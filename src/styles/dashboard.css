@@ -1,0 +1,52 @@
+/* ============================================================
+   AL BALQAN — Dashboard specific styles
+   ============================================================ */
+
+.dashboard-hero {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-darker) 100%);
+  border-radius: var(--radius-lg);
+  padding: 40px 36px;
+  color: #fff;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.dashboard-hero h1 {
+  color: #fff;
+  font-size: 26px;
+  margin-bottom: 8px;
+}
+
+.dashboard-hero p {
+  color: rgba(255, 255, 255, 0.82);
+  margin: 0;
+  max-width: 560px;
+}
+
+.dashboard-hero .dashboard-hero__action {
+  flex: 0 0 auto;
+}
+
+.storage-note {
+  margin-top: 20px;
+  font-size: 13px;
+  color: var(--muted);
+  background: #fff9e8;
+  border: 1px solid #f0e2b6;
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+}
+
+.storage-note strong {
+  color: var(--primary-dark);
+}
+
+@media (max-width: 768px) {
+  .dashboard-hero {
+    padding: 28px 22px;
+  }
+}

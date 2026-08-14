@@ -1,0 +1,113 @@
+/* ============================================================
+   AL BALQAN — Print CSS
+   Printing uses the browser's print dialog on the current page.
+   Only the invoice is printed; all UI controls are hidden.
+
+   - 'create' mode:  body.printing-create — only the on-page
+                     invoice sheet on the Create Invoice page prints.
+   - 'history' mode: body.printing-history — only the .print-area
+                     (rendered via portal) prints.
+   ============================================================ */
+
+.print-area {
+  display: none;
+}
+
+@media print {
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 210mm !important;
+  }
+
+  .no-print,
+  .app-header,
+  .toast-container,
+  .modal-overlay {
+    display: none !important;
+  }
+
+  /* ---------- Create mode ---------- */
+
+  body.printing-create .page {
+    max-width: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  body.printing-create .page-header,
+  body.printing-create .editor-form,
+  body.printing-create .editor-actions,
+  body.printing-create .legend {
+    display: none !important;
+  }
+
+  body.printing-create .editor-layout {
+    display: block !important;
+  }
+
+  body.printing-create .preview-sticky {
+    position: static !important;
+  }
+
+  body.printing-create .invoice-sheet-wrap {
+    padding: 0 !important;
+    background: #fff !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  body.printing-create .invoice-sheet {
+    width: 210mm !important;
+    height: auto !important;
+    min-height: 297mm;
+    margin: 0 !important;
+    transform: none !important;
+    transform-origin: initial !important;
+  }
+
+  /* ---------- History mode ---------- */
+
+  body.printing-history .app-shell {
+    display: none !important;
+  }
+
+  .print-area {
+    display: block !important;
+  }
+
+  .print-area .invoice-sheet {
+    width: 210mm !important;
+    height: auto !important;
+    min-height: 297mm;
+    margin: 0 !important;
+    transform: none !important;
+  }
+
+  /* ---------- Shared ---------- */
+
+  .invoice__header,
+  .invoice__section,
+  .invoice__payment,
+  .invoice__signature-stamp,
+  .invoice__footer-area,
+  .invoice__footer {
+    break-inside: avoid;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  img {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}

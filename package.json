@@ -1,0 +1,22 @@
+{
+  "name": "al-balqan-invoice-system",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "AL BALQAN Tourism & Visa Services Company — Temporary Invoice Generator",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "jspdf": "^2.5.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.1",
+    "vite": "^5.4.2"
+  }
+}
