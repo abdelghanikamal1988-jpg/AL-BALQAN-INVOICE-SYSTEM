@@ -5,9 +5,9 @@
 
 import { getInvoices } from './storage.js';
 
-export function nextInvoiceNumber() {
+export async function nextInvoiceNumber() {
   const year = new Date().getFullYear();
-  const invoices = getInvoices();
+  const invoices = await getInvoices();
   const prefix = `INV-${year}-`;
 
   let maxSeq = 0;
@@ -25,8 +25,8 @@ export function nextInvoiceNumber() {
  * Guarantee a unique invoice number at save time.
  * If the proposed number already exists, generate a new one.
  */
-export function uniqueInvoiceNumber(proposedNumber, { ignoreId = null } = {}) {
-  const invoices = getInvoices();
+export async function uniqueInvoiceNumber(proposedNumber, { ignoreId = null } = {}) {
+  const invoices = await getInvoices();
   const exists = invoices.some(
     (inv) =>
       inv.invoiceNumber === proposedNumber && inv.id !== ignoreId

@@ -1,84 +1,54 @@
 /**
- * Local Storage service — the ONLY place that touches localStorage.
+ * Storage service — invoices live in Supabase, drafts stay in localStorage.
  *
- * The UI never reads/writes localStorage directly. This layer can be
- * swapped in the future for a REST API, Supabase or Firebase without
- * rewriting the UI components.
- *
- * Keys:
- *  - albalqan_invoices        -> array of invoices
- *  - albalqan_invoice_draft   -> unfinished invoice draft
+ * This is the ONLY module the UI imports. Swap the implementation here
+ * without touching any component.
  */
 
 import { formatDate, formatTime } from './formatDate.js';
 import { calculateVat, VAT_MODE } from './vat.js';
+import {
+  dbFetchAll,
+  dbFetchOne,
+  dbInsert,
+  dbUpdateBackup,
+  dbDelete,
+  dbInsertMany,
+} from '../lib/invoiceRepo.js';
 
-const INVOICES_KEY = 'albalqan_invoices';
 const DRAFT_KEY = 'albalqan_invoice_draft';
 
-function read(key, fallback) {
-  try {
-    const raw = localStorage.getItem(key);
-    if (!raw) return fallback;
-    return JSON.parse(raw);
-  } catch (err) {
-    return fallback;
-  }
+/* ----------------------- Invoices (Supabase) ----------------------- */
+
+export async function getInvoices() {
+  return dbFetchAll();
 }
 
-function write(key, value) {
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-  } catch (err) {
-    // Storage may be full or unavailable — let callers handle gracefully.
-    throw err;
-  }
+export async function getInvoiceById(id) {
+  return dbFetchOne(id);
 }
 
-/* ----------------------- Invoices ----------------------- */
-
-export function getInvoices() {
-  const list = read(INVOICES_KEY, []);
-  return Array.isArray(list) ? list : [];
+export async function saveInvoice(invoice) {
+  return dbInsert(invoice);
 }
 
-export function getInvoiceById(id) {
-  return getInvoices().find((inv) => inv.id === id) || null;
+export async function updateInvoice(invoice) {
+  return dbUpdateBackup(invoice.id, invoice);
 }
 
-function persistAll(list) {
-  write(INVOICES_KEY, list);
-}
-
-export function saveInvoice(invoice) {
-  const list = getInvoices();
-  list.unshift(invoice);
-  persistAll(list);
-  return invoice;
-}
-
-export function updateInvoice(invoice) {
-  const list = getInvoices();
-  const idx = list.findIndex((inv) => inv.id === invoice.id);
-  if (idx === -1) return null;
-  list[idx] = invoice;
-  persistAll(list);
-  return invoice;
-}
-
-export function deleteInvoice(id) {
-  const list = getInvoices().filter((inv) => inv.id !== id);
-  persistAll(list);
+export async function deleteInvoice(id) {
+  await dbDelete(id);
 }
 
 /**
- * Case-insensitive search across invoice number, customer name,
- * passport number and phone number.
+ * Case-insensitive search. Fetch once, filter in memory — enough for a
+ * small business volume of invoices.
  */
-export function searchInvoices(query) {
+export async function searchInvoices(query) {
   const q = String(query || '').trim().toLowerCase();
-  if (!q) return getInvoices();
-  return getInvoices().filter((inv) => {
+  const all = await dbFetchAll();
+  if (!q) return all;
+  return all.filter((inv) => {
     const haystack = [
       inv.invoiceNumber,
       inv.customer?.name,
@@ -92,29 +62,59 @@ export function searchInvoices(query) {
   });
 }
 
-export function importInvoices(incoming) {
-  const list = getInvoices();
-  const existingIds = new Set(list.map((inv) => inv.id));
-  let added = 0;
-  incoming.forEach((inv) => {
-    if (inv && inv.id && !existingIds.has(inv.id)) {
-      existingIds.add(inv.id);
-      list.push(inv);
-      added += 1;
-    }
-  });
-  persistAll(list);
-  return added;
+export async function importInvoices(incoming) {
+  const all = await dbFetchAll();
+  const existingIds = new Set(all.map((inv) => inv.id));
+  const fresh = incoming.filter(
+    (inv) => inv && inv.id && !existingIds.has(inv.id)
+  );
+  if (fresh.length > 0) await dbInsertMany(fresh);
+  return fresh.length;
 }
 
-/* ----------------------- Draft ----------------------- */
+/**
+ * One-time migration: on first run against an empty table, copy any
+ * invoices already saved in localStorage into the database.
+ */
+export async function migrateLocalInvoices() {
+  try {
+    const raw = localStorage.getItem('albalqan_invoices');
+    if (!raw) return 0;
+    const local = JSON.parse(raw);
+    if (!Array.isArray(local) || local.length === 0) return 0;
+
+    const all = await dbFetchAll();
+    const existingIds = new Set(all.map((inv) => inv.id));
+    const fresh = local.filter((inv) => inv && inv.id && !existingIds.has(inv.id));
+
+    if (fresh.length > 0) {
+      await dbInsertMany(fresh);
+      return fresh.length;
+    }
+    return 0;
+  } catch (err) {
+    return 0;
+  }
+}
+
+/* ----------------------- Draft (localStorage) ----------------------- */
 
 export function getDraft() {
-  return read(DRAFT_KEY, null);
+  try {
+    const raw = localStorage.getItem(DRAFT_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch (err) {
+    return null;
+  }
 }
 
 export function saveDraft(draft) {
-  write(DRAFT_KEY, draft);
+  try {
+    localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+  } catch (err) {
+    /* ignore */
+  }
 }
 
 export function clearDraft() {

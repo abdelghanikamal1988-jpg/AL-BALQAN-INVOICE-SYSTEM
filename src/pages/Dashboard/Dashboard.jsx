@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import company from '../../data/company.js';
 import { getInvoices } from '../../utils/storage.js';
@@ -11,11 +11,25 @@ import { importInvoices } from '../../utils/storage.js';
 
 export default function Dashboard() {
   const toast = useToast();
-  const [, setVersion] = useState(0);
+  const [refreshKey, setRefreshKey] = useState(0);
   const fileInputRef = useRef(null);
+  const [invoices, setInvoices] = useState([]);
+
+  useEffect(() => {
+    let active = true;
+    getInvoices()
+      .then((list) => {
+        if (active) setInvoices(list);
+      })
+      .catch(() => {
+        if (active) setInvoices([]);
+      });
+    return () => {
+      active = false;
+    };
+  }, [refreshKey]);
 
   const stats = useMemo(() => {
-    const invoices = getInvoices();
     const today = formatDate(new Date());
     let total = 0;
     let todayCount = 0;
@@ -29,10 +43,16 @@ export default function Dashboard() {
     });
 
     return { total, todayCount, partiallyPaid };
-  }, []);
+  }, [invoices]);
 
-  const handleExport = () => {
-    const invoices = getInvoices();
+  const handleExport = async () => {
+    let invoices;
+    try {
+      invoices = await getInvoices();
+    } catch (err) {
+      toast.error('Unable to load invoices for export.');
+      return;
+    }
     if (invoices.length === 0) {
       toast.info('No invoices to export yet.');
       return;
@@ -55,19 +75,21 @@ export default function Dashboard() {
   const handleImportFile = (file) => {
     const reader = new FileReader();
     reader.onload = () => {
-      try {
-        const data = JSON.parse(reader.result);
-        if (!Array.isArray(data)) throw new Error('Invalid format');
-        const added = importInvoices(data);
-        if (added === 0) {
-          toast.info('No new invoices were added (duplicates skipped).');
-        } else {
-          toast.success(`${added} invoice${added > 1 ? 's' : ''} imported.`);
-          setVersion((v) => v + 1);
-        }
-      } catch (err) {
-        toast.error('Import failed. The file is not a valid AL BALQAN backup.');
-      }
+      importInvoices(JSON.parse(reader.result))
+        .then((added) => {
+          if (added === 0) {
+            toast.info('No new invoices were added (duplicates skipped).');
+          } else {
+            toast.success(`${added} invoice${added > 1 ? 's' : ''} imported.`);
+            setRefreshKey((k) => k + 1);
+          }
+        })
+        .catch(() => {
+          toast.error('Import failed. The file is not a valid AL BALQAN backup.');
+        });
+    };
+    reader.onerror = () => {
+      toast.error('Import failed. Could not read the file.');
     };
     reader.readAsText(file);
   };
@@ -119,8 +141,8 @@ export default function Dashboard() {
       </div>
 
       <div className="storage-note">
-        <strong>Backup your data:</strong> Invoices are stored locally on this device only. Use
-        Export Data to create a JSON backup and Import Data to restore it on another device.
+        <strong>Backup your data:</strong> Invoices are stored securely in the cloud. Use
+        Export Data to create a JSON backup.
       </div>
 
       <div style={{ marginTop: 14 }} className="editor-actions">

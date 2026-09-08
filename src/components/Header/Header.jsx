@@ -1,7 +1,13 @@
 import { NavLink } from 'react-router-dom';
 import company from '../../data/company.js';
+import { useAuth } from '../../context/AuthContext.jsx';
 
 export default function Header() {
+  const { signOut } = useAuth();
+
+  const handleSignOut = async () => {
+    await signOut();
+  };
   return (
     <header className="app-header no-print">
       <div className="app-header__inner">
@@ -34,6 +40,9 @@ export default function Header() {
         <NavLink to="/create" className="btn btn--primary app-header__cta">
           + New Invoice
         </NavLink>
+        <button type="button" className="btn app-header__signout" onClick={handleSignOut}>
+          Sign Out
+        </button>
       </div>
     </header>
   );

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import InvoiceHistoryToolbar from '../../components/InvoiceHistory/InvoiceHistoryToolbar.jsx';
 import InvoicePreview from '../../components/InvoicePreview/InvoicePreview.jsx';
@@ -6,7 +6,6 @@ import Modal from '../../components/Modal/Modal.jsx';
 import { useToast } from '../../components/Toast/ToastProvider.jsx';
 import {
   getInvoices,
-  getInvoiceById,
   deleteInvoice,
   searchInvoices,
   importInvoices,
@@ -43,22 +42,37 @@ export default function InvoiceHistory() {
   const [query, setQuery] = useState('');
   const [refreshKey, setRefreshKey] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [invoices, setInvoices] = useState([]);
   const [viewInvoice, setViewInvoice] = useState(null);
   const [deletePrompt, setDeletePrompt] = useState(null);
   const fileInputRef = useRef(null);
 
   useEffect(() => {
-    const t = setTimeout(() => setLoading(false), 250);
-    return () => clearTimeout(t);
-  }, []);
+    let active = true;
+    setLoading(true);
+    searchInvoices(query)
+      .then((list) => {
+        if (active) setInvoices(list);
+      })
+      .catch(() => {
+        if (active) setInvoices([]);
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, [query, refreshKey]);
 
-  const invoices = useMemo(
-    () => searchInvoices(query),
-    [query, refreshKey]
-  );
-
-  const handleExport = () => {
-    const all = getInvoices();
+  const handleExport = async () => {
+    let all;
+    try {
+      all = await getInvoices();
+    } catch (err) {
+      toast.error('Unable to load invoices for export.');
+      return;
+    }
     if (all.length === 0) {
       toast.info('No invoices to export yet.');
       return;
@@ -79,29 +93,35 @@ export default function InvoiceHistory() {
   const handleImportFile = (file) => {
     const reader = new FileReader();
     reader.onload = () => {
-      try {
-        const data = JSON.parse(reader.result);
-        if (!Array.isArray(data)) throw new Error('Invalid format');
-        const added = importInvoices(data);
-        if (added === 0) {
-          toast.info('No new invoices were added (duplicates skipped).');
-        } else {
-          toast.success(`${added} invoice${added > 1 ? 's' : ''} imported.`);
-          setRefreshKey((k) => k + 1);
-        }
-      } catch (err) {
-        toast.error('Import failed. The file is not a valid AL BALQAN backup.');
-      }
+      importInvoices(JSON.parse(reader.result))
+        .then((added) => {
+          if (added === 0) {
+            toast.info('No new invoices were added (duplicates skipped).');
+          } else {
+            toast.success(`${added} invoice${added > 1 ? 's' : ''} imported.`);
+            setRefreshKey((k) => k + 1);
+          }
+        })
+        .catch(() => {
+          toast.error('Import failed. The file is not a valid AL BALQAN backup.');
+        });
+    };
+    reader.onerror = () => {
+      toast.error('Import failed. Could not read the file.');
     };
     reader.readAsText(file);
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (!deletePrompt) return;
-    deleteInvoice(deletePrompt);
-    setDeletePrompt(null);
-    setRefreshKey((k) => k + 1);
-    toast.info('Invoice deleted.');
+    try {
+      await deleteInvoice(deletePrompt.id);
+      setDeletePrompt(null);
+      setRefreshKey((k) => k + 1);
+      toast.info('Invoice deleted.');
+    } catch (err) {
+      toast.error('Unable to delete the invoice. Please try again.');
+    }
   };
 
   /* ---------- Print / PDF actions ---------- */
@@ -227,7 +247,7 @@ export default function InvoiceHistory() {
                           type="button"
                           className="btn btn--danger btn--sm"
                           aria-label={`Delete invoice ${inv.invoiceNumber}`}
-                          onClick={() => setDeletePrompt(inv.id)}
+                          onClick={() => setDeletePrompt(inv)}
                         >
                           Delete
                         </button>
@@ -242,7 +262,7 @@ export default function InvoiceHistory() {
       )}
 
       <div className="history-note">
-        Invoices are stored locally on this device. Export Data regularly to keep a JSON backup.
+        Invoices are stored securely in the cloud. Export Data regularly to keep a JSON backup.
       </div>
 
       <input
@@ -311,8 +331,8 @@ export default function InvoiceHistory() {
           }
         >
           <p>
-            This will permanently remove invoice {getInvoiceById(deletePrompt)?.invoiceNumber} from
-            local storage. This action cannot be undone.
+            This will permanently remove invoice {deletePrompt.invoiceNumber} from your
+            account. This action cannot be undone.
           </p>
         </Modal>
       )}
