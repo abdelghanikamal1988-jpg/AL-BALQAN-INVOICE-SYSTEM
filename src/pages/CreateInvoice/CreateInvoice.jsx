@@ -3,7 +3,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import InvoiceForm from '../../components/InvoiceForm/InvoiceForm.jsx';
 import InvoicePreview from '../../components/InvoicePreview/InvoicePreview.jsx';
 import Modal from '../../components/Modal/Modal.jsx';
+import Can from '../../components/Can/Can.jsx';
 import { useToast } from '../../components/Toast/ToastProvider.jsx';
+import { useAuth } from '../../context/AuthContext.jsx';
+import { dbSubmitPending } from '../../lib/pendingRepo.js';
 import company from '../../data/company.js';
 import { nextInvoiceNumber, uniqueInvoiceNumber } from '../../utils/invoiceNumber.js';
 import { formatDate, formatTime } from '../../utils/formatDate.js';
@@ -20,6 +23,9 @@ import {
 import { exportInvoicePdf, printInvoicePdf } from '../../utils/pdf.js';
 import { normalizeName, isEmailValid, isPhoneValid, isEmptyField } from '../../utils/validation.js';
 import { calculateVat } from '../../utils/vat.js';
+
+/** Fields that are stored/displayed in capital letters (email is excluded). */
+const UPPERCASE_FIELDS = ['name', 'nationality', 'passport'];
 
 const EMPTY_FORM = {
   name: '',
@@ -40,6 +46,7 @@ export default function CreateInvoice() {
   const { id } = useParams();
   const navigate = useNavigate();
   const toast = useToast();
+  const { needsEditApproval } = useAuth();
 
   const editing = Boolean(id);
   const inputRef = useRef(null);
@@ -58,12 +65,18 @@ export default function CreateInvoice() {
   const [savedInvoice, setSavedInvoice] = useState(null);
   const [savedActionsOpen, setSavedActionsOpen] = useState(false);
   const [clearPrompt, setClearPrompt] = useState(false);
+  /* Id of the invoice this screen already saved in create mode — every later
+     save updates that row instead of inserting a duplicate. */
+  const [savedId, setSavedId] = useState(null);
 
   const draftRef = useRef(null);
 
   const changeForm = useCallback(
     (field, value) => {
-      setForm((prev) => ({ ...prev, [field]: value }));
+      const nextValue = UPPERCASE_FIELDS.includes(field)
+        ? String(value ?? '').toUpperCase()
+        : value;
+      setForm((prev) => ({ ...prev, [field]: nextValue }));
       setDirty(true);
       setErrors((prev) => {
         const next = { ...prev };
@@ -179,6 +192,9 @@ export default function CreateInvoice() {
     const next = {};
     const name = normalizeName(form.name);
     if (isEmptyField(name)) next.name = 'Customer full name is required.';
+    if (isEmptyField(form.nationality)) next.nationality = 'Nationality is required.';
+    if (isEmptyField(form.passport)) next.passport = 'Passport number is required.';
+    if (isEmptyField(form.phone)) next.phone = 'Phone number is required.';
     if (isEmptyField(form.destination)) next.destination = 'Please select a destination.';
     if (isEmptyField(form.service)) next.service = 'Please select a service type.';
 
@@ -198,6 +214,47 @@ export default function CreateInvoice() {
   };
 
   /* ---------- Save ---------- */
+  /**
+   * Cleans the form and returns the invoice object that would be written
+   * to the database (without writing anything).
+   */
+  const buildInvoice = async () => {
+    const cleaned = {
+      ...form,
+      name: normalizeName(form.name),
+      passport: String(form.passport || '').trim(),
+      nationality: String(form.nationality || '').trim(),
+    };
+
+    const targetId = editing ? id : savedId;
+    const number = await uniqueInvoiceNumber(invoiceNumber, { ignoreId: targetId });
+    setInvoiceNumber(number);
+
+    const invoice = createInvoiceObject(cleaned, number);
+
+    if (targetId) {
+      invoice.id = targetId;
+      invoice.issueDate = issueDateDisplay;
+      invoice.issueTime = issueTimeDisplay;
+    }
+
+    return { invoice, targetId };
+  };
+
+  /**
+   * Writes the current form to the database.
+   * Returns the saved invoice, or null when the update matched no row.
+   */
+  const persistInvoice = async () => {
+    const { invoice, targetId } = await buildInvoice();
+
+    if (targetId) return updateInvoice(invoice);
+
+    const result = await saveInvoice(invoice);
+    clearDraft();
+    return result;
+  };
+
   const handleSave = async () => {
     const nextErrors = validate();
     setErrors(nextErrors);
@@ -208,34 +265,27 @@ export default function CreateInvoice() {
 
     setSaving(true);
     try {
-      const cleaned = {
-        ...form,
-        name: normalizeName(form.name),
-        passport: String(form.passport || '').trim(),
-        nationality: String(form.nationality || '').trim(),
-      };
+      if (editing && needsEditApproval) {
+        /* Admin approval workflow: the proposal is stored, the record
+           keeps its current values until an admin applies it. */
+        const { invoice } = await buildInvoice();
+        await dbSubmitPending('invoice', invoice.id, invoice);
+        toast.success('Changes submitted for approval. The invoice stays unchanged until an administrator approves.');
+        navigate('/history');
+        return;
+      }
 
-      const number = await uniqueInvoiceNumber(invoiceNumber, { ignoreId: id });
-      setInvoiceNumber(number);
-
-      const invoice = createInvoiceObject(cleaned, number);
-
-      let result;
-      if (editing && id) {
-        invoice.id = id;
-        invoice.issueDate = issueDateDisplay;
-        invoice.issueTime = issueTimeDisplay;
-        result = await updateInvoice(invoice);
-        if (!result) {
-          toast.error('Unable to update the invoice. Please try again.');
-          return;
-        }
+      const result = await persistInvoice();
+      if (!result) {
+        toast.error('Unable to update the invoice. Please try again.');
+        return;
+      }
+      if (editing) {
         toast.success('Invoice updated successfully.');
       } else {
-        result = await saveInvoice(invoice);
-        clearDraft();
         setForm(EMPTY_FORM);
         setDirty(false);
+        setSavedId(null);
         toast.success('Invoice saved successfully.');
       }
 
@@ -251,56 +301,11 @@ export default function CreateInvoice() {
     }
   };
 
-  /* ---------- Print ---------- */
-  const buildInvoiceData = () => ({
-    invoiceNumber,
-    issueDate: issueDateDisplay,
-    issueTime: issueTimeDisplay,
-    customer: {
-      name: normalizeName(form.name),
-      nationality: String(form.nationality || '').trim(),
-      passport: String(form.passport || '').trim(),
-      phone: form.phone,
-      email: form.email,
-    },
-    travel: {
-      destination: form.destination,
-      service: form.service,
-      residenceType: form.residenceType,
-    },
-    payment: {
-      total: form.total,
-      paid: form.paid,
-      vatMode: form.vatMode || 'none',
-    },
-    notes: form.notes,
-  });
-
-  const handlePrint = async () => {
-    const nextErrors = validate();
-    if (Object.keys(nextErrors).length > 0) {
-      setErrors(nextErrors);
-      toast.error('Please fix the highlighted fields before printing.');
-      return;
-    }
-    try {
-      await printInvoicePdf(buildInvoiceData());
-    } catch (err) {
-      toast.error("Unable to open the print dialog. Please use your browser's print command.");
-    }
-  };
-
-  /* ---------- PDF ---------- */
-  const handlePdf = async () => {
-    const nextErrors = validate();
-    if (Object.keys(nextErrors).length > 0) {
-      setErrors(nextErrors);
-      toast.error('Please fix the highlighted fields before exporting.');
-      return;
-    }
+  /* ---------- Save, then export / print ---------- */
+  const exportSaved = async (saved) => {
     setExporting(true);
     try {
-      await exportInvoicePdf(buildInvoiceData());
+      await exportInvoicePdf(saved);
       toast.success('PDF exported successfully.');
     } catch (err) {
       toast.error('Unable to export PDF. Please try again or use Print.');
@@ -309,12 +314,59 @@ export default function CreateInvoice() {
     }
   };
 
+  const printSaved = async (saved) => {
+    try {
+      await printInvoicePdf(saved);
+    } catch (err) {
+      toast.error("Unable to open the print dialog. Please use your browser's print command.");
+    }
+  };
+
+  /** Required behaviour: EXPORT PDF / PRINT INVOICE save the invoice first. */
+  const saveThen = async (nextStep) => {
+    if (editing && needsEditApproval) {
+      toast.error('Your changes must be approved by an administrator before exporting or printing. The invoice in the history stays print-ready.');
+      return;
+    }
+
+    const nextErrors = validate();
+    if (Object.keys(nextErrors).length > 0) {
+      setErrors(nextErrors);
+      toast.error('Please fix the highlighted fields before continuing.');
+      return;
+    }
+
+    setSaving(true);
+    let saved = null;
+    try {
+      saved = await persistInvoice();
+    } catch (err) {
+      console.error('Failed to save invoice:', err);
+      toast.error('Unable to save the invoice. Please try again.');
+      return;
+    } finally {
+      setSaving(false);
+    }
+
+    if (!saved) {
+      toast.error('Unable to save the invoice. Please try again.');
+      return;
+    }
+    if (!editing) {
+      setSavedId(saved.id);
+      setDirty(false);
+    }
+
+    await nextStep(saved);
+  };
+
   /* ---------- Clear / New ---------- */
   const resetForm = () => {
     clearDraft();
     setForm(EMPTY_FORM);
     setErrors({});
     setInvoiceNumber('');
+    setSavedId(null);
     setIssueDateDisplay(formatDate());
     setIssueTimeDisplay(formatTime());
     setDirty(false);
@@ -387,20 +439,34 @@ export default function CreateInvoice() {
           >
             Clear Form
           </button>
-          <button type="button" className="btn btn--secondary" onClick={() => handlePrint()} disabled={saving || exporting}>
-            Print Invoice
-          </button>
-          <button type="button" className="btn btn--secondary" onClick={() => handlePdf()} disabled={saving || exporting}>
-            {exporting ? <span className="btn__spinner" aria-hidden="true" /> : 'Export PDF'}
-          </button>
-          <button
-            type="button"
-            className="btn btn--primary"
-            onClick={handleSave}
-            disabled={saving || exporting}
-          >
-            {saving ? <span className="btn__spinner" aria-hidden="true" /> : editing ? 'Update Invoice' : 'Save Invoice'}
-          </button>
+          <Can perm="action:invoice.export_pdf">
+            <button
+              type="button"
+              className="btn btn--secondary"
+              onClick={() => saveThen(printSaved)}
+              disabled={saving || exporting}
+            >
+              Print Invoice
+            </button>
+            <button
+              type="button"
+              className="btn btn--secondary"
+              onClick={() => saveThen(exportSaved)}
+              disabled={saving || exporting}
+            >
+              {exporting ? <span className="btn__spinner" aria-hidden="true" /> : 'Export PDF'}
+            </button>
+          </Can>
+          <Can perm="action:invoice.save">
+            <button
+              type="button"
+              className="btn btn--primary"
+              onClick={handleSave}
+              disabled={saving || exporting}
+            >
+              {saving ? <span className="btn__spinner" aria-hidden="true" /> : editing ? 'Update Invoice' : 'Save Invoice'}
+            </button>
+          </Can>
         </div>
       </div>
 
@@ -432,6 +498,35 @@ export default function CreateInvoice() {
               <div id="invoice-sheet">
                 <InvoicePreview form={previewForm} invoiceNumber={invoiceNumber} />
               </div>
+            </div>
+
+            <div className="preview-actions">
+              <Can perm="action:invoice.export_pdf">
+                <button
+                  type="button"
+                  className="btn btn--secondary"
+                  onClick={() => saveThen(exportSaved)}
+                  disabled={saving || exporting}
+                >
+                  {exporting ? <span className="btn__spinner" aria-hidden="true" /> : 'Export PDF'}
+                </button>
+              </Can>
+              <Can perm="action:invoice.save">
+                <button
+                  type="button"
+                  className="btn btn--primary"
+                  onClick={handleSave}
+                  disabled={saving || exporting}
+                >
+                  {saving ? (
+                    <span className="btn__spinner" aria-hidden="true" />
+                  ) : editing ? (
+                    'Update Invoice'
+                  ) : (
+                    'Save Invoice'
+                  )}
+                </button>
+              </Can>
             </div>
           </div>
         </div>
@@ -497,30 +592,32 @@ export default function CreateInvoice() {
               >
                 New Invoice
               </button>
-              <button
-                type="button"
-                className="btn btn--secondary"
-                onClick={() => {
-                  exportInvoicePdf(savedInvoice)
-                    .then(() => toast.success('PDF exported successfully.'))
-                    .catch(() => toast.error('Unable to export PDF. Please try again or use Print.'));
-                }}
-              >
-                Export PDF
-              </button>
-              <button
-                type="button"
-                className="btn btn--primary"
-                onClick={() => {
-                  setSavedActionsOpen(false);
-                  setSavedInvoice(null);
-                  printInvoicePdf(savedInvoice)
-                    .then(() => {})
-                    .catch(() => toast.error("Unable to open the print dialog. Please use your browser's print command."));
-                }}
-              >
-                Print
-              </button>
+              <Can perm="action:invoice.export_pdf">
+                <button
+                  type="button"
+                  className="btn btn--secondary"
+                  onClick={() => {
+                    exportInvoicePdf(savedInvoice)
+                      .then(() => toast.success('PDF exported successfully.'))
+                      .catch(() => toast.error('Unable to export PDF. Please try again or use Print.'));
+                  }}
+                >
+                  Export PDF
+                </button>
+                <button
+                  type="button"
+                  className="btn btn--primary"
+                  onClick={() => {
+                    setSavedActionsOpen(false);
+                    setSavedInvoice(null);
+                    printInvoicePdf(savedInvoice)
+                      .then(() => {})
+                      .catch(() => toast.error("Unable to open the print dialog. Please use your browser's print command."));
+                  }}
+                >
+                  Print
+                </button>
+              </Can>
             </>
           }
         >

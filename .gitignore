@@ -7,3 +7,8 @@ npm-debug.log*
 .env
 .env.local
 .env.*.local
+# dev test harness output (scripts/html stay tracked)
+.dev/*.png
+.dev/*.jpg
+.dev/*.pdf
+.dev/*.log

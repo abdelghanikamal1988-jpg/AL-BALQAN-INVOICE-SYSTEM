@@ -1,6 +1,7 @@
 import CustomerSection from '../CustomerSection/CustomerSection.jsx';
 import ServiceSection from '../ServiceSection/ServiceSection.jsx';
 import PaymentSection from '../PaymentSection/PaymentSection.jsx';
+import Icon from '../Icons/Icon.jsx';
 
 export default function InvoiceForm({
   form,
@@ -15,7 +16,7 @@ export default function InvoiceForm({
     <div className="editor-form">
       <section className="card" aria-label="Invoice Information">
         <div className="card__header">
-          <span className="card__icon" aria-hidden="true">🧾</span>
+          <span className="card__icon" aria-hidden="true"><Icon name="receipt" /></span>
           <h2>Invoice Information</h2>
         </div>
         <div className="card__body">
@@ -53,7 +54,7 @@ export default function InvoiceForm({
 
       <section className="card" aria-label="Notes">
         <div className="card__header">
-          <span className="card__icon" aria-hidden="true">📝</span>
+          <span className="card__icon" aria-hidden="true"><Icon name="note" /></span>
           <h2>Notes</h2>
         </div>
         <div className="card__body">

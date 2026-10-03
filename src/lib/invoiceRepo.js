@@ -35,11 +35,12 @@ async function currentUserId() {
 export async function dbFetchAll() {
   const { data, error } = await supabase
     .from('invoices')
-    .select('data')
+    .select('data, user_id')
     .order('created_at', { ascending: false });
   if (error) throw error;
   return (data || []).map((row, index) => ({
     ...row.data,
+    createdBy: row.user_id || null,
     rowIndex: index,
   }));
 }
@@ -48,7 +49,7 @@ export async function dbFetchOne(id) {
   const { data, error } = await supabase
     .from('invoices')
     .select('data')
-    .eq('id', id)
+    .eq('data->>id', id)
     .maybeSingle();
   if (error) throw error;
   if (!data) return null;
@@ -68,15 +69,25 @@ export async function dbUpdateBackup(id, invoice) {
   const { data, error } = await supabase
     .from('invoices')
     .update({ data: invoice })
-    .eq('id', id)
+    .eq('data->>id', id)
     .select();
   if (error) throw error;
-  return data?.[0]?.data || invoice;
+  if (!data || data.length === 0) {
+    throw new Error('Invoice not found or not permitted to update.');
+  }
+  return data[0].data;
 }
 
 export async function dbDelete(id) {
-  const { error } = await supabase.from('invoices').delete().eq('id', id);
+  const { data, error } = await supabase
+    .from('invoices')
+    .delete()
+    .eq('data->>id', id)
+    .select('id');
   if (error) throw error;
+  if (!data || data.length === 0) {
+    throw new Error('No invoice was deleted. Check the DELETE policy in Supabase (supabase/schema.sql).');
+  }
 }
 
 export async function dbInsertMany(invoices) {

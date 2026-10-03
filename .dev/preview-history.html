@@ -1,0 +1,185 @@
+﻿<!doctype html>
+<html lang="en">
+  <head>
+  <link rel="stylesheet" href="../dist/assets/index-RHfJy8wx.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" />
+    <title>Preview — Invoice History</title>
+  </head>
+  <body>
+    <div class="page page--wide">
+      <div class="page-header">
+        <div>
+          <h1>Invoice History</h1>
+          <p class="subtitle">Search, view, edit, print or export saved invoices.</p>
+        </div>
+        <button type="button" class="btn btn--primary">+ New Invoice</button>
+      </div>
+
+      <div class="history-toolbar">
+        <div class="history-toolbar__search">
+          <label class="searchbar">
+            <span class="searchbar__icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
+            </span>
+            <input
+              type="search"
+              placeholder="Search by invoice no., customer, passport or phone..."
+            />
+          </label>
+        </div>
+        <button type="button" class="btn btn--secondary btn--sm">Export Data</button>
+        <button type="button" class="btn btn--secondary btn--sm">Import Data</button>
+        <button type="button" class="btn btn--neutral btn--sm">Clear Search</button>
+      </div>
+
+      <div class="history-filters" aria-label="Invoice filters">
+        <div class="field history-filters__field">
+          <label for="inv-period">Date</label>
+          <select id="inv-period">
+            <option value="">All dates</option>
+            <option value="2026-10">OCTOBER 2026</option>
+            <option value="2026-09">SEPTEMBER 2026</option>
+            <option value="2026-08">AUGUST 2026</option>
+          </select>
+        </div>
+        <div class="field history-filters__field">
+          <label for="inv-nationality">Nationality</label>
+          <select id="inv-nationality">
+            <option value="">All nationalities</option>
+            <option>EGYPTIAN</option>
+            <option>SYRIAN</option>
+            <option>PALESTINIAN</option>
+          </select>
+        </div>
+        <div class="field history-filters__field">
+          <label for="inv-destination">Destination</label>
+          <select id="inv-destination">
+            <option value="">All destinations</option>
+            <option>Albania</option>
+            <option>Kosovo</option>
+            <option>Montenegro</option>
+          </select>
+        </div>
+        <div class="field history-filters__field">
+          <label for="inv-service">Service</label>
+          <select id="inv-service">
+            <option value="">All services</option>
+            <option>Tourist Visa</option>
+            <option>Residence</option>
+            <option>Work Contract</option>
+          </select>
+        </div>
+        <div class="field history-filters__field">
+          <label for="inv-status">Status</label>
+          <select id="inv-status">
+            <option value="">All statuses</option>
+            <option>PAID</option>
+            <option>PARTIALLY PAID</option>
+            <option>UNPAID</option>
+          </select>
+        </div>
+        <button type="button" class="btn btn--neutral btn--sm history-filters__reset">
+          Clear filters
+        </button>
+      </div>
+
+      <div class="history-summary" aria-label="Financial summary">
+        <span class="history-summary__item">
+          <span class="history-summary__label">Showing</span><b>18 of 42</b>
+        </span>
+        <span class="history-summary__item">
+          <span class="history-summary__label">Total paid</span><b>AED 96,400.00</b>
+        </span>
+        <span class="history-summary__item">
+          <span class="history-summary__label">Total remaining</span><b>AED 41,150.00</b>
+        </span>
+      </div>
+
+      <div class="card">
+        <div class="history-table-wrap">
+          <table class="history-table">
+            <thead>
+              <tr>
+                <th>Invoice No.</th>
+                <th>Date</th>
+                <th>Customer</th>
+                <th>Passport</th>
+                <th>Destination</th>
+                <th>Service</th>
+                <th>Total</th>
+                <th>Paid</th>
+                <th>Remaining</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="mono">AB-INV-1042</td>
+                <td>2026-10-01</td>
+                <td>MARIAM HADDAD</td>
+                <td>P11223344</td>
+                <td>Albania</td>
+                <td>Tourist Visa</td>
+                <td>AED 9,200.00</td>
+                <td>AED 4,500.00</td>
+                <td>AED 4,700.00</td>
+                <td><span class="badge badge--partial">PARTIALLY PAID</span></td>
+                <td class="actions-cell">
+                  <button type="button" class="btn btn--neutral btn--sm">View</button>
+                  <button type="button" class="btn btn--secondary btn--sm">Edit</button>
+                  <button type="button" class="btn btn--secondary btn--sm">Print</button>
+                  <button type="button" class="btn btn--secondary btn--sm">PDF</button>
+                  <button type="button" class="btn btn--danger btn--sm">Delete</button>
+                </td>
+              </tr>
+              <tr>
+                <td class="mono">AB-INV-1041</td>
+                <td>2026-09-28</td>
+                <td>RAMI YOUSEF</td>
+                <td>N99887766</td>
+                <td>Kosovo</td>
+                <td>Residence</td>
+                <td>AED 12,750.00</td>
+                <td>AED 12,750.00</td>
+                <td>AED 0.00</td>
+                <td><span class="badge badge--paid">PAID</span></td>
+                <td class="actions-cell">
+                  <button type="button" class="btn btn--neutral btn--sm">View</button>
+                  <button type="button" class="btn btn--secondary btn--sm">Edit</button>
+                  <button type="button" class="btn btn--secondary btn--sm">Print</button>
+                  <button type="button" class="btn btn--secondary btn--sm">PDF</button>
+                  <button type="button" class="btn btn--danger btn--sm">Delete</button>
+                </td>
+              </tr>
+              <tr>
+                <td class="mono">AB-INV-1040</td>
+                <td>2026-09-12</td>
+                <td>AHMED KHALED</td>
+                <td>N12345678</td>
+                <td>Montenegro</td>
+                <td>Work Contract</td>
+                <td>AED 7,400.00</td>
+                <td>AED 0.00</td>
+                <td>AED 7,400.00</td>
+                <td><span class="badge badge--unpaid">UNPAID</span></td>
+                <td class="actions-cell">
+                  <button type="button" class="btn btn--neutral btn--sm">View</button>
+                  <button type="button" class="btn btn--secondary btn--sm">Edit</button>
+                  <button type="button" class="btn btn--secondary btn--sm">Print</button>
+                  <button type="button" class="btn btn--secondary btn--sm">PDF</button>
+                  <button type="button" class="btn btn--danger btn--sm">Delete</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="history-note">
+        Invoices are stored securely in the cloud. Export Data regularly to keep a JSON backup.
+      </div>
+    </div>
+  </body>
+</html>

@@ -170,8 +170,8 @@ export async function buildInvoicePdf(invoice) {
   let rowY = y;
   rowY = item('Customer Name', caps(invoice.customer?.name), M, rowY, colW);
   rowY = item('Nationality', caps(invoice.customer?.nationality), M + colW + 6, rowY, colW);
-  rowY = item('Passport Number', invoice.customer?.passport, M, rowY + 2, colW);
-  rowY = item('Phone', invoice.customer?.phone, M + colW + 6, rowY + 2, colW);
+  rowY = item('Passport Number', caps(invoice.customer?.passport), M, rowY + 2, colW);
+  rowY = item('Phone', caps(invoice.customer?.phone), M + colW + 6, rowY + 2, colW);
   rowY = item('Email', invoice.customer?.email, M, rowY + 2, colW);
   rowY = item('Destination', destinationLabel(invoice.travel?.destination), M + colW + 6, rowY + 2, colW);
 

@@ -1,0 +1,72 @@
+﻿<!doctype html>
+<html lang="en">
+  <head>
+  <link rel="stylesheet" href="../dist/assets/index-RHfJy8wx.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" />
+    <title>Preview — Delete password gate</title>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: #f5f6f8;
+      }
+      .demo-caption {
+        position: relative;
+        z-index: 1000;
+        padding: 10px 16px;
+        font: 12px/1.4 system-ui, sans-serif;
+        color: #5c6673;
+        background: #fff;
+        border-bottom: 1px solid #dfe3e8;
+      }
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        animation: none !important;
+      }
+
+      .modal {
+        animation: none !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="demo-caption">
+      Delete â†’ Confirm â†’ password gate (email + password of the signed-in account)
+    </div>
+
+    <div class="modal-overlay no-print" role="dialog" aria-modal="true">
+      <div class="modal">
+        <div class="modal__header">
+          <h3>Confirm your identity</h3>
+        </div>
+        <div class="modal__body">
+          <form id="confirm-auth-form" class="confirm-auth">
+            <p class="confirm-auth__reason">
+              Enter your account credentials to permanently delete invoice AB-INV-1042.
+            </p>
+
+            <div class="field">
+              <label for="confirm-auth-email">Email</label>
+              <input id="confirm-auth-email" type="email" value="admin@albalqan.com" />
+            </div>
+
+            <div class="field">
+              <label for="confirm-auth-password">Password</label>
+              <input id="confirm-auth-password" type="password" value="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" />
+            </div>
+
+            <span class="field__error confirm-auth__error">Incorrect email or password.</span>
+          </form>
+        </div>
+        <div class="modal__actions">
+          <button type="button" class="btn btn--neutral">Cancel</button>
+          <button type="submit" form="confirm-auth-form" class="btn btn--danger">
+            Confirm &amp; Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

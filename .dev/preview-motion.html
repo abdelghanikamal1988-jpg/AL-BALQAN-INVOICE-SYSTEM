@@ -1,0 +1,88 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="../dist/assets/index-RHfJy8wx.css" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" />
+<title>motion + date fields preview</title>
+<style>
+  body { margin: 0; background: var(--background); }
+</style>
+</head>
+<body>
+<div class="page" style="padding: 24px; max-width: 940px;">
+  <div class="card">
+    <div class="card__header"><span class="card__icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19.5 20.5v-1.7a4.3 4.3 0 0 0-4.3-4.3H8.8a4.3 4.3 0 0 0-4.3 4.3v1.7" /> <circle cx="12" cy="7.8" r="3.9" /></svg></span><h2>Personal Information</h2></div>
+    <div class="card__body">
+      <div class="cf-grid">
+        <div class="field"><label>First Name</label><input type="text" value="AHMED" /></div>
+        <div class="field"><label>Date of Birth</label><input type="date" value="1990-05-12" /></div>
+        <div class="field"><label>Passport Expiry</label><input type="date" value="2030-01-01" /></div>
+        <div class="field"><label>Nationality</label><select><option>Egyptian</option></select></div>
+      </div>
+    </div>
+  </div>
+
+  <section class="db-hero" id="hero">
+    <div class="db-hero__text">
+      <p class="db-hero__eyebrow">Dashboard</p>
+      <h1>Welcome back</h1>
+      <p class="db-hero__sub">Overview of invoices, clients and applications.</p>
+    </div>
+    <div class="db-hero__actions"><button class="btn btn--primary">New Invoice</button></div>
+  </section>
+
+  <div class="db-metrics">
+    <div class="card db-metric"><span class="db-metric__label">Total Clients</span><span class="db-metric__value">128</span></div>
+    <div class="card db-metric"><span class="db-metric__label">Invoices</span><span class="db-metric__value">346</span></div>
+    <div class="card db-metric"><span class="db-metric__label">Pending</span><span class="db-metric__value">17</span></div>
+    <div class="card db-metric"><span class="db-metric__label">Revenue</span><span class="db-metric__value db-metric__value--money">EGP 240,500</span></div>
+  </div>
+
+  <div style="margin-top: 20px; display: flex; gap: 10px;">
+    <button class="btn btn--primary">Continue</button>
+    <button class="btn btn--secondary">Cancel</button>
+  </div>
+</div>
+
+<script>
+  window.addEventListener('load', function () {
+    var out = [];
+    document.querySelectorAll('.field input, .field select').forEach(function (el) {
+      var r = el.getBoundingClientRect();
+      var cs = getComputedStyle(el);
+      out.push(
+        (el.type || el.tagName) +
+          ' h=' + r.height.toFixed(1) +
+          ' w=' + r.width.toFixed(1) +
+          ' fs=' + cs.fontSize +
+          ' pad=' + cs.paddingTop + '/' + cs.paddingLeft +
+          ' radius=' + cs.borderRadius +
+          ' border=' + cs.borderTopWidth + ' ' + cs.borderTopColor
+      );
+    });
+    var page = document.querySelector('.page');
+    var hero = document.getElementById('hero');
+    var metric = document.querySelector('.db-metric');
+    out.push('pageAnim=' + getComputedStyle(page).animationName + ' ' + getComputedStyle(page).animationDuration + ' fill=' + getComputedStyle(page).animationFillMode);
+    out.push('heroAnim=' + getComputedStyle(hero).animationName + ' opacity=' + getComputedStyle(hero).opacity + ' tf=' + getComputedStyle(hero).transform);
+    out.push('metricAnim=' + getComputedStyle(metric).animationName + ' delay=' + getComputedStyle(metric).animationDelay + ' opacity=' + getComputedStyle(metric).opacity);
+    var pre = document.createElement('pre');
+    pre.id = 'probe';
+    pre.textContent = out.join('\n');
+    document.body.appendChild(pre);
+
+    setTimeout(function () {
+      var o2 = [];
+      o2.push('t=' + performance.now().toFixed(0) + ' timeline=' + (document.timeline && document.timeline.currentTime ? document.timeline.currentTime.toFixed(0) : 'na'));
+      o2.push('hero opacity=' + getComputedStyle(hero).opacity + ' tf=' + getComputedStyle(hero).transform);
+      o2.push('metric opacity=' + getComputedStyle(metric).opacity);
+      var p2 = document.createElement('pre');
+      p2.id = 'probe2';
+      p2.textContent = o2.join('\n');
+      document.body.appendChild(p2);
+    }, 1500);
+  });
+</script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-export default function Modal({ title, onClose, children, actions, danger = false }) {
+export default function Modal({ title, onClose, children, actions, danger = false, className = '' }) {
   const overlayRef = useRef(null);
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export default function Modal({ title, onClose, children, actions, danger = fals
         if (e.target === overlayRef.current) onClose();
       }}
     >
-      <div className="modal">
+      <div className={className ? `modal ${className}` : 'modal'}>
         <div className="modal__header">
           <h3>{title}</h3>
         </div>

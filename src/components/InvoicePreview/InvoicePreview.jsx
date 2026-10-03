@@ -80,11 +80,11 @@ export default function InvoicePreview({ form, invoiceNumber }) {
                 </div>
                 <div className="invoice__customer-item">
                   <strong>Passport Number</strong>
-                  <span>{form.passport || '—'}</span>
+                  <span className="invoice__customer-value-upper">{form.passport || '—'}</span>
                 </div>
                 <div className="invoice__customer-item">
                   <strong>Phone</strong>
-                  <span>{form.phone || '—'}</span>
+                  <span className="invoice__customer-value-upper">{form.phone || '—'}</span>
                 </div>
                 <div className="invoice__customer-item">
                   <strong>Email</strong>

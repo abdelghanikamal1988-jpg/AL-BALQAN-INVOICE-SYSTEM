@@ -1,0 +1,427 @@
+/* ============================================================
+   AL BALQAN — Responsive layer (mobile & tablet).
+   Imported LAST in main.jsx so its rules win over the page
+   stylesheets — but only inside its media queries. Everything
+   for desktop (>= 1024px) stays exactly as designed; the only
+   unconditional rules here hide elements that exist purely for
+   small screens (menu button, drawer backdrop).
+   Breakpoints:
+     · <= 1023px  tablet — sidebar rail stays, modals adapt
+     · <= 767px   phone  — off-canvas drawer, stacked layouts
+   ============================================================ */
+
+/* ---------- small-screen-only elements (never on desktop) ---------- */
+
+.app-header__menu {
+  display: none;
+}
+
+.sidebar-backdrop {
+  display: none;
+}
+
+.db-act-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ============================== TABLET ============================== */
+
+@media (max-width: 1023px) {
+  /* The top nav links duplicate the sidebar rail — keep only the rail. */
+  .app-header__nav {
+    display: none;
+  }
+
+  .page {
+    padding: 20px;
+  }
+
+  /* The A4 sheet is 210mm wide — let the editor grid items shrink below
+     their content or the whole page shrink-to-fits (~825px) on phones. */
+  .editor-layout > * {
+    min-width: 0;
+  }
+
+  /* Modals: fit the viewport and scroll inside instead of clipping. */
+  .modal-overlay {
+    padding: 16px;
+  }
+
+  .modal {
+    max-height: calc(100vh - 32px);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .modal__body {
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .prv-diff th,
+  .prv-diff td {
+    padding: 8px 10px;
+  }
+}
+
+/* =============================== PHONE ============================== */
+
+@media (max-width: 767px) {
+  /* ---------- top bar ---------- */
+
+  .app-header__inner {
+    padding: 0 12px;
+    gap: 10px;
+  }
+
+  .app-header__menu {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 42px;
+    width: 42px;
+    height: 42px;
+    margin-left: -4px;
+    padding: 0;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text);
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+
+  .app-header__menu:active {
+    background: var(--background);
+  }
+
+  .app-header__logo {
+    width: 46px;
+    height: 46px;
+    flex-basis: 46px;
+  }
+
+  .app-header__avatar {
+    width: 38px;
+    height: 38px;
+    font-size: 13px;
+  }
+
+  .app-header__bell {
+    padding: 10px;
+  }
+
+  .app-header__nav {
+    display: none;
+  }
+
+  /* ---------- off-canvas navigation drawer ---------- */
+
+  .sidebar {
+    display: flex;
+    width: min(78vw, 300px);
+    transform: translateX(-101%);
+    transition: transform 0.22s ease;
+    z-index: 360;
+    box-shadow: none;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .sidebar.is-open {
+    transform: translateX(0);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .sidebar:hover,
+  .sidebar:focus-within {
+    width: min(78vw, 300px);
+  }
+
+  /* Touch devices have no hover — always show the labels. */
+  .sidebar__label {
+    opacity: 1;
+  }
+
+  .sidebar__link {
+    padding: 13px 14px;
+    font-size: 15px;
+  }
+
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: var(--header-h) 0 0;
+    z-index: 350;
+    background: rgba(16, 30, 54, 0.45);
+    animation: fade-in 0.15s ease;
+  }
+
+  /* ---------- page rhythm ---------- */
+
+  .page {
+    padding: 16px 14px calc(30px + env(safe-area-inset-bottom));
+  }
+
+  .page-header {
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .page-header h1 {
+    font-size: 21px;
+  }
+
+  .page-header .subtitle {
+    font-size: 13px;
+  }
+
+  /* ---------- touch-friendly controls ---------- */
+
+  .btn {
+    min-height: 44px;
+    padding: 12px 20px;
+  }
+
+  .btn--sm {
+    min-height: 38px;
+    padding: 9px 14px;
+  }
+
+  /* 16px stops iOS Safari from zooming into fields on focus. */
+  input:not([type='checkbox']):not([type='radio']),
+  select,
+  textarea {
+    font-size: 16px;
+  }
+
+  .field input,
+  .field select,
+  .searchbar input,
+  .history-filters__field input,
+  .history-filters__field select {
+    font-size: 16px;
+  }
+
+  .field input,
+  .field select {
+    min-height: 44px;
+  }
+
+  .searchbar {
+    min-height: 44px;
+  }
+
+  /* ---------- grids: denser on phones ---------- */
+
+  .stat-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+  }
+
+  /* ---------- dashboard ---------- */
+
+  .db-hero {
+    padding: 18px;
+    gap: 12px;
+  }
+
+  .db-approval {
+    flex-wrap: wrap;
+    gap: 10px 12px;
+    padding: 13px 14px;
+  }
+
+  .db-approval__text {
+    flex: 1 1 190px;
+    min-width: 0;
+  }
+
+  .db-approval .btn {
+    flex: 1 1 100%;
+  }
+
+  .db-act th,
+  .db-act td {
+    white-space: nowrap;
+    padding: 10px 12px;
+  }
+
+  .db-act__label {
+    max-width: 210px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* ---------- toolbars, filters, search ---------- */
+
+  .history-toolbar {
+    gap: 10px;
+  }
+
+  .history-toolbar .history-toolbar__search {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  .history-filters {
+    gap: 10px;
+  }
+
+  .history-filters__field {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  .history-filters__reset {
+    margin-left: 0;
+    flex: 1 1 100%;
+  }
+
+  /* ---------- tables ---------- */
+
+  .history-table,
+  .cl-table {
+    font-size: 13px;
+  }
+
+  .history-table th,
+  .history-table td {
+    padding: 10px 12px;
+  }
+
+  .cl-table th,
+  .cl-table td {
+    padding: 10px 11px;
+  }
+
+  /* ---------- modals ---------- */
+
+  .modal-overlay {
+    padding: 10px;
+  }
+
+  .modal {
+    max-height: calc(100vh - 20px);
+    max-height: calc(100dvh - 20px);
+  }
+
+  .modal__header {
+    padding: 15px 16px;
+  }
+
+  .modal__body {
+    padding: 16px;
+  }
+
+  .modal__actions {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 12px 16px calc(14px + env(safe-area-inset-bottom));
+  }
+
+  .modal__actions .btn {
+    flex: 1 1 130px;
+  }
+
+  /* ---------- approvals inbox + review diff ---------- */
+
+  .appr-row {
+    padding: 11px 12px;
+    gap: 10px;
+  }
+
+  .appr-row__title,
+  .appr-row__meta {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .prv-diff {
+    font-size: 12.5px;
+  }
+
+  .prv-diff th,
+  .prv-diff td {
+    padding: 7px 8px;
+  }
+
+  /* ---------- clients / client detail ---------- */
+
+  .cl-stats {
+    gap: 6px;
+  }
+
+  .cl-stat {
+    flex: 1 1 calc(50% - 6px);
+    justify-content: center;
+  }
+
+  .cd-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 8px;
+  }
+
+  .empty-state {
+    padding: 30px 16px;
+  }
+
+  /* ---------- create-invoice editor ---------- */
+
+  .editor-actions {
+    width: 100%;
+    gap: 8px;
+  }
+
+  .editor-actions .spacer {
+    display: none;
+  }
+
+  .editor-actions .btn {
+    flex: 1 1 140px;
+    justify-content: center;
+  }
+
+  .preview-toolbar {
+    gap: 8px;
+  }
+
+  .preview-toolbar h2 {
+    font-size: 15px;
+  }
+
+  /* ---------- login / no access ---------- */
+
+  .login-page {
+    padding: 16px;
+  }
+
+  .login-card {
+    padding: 26px 20px;
+  }
+
+  /* ---------- toasts ---------- */
+
+  .toast-container {
+    top: auto;
+    left: 12px;
+    right: 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom));
+    max-width: none;
+  }
+}
+
+/* ====================== PHONE (tiny screens) ======================= */
+
+@media (max-width: 560px) {
+  /* Marketing site grids use fixed px widths — relax them. */
+  .ws-destinations__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ws-hero__title {
+    font-size: 36px;
+  }
+}

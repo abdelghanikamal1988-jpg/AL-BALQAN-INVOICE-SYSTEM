@@ -1,0 +1,316 @@
+/* ============================================================
+   AL BALQAN — Admin > Users page
+   ============================================================ */
+
+.au-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.au-loading,
+.au-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 44px 20px;
+  color: var(--muted);
+}
+
+/* ------------------------------- table ------------------------------- */
+
+.au-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.au-table th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--border);
+}
+
+.au-table td {
+  padding: 12px 18px;
+  border-bottom: 1px solid #eef1f5;
+  vertical-align: middle;
+}
+
+.au-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.au-table tbody tr {
+  transition: background-color 0.15s ease;
+}
+
+.au-table tbody tr:hover {
+  background: #fafbfc;
+}
+
+.au-row--off td {
+  opacity: 0.55;
+}
+
+.au-name {
+  display: block;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.au-email {
+  display: block;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.au-date {
+  white-space: nowrap;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* -------------------------------- chips -------------------------------- */
+
+.au-chip {
+  display: inline-block;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  padding: 4px 10px;
+  white-space: nowrap;
+  background: #eaeef4;
+  color: var(--primary-dark);
+}
+
+.au-chip--admin {
+  background: var(--primary);
+  color: #fff;
+}
+
+.au-chip--employee {
+  background: #e7edf5;
+  color: var(--primary-dark);
+}
+
+.au-chip--delegate {
+  background: #f3eee1;
+  color: #8a6d1f;
+}
+
+.au-chip--custom {
+  background: #eef1f5;
+  color: var(--muted);
+}
+
+.au-status {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #1f7a3d;
+}
+
+.au-status::before {
+  content: '';
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #21a053;
+  margin-right: 6px;
+  vertical-align: 1px;
+}
+
+.au-status--off {
+  color: var(--muted);
+}
+
+.au-status--off::before {
+  background: #b6bcc4;
+}
+
+/* ------------------------------ row actions ------------------------------ */
+
+.au-actions {
+  white-space: nowrap;
+  text-align: right;
+}
+
+.au-actions .btn {
+  margin-left: 6px;
+}
+
+/* ------------------------------- the form ------------------------------- */
+
+.au-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.au-perms {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px 14px;
+  margin: 0;
+}
+
+.au-perms legend {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  padding: 0 6px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.au-perms__count {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+  background: var(--background);
+  border-radius: 999px;
+  padding: 2px 8px;
+}
+
+.au-perms__group {
+  margin: 10px 0 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.au-perms__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 7px 12px;
+}
+
+.au-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  color: var(--text);
+  cursor: pointer;
+  user-select: none;
+}
+
+.au-check input[type='checkbox'] {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--primary);
+  cursor: pointer;
+  flex: 0 0 16px;
+}
+
+.au-check--row {
+  margin-top: 2px;
+}
+
+/* --------------------------- add / edit user modal --------------------------- */
+
+.modal.au-modal {
+  max-width: 780px;
+  max-height: calc(100vh - 40px);
+  display: flex;
+  flex-direction: column;
+}
+
+.au-modal .modal__header {
+  padding: 14px 22px;
+}
+
+.au-modal .modal__body {
+  padding: 16px 22px;
+  overflow-y: auto;
+  flex: 1 1 auto;
+}
+
+.au-modal .modal__actions {
+  padding: 12px 22px 16px;
+}
+
+/* name | email, password | role — permissions span both columns */
+.au-modal .au-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 16px;
+}
+
+.au-modal .au-form > .au-perms,
+.au-modal .au-form > .au-check--row,
+.au-modal .au-form > .field__error {
+  grid-column: 1 / -1;
+}
+
+.au-modal .au-perms {
+  padding: 10px 14px 12px;
+}
+
+.au-modal .au-perms legend {
+  font-size: 12.5px;
+}
+
+.au-modal .au-perms__group {
+  margin: 6px 0 5px;
+  font-size: 10.5px;
+}
+
+.au-modal .au-perms__grid {
+  grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
+  gap: 5px 12px;
+}
+
+.au-modal .au-check {
+  font-size: 13px;
+  gap: 7px;
+}
+
+.au-modal .au-check input[type='checkbox'] {
+  width: 15px;
+  height: 15px;
+  flex-basis: 15px;
+}
+
+/* ------------------------------- responsive ------------------------------- */
+
+@media (max-width: 768px) {
+  .au-modal .au-form {
+    grid-template-columns: 1fr;
+  }
+
+  .au-table thead {
+    display: none;
+  }
+
+  .au-table tr {
+    display: block;
+    border-bottom: 1px solid var(--border);
+    padding: 10px 0;
+  }
+
+  .au-table td {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    border: none;
+    padding: 5px 16px;
+  }
+
+  .au-actions {
+    text-align: left;
+    flex-wrap: wrap;
+  }
+}

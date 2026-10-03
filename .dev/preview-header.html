@@ -1,0 +1,52 @@
+﻿<!doctype html>
+<html lang="en">
+  <head>
+  <link rel="stylesheet" href="../dist/assets/index-RHfJy8wx.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" />
+    <title>Preview — nav bar</title>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: var(--background);
+      }
+      .demo-note {
+        padding: 8px 16px;
+        font: 12px/1.5 system-ui, sans-serif;
+        color: #5c6673;
+        background: #fff;
+        border-bottom: 1px solid var(--border);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="demo-note">
+      Nav bar: no blue background / no yellow line, logo without the white box, brand
+      words removed, user circle neutral
+    </div>
+
+    <header class="app-header no-print">
+      <div class="app-header__inner">
+        <a href="#" class="app-header__brand" aria-label="AL BALQAN home">
+          <span class="app-header__logo">
+            <img src="../public/logo.png" alt="AL BALQAN logo" />
+          </span>
+        </a>
+
+        <nav class="app-header__nav" aria-label="Primary">
+          <a href="#" class="app-header__link is-active">Dashboard</a>
+          <a href="#" class="app-header__link">New Invoice</a>
+          <a href="#" class="app-header__link">Invoice History</a>
+          <a href="#" class="app-header__link">Clients</a>
+        </nav>
+
+        <span class="app-header__avatar" title="admin@albalqan.com">MA</span>
+      </div>
+    </header>
+
+    <div style="padding: 24px; font: 14px system-ui, sans-serif; color: #5c6673">
+      Page content...
+    </div>
+  </body>
+</html>

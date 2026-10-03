@@ -74,6 +74,73 @@
   min-width: 240px;
 }
 
+.history-filters {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 12px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: 14px 18px;
+  margin-bottom: 14px;
+}
+
+.history-filters__field {
+  flex: 0 1 178px;
+  min-width: 148px;
+}
+
+.history-filters__field label {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.history-filters__field select {
+  font-size: 13.5px;
+  padding: 9px 10px;
+}
+
+.history-filters__reset {
+  margin-left: auto;
+}
+
+.history-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 14px;
+}
+
+.history-summary__item {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 12.5px;
+  color: var(--muted);
+  box-shadow: var(--shadow-sm);
+}
+
+.history-summary__label {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.history-summary__item b {
+  color: var(--primary);
+  font-size: 14.5px;
+}
+
 .history-table-wrap {
   overflow-x: auto;
 }
@@ -97,9 +164,18 @@
 }
 
 .history-table td {
-  padding: 12px 14px;
+  padding: 10px 12px;
   border-bottom: 1px solid var(--border);
   vertical-align: middle;
+}
+
+/* dates, amounts and badges must never wrap into two lines */
+.history-table td:nth-child(2),
+.history-table td:nth-child(7),
+.history-table td:nth-child(8),
+.history-table td:nth-child(9),
+.history-table td:nth-child(10) {
+  white-space: nowrap;
 }
 
 .history-table tbody tr:hover {
@@ -119,7 +195,9 @@
 }
 
 .history-table .actions-cell .btn {
-  margin-right: 6px;
+  margin-right: 4px;
+  padding: 7px 9px;
+  font-size: 12.5px;
 }
 
 .history-table .actions-cell .btn:last-child {
@@ -146,7 +224,7 @@
 
 .preview-sticky {
   position: sticky;
-  top: 88px;
+  top: calc(var(--header-h) + 16px);
 }
 
 .preview-toolbar {
@@ -166,6 +244,14 @@
 .preview-scale {
   font-size: 12px;
   color: var(--muted);
+}
+
+/* Bottom-right actions under the live preview */
+.preview-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 12px;
 }
 
 .invoice-sheet-wrap {
@@ -557,5 +643,13 @@
 
   .invoice-sheet-wrap {
     max-height: none;
+  }
+
+  .history-filters__field {
+    flex: 1 1 160px;
+  }
+
+  .history-filters__reset {
+    margin-left: 0;
   }
 }

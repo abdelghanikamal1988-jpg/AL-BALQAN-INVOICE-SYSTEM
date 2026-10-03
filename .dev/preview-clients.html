@@ -1,0 +1,201 @@
+﻿<!doctype html>
+<html lang="en">
+  <head>
+  <link rel="stylesheet" href="../dist/assets/index-RHfJy8wx.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" />
+    <title>Preview — Clients list</title>
+  </head>
+  <body>
+    <div class="page page--wide clients-page">
+      <div class="page-header">
+        <div>
+          <h1>Clients</h1>
+          <p class="subtitle">Client applications, documents and linked invoices.</p>
+        </div>
+        <a href="#" class="btn btn--primary">+ New Client</a>
+      </div>
+
+      <div class="cl-stats">
+        <span class="cl-stat"><b>12</b> Clients</span>
+        <span class="cl-stat cl-stat--new"><b>3</b> NEW</span>
+        <span class="cl-stat cl-stat--docs"><b>2</b> DOCUMENTS SUBMITTED</span>
+        <span class="cl-stat cl-stat--review"><b>4</b> UNDER REVIEW</span>
+        <span class="cl-stat cl-stat--approved"><b>2</b> APPROVED</span>
+        <span class="cl-stat cl-stat--rejected"><b>1</b> REJECTED</span>
+      </div>
+
+      <div class="cl-toolbar">
+        <div class="field cl-toolbar__search">
+          <label for="client-search">Search</label>
+          <input
+            id="client-search"
+            type="search"
+            placeholder="Name, passport, country, agent, status..."
+          />
+        </div>
+        <div class="field cl-toolbar__agent">
+          <label for="client-agent">Referral agent</label>
+          <select id="client-agent">
+            <option>All agents</option>
+            <option>CUSTOMER</option>
+          </select>
+        </div>
+        <div class="field cl-toolbar__filter">
+          <label for="client-country">Nationality / country</label>
+          <select id="client-country">
+            <option>All countries</option>
+            <option>EGYPT</option>
+            <option>UNITED ARAB EMIRATES</option>
+            <option>JORDAN</option>
+          </select>
+        </div>
+        <div class="field cl-toolbar__filter">
+          <label for="client-status">Status</label>
+          <select id="client-status">
+            <option>All statuses</option>
+            <option>NEW</option>
+            <option>UNDER REVIEW</option>
+            <option>APPROVED</option>
+          </select>
+        </div>
+        <div class="field cl-toolbar__filter">
+          <label for="client-invoices">Invoices</label>
+          <select id="client-invoices">
+            <option>Any</option>
+            <option>With invoices</option>
+            <option>Without invoices</option>
+          </select>
+        </div>
+        <button type="button" class="btn btn--neutral btn--sm cl-toolbar__reset">Clear filters</button>
+      </div>
+
+      <p class="cl-summary">12 of 12 clients</p>
+
+      <div class="card">
+        <div class="cl-table-wrap">
+          <table class="cl-table">
+            <thead>
+              <tr>
+                <th>Client</th>
+                <th>Passport</th>
+                <th>Country</th>
+                <th>Referral Agent</th>
+                <th>Status</th>
+                <th>Invoices</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div class="cl-identity">
+                    <span class="cl-avatar">AA</span>
+                    <span>
+                      <span class="cl-name">AHMED KHALED AL MANSOURI</span>
+                      <span class="cl-sub">MALE</span>
+                    </span>
+                  </div>
+                </td>
+                <td><span class="cl-passport">N12345678</span></td>
+                <td>UNITED ARAB EMIRATES</td>
+                <td>CUSTOMER</td>
+                <td><span class="cbadge cbadge--approved">APPROVED</span></td>
+                <td>
+                  <button type="button" class="btn btn--neutral btn--sm">2 invoices</button>
+                </td>
+                <td class="actions-cell">
+                  <div class="cl-actions">
+                    <button type="button" class="btn btn--secondary btn--sm">View</button>
+                    <button type="button" class="btn btn--secondary btn--sm">Edit</button>
+                    <button type="button" class="btn btn--danger btn--sm">Delete</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="cl-identity">
+                    <span class="cl-avatar">SM</span>
+                    <span>
+                      <span class="cl-name">SARA MOHAMMED HASSAN</span>
+                      <span class="cl-sub">FEMALE</span>
+                    </span>
+                  </div>
+                </td>
+                <td><span class="cl-passport">P99887766</span></td>
+                <td>EGYPT</td>
+                <td>AL NOOR TRAVELS</td>
+                <td><span class="cbadge cbadge--docs">DOCUMENTS SUBMITTED</span></td>
+                <td>
+                  <button type="button" class="btn btn--neutral btn--sm">No invoice</button>
+                </td>
+                <td class="actions-cell">
+                  <div class="cl-actions">
+                    <button type="button" class="btn btn--secondary btn--sm">View</button>
+                    <button type="button" class="btn btn--secondary btn--sm">Edit</button>
+                    <button type="button" class="btn btn--danger btn--sm">Delete</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="cl-identity">
+                    <span class="cl-avatar">OI</span>
+                    <span>
+                      <span class="cl-name">OMAR IBRAHIM SALEH</span>
+                      <span class="cl-sub">MALE</span>
+                    </span>
+                  </div>
+                </td>
+                <td><span class="cl-passport">G55443322</span></td>
+                <td>JORDAN</td>
+                <td>CUSTOMER</td>
+                <td><span class="cbadge cbadge--review">UNDER REVIEW</span></td>
+                <td>
+                  <button type="button" class="btn btn--neutral btn--sm">1 invoice</button>
+                </td>
+                <td class="actions-cell">
+                  <div class="cl-actions">
+                    <button type="button" class="btn btn--secondary btn--sm">View</button>
+                    <button type="button" class="btn btn--secondary btn--sm">Edit</button>
+                    <button type="button" class="btn btn--danger btn--sm">Delete</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="cl-identity">
+                    <span class="cl-avatar">LK</span>
+                    <span>
+                      <span class="cl-name">LAYAN KHALID OMAR</span>
+                      <span class="cl-sub">FEMALE</span>
+                    </span>
+                  </div>
+                </td>
+                <td><span class="cl-passport">A11223344</span></td>
+                <td>SAUDI ARABIA</td>
+                <td>DESIREE TOURS</td>
+                <td><span class="cbadge cbadge--rejected">REJECTED</span></td>
+                <td>
+                  <button type="button" class="btn btn--neutral btn--sm">No invoice</button>
+                </td>
+                <td class="actions-cell">
+                  <div class="cl-actions">
+                    <button type="button" class="btn btn--secondary btn--sm">View</button>
+                    <button type="button" class="btn btn--secondary btn--sm">Edit</button>
+                    <button type="button" class="btn btn--danger btn--sm">Delete</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <p class="history-note">
+        Paid and remaining amounts are always read live from the invoice system — no payment data
+        is stored in the client record.
+      </p>
+    </div>
+  </body>
+</html>

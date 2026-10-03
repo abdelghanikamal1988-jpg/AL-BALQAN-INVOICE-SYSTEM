@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import Icon from '../Icons/Icon.jsx';
 import { formatNumber } from '../../utils/formatCurrency.js';
 import { calculatePayment, statusLabel, statusClass } from '../../utils/paymentCalculator.js';
 import { calculateVat, VAT_MODE, VAT_RATE_LABEL } from '../../utils/vat.js';
@@ -49,7 +50,7 @@ export default function PaymentSection({ form, errors, onChange }) {
   return (
     <section className="card" aria-label="Payment Details">
       <div className="card__header">
-        <span className="card__icon" aria-hidden="true">💳</span>
+        <span className="card__icon" aria-hidden="true"><Icon name="card" /></span>
         <h2>Payment Details</h2>
       </div>
       <div className="card__body">

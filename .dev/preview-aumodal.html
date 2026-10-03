@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="../dist/assets/index-RHfJy8wx.css" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" />
+<title>add-user modal fit test</title>
+<style>
+  /* static final state for pixel measurement */
+  .modal-overlay, .modal { animation: none !important; }
+</style>
+</head>
+<body>
+
+<div class="modal-overlay">
+  <div class="modal au-modal">
+    <div class="modal__header"><h3>Add user</h3></div>
+    <div class="modal__body">
+      <form class="au-form">
+        <div class="field"><label>Full name</label><input type="text" value="Sara Employee" /></div>
+        <div class="field"><label>Email</label><input type="email" value="sara@albalqan.com" /></div>
+        <div class="field"><label>Password</label><input type="password" value="password123" /><span class="field__hint">Minimum 8 characters. Tell the user this password.</span></div>
+        <div class="field"><label>Role</label>
+          <select><option>Admin</option><option selected>Employee</option><option>Delegate</option><option>Custom</option></select>
+          <span class="field__hint">Choosing a role fills the checklist below — you can still toggle anything.</span>
+        </div>
+        <fieldset class="au-perms">
+          <legend>Permissions <span class="au-perms__count">5 selected</span></legend>
+          <p class="au-perms__group">Pages</p>
+          <div class="au-perms__grid">
+            <label class="au-check"><input type="checkbox" checked /><span>Dashboard</span></label>
+            <label class="au-check"><input type="checkbox" checked /><span>New Invoice</span></label>
+            <label class="au-check"><input type="checkbox" /><span>Invoice History</span></label>
+            <label class="au-check"><input type="checkbox" checked /><span>Clients History</span></label>
+            <label class="au-check"><input type="checkbox" checked /><span>New Client</span></label>
+            <label class="au-check"><input type="checkbox" /><span>Users (admin panel)</span></label>
+          </div>
+          <p class="au-perms__group">Buttons &amp; actions</p>
+          <div class="au-perms__grid">
+            <label class="au-check"><input type="checkbox" checked /><span>Create / update invoices</span></label>
+            <label class="au-check"><input type="checkbox" /><span>Delete invoices</span></label>
+            <label class="au-check"><input type="checkbox" /><span>Print / export invoice PDF</span></label>
+            <label class="au-check"><input type="checkbox" /><span>Export data (JSON backup)</span></label>
+            <label class="au-check"><input type="checkbox" /><span>Import data (JSON restore)</span></label>
+            <label class="au-check"><input type="checkbox" /><span>Edit clients</span></label>
+            <label class="au-check"><input type="checkbox" /><span>Delete clients</span></label>
+            <label class="au-check"><input type="checkbox" /><span>Change client status</span></label>
+            <label class="au-check"><input type="checkbox" /><span>Upload client documents</span></label>
+            <label class="au-check"><input type="checkbox" /><span>Client PDF</span></label>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+    <div class="modal__actions">
+      <button class="btn btn--neutral">Cancel</button>
+      <button class="btn btn--primary">Create user</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

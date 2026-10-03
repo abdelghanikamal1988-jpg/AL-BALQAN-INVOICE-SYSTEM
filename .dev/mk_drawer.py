@@ -1,0 +1,7 @@
+s = open('.dev/preview-shell.html', encoding='utf-8').read()
+s = s.replace('class="sidebar no-print"', 'class="sidebar no-print is-open"')
+s = s.replace('        </aside>', '        </aside>\n        <div class="sidebar-backdrop"></div>')
+s = s.replace('aria-expanded="false"', 'aria-expanded="true"')
+s = s.replace('shell layout', 'shell layout (drawer open)')
+open('.dev/preview-shell-drawer.html', 'w', encoding='utf-8').write(s)
+print('ok')

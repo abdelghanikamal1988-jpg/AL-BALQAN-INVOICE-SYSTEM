@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useState } from 'react';
+import Icon from '../Icons/Icon.jsx';
 
 const ToastContext = createContext(null);
 
@@ -40,7 +41,7 @@ export function ToastProvider({ children }) {
               aria-label="Dismiss notification"
               onClick={() => dismiss(t.id)}
             >
-              ×
+              <Icon name="x" />
             </button>
           </div>
         ))}

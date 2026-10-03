@@ -2,51 +2,325 @@
    AL BALQAN — Dashboard specific styles
    ============================================================ */
 
-.dashboard-hero {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-darker) 100%);
+/* ---------- Hero / welcome ---------- */
+
+.db-hero {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--secondary);
   border-radius: var(--radius-lg);
-  padding: 40px 36px;
-  color: #fff;
+  box-shadow: var(--shadow-sm);
+  padding: 26px 28px;
   margin-bottom: 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 24px;
   flex-wrap: wrap;
+  animation: rise-in 0.4s ease backwards;
 }
 
-.dashboard-hero h1 {
-  color: #fff;
-  font-size: 26px;
-  margin-bottom: 8px;
+.db-hero__eyebrow {
+  margin: 0 0 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 
-.dashboard-hero p {
-  color: rgba(255, 255, 255, 0.82);
+.db-hero h1 {
+  font-size: 23px;
+  margin: 0 0 6px;
+}
+
+.db-hero__sub {
   margin: 0;
-  max-width: 560px;
+  color: var(--muted);
+  font-size: 14px;
+  max-width: 620px;
 }
 
-.dashboard-hero .dashboard-hero__action {
+.db-hero__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
   flex: 0 0 auto;
 }
 
-.storage-note {
-  margin-top: 20px;
-  font-size: 13px;
-  color: var(--muted);
-  background: #fff9e8;
-  border: 1px solid #f0e2b6;
-  border-radius: var(--radius-md);
-  padding: 12px 16px;
+/* ---------- Sections ---------- */
+
+.db-section {
+  margin-bottom: 24px;
 }
 
-.storage-note strong {
+.db-section__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.db-section__head h2 {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--primary-dark);
+  margin: 0;
+}
+
+.db-section__hint {
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.db-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+  gap: 12px;
+}
+
+.db-metric {
+  padding: 14px 16px;
+  animation: rise-in 0.42s ease backwards;
+}
+
+.db-metrics > .db-metric:nth-child(1) { animation-delay: 0.05s; }
+.db-metrics > .db-metric:nth-child(2) { animation-delay: 0.1s; }
+.db-metrics > .db-metric:nth-child(3) { animation-delay: 0.15s; }
+.db-metrics > .db-metric:nth-child(4) { animation-delay: 0.2s; }
+.db-metrics > .db-metric:nth-child(5) { animation-delay: 0.25s; }
+.db-metrics > .db-metric:nth-child(6) { animation-delay: 0.3s; }
+
+.db-metric__label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.db-metric__value {
+  display: block;
+  font-size: 25px;
+  font-weight: 700;
+  line-height: 1.15;
   color: var(--primary-dark);
 }
 
+.db-metric__value--money {
+  font-size: 19px;
+}
+
+/* ---------- Recent activity + status ---------- */
+
+.db-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+  margin-bottom: 24px;
+}
+
+.db-panel__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 15px 18px;
+  border-bottom: 1px solid var(--border);
+}
+
+.db-panel__head h2 {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--primary-dark);
+  margin: 0;
+}
+
+.db-panel__hint {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.db-empty {
+  margin: 0;
+  padding: 18px;
+  font-size: 13.5px;
+  color: var(--muted);
+}
+
+.db-act {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+
+.db-act th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 10px 18px;
+  border-bottom: 1px solid var(--border);
+}
+
+.db-act td {
+  padding: 11px 18px;
+  border-bottom: 1px solid #eef1f5;
+  vertical-align: middle;
+}
+
+.db-act tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.db-act__date {
+  white-space: nowrap;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.db-act__type {
+  display: inline-block;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--primary-dark);
+  background: #eaeef4;
+  border-radius: 999px;
+  padding: 3px 9px;
+  white-space: nowrap;
+}
+
+.db-act__label {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.db-act__detail {
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+/* ---------- Application status ---------- */
+
+.db-status {
+  padding: 10px 18px 16px;
+}
+
+.db-status__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 0;
+}
+
+.db-status__name {
+  flex: 0 0 auto;
+  width: 148px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.db-status__bar {
+  flex: 1;
+  height: 8px;
+  background: #eef1f5;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.db-status__fill {
+  display: block;
+  height: 100%;
+  background: var(--primary);
+  border-radius: 999px;
+  transition: width 0.6s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.db-status__count {
+  flex: 0 0 auto;
+  width: 20px;
+  text-align: right;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Utility row (backup / import) ---------- */
+
+.db-utility {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+  border-top: 1px solid var(--border);
+  padding-top: 14px;
+}
+
+.db-utility__note {
+  margin-right: auto;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 900px) {
+  .db-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 @media (max-width: 768px) {
-  .dashboard-hero {
-    padding: 28px 22px;
+  .db-hero {
+    padding: 22px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .db-hero h1 {
+    font-size: 20px;
+  }
+
+  .db-metrics {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .db-act th,
+  .db-act td {
+    padding: 10px 12px;
+  }
+
+  .db-act__detail {
+    display: none;
+  }
+
+  .db-status__name {
+    width: 120px;
+    font-size: 11.5px;
+  }
+
+  .db-utility {
+    justify-content: flex-start;
+  }
+
+  .db-utility__note {
+    margin-right: 0;
+    flex: 1 1 100%;
   }
 }

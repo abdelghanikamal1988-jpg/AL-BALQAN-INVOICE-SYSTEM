@@ -1,0 +1,8 @@
+[
+  ["sec0-bell", "document.querySelectorAll('.wrap > section')[0].style.setProperty('display','none','important')", "document.querySelectorAll('.wrap > section')[0].style.removeProperty('display')"],
+  ["sec1-approval", "document.querySelectorAll('.wrap > section')[1].style.setProperty('display','none','important')", "document.querySelectorAll('.wrap > section')[1].style.removeProperty('display')"],
+  ["sec2-chips", "document.querySelectorAll('.wrap > section')[2].style.setProperty('display','none','important')", "document.querySelectorAll('.wrap > section')[2].style.removeProperty('display')"],
+  ["sec3-table", "document.querySelectorAll('.wrap > section')[3].style.setProperty('display','none','important')", "document.querySelectorAll('.wrap > section')[3].style.removeProperty('display')"],
+  ["sec4-modal", "document.querySelectorAll('.wrap > section')[4].style.setProperty('display','none','important')", "document.querySelectorAll('.wrap > section')[4].style.removeProperty('display')"],
+  ["only-approval-el", "document.querySelectorAll('.db-approval').forEach(function(e){e.style.setProperty('display','none','important')})", "document.querySelectorAll('.db-approval').forEach(function(e){e.style.removeProperty('display')})"]
+]

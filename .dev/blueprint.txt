@@ -1,0 +1,226 @@
+# UI & SYSTEM MODIFICATION MASTER BLUEPRINT
+
+## CRITICAL RULE
+Modify ONLY the items explicitly defined below.
+DO NOT change, remove, rebuild, rename, or break any existing functionality, data, logic, invoice system, database structure, or unrelated UI.
+Preserve all current functionality exactly as-is.
+Before editing, inspect the existing system and implement the changes safely without affecting anything else.
+
+---
+
+## 1. GLOBAL UI RULES
+
+- Use MINIMAL, SIMPLE, MONOCHROME icons throughout the entire system.
+- No colorful icons.
+- Preserve all existing functionality and workflows unless explicitly changed below.
+- Do not introduce unnecessary features.
+
+---
+
+## 2. NAVBAR → LEFT SIDEBAR
+
+Move the current top NAVBAR to a LEFT vertical SIDEBAR.
+
+### Default state
+- Show ICONS ONLY.
+- Keep the sidebar compact.
+
+### Hover state
+- Expand the sidebar.
+- Show each icon's label beside it:
+  - DASHBOARD
+  - NEW INVOICE
+  - INVOICE HISTORY
+  - CLIENTS
+- Keep the interaction clean and minimal.
+
+### User profile
+- Remove the existing NEW INVOICE item from the top-right area.
+- Replace it with a circular user avatar:
+  - User photo, OR
+  - User initials.
+
+### Sign Out
+- Move SIGN OUT to the bottom of the left sidebar.
+- Do not keep a separate SIGN OUT button in the top-right.
+
+---
+
+## 3. CLIENTS NAVIGATION
+
+Split CLIENTS into two sections exactly like INVOICE HISTORY:
+
+- NEW CLIENT
+- CLIENTS HISTORY
+
+Do NOT keep NEW CLIENT as an internal tab inside the Clients page.
+
+---
+
+## 4. DASHBOARD
+
+Redesign the Dashboard content organization only.
+
+### Top
+- Simple welcome/header area.
+- Quick action: NEW CLIENT.
+- NEW INVOICE may remain available as a secondary quick action.
+
+### Client Overview
+Show:
+- TOTAL CLIENTS
+- NEW CLIENTS
+- UNDER REVIEW
+- APPROVED
+- REJECTED
+
+### Financial Overview
+Show:
+- TOTAL INVOICED
+- TOTAL PAID
+- TOTAL REMAINING
+- PARTIALLY PAID
+
+### Recent Activity
+Add a compact table showing recent:
+- Client activity
+- Applications
+- Payments
+- Status changes
+
+### Application Status
+Provide a simple summary of application statuses.
+
+### Remove from main Dashboard
+Do not make IMPORT DATA / EXPORT DATA large primary Dashboard actions.
+Keep existing functionality available in its appropriate existing area.
+
+---
+
+## 5. NEW INVOICE
+
+Keep all existing New Invoice functionality unchanged.
+
+The existing top buttons remain:
+- NEW INVOICE
+- CLEAR FORM
+- PRINT INVOICE
+- EXPORT PDF
+- SAVE INVOICE
+
+Keep the existing form on the left and LIVE PREVIEW on the right.
+
+### Additional bottom actions
+Add these buttons below the LIVE PREVIEW on the bottom-right:
+- EXPORT PDF
+- SAVE INVOICE
+
+Do NOT add a PRINT button to the bottom actions.
+
+### Required behavior
+- SAVE INVOICE → Save the invoice.
+- EXPORT PDF → Save the invoice AND export the PDF.
+- PRINT INVOICE → Save the invoice AND print the PDF.
+
+Do not remove or alter the existing top buttons.
+
+---
+
+## 6. INVOICE HISTORY
+
+Keep the existing invoice list and functionality.
+
+### Table
+The invoice list must display:
+- INVOICE NUMBER
+- DATE
+- CUSTOMER
+- PASSPORT
+- DESTINATION
+- SERVICE
+- TOTAL
+- PAID
+- REMAINING
+- STATUS
+- ACTIONS
+
+The table must fit properly without requiring inconvenient horizontal scrolling.
+
+### Search
+Keep the existing search functionality.
+
+### Filters
+Add filters for:
+- DATE
+- NATIONALITY
+- DESTINATION
+- SERVICE
+- STATUS
+
+Date filtering must allow selecting a period/month, e.g. viewing all invoices created in NOVEMBER.
+
+Nationality filtering must allow viewing counts/results by nationality, e.g. EGYPTIAN, SYRIAN, PALESTINIAN.
+
+### Actions
+Keep the existing actions for each invoice:
+- EDIT
+- PRINT PDF
+- DELETE
+
+### Financial summary
+Show:
+- TOTAL PAID
+- TOTAL REMAINING
+
+Do not add other changes to Invoice History.
+
+---
+
+## 7. CLIENTS / CLIENT HISTORY
+
+Keep the existing Clients functionality.
+
+Add filters only for:
+- NATIONALITY / COUNTRY
+- REFERRAL AGENT
+- STATUS
+- INVOICES
+
+Do not change other functionality.
+
+---
+
+## 8. SESSION SECURITY / AUTO LOGOUT
+
+Implement an activity-based session timeout.
+
+### Rules
+- SESSION TIMEOUT: 30 MINUTES OF INACTIVITY.
+- This is an IDLE/INACTIVITY timeout, NOT a fixed session duration.
+- Any genuine user activity resets the inactivity timer.
+- Activity includes interaction with the system such as clicking, typing, navigation, or other active interaction.
+- If the user remains active, the session must remain open indefinitely, even for multiple days.
+- After 30 continuous minutes with no activity, automatically log the user out.
+- Return the user to the LOGIN page after automatic logout.
+- NO WARNING or countdown notification before logout.
+- Simply leaving the system open is NOT considered activity.
+- Do not change the existing authentication behavior beyond this inactivity timeout.
+
+---
+
+## FINAL SAFETY REQUIREMENT
+
+IMPLEMENT ONLY THE CHANGES SPECIFIED IN THIS BLUEPRINT.
+
+DO NOT:
+- Break existing functionality.
+- Change existing business logic.
+- Change invoice calculations.
+- Change existing database data unnecessarily.
+- Rebuild the Invoice System.
+- Duplicate existing functionality.
+- Modify unrelated pages or components.
+- Introduce additional features.
+- Change any functionality not explicitly mentioned above.
+
+The existing system must continue working exactly as it does today, with ONLY the specified modifications applied.

@@ -19,7 +19,8 @@ invoices for visa & residence services.
 | Website | www.albalqan.com |
 | Currency | AED |
 
-> Invoices are stored locally in the browser. They are **not** sent to any server.
+> Invoices and client records are stored in **Supabase** (per-user, protected by row level
+> security). Only the unfinished draft stays in the browser.
 
 ---
 
@@ -59,15 +60,18 @@ npm run preview
 
 ## Deploy to Netlify
 
+Netlify is the only deployment target. Build settings live in `netlify.toml`
+(build command `npm run build`, publish directory `dist`, Node 20, SPA redirect).
+
 1. Connect the repository (or drag-and-drop the `dist` folder).
-2. Build settings:
-   - Build command: `npm run build`
-   - Publish directory: `dist`
-3. The project ships with a `public/_redirects` file:
-   ```
-   /*    /index.html   200
-   ```
-   This makes client-side routes (e.g. `/history`, `/edit/abc`) work without 404s.
+2. In **Site configuration > Environment variables** add the Supabase keys
+   (`.env` is gitignored, so Netlify does not receive them from the repo):
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_ANON_KEY`
+3. Deploy.
+
+Client-side routes (e.g. `/history`, `/edit/abc`) work without 404s because
+`netlify.toml` and `public/_redirects` both serve `index.html` for every path.
 
 ---
 
@@ -109,6 +113,30 @@ The form, preview, PDF and history update automatically.
 
 ---
 
+## Clients (application & documents)
+
+A separate module for client applications — it **never** touches the invoice records.
+
+- **Setup:** run `supabase/clients.sql` once in the Supabase SQL editor (after
+  `supabase/schema.sql`). It creates `referral_agents`, `clients` and the two private storage
+  buckets `client-documents` / `client-pdfs`.
+- **Pages:** `/clients` (list, search, agent filter), `/clients/new`,
+  `/clients/:id` (record, documents, status, PDF), `/clients/:id/edit`.
+- **Required fields:** Name, Father Name, Surname, Country, Passport No., Date of Birth,
+  Date of Issue, Date of Expiry, Issuing Place, Place of Birth, Sex, Referral Agent
+  (text fields are typed and displayed in uppercase).
+- **Documents:** exactly three slots — Passport, ID, Personal Photo (JPG/PNG/PDF, max 10 MB each).
+  They are optional; saving without them asks for confirmation.
+- **PDF:** generated with `pdf-lib` **on top of** `src/assets/letterhead.pdf`, which is loaded as-is
+  (never redrawn) and **inlined into the bundle** as a data URI — no runtime download, so browser
+  extensions/ad-blockers can never block it (`ERR_BLOCKED_BY_CLIENT`). The page size is read from
+  the template, so replacing the file with an A4 export needs no code change. The result is stored
+  in the `client-pdfs` bucket and downloaded.
+- **Invoices:** amounts are matched by normalised passport number and read live from the invoice
+  system. No money is stored in the client record.
+
+---
+
 ## PDF export
 
 PDF export uses **[jsPDF](https://github.com/parallax/jsPDF)** and draws the invoice directly as a
@@ -132,12 +160,14 @@ Printing uses the browser's own print dialog on the current page (`window.print(
 
 ## Storage
 
-- Invoices: `localStorage` key `albalqan_invoices`
+- Invoices: Supabase table `public.invoices` (one JSONB `data` column, row level security)
+- Clients: Supabase table `public.clients`, agents: `public.referral_agents`
+- Documents / generated client PDFs: Supabase Storage buckets `client-documents`, `client-pdfs`
 - Unfinished draft: `localStorage` key `albalqan_invoice_draft`
 
-All storage access lives in `src/utils/storage.js`. The UI never touches `localStorage` directly,
-so this layer can be replaced with a REST API / Supabase / Firebase in the future without rewriting
-the components.
+All access lives in `src/utils/storage.js` (invoices), `src/lib/invoiceRepo.js`,
+`src/lib/clientRepo.js` and `src/utils/uploads.js` (clients). The UI never calls Supabase
+directly, so this layer can be replaced without rewriting the components.
 
 ### Backup
 
@@ -170,11 +200,19 @@ src/
 ├── pages/
 │   ├── Dashboard/
 │   ├── CreateInvoice/
-│   └── InvoiceHistory/
+│   ├── InvoiceHistory/
+│   ├── Clients/
+│   ├── ClientForm/
+│   └── ClientDetail/
+├── lib/
+│   ├── supabase.js
+│   ├── invoiceRepo.js
+│   └── clientRepo.js
 ├── data/
 │   ├── company.js
 │   ├── services.js
-│   └── destinations.js
+│   ├── destinations.js
+│   └── clientStatuses.js
 ├── utils/
 │   ├── invoiceNumber.js
 │   ├── paymentCalculator.js
@@ -184,10 +222,15 @@ src/
 │   ├── storage.js
 │   ├── pdf.js
 │   ├── print.js
-│   └── validation.js
+│   ├── validation.js
+│   ├── vat.js
+│   ├── clients.js
+│   ├── clientPdf.js
+│   └── uploads.js
 └── styles/
     ├── global.css
     ├── dashboard.css
     ├── invoice.css
+    ├── clients.css
     └── print.css
 ```

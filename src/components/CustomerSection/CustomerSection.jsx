@@ -1,10 +1,12 @@
+import Icon from '../Icons/Icon.jsx';
+
 export default function CustomerSection({ form, errors, onChange, inputRef }) {
   const set = (field) => (e) => onChange(field, e.target.value);
 
   return (
     <section className="card" aria-label="Customer Information">
       <div className="card__header">
-        <span className="card__icon" aria-hidden="true">👤</span>
+        <span className="card__icon" aria-hidden="true"><Icon name="user" /></span>
         <h2>Customer Information</h2>
       </div>
       <div className="card__body">
@@ -23,8 +25,8 @@ export default function CustomerSection({ form, errors, onChange, inputRef }) {
             {errors.name && <span className="field__error">{errors.name}</span>}
           </div>
 
-          <div className="field">
-            <label htmlFor="customer-nationality">Nationality</label>
+          <div className={`field ${errors.nationality ? 'field--error' : ''}`}>
+            <label htmlFor="customer-nationality">Nationality *</label>
             <input
               id="customer-nationality"
               type="text"
@@ -33,10 +35,11 @@ export default function CustomerSection({ form, errors, onChange, inputRef }) {
               placeholder="e.g. Egypt"
               autoComplete="nationality"
             />
+            {errors.nationality && <span className="field__error">{errors.nationality}</span>}
           </div>
 
-          <div className="field">
-            <label htmlFor="customer-passport">Passport Number</label>
+          <div className={`field ${errors.passport ? 'field--error' : ''}`}>
+            <label htmlFor="customer-passport">Passport Number *</label>
             <input
               id="customer-passport"
               type="text"
@@ -45,10 +48,11 @@ export default function CustomerSection({ form, errors, onChange, inputRef }) {
               placeholder="Passport number"
               autoComplete="off"
             />
+            {errors.passport && <span className="field__error">{errors.passport}</span>}
           </div>
 
-          <div className="field">
-            <label htmlFor="customer-phone">Phone Number</label>
+          <div className={`field ${errors.phone ? 'field--error' : ''}`}>
+            <label htmlFor="customer-phone">Phone Number *</label>
             <input
               id="customer-phone"
               type="tel"

@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+  <link rel="stylesheet" href="../dist/assets/index-RHfJy8wx.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fugaz+One&family=Inter:wght@300;400;500;600;700&family=Prompt:wght@200;300;400;500;600&display=swap" rel="stylesheet" />
+    <title>Create Invoice render test</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import React from 'react';
+      import { createRoot } from 'react-dom/client';
+      import { MemoryRouter } from 'react-router-dom';
+      import CreateInvoice from '/src/pages/CreateInvoice/CreateInvoice.jsx';
+      import { AuthProvider } from '/src/context/AuthContext.jsx';
+      import { ToastProvider } from '/src/components/Toast/ToastProvider.jsx';
+
+      const e = React.createElement;
+      createRoot(document.getElementById('root')).render(
+        e(MemoryRouter, { initialEntries: ['/create'] },
+          e(AuthProvider, null,
+            e(ToastProvider, null,
+              e(CreateInvoice, null))))
+      );
+    </script>
+  </body>
+</html>

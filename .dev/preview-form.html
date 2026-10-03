@@ -1,0 +1,136 @@
+﻿<!doctype html>
+<html lang="en">
+  <head>
+  <link rel="stylesheet" href="../dist/assets/index-RHfJy8wx.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" />
+    <title>Preview — New client</title>
+  </head>
+  <body>
+    <div class="page page--wide clients-page">
+      <div class="page-header">
+        <div>
+          <h1>New Client</h1>
+          <p class="subtitle">All fields are required. Documents are optional.</p>
+        </div>
+        <div class="editor-actions">
+          <button type="button" class="btn btn--neutral">Cancel</button>
+          <button type="submit" class="btn btn--primary">Save Client</button>
+        </div>
+      </div>
+
+      <form class="editor-layout">
+        <div class="editor-form">
+          <section class="card">
+            <div class="card__header">
+              <span class="card__icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19.5 20.5v-1.7a4.3 4.3 0 0 0-4.3-4.3H8.8a4.3 4.3 0 0 0-4.3 4.3v1.7" /> <circle cx="12" cy="7.8" r="3.9" /></svg></span>
+              <h2>Personal Details</h2>
+            </div>
+            <div class="card__body">
+              <p class="cf-section__note">Exactly as written in the passport.</p>
+              <div class="cf-grid">
+                <div class="field">
+                  <label for="f1">Name<span class="cf-req">*</span></label>
+                  <input id="f1" type="text" value="AHMED" />
+                </div>
+                <div class="field">
+                  <label for="f2">Father Name<span class="cf-req">*</span></label>
+                  <input id="f2" type="text" value="KHALED" />
+                </div>
+                <div class="field">
+                  <label for="f3">Surname<span class="cf-req">*</span></label>
+                  <input id="f3" type="text" value="AL MANSOURI" />
+                </div>
+                <div class="field">
+                  <label for="f4">Sex<span class="cf-req">*</span></label>
+                  <select id="f4"><option>Male</option></select>
+                </div>
+                <div class="field">
+                  <label for="f5">Date of Birth<span class="cf-req">*</span></label>
+                  <input id="f5" type="date" value="1990-05-14" />
+                </div>
+                <div class="field">
+                  <label for="f6">Place of Birth<span class="cf-req">*</span></label>
+                  <input id="f6" type="text" value="AL AIN" />
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="card__header">
+              <span class="card__icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 7.5a2 2 0 0 1 2-2h3.2l2.1 2.6h7.7a2 2 0 0 1 2 2v7.9a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2z" /></svg></span>
+              <h2>Passport Details</h2>
+            </div>
+            <div class="card__body">
+              <p class="cf-section__note">Text is converted to uppercase automatically.</p>
+              <div class="cf-grid">
+                <div class="field">
+                  <label for="p1">Passport No.<span class="cf-req">*</span></label>
+                  <input id="p1" type="text" value="N12345678" />
+                </div>
+                <div class="field field--error">
+                  <label for="p2">Country Name<span class="cf-req">*</span></label>
+                  <input id="p2" type="text" value="" />
+                  <span class="field__error">Country is required.</span>
+                </div>
+                <div class="field">
+                  <label for="p3">Date of Issue<span class="cf-req">*</span></label>
+                  <input id="p3" type="date" value="2022-01-10" />
+                </div>
+                <div class="field">
+                  <label for="p4">Date of Expiry<span class="cf-req">*</span></label>
+                  <input id="p4" type="date" value="2032-01-09" />
+                </div>
+                <div class="field">
+                  <label for="p5">Issuing Place<span class="cf-req">*</span></label>
+                  <input id="p5" type="text" value="ABU DHABI" />
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="card__header">
+              <span class="card__icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.19 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" /></svg></span>
+              <h2>Documents</h2>
+            </div>
+            <div class="card__body">
+              <div class="cf-docs">
+                <div class="cf-doc">
+                  <div class="cf-doc__label">Passport</div>
+                  <div class="cf-doc__thumb">No file</div>
+                  <div class="cf-doc__btns">
+                    <label class="btn btn--secondary btn--sm">Upload</label>
+                  </div>
+                </div>
+                <div class="cf-doc">
+                  <div class="cf-doc__label">ID</div>
+                  <img
+                    class="cf-doc__thumb"
+                    src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='140'%3E%3Crect width='200' height='140' fill='%23dfe6f0'/%3E%3Ctext x='100' y='75' font-family='Arial' font-size='14' text-anchor='middle' fill='%235c6673'%3EID%3C/text%3E%3C/svg%3E"
+                  />
+                  <div class="cf-doc__file">emirates-id-front.jpg</div>
+                  <div class="cf-doc__btns">
+                    <label class="btn btn--secondary btn--sm">Replace</label>
+                    <button type="button" class="btn btn--danger btn--sm">Remove</button>
+                  </div>
+                </div>
+                <div class="cf-doc">
+                  <div class="cf-doc__label">Photo</div>
+                  <div class="cf-doc__thumb">PDF document</div>
+                  <div class="cf-doc__file">photo-scan.pdf</div>
+                  <div class="cf-doc__btns">
+                    <label class="btn btn--secondary btn--sm">Replace</label>
+                    <button type="button" class="btn btn--danger btn--sm">Remove</button>
+                  </div>
+                </div>
+              </div>
+              <p class="legend">Documents are optional — you can save the client without them.</p>
+            </div>
+          </section>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>

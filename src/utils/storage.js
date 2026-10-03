@@ -45,10 +45,18 @@ export async function deleteInvoice(id) {
  * small business volume of invoices.
  */
 export async function searchInvoices(query) {
-  const q = String(query || '').trim().toLowerCase();
   const all = await dbFetchAll();
-  if (!q) return all;
-  return all.filter((inv) => {
+  return filterInvoices(all, query);
+}
+
+/**
+ * Pure in-memory filter over an already loaded list — used by the invoice
+ * history filters without touching the database again.
+ */
+export function filterInvoices(list, query) {
+  const q = String(query || '').trim().toLowerCase();
+  if (!q) return list;
+  return (list || []).filter((inv) => {
     const haystack = [
       inv.invoiceNumber,
       inv.customer?.name,
@@ -73,8 +81,9 @@ export async function importInvoices(incoming) {
 }
 
 /**
- * One-time migration: on first run against an empty table, copy any
- * invoices already saved in localStorage into the database.
+ * One-time migration: copy any invoices already saved in localStorage into
+ * the database, then clear the local copy so it cannot resurrect invoices
+ * that were later deleted in the cloud.
  */
 export async function migrateLocalInvoices() {
   try {
@@ -87,11 +96,16 @@ export async function migrateLocalInvoices() {
     const existingIds = new Set(all.map((inv) => inv.id));
     const fresh = local.filter((inv) => inv && inv.id && !existingIds.has(inv.id));
 
+    let added = 0;
     if (fresh.length > 0) {
       await dbInsertMany(fresh);
-      return fresh.length;
+      added = fresh.length;
     }
-    return 0;
+    /* One-time import: once the local copy has been handled it is removed,
+       so invoices deleted in the cloud can never be brought back from this
+       device on the next sign-in. */
+    localStorage.removeItem('albalqan_invoices');
+    return added;
   } catch (err) {
     return 0;
   }

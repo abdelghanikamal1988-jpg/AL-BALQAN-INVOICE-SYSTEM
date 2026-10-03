@@ -1,5 +1,6 @@
 import services from '../../data/services.js';
 import destinations from '../../data/destinations.js';
+import Icon from '../Icons/Icon.jsx';
 
 export default function ServiceSection({ form, errors, onChange }) {
   const selectedService = services.find((s) => s.id === form.service) || null;
@@ -10,7 +11,7 @@ export default function ServiceSection({ form, errors, onChange }) {
   return (
     <section className="card" aria-label="Travel & Service">
       <div className="card__header">
-        <span className="card__icon" aria-hidden="true">✈️</span>
+        <span className="card__icon" aria-hidden="true"><Icon name="plane" /></span>
         <h2>Travel &amp; Service</h2>
       </div>
       <div className="card__body">

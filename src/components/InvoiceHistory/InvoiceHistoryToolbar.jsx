@@ -1,4 +1,5 @@
 import SearchBar from '../SearchBar/SearchBar.jsx';
+import Can from '../Can/Can.jsx';
 
 export default function InvoiceHistoryToolbar({ query, onChange, onExport, onImport, onClear }) {
   return (
@@ -6,12 +7,16 @@ export default function InvoiceHistoryToolbar({ query, onChange, onExport, onImp
       <div className="history-toolbar__search">
         <SearchBar value={query} onChange={onChange} placeholder="Search by invoice no., customer, passport or phone…" />
       </div>
-      <button type="button" className="btn btn--secondary btn--sm" onClick={onExport}>
-        Export Data
-      </button>
-      <button type="button" className="btn btn--secondary btn--sm" onClick={onImport}>
-        Import Data
-      </button>
+      <Can perm="action:invoice.export">
+        <button type="button" className="btn btn--secondary btn--sm" onClick={onExport}>
+          Export Data
+        </button>
+      </Can>
+      <Can perm="action:invoice.import">
+        <button type="button" className="btn btn--secondary btn--sm" onClick={onImport}>
+          Import Data
+        </button>
+      </Can>
       {onClear && (
         <button type="button" className="btn btn--neutral btn--sm" onClick={onClear}>
           Clear Search

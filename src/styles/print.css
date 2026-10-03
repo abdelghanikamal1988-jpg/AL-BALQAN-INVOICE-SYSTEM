@@ -29,9 +29,18 @@
 
   .no-print,
   .app-header,
+  .sidebar,
   .toast-container,
   .modal-overlay {
     display: none !important;
+  }
+
+  .app-shell {
+    display: block !important;
+  }
+
+  .app-shell__main {
+    margin-left: 0 !important;
   }
 
   /* ---------- Create mode ---------- */
