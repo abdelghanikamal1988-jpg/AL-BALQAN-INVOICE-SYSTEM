@@ -82,23 +82,23 @@
   display: inline-block;
   font-size: 10.5px;
   font-weight: 700;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   border-radius: 999px;
   padding: 4px 10px;
   white-space: nowrap;
-  background: #eaeef4;
-  color: var(--primary-dark);
+  background: var(--mist);
+  color: var(--text);
 }
 
 .au-chip--admin {
-  background: var(--primary);
+  background: var(--ink);
   color: #fff;
 }
 
 .au-chip--employee {
-  background: #e7edf5;
-  color: var(--primary-dark);
+  background: var(--mist);
+  color: var(--text);
 }
 
 .au-chip--delegate {

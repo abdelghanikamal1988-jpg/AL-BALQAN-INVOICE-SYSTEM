@@ -5,11 +5,10 @@
 /* ---------- Hero / welcome ---------- */
 
 .db-hero {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-left: 4px solid var(--secondary);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
+  background: var(--ink);
+  border: none;
+  border-radius: 4px;
+  box-shadow: none;
   padding: 26px 28px;
   margin-bottom: 24px;
   display: flex;
@@ -24,19 +23,20 @@
   margin: 0 0 6px;
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: rgba(255, 255, 255, 0.45);
 }
 
 .db-hero h1 {
   font-size: 23px;
   margin: 0 0 6px;
+  color: #fff;
 }
 
 .db-hero__sub {
   margin: 0;
-  color: var(--muted);
+  color: rgba(255, 255, 255, 0.6);
   font-size: 14px;
   max-width: 620px;
 }
@@ -47,6 +47,28 @@
   gap: 10px;
   flex-wrap: wrap;
   flex: 0 0 auto;
+}
+
+/* On the dark hero the polarity of the buttons flips. */
+.db-hero .btn--primary {
+  background: #fff;
+  color: var(--ink);
+}
+
+.db-hero .btn--primary:hover:not(:disabled) {
+  background: var(--mist);
+  box-shadow: none;
+}
+
+.db-hero .btn--secondary {
+  background: transparent;
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.db-hero .btn--secondary:hover:not(:disabled) {
+  border-color: #fff;
+  background: rgba(255, 255, 255, 0.08);
 }
 
 /* ---------- Sections ---------- */
@@ -66,9 +88,9 @@
 .db-section__head h2 {
   font-size: 13px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--primary-dark);
+  color: var(--text);
   margin: 0;
 }
 
@@ -110,7 +132,9 @@
   font-size: 25px;
   font-weight: 700;
   line-height: 1.15;
-  color: var(--primary-dark);
+  color: var(--text);
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
 }
 
 .db-metric__value--money {
@@ -140,9 +164,9 @@
 .db-panel__head h2 {
   font-size: 13px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--primary-dark);
+  color: var(--text);
   margin: 0;
 }
 
@@ -177,7 +201,7 @@
 
 .db-act td {
   padding: 11px 18px;
-  border-bottom: 1px solid #eef1f5;
+  border-bottom: 1px solid rgba(20, 20, 20, 0.06);
   vertical-align: middle;
 }
 
@@ -195,9 +219,10 @@
   display: inline-block;
   font-size: 10.5px;
   font-weight: 700;
-  letter-spacing: 0.05em;
-  color: var(--primary-dark);
-  background: #eaeef4;
+  letter-spacing: 0.08em;
+  color: var(--text);
+  background: var(--mist);
+  border: 1px solid rgba(20, 20, 20, 0.1);
   border-radius: 999px;
   padding: 3px 9px;
   white-space: nowrap;
@@ -237,7 +262,7 @@
 .db-status__bar {
   flex: 1;
   height: 8px;
-  background: #eef1f5;
+  background: rgba(20, 20, 20, 0.07);
   border-radius: 999px;
   overflow: hidden;
 }
@@ -245,9 +270,9 @@
 .db-status__fill {
   display: block;
   height: 100%;
-  background: var(--primary);
+  background: var(--ink);
   border-radius: 999px;
-  transition: width 0.6s cubic-bezier(0.22, 0.61, 0.36, 1);
+  transition: width 0.6s var(--ease);
 }
 
 .db-status__count {
@@ -256,7 +281,7 @@
   text-align: right;
   font-size: 13px;
   font-weight: 700;
-  color: var(--primary-dark);
+  color: var(--text);
   font-variant-numeric: tabular-nums;
 }
 

@@ -1425,6 +1425,153 @@ button {
   animation: page-rise 0.55s var(--ease) both;
 }
 
+/* ============================================================
+   AL BALQAN × Landing — fingerprint layer 2
+   Full visual restyle: ink controls, sharp geometry, dark gate.
+   Visual layer only; no behavior / layout contract changes.
+   ============================================================ */
+
+/* Sharp geometry — cards, controls and panels read like the landing.
+   The invoice sheet keeps its own radii from invoice.css tokens. */
+.card,
+.modal,
+.quick-action,
+.appr-row,
+.searchbar,
+.toast,
+.vat-fieldset,
+.login-tabs {
+  border-radius: 4px;
+}
+
+.btn,
+.btn--sm,
+.field input:not([type='checkbox']):not([type='radio']),
+.field select,
+.field textarea {
+  border-radius: 0;
+}
+
+.card,
+.quick-action {
+  box-shadow: none;
+}
+
+.card--muted,
+.quick-action {
+  background: var(--surface);
+}
+
+/* Primary control = ink (the landing CTA), secondary = hairline outline */
+.btn--primary {
+  background: var(--ink);
+  color: #fff;
+}
+
+.btn--primary:hover:not(:disabled) {
+  background: #000;
+  box-shadow: none;
+}
+
+.btn--secondary {
+  color: var(--text);
+  background: var(--surface);
+  border-color: rgba(20, 20, 20, 0.2);
+}
+
+.btn--secondary:hover:not(:disabled) {
+  border-color: var(--ink);
+  background: var(--mist);
+}
+
+.btn--neutral:hover:not(:disabled) {
+  color: var(--ink);
+  border-color: var(--ink);
+}
+
+.btn--secondary .btn__spinner,
+.btn--neutral .btn__spinner {
+  border-color: rgba(20, 20, 20, 0.25);
+  border-top-color: var(--ink);
+}
+
+/* Ink focus rings instead of gold */
+:focus-visible {
+  outline-color: var(--ink);
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  border-color: var(--ink);
+  box-shadow: 0 0 0 3px rgba(20, 20, 20, 0.1);
+}
+
+.searchbar:focus-within {
+  border-color: var(--ink);
+  box-shadow: 0 0 0 3px rgba(20, 20, 20, 0.1);
+}
+
+/* Surfaces and copy go monochrome ink */
+a {
+  color: var(--ink);
+}
+
+.card__icon {
+  background: rgba(20, 20, 20, 0.06);
+  color: var(--ink);
+}
+
+.stat-card .stat-card__value {
+  color: var(--text);
+}
+
+.app-header__link.is-active {
+  color: var(--text);
+  background: var(--mist);
+}
+
+.spinner {
+  border-color: rgba(20, 20, 20, 0.18);
+  border-top-color: var(--ink);
+}
+
+.modal-overlay {
+  background: rgba(20, 20, 20, 0.5);
+}
+
+.toast {
+  border-left-color: var(--ink);
+}
+
+/* Dark gate — the landing hero, restated */
+.login-page {
+  background: var(--ink);
+}
+
+.login-card h1 {
+  color: var(--text);
+}
+
+.login-card__logo {
+  border: 1px solid rgba(20, 20, 20, 0.1);
+  border-radius: 4px;
+  box-shadow: none;
+}
+
+.login-card__logo-fallback {
+  color: var(--ink);
+}
+
+.login-tabs {
+  background: var(--mist);
+}
+
+.login-tab.is-active {
+  color: var(--ink);
+  box-shadow: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

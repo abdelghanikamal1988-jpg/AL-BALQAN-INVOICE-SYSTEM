@@ -362,11 +362,11 @@
 /* ------------------------------ card accents ------------------------------ */
 
 .clients-page .card {
-  border-radius: var(--radius-lg);
+  border-radius: 4px;
 }
 
 .clients-page .card__header {
-  background: linear-gradient(180deg, #fbfcfe 0%, var(--surface) 100%);
+  background: var(--surface);
 }
 
 .clients-page .card__header h2 {
