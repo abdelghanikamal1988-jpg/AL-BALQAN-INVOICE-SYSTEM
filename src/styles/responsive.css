@@ -174,7 +174,8 @@
   }
 
   .page-header .subtitle {
-    font-size: 13px;
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
   }
 
   /* ---------- touch-friendly controls ---------- */
