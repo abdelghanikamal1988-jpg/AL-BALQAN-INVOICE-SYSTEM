@@ -156,10 +156,12 @@
   text-align: left;
   font-size: 12px;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--muted);
-  padding: 12px 14px;
-  border-bottom: 2px solid var(--primary);
+  letter-spacing: 0.14em;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.55);
+  background: var(--ink);
+  padding: 14px;
+  border-bottom: none;
   white-space: nowrap;
 }
 

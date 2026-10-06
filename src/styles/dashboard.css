@@ -5,49 +5,53 @@
 /* ---------- Hero / welcome ---------- */
 
 .db-hero {
-  background: var(--ink);
+  background: linear-gradient(rgba(20, 20, 20, 0.84), rgba(20, 20, 20, 0.92)),
+    url('../assets/hero-frame.jpg') center / cover no-repeat;
   border: none;
   border-radius: 4px;
   box-shadow: none;
-  padding: 44px 48px;
-  margin-bottom: 44px;
+  padding: 64px 48px;
+  margin-bottom: 56px;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  flex-wrap: wrap;
+  justify-content: center;
+  text-align: center;
+  gap: 0;
   animation: rise-in 0.4s ease backwards;
 }
 
 .db-hero__eyebrow {
-  margin: 0 0 12px;
+  margin: 0 0 16px;
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.3em;
+  letter-spacing: 0.35em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.45);
 }
 
 .db-hero h1 {
-  font-size: 32px;
+  font-size: 40px;
   letter-spacing: -0.02em;
-  margin: 0 0 8px;
+  margin: 0 0 16px;
   color: #fff;
 }
 
 .db-hero__sub {
-  margin: 0;
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 14px;
+  margin: 0 auto;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 15px;
   max-width: 620px;
 }
 
 .db-hero__actions {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
   flex-wrap: wrap;
   flex: 0 0 auto;
+  margin-top: 30px;
 }
 
 /* On the dark hero the polarity of the buttons flips. */
@@ -75,19 +79,21 @@
 /* ---------- Sections ---------- */
 
 .db-section {
-  margin-bottom: 44px;
+  margin-bottom: 52px;
 }
 
 .db-section__head {
   display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 18px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 10px;
+  margin-bottom: 26px;
 }
 
 .db-section__head h2 {
-  font-size: 21px;
+  font-size: 26px;
   font-weight: 700;
   letter-spacing: -0.01em;
   text-transform: none;
@@ -110,11 +116,18 @@
 .db-metrics {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
-  gap: 16px;
+  gap: 1px;
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 4px;
+  overflow: hidden;
 }
 
 .db-metric {
-  padding: 26px;
+  background: var(--ink);
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 34px 30px;
   animation: rise-in 0.42s ease backwards;
 }
 
@@ -131,7 +144,7 @@
   font-weight: 600;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: rgba(255, 255, 255, 0.45);
   margin-bottom: 14px;
 }
 
@@ -140,7 +153,7 @@
   font-size: 40px;
   font-weight: 700;
   line-height: 1.1;
-  color: var(--text);
+  color: #fff;
   font-family: var(--font-display);
   letter-spacing: -0.02em;
 }
@@ -202,9 +215,10 @@
   font-weight: 700;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: rgba(255, 255, 255, 0.55);
+  background: var(--ink);
   padding: 14px 26px;
-  border-bottom: 1px solid rgba(20, 20, 20, 0.15);
+  border-bottom: none;
 }
 
 .db-act td {
@@ -323,21 +337,25 @@
 
 @media (max-width: 768px) {
   .db-hero {
-    padding: 22px;
+    padding: 40px 24px;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
   }
 
   .db-hero h1 {
-    font-size: 20px;
+    font-size: 24px;
+  }
+
+  .db-hero__actions {
+    margin-top: 24px;
   }
 
   .db-section__head h2 {
-    font-size: 18px;
+    font-size: 20px;
   }
 
   .db-metric {
-    padding: 18px;
+    padding: 22px 18px;
   }
 
   .db-metrics {

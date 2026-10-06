@@ -14,6 +14,9 @@ def main():
     height = int(sys.argv[3])
     out = sys.argv[4]
     eval_js = sys.argv[5] if len(sys.argv) > 5 else None
+    if eval_js and eval_js.startswith("@"):
+        with open(eval_js[1:], "r", encoding="utf-8") as f:
+            eval_js = f.read()
     mobile = len(sys.argv) > 6 and sys.argv[6] == "mobile"
 
     t = new_target(url)

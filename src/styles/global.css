@@ -1545,9 +1545,10 @@ a {
   border-left-color: var(--ink);
 }
 
-/* Dark gate — the landing hero, restated */
+/* Dark gate — the landing hero, restated over its photography */
 .login-page {
-  background: var(--ink);
+  background: linear-gradient(rgba(20, 20, 20, 0.84), rgba(20, 20, 20, 0.92)),
+    url('../assets/login-frame.jpg') center / cover no-repeat;
 }
 
 .login-card h1 {
@@ -1793,6 +1794,54 @@ body {
 @media (max-width: 767px) {
   .app-header__cta {
     display: none;
+  }
+}
+
+/* ============================================================
+   AL BALQAN × Landing — fingerprint layer 5
+   Composition: centered section rhythm like the landing's
+   section headings, ink bands, dark table headers.
+   ============================================================ */
+
+/* Page titles read as centered landing section headings */
+.page-header {
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  gap: 22px;
+  margin-bottom: 44px;
+}
+
+.page-header h1 {
+  font-size: 38px;
+  letter-spacing: -0.02em;
+  margin-bottom: 10px;
+}
+
+.page-header .subtitle {
+  letter-spacing: 0.35em;
+}
+
+/* Login headline at landing scale */
+.login-card h1 {
+  font-size: 26px;
+  letter-spacing: -0.02em;
+}
+
+/* Panel titles: keep left-aligned hierarchy under centered page titles */
+.card__header h2 {
+  font-weight: 700;
+}
+
+@media (max-width: 767px) {
+  .page-header {
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .page-header h1 {
+    font-size: 24px;
   }
 }
 
