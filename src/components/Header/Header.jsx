@@ -61,6 +61,11 @@ export default function Header({ menuOpen = false, onMenuToggle }) {
         </nav>
 
         <div className="app-header__right">
+          {hasPerm('page:invoice.create') && (
+            <NavLink to="/create" className="app-header__cta">
+              New invoice
+            </NavLink>
+          )}
           {isAdmin && count > 0 && (
             <button
               type="button"

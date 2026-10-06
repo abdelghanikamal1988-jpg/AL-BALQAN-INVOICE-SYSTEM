@@ -10,8 +10,8 @@
   --secondary: #D5AF34;
   --secondary-dark: #b8952a;
 
-  /* Landing fingerprint: ink / ash / mist */
-  --background: #eff4f7;
+  /* Landing fingerprint: ink / ash / mist — canvas is pure white like the landing */
+  --background: #ffffff;
   --surface: #ffffff;
   --text: #141414;
   --muted: #555555;
@@ -28,7 +28,7 @@
   --radius-lg: 10px;
 
   /* Top bar height — the sidebar starts right below it. */
-  --header-h: 76px;
+  --header-h: 80px;
 
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.07);
@@ -1682,6 +1682,118 @@ body {
 
 .empty-state {
   padding: 72px 24px;
+}
+
+/* ============================================================
+   AL BALQAN × Landing — fingerprint layer 4
+   Exact landing language: white canvas, underline fields,
+   animated nav underlines, no decorative chrome.
+   ============================================================ */
+
+/* Fields exactly like the landing consultation form */
+.field input:not([type='checkbox']):not([type='radio']),
+.field select,
+.field textarea {
+  border: none;
+  border-bottom: 1px solid rgba(20, 20, 20, 0.2);
+  background: transparent;
+  border-radius: 0;
+  padding: 12px 2px 8px 0;
+  min-height: 44px;
+  box-shadow: none;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  border-bottom-color: var(--ink);
+  box-shadow: none;
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: rgba(20, 20, 20, 0.3);
+}
+
+.searchbar {
+  border: none;
+  border-bottom: 1px solid rgba(20, 20, 20, 0.2);
+  border-radius: 0;
+  background: transparent;
+}
+
+.searchbar:focus-within {
+  border-bottom-color: var(--ink);
+  box-shadow: none;
+}
+
+/* Header nav: landing hover underline (scale-x origin-right) */
+.app-header__link {
+  position: relative;
+  background: transparent;
+}
+
+.app-header__link:hover {
+  color: var(--ink);
+  background: transparent;
+}
+
+.app-header__link.is-active {
+  color: var(--ink);
+  background: transparent;
+  font-weight: 600;
+}
+
+.app-header__link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: var(--ink);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s ease-out;
+}
+
+.app-header__link:hover::after,
+.app-header__link.is-active::after {
+  transform: scaleX(1);
+}
+
+.app-header__bell:hover {
+  background: rgba(20, 20, 20, 0.06);
+}
+
+/* Header CTA — the landing's ink pill */
+.app-header__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--ink);
+  color: #fff;
+  border: 1px solid var(--ink);
+  padding: 12px 24px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.25s var(--ease), color 0.25s var(--ease);
+}
+
+.app-header__cta:hover {
+  background: #fff;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+@media (max-width: 767px) {
+  .app-header__cta {
+    display: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

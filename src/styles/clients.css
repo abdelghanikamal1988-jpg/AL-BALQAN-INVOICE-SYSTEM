@@ -203,11 +203,11 @@
 }
 
 .cl-table tbody tr:nth-child(even) {
-  background: #fbfcfe;
+  background: transparent;
 }
 
 .cl-table tbody tr:hover {
-  background: #f3f7fc;
+  background: rgba(20, 20, 20, 0.03);
 }
 
 .cl-table tbody tr {
