@@ -36,7 +36,7 @@ def main():
         "mobile": mobile, "screenWidth": width, "screenHeight": height,
     })
     cmd("Page.navigate", {"url": url})
-    time.sleep(3.5)
+    time.sleep(float(__import__("os").environ.get("CDP_WAIT", "6")))
     res = {}
     if eval_js:
         r = cmd("Runtime.evaluate", {"expression": eval_js, "returnByValue": True, "awaitPromise": False})
