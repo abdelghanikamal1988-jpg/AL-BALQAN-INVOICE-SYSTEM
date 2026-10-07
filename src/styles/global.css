@@ -1834,6 +1834,16 @@ body {
   font-weight: 700;
 }
 
+/* System logo renders pure black (the printed invoice keeps the gold mark) */
+.app-header__logo img,
+.login-card__logo img {
+  filter: brightness(0);
+}
+
+.app-header__logo-fallback {
+  color: var(--ink);
+}
+
 @media (max-width: 767px) {
   .page-header {
     gap: 16px;
