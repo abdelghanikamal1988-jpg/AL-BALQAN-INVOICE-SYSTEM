@@ -13,24 +13,24 @@
 /* ------------------------------ page header ------------------------------ */
 
 .clients-page .page-header {
-  align-items: center;
+  align-items: flex-start;
   background: transparent;
   border: none;
   border-radius: 0;
   box-shadow: none;
   padding: 0;
-  margin-bottom: 44px;
+  margin-bottom: 24px;
 }
 
 .clients-page .page-header h1 {
-  font-size: 38px;
+  font-size: 24px;
   letter-spacing: -0.02em;
-  margin-bottom: 10px;
+  margin-bottom: 6px;
 }
 
 .clients-page .page-header .subtitle {
-  font-size: 11px;
-  letter-spacing: 0.35em;
+  font-size: 13.5px;
+  letter-spacing: normal;
 }
 
 .clients-page .page-header .btn--primary {
@@ -53,11 +53,11 @@
 }
 
 .clients-page .cl-toolbar .field label {
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--text);
 }
 
 .clients-page .cl-toolbar__search {
@@ -79,7 +79,7 @@
 
 .clients-page #client-search {
   padding-left: 36px;
-  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235c6673' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236a6a6a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: 12px center;
 }
@@ -87,8 +87,8 @@
 .clients-page .field input,
 .clients-page .field select,
 .clients-page .field textarea {
-  border-color: #d9dee6;
-  border-radius: 8px;
+  border-color: var(--border);
+  border-radius: var(--radius-sm);
   font-size: 14.5px;
 }
 
@@ -96,7 +96,7 @@
 .clients-page .field select:focus,
 .clients-page .field textarea:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(20, 20, 20, 0.14);
+  box-shadow: 0 0 0 3px rgba(20, 20, 20, 0.08);
 }
 
 .clients-page .field--error input,
@@ -153,9 +153,9 @@
   flex: 0 0 7px;
 }
 
-.cl-stat--new::before { background: #7b879b; }
+.cl-stat--new::before { background: #141414; }
 .cl-stat--docs::before { background: #d5af34; }
-.cl-stat--submitted::before { background: #7b879b; }
+.cl-stat--submitted::before { background: #8a8a8a; }
 .cl-stat--review::before { background: #7c53c4; }
 .cl-stat--approved::before { background: #2e9e5b; }
 .cl-stat--rejected::before { background: #c62828; }
@@ -181,14 +181,14 @@
 
 .cl-table th {
   text-align: left;
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: rgba(255, 255, 255, 0.55);
-  padding: 14px 16px;
-  background: var(--ink);
-  border-bottom: none;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  padding: 11px 16px;
+  background: transparent;
+  border-bottom: 1px solid var(--border);
   white-space: nowrap;
 }
 
@@ -288,7 +288,7 @@
 
 .clients-page .cl-table .btn--neutral {
   background: transparent;
-  border-color: #d9dee6;
+  border-color: var(--border);
   color: var(--muted);
 }
 
@@ -324,9 +324,9 @@
 }
 
 .cbadge--new {
-  background: #eef2f7;
-  color: #3d4b60;
-  border-color: #d5dbe4;
+  background: var(--ink);
+  color: #fff;
+  border-color: var(--ink);
 }
 
 .cbadge--docs {
@@ -362,7 +362,7 @@
 /* ------------------------------ card accents ------------------------------ */
 
 .clients-page .card {
-  border-radius: 4px;
+  border-radius: var(--radius-lg);
 }
 
 .clients-page .card__header {
@@ -399,11 +399,11 @@
 }
 
 .clients-page .cf-grid .field label {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--text);
   margin-bottom: -1px;
 }
 
@@ -438,8 +438,8 @@
 .cf-agent-add input {
   flex: 1 1 200px;
   min-width: 160px;
-  border: 1px solid #d9dee6;
-  border-radius: 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
   padding: 9px 11px;
   font-family: inherit;
   font-size: 14px;
@@ -454,7 +454,7 @@
 }
 
 .cf-doc {
-  border: 1.5px dashed #ccd4de;
+  border: 1.5px dashed #d4d4d4;
   border-radius: 12px;
   padding: 14px;
   text-align: center;
@@ -573,11 +573,11 @@
 }
 
 .clients-page .cd-profile__select label {
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--text);
 }
 
 .cd-profile__actions {
@@ -717,7 +717,7 @@
 /* ------------------------------ invoices ------------------------------ */
 
 .clients-page .card__body .cl-table th {
-  background: var(--ink);
+  background: transparent;
 }
 
 .cd-totals {
@@ -770,7 +770,7 @@
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--muted);
-  border-bottom: 2px solid var(--primary);
+  border-bottom: 1px solid var(--border);
 }
 
 .cl-modal-inv tbody tr:nth-child(even) {
@@ -840,7 +840,7 @@
 
 @media (max-width: 720px) {
   .clients-page .page-header {
-    padding: 14px 16px;
+    padding: 0;
   }
 
   .clients-page .page-header h1 {

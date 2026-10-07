@@ -1,6 +1,6 @@
 /* ============================================================
-   AL BALQAN — Left sidebar navigation (desktop only)
-   Icons only by default, expands on hover / keyboard focus.
+   AL BALQAN — Left sidebar navigation (Nexus language)
+   White rail, always-visible labels, soft ink active pill.
    ============================================================ */
 
 .sidebar {
@@ -8,20 +8,13 @@
   top: var(--header-h);
   left: 0;
   bottom: 0;
-  width: 64px;
+  width: var(--sidebar-w);
   z-index: 300;
   display: flex;
   flex-direction: column;
-  background: var(--ink);
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--surface);
+  border-right: 1px solid var(--border);
   overflow: hidden;
-  transition: width 0.35s var(--ease);
-}
-
-.sidebar:hover,
-.sidebar:focus-within {
-  width: 236px;
-  box-shadow: var(--shadow-md);
 }
 
 .sidebar__nav {
@@ -29,7 +22,7 @@
   display: flex;
   flex-direction: column;
   gap: 3px;
-  padding: 16px 8px;
+  padding: 14px 10px;
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -37,73 +30,66 @@
 .sidebar__link {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 11px 12px;
+  gap: 12px;
+  padding: 9px 12px;
   border: none;
-  border-radius: 9px;
+  border-radius: var(--radius-md);
   background: transparent;
-  color: rgba(255, 255, 255, 0.55);
+  color: var(--muted);
   font-family: inherit;
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
+  font-size: 13.5px;
+  font-weight: 500;
   text-align: left;
   text-decoration: none;
   white-space: nowrap;
-  transition: background 0.25s var(--ease), color 0.25s var(--ease);
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
 .sidebar__link:hover {
-  background: rgba(255, 255, 255, 0.07);
-  color: #fff;
+  background: var(--hover);
+  color: var(--text);
   text-decoration: none;
 }
 
 .sidebar__link.is-active {
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
-  font-weight: 700;
+  background: var(--pill);
+  color: var(--text);
+  font-weight: 600;
 }
 
 .sidebar__link.is-active:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--pill);
 }
 
 .sidebar__icon {
-  flex: 0 0 24px;
-  width: 24px;
-  height: 24px;
+  flex: 0 0 20px;
+  width: 20px;
+  height: 20px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  color: currentColor;
 }
 
 .sidebar__icon svg {
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   display: block;
   transition: transform 0.18s ease;
 }
 
 .sidebar__link:hover .sidebar__icon svg {
-  transform: scale(1.08);
+  transform: scale(1.06);
 }
 
 .sidebar__label {
-  opacity: 0;
-  transition: opacity 0.15s ease;
-}
-
-.sidebar:hover .sidebar__label,
-.sidebar:focus-within .sidebar__label {
   opacity: 1;
 }
 
 .sidebar__foot {
   flex: 0 0 auto;
-  padding: 8px 8px 14px;
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 8px 10px 14px;
+  border-top: 1px solid var(--border);
 }
 
 @media (max-width: 767px) {

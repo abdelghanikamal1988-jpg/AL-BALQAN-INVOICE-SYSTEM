@@ -1,133 +1,122 @@
 /* ============================================================
-   AL BALQAN — Dashboard specific styles
+   AL BALQAN — Dashboard (Nexus language)
+   Light greeting, white KPI cards, hairline tables.
    ============================================================ */
 
-/* ---------- Hero / welcome ---------- */
+/* ---------- Greeting / page head ---------- */
 
 .db-hero {
-  background: linear-gradient(rgba(20, 20, 20, 0.84), rgba(20, 20, 20, 0.92)),
-    url('../assets/hero-frame.jpg') center / cover no-repeat;
+  background: transparent;
   border: none;
-  border-radius: 4px;
+  border-radius: 0;
   box-shadow: none;
-  padding: 64px 48px;
-  margin-bottom: 56px;
+  padding: 0;
+  margin-bottom: 28px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  text-align: center;
+  text-align: left;
   gap: 0;
   animation: rise-in 0.4s ease backwards;
 }
 
 .db-hero__eyebrow {
-  margin: 0 0 16px;
+  margin: 0 0 10px;
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.35em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--ink);
 }
 
 .db-hero h1 {
-  font-size: 40px;
+  font-size: 26px;
+  font-weight: 800;
   letter-spacing: -0.02em;
-  margin: 0 0 16px;
-  color: #fff;
+  margin: 0 0 8px;
+  color: var(--text);
 }
 
 .db-hero__sub {
-  margin: 0 auto;
-  color: rgba(255, 255, 255, 0.65);
-  font-size: 15px;
-  max-width: 620px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  max-width: 640px;
 }
 
 .db-hero__actions {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 10px;
   flex-wrap: wrap;
   flex: 0 0 auto;
-  margin-top: 30px;
-}
-
-/* On the dark hero the polarity of the buttons flips. */
-.db-hero .btn--primary {
-  background: #fff;
-  color: var(--ink);
-}
-
-.db-hero .btn--primary:hover:not(:disabled) {
-  background: var(--mist);
-  box-shadow: none;
-}
-
-.db-hero .btn--secondary {
-  background: transparent;
-  color: #fff;
-  border-color: rgba(255, 255, 255, 0.35);
-}
-
-.db-hero .btn--secondary:hover:not(:disabled) {
-  border-color: #fff;
-  background: rgba(255, 255, 255, 0.08);
+  margin-top: 20px;
 }
 
 /* ---------- Sections ---------- */
 
 .db-section {
-  margin-bottom: 52px;
+  margin-bottom: 40px;
 }
 
 .db-section__head {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
-  text-align: center;
-  gap: 10px;
-  margin-bottom: 26px;
+  justify-content: flex-start;
+  text-align: left;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.db-section__head::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--line);
 }
 
 .db-section__head h2 {
-  font-size: 26px;
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: -0.01em;
-  text-transform: none;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   color: var(--text);
   margin: 0;
 }
 
 .db-section__hint {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  letter-spacing: 0.18em;
   color: var(--muted);
+  white-space: nowrap;
 }
 
 .db-section__hint:hover {
   color: var(--ink);
 }
 
+/* ---------- KPI cards (white, bordered, Nexus metric tiles) ---------- */
+
 .db-metrics {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
-  gap: 1px;
-  background: rgba(255, 255, 255, 0.16);
-  border-radius: 4px;
-  overflow: hidden;
+  grid-template-columns: repeat(auto-fit, minmax(165px, 1fr));
+  gap: 14px;
+  background: transparent;
+  border-radius: 0;
+  overflow: visible;
 }
 
 .db-metric {
-  background: var(--ink);
-  border: none;
-  border-radius: 0;
-  box-shadow: none;
-  padding: 34px 30px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: 18px 20px;
   animation: rise-in 0.42s ease backwards;
 }
 
@@ -140,36 +129,36 @@
 
 .db-metric__label {
   display: block;
-  font-size: 10.5px;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.45);
-  margin-bottom: 14px;
+  font-size: 12.5px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--muted);
+  margin-bottom: 10px;
 }
 
 .db-metric__value {
   display: block;
-  font-size: 40px;
-  font-weight: 700;
+  font-size: 26px;
+  font-weight: 800;
   line-height: 1.1;
-  color: #fff;
+  color: var(--text);
   font-family: var(--font-display);
   letter-spacing: -0.02em;
 }
 
 .db-metric__value--money {
-  font-size: 27px;
+  font-size: 21px;
 }
 
-/* ---------- Recent activity + status ---------- */
+/* ---------- Recent activity + status panels ---------- */
 
 .db-grid {
   display: grid;
   grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
-  gap: 20px;
+  gap: 16px;
   align-items: start;
-  margin-bottom: 44px;
+  margin-bottom: 36px;
 }
 
 .db-panel__head {
@@ -178,12 +167,12 @@
   justify-content: space-between;
   gap: 12px;
   flex-wrap: wrap;
-  padding: 22px 26px;
+  padding: 16px 20px;
   border-bottom: 1px solid var(--border);
 }
 
 .db-panel__head h2 {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
   letter-spacing: -0.01em;
   text-transform: none;
@@ -192,13 +181,13 @@
 }
 
 .db-panel__hint {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--muted);
 }
 
 .db-empty {
   margin: 0;
-  padding: 26px;
+  padding: 24px 20px;
   font-size: 13.5px;
   color: var(--muted);
 }
@@ -211,24 +200,28 @@
 
 .db-act th {
   text-align: left;
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.55);
-  background: var(--ink);
-  padding: 14px 26px;
-  border-bottom: none;
+  color: var(--muted);
+  background: transparent;
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--border);
 }
 
 .db-act td {
-  padding: 16px 26px;
-  border-bottom: 1px solid rgba(20, 20, 20, 0.06);
+  padding: 13px 20px;
+  border-bottom: 1px solid var(--border);
   vertical-align: middle;
 }
 
 .db-act tbody tr:last-child td {
   border-bottom: none;
+}
+
+.db-act tbody tr:hover td {
+  background: #fafafa;
 }
 
 .db-act__date {
@@ -239,9 +232,9 @@
 
 .db-act__type {
   display: inline-block;
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.04em;
   color: var(--text);
   background: var(--mist);
   border: 1px solid rgba(20, 20, 20, 0.1);
@@ -263,7 +256,7 @@
 /* ---------- Application status ---------- */
 
 .db-status {
-  padding: 16px 26px 24px;
+  padding: 14px 20px 20px;
 }
 
 .db-status__row {
@@ -275,12 +268,12 @@
 
 .db-status__name {
   flex: 0 0 auto;
-  width: 170px;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--muted);
+  width: 160px;
+  font-size: 12.5px;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--text);
 }
 
 .db-status__bar {
@@ -336,30 +329,25 @@
 }
 
 @media (max-width: 768px) {
-  .db-hero {
-    padding: 40px 24px;
-    flex-direction: column;
-    align-items: center;
-  }
-
   .db-hero h1 {
-    font-size: 24px;
+    font-size: 22px;
   }
 
   .db-hero__actions {
-    margin-top: 24px;
+    margin-top: 16px;
   }
 
   .db-section__head h2 {
-    font-size: 20px;
+    font-size: 11.5px;
   }
 
   .db-metric {
-    padding: 22px 18px;
+    padding: 16px 16px;
   }
 
   .db-metrics {
     grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
   }
 
   .db-act th,
@@ -372,13 +360,12 @@
   }
 
   .db-status {
-    padding: 12px 16px 18px;
+    padding: 12px 16px 16px;
   }
 
   .db-status__name {
-    width: 120px;
-    font-size: 10.5px;
-    letter-spacing: 0.08em;
+    width: 110px;
+    font-size: 11.5px;
   }
 
   .db-utility {

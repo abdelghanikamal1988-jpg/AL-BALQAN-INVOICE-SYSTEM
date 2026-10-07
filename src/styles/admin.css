@@ -27,14 +27,14 @@
 
 .au-table th {
   text-align: left;
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.55);
-  background: var(--ink);
-  padding: 14px 20px;
-  border-bottom: none;
+  color: var(--muted);
+  background: transparent;
+  padding: 11px 20px;
+  border-bottom: 1px solid var(--border);
 }
 
 .au-table td {
@@ -108,7 +108,7 @@
 }
 
 .au-chip--custom {
-  background: #eef1f5;
+  background: #f1f1f1;
   color: var(--muted);
 }
 
@@ -134,7 +134,7 @@
 }
 
 .au-status--off::before {
-  background: #b6bcc4;
+  background: #b0b0b0;
 }
 
 /* ------------------------------ row actions ------------------------------ */

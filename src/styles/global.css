@@ -1,45 +1,52 @@
 ﻿/* ============================================================
-   AL BALQAN â€” Design System
-   All colors and tokens live here in one place.
+   AL BALQAN — Nexus design system (unified)
+   White + black identity, Nexus layout language.
+   All tokens live here in one place.
    ============================================================ */
 
 :root {
+  /* Identity: ink is the brand — black buttons, black active, black links */
   --primary: #141414;
   --primary-dark: #000000;
   --primary-darker: #000000;
   --secondary: #D5AF34;
   --secondary-dark: #b8952a;
 
-  /* Landing fingerprint: ink / ash / mist â€” canvas is pure white like the landing */
+  /* Surfaces (Nexus ground / line / ink, neutralized for AL BALQAN) */
+  --ground: #F6F7F7;
   --background: #ffffff;
   --surface: #ffffff;
   --text: #141414;
   --muted: #555555;
-  --border: rgba(20, 20, 20, 0.1);
+  --faint: #8A918C;
+  --border: #E4E7E6;
+  --line: #E4E7E6;
   --ink: #141414;
   --mist: #f4f4f4;
+  --pill: #EDEEEE;
+  --hover: #F5F6F5;
 
   --success: #2e7d32;
   --warning: #b26a00;
   --danger: #c62828;
 
-  --radius-sm: 4px;
-  --radius-md: 6px;
-  --radius-lg: 10px;
+  /* Nexus radii, adapted */
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
 
-  /* Top bar height â€” the sidebar starts right below it. */
-  --header-h: 80px;
+  --header-h: 64px;
+  --sidebar-w: 232px;
 
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
   --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.07);
   --shadow-lg: 0 14px 36px rgba(0, 0, 0, 0.12);
 
-  /* The one easing used across the whole landing */
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
 
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     'Helvetica Neue', Arial, sans-serif;
-  --font-display: 'Cal Sans', 'Inter', -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
 }
 
@@ -59,7 +66,7 @@ body {
   font-size: 15px;
   line-height: 1.55;
   color: var(--text);
-  background: var(--background);
+  background: var(--ground);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -74,7 +81,7 @@ h6 {
   color: var(--text);
   font-family: var(--font-display);
   font-weight: 700;
-  line-height: 1.2;
+  line-height: 1.25;
   letter-spacing: -0.01em;
 }
 
@@ -92,13 +99,18 @@ a:hover {
 }
 
 :focus-visible {
-  outline: 2px solid var(--secondary);
+  outline: 2px solid var(--ink);
   outline-offset: 2px;
 }
 
 button {
   font-family: inherit;
   cursor: pointer;
+}
+
+::selection {
+  background: var(--ink);
+  color: #fff;
 }
 
 /* ---------- Layout ---------- */
@@ -126,13 +138,13 @@ button {
 
 @media (min-width: 768px) {
   .app-shell__main {
-    margin-left: 64px;
+    margin-left: var(--sidebar-w);
   }
 }
 
 .page {
   flex: 1;
-  padding: 24px;
+  padding: 28px;
   max-width: 1200px;
   margin: 0 auto;
   width: 100%;
@@ -142,24 +154,27 @@ button {
   max-width: 1400px;
 }
 
+/* Page head: title block left, actions right (Nexus page header) */
 .page-header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
   flex-wrap: wrap;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .page-header h1 {
-  font-size: 34px;
+  font-size: 24px;
+  font-weight: 800;
   letter-spacing: -0.02em;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .page-header .subtitle {
   color: var(--muted);
-  font-size: 14px;
+  font-size: 13.5px;
+  font-weight: 400;
   margin: 0;
 }
 
@@ -171,12 +186,12 @@ button {
   justify-content: center;
   gap: 8px;
   border: 1px solid transparent;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   font-family: inherit;
   font-size: 14px;
   font-weight: 600;
-  padding: 10px 18px;
-  line-height: 1;
+  padding: 10px 16px;
+  line-height: 1.15;
   transition: background 0.15s ease, border-color 0.15s ease,
     box-shadow 0.15s ease, color 0.15s ease, transform 0.12s ease;
   white-space: nowrap;
@@ -198,18 +213,19 @@ button {
 
 .btn--primary:hover:not(:disabled) {
   background: var(--primary-dark);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.16);
 }
 
 .btn--secondary {
   background: var(--surface);
   color: var(--primary);
-  border-color: var(--border);
+  border-color: rgba(20, 20, 20, 0.16);
 }
 
 .btn--secondary:hover:not(:disabled) {
-  border-color: var(--primary);
-  background: #f7f7f7;
+  border-color: var(--ink);
+  background: var(--mist);
+  box-shadow: none;
 }
 
 .btn--neutral {
@@ -219,8 +235,8 @@ button {
 }
 
 .btn--neutral:hover:not(:disabled) {
-  color: var(--text);
-  border-color: var(--muted);
+  color: var(--ink);
+  border-color: var(--ink);
 }
 
 .btn--danger {
@@ -256,8 +272,8 @@ button {
 
 .btn--secondary .btn__spinner,
 .btn--neutral .btn__spinner {
-  border-color: rgba(20, 20, 20, 0.3);
-  border-top-color: var(--primary);
+  border-color: rgba(20, 20, 20, 0.25);
+  border-top-color: var(--ink);
 }
 
 @keyframes spin {
@@ -285,6 +301,7 @@ button {
 
 .card__header h2 {
   font-size: 16px;
+  font-weight: 700;
   margin: 0;
   flex: 1;
 }
@@ -293,13 +310,13 @@ button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   border-radius: var(--radius-sm);
-  background: rgba(20, 20, 20, 0.08);
-  color: var(--primary);
+  background: var(--mist);
+  color: var(--ink);
   font-size: 16px;
-  flex: 0 0 30px;
+  flex: 0 0 32px;
 }
 
 .card__body {
@@ -321,7 +338,7 @@ button {
 .field label {
   font-size: 13px;
   font-weight: 600;
-  color: var(--primary-dark);
+  color: var(--text);
 }
 
 .field .field__hint {
@@ -339,7 +356,7 @@ button {
   padding: 10px 12px;
   min-height: 44px;
   font-family: inherit;
-  font-size: 14px;
+  font-size: 14.5px;
   color: var(--text);
   background: var(--surface);
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
@@ -350,7 +367,7 @@ button {
 .field textarea:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(20, 20, 20, 0.12);
+  box-shadow: 0 0 0 3px rgba(20, 20, 20, 0.08);
 }
 
 /* Native date/time pickers match the rest of the form. */
@@ -382,7 +399,7 @@ button {
 
 .field input::placeholder,
 .field textarea::placeholder {
-  color: #a6aeb8;
+  color: #9AA1A6;
 }
 
 .field textarea {
@@ -430,7 +447,7 @@ button {
 .vat-fieldset .field__legend {
   font-size: 13px;
   font-weight: 600;
-  color: var(--primary-dark);
+  color: var(--text);
   padding: 0 4px;
 }
 
@@ -468,7 +485,7 @@ button {
   margin-top: 14px;
 }
 
-/* ---------- Status badges ---------- */
+/* ---------- Status badges (soft pills, Nexus style) ---------- */
 
 .badge {
   display: inline-flex;
@@ -575,7 +592,7 @@ button {
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(16, 30, 54, 0.5);
+  background: rgba(20, 20, 20, 0.45);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -586,6 +603,7 @@ button {
 
 .modal {
   background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
   width: 100%;
@@ -600,7 +618,8 @@ button {
 
 .modal__header h3 {
   margin: 0;
-  font-size: 17px;
+  font-size: 16.5px;
+  font-weight: 700;
 }
 
 .modal__body {
@@ -617,7 +636,7 @@ button {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-  padding: 16px 22px 20px;
+  padding: 14px 22px 18px;
   border-top: 1px solid var(--border);
 }
 
@@ -760,22 +779,23 @@ button {
   margin-left: auto;
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
 }
 
 .app-header__bell {
   position: relative;
-  padding: 6px;
+  padding: 7px;
   border: none;
   border-radius: var(--radius-sm);
   background: none;
-  font-size: 21px;
+  font-size: 20px;
   line-height: 1;
   cursor: pointer;
+  color: var(--text);
 }
 
 .app-header__bell:hover {
-  background: var(--background);
+  background: var(--hover);
 }
 
 .app-header__bell-count {
@@ -893,7 +913,7 @@ button {
 }
 
 .confirm-auth input:disabled {
-  background: var(--background);
+  background: var(--ground);
 }
 
 .confirm-auth__error {
@@ -929,8 +949,8 @@ button {
 .spinner {
   width: 20px;
   height: 20px;
-  border: 3px solid rgba(20, 20, 20, 0.2);
-  border-top-color: var(--primary);
+  border: 3px solid rgba(20, 20, 20, 0.18);
+  border-top-color: var(--ink);
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
   display: inline-block;
@@ -965,7 +985,7 @@ button {
   font-size: 22px;
 }
 
-/* ---------- Dashboard ---------- */
+/* ---------- Stat cards + quick actions (Nexus KPI language) ---------- */
 
 .stat-grid {
   display: grid;
@@ -979,16 +999,18 @@ button {
 }
 
 .stat-card .stat-card__label {
-  font-size: 13px;
+  font-size: 12.5px;
+  font-weight: 500;
   color: var(--muted);
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 .stat-card .stat-card__value {
-  font-size: 28px;
-  font-weight: 700;
+  font-size: 26px;
+  font-weight: 800;
   color: var(--primary);
   line-height: 1.1;
+  letter-spacing: -0.02em;
 }
 
 .quick-actions {
@@ -1004,6 +1026,7 @@ button {
   border-radius: var(--radius-lg);
   background: var(--surface);
   text-decoration: none;
+  box-shadow: var(--shadow-sm);
   transition: box-shadow 0.15s ease, transform 0.15s ease, border-color 0.15s ease;
 }
 
@@ -1011,7 +1034,7 @@ button {
   text-decoration: none;
   box-shadow: var(--shadow-md);
   transform: translateY(-2px);
-  border-color: var(--primary);
+  border-color: rgba(20, 20, 20, 0.3);
 }
 
 .quick-action .quick-action__icon {
@@ -1030,7 +1053,7 @@ button {
   margin: 0;
 }
 
-/* ---------- App header ---------- */
+/* ---------- App header (Nexus topbar) ---------- */
 
 .app-header {
   position: sticky;
@@ -1046,10 +1069,10 @@ button {
 .app-header__inner {
   width: 100%;
   margin: 0;
-  padding: 0 24px;
+  padding: 0 20px;
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 16px;
 }
 
 .app-header__brand {
@@ -1065,13 +1088,13 @@ button {
 }
 
 .app-header__logo {
-  width: 56px;
-  height: 56px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  flex: 0 0 56px;
+  flex: 0 0 40px;
 }
 
 .app-header__logo img {
@@ -1083,21 +1106,21 @@ button {
 .app-header__logo-fallback {
   font-weight: 800;
   color: var(--primary);
-  font-size: 16px;
+  font-size: 15px;
 }
 
 .app-header__nav {
   display: none;
-  gap: 4px;
+  gap: 2px;
   flex: 1;
   justify-content: center;
 }
 
 .app-header__link {
   color: var(--muted);
-  padding: 8px 14px;
+  padding: 7px 13px;
   border-radius: var(--radius-sm);
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 500;
   text-decoration: none;
   transition: background 0.15s ease, color 0.15s ease;
@@ -1105,30 +1128,30 @@ button {
 
 .app-header__link:hover {
   color: var(--text);
-  background: var(--background);
+  background: var(--hover);
   text-decoration: none;
 }
 
 .app-header__link.is-active {
-  color: var(--primary-dark);
-  background: var(--background);
+  color: var(--text);
+  background: var(--pill);
   font-weight: 600;
 }
 
 .app-header__avatar {
   flex: 0 0 auto;
   margin-left: auto;
-  width: 44px;
-  height: 44px;
+  width: 34px;
+  height: 34px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: var(--background);
-  color: var(--text);
-  border: 1px solid var(--border);
+  background: var(--ink);
+  color: #fff;
+  border: none;
   border-radius: 50%;
-  font-size: 14px;
-  font-weight: 800;
+  font-size: 12.5px;
+  font-weight: 700;
   letter-spacing: 0.02em;
   user-select: none;
 }
@@ -1141,14 +1164,14 @@ button {
   gap: 8px;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   padding: 0 12px;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .searchbar:focus-within {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(20, 20, 20, 0.12);
+  box-shadow: 0 0 0 3px rgba(20, 20, 20, 0.08);
 }
 
 .searchbar__icon {
@@ -1160,9 +1183,9 @@ button {
   flex: 1;
   border: none;
   background: none;
-  padding: 10px 0;
+  padding: 11px 0;
   font-family: inherit;
-  font-size: 14px;
+  font-size: 14.5px;
   color: var(--text);
   outline: none;
 }
@@ -1176,7 +1199,7 @@ button {
   padding: 2px 4px;
 }
 
-/* ---------- Login ---------- */
+/* ---------- Login (white patterned page, ink card, white mark) ---------- */
 
 .login-page {
   min-height: 100vh;
@@ -1184,14 +1207,23 @@ button {
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background: var(--ink);
+  background-color: #fff;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='84' height='42' viewBox='0 0 84 42'%3E%3Cpath d='M0 21 Q10.5 6 21 21 T42 21 T63 21 T84 21' fill='none' stroke='%23141414' stroke-opacity='.05' stroke-width='1.1'/%3E%3C/svg%3E");
+  background-size: 84px 42px;
+  background-repeat: repeat;
 }
 
 .login-card {
   width: 100%;
   max-width: 400px;
-  padding: 32px;
+  padding: 40px 36px;
   text-align: center;
+  background: var(--ink);
+  border: none;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  color: #fff;
+  color-scheme: dark;
 }
 
 .login-card--loading {
@@ -1200,7 +1232,7 @@ button {
   justify-content: center;
   flex-direction: column;
   gap: 12px;
-  color: var(--muted);
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .login-card__logo {
@@ -1210,35 +1242,42 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--surface);
-  border-radius: 12px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
   overflow: hidden;
-  padding: 6px;
-  box-shadow: var(--shadow-md);
+  padding: 0;
+  box-shadow: none;
 }
 
 .login-card__logo img {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
+  filter: brightness(0) invert(1);
 }
 
 .login-card__logo-fallback {
   font-weight: 800;
-  color: var(--primary);
+  color: #fff;
   font-size: 24px;
 }
 
 .login-card h1 {
-  font-size: 22px;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
   margin-bottom: 2px;
-  color: var(--primary-dark);
+  color: #fff;
 }
 
 .login-card__tagline {
-  font-size: 13px;
-  color: var(--muted);
-  margin: 0 0 22px;
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.24em;
+  color: rgba(255, 255, 255, 0.45);
+  margin: 14px 0 26px;
 }
 
 .login-form {
@@ -1250,8 +1289,67 @@ button {
 
 .login-card__note {
   font-size: 12px;
-  color: var(--muted);
+  color: rgba(255, 255, 255, 0.45);
   margin: 18px 0 0;
+}
+
+.login-card .field label {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 12.5px;
+}
+
+.login-card .field input:not([type='checkbox']):not([type='radio']) {
+  color: #fff;
+  background-color: var(--ink);
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 0;
+  padding-left: 2px;
+}
+
+.login-card .field input:focus {
+  border-bottom-color: #fff;
+  box-shadow: none;
+}
+
+.login-card .field input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+/* Autofill must stay ink like the rest of the card. */
+.login-card .field input:not([type='checkbox']):not([type='radio']):-webkit-autofill,
+.login-card .field input:not([type='checkbox']):not([type='radio']):-webkit-autofill:hover,
+.login-card .field input:not([type='checkbox']):not([type='radio']):-webkit-autofill:focus,
+.login-card .field input:not([type='checkbox']):not([type='radio']):-webkit-autofill:focus-visible {
+  background-color: var(--ink);
+  -webkit-text-fill-color: #fff;
+  -webkit-box-shadow: 0 0 0 1000px var(--ink) inset;
+  caret-color: #fff;
+  transition: background-color 99999s ease-out 0s, box-shadow 99999s ease-out 0s;
+}
+
+.login-card .btn--primary {
+  background: #fff;
+  color: var(--ink);
+}
+
+.login-card .btn--primary:hover:not(:disabled) {
+  background: var(--mist);
+  box-shadow: none;
+}
+
+.login-card .btn__spinner {
+  border-color: rgba(20, 20, 20, 0.3);
+  border-top-color: var(--ink);
+}
+
+.login-card .spinner {
+  border-color: rgba(255, 255, 255, 0.25);
+  border-top-color: #fff;
+}
+
+.login-card :focus-visible {
+  outline-color: #fff;
 }
 
 /* ---------- Motion ---------- */
@@ -1267,8 +1365,19 @@ button {
   }
 }
 
+@keyframes page-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 .page {
-  animation: rise-in 0.32s cubic-bezier(0.22, 0.61, 0.36, 1) backwards;
+  animation: page-rise 0.4s var(--ease) both;
 }
 
 @media print {
@@ -1306,617 +1415,17 @@ button {
     padding: 0 16px;
     gap: 10px;
   }
-
-  .app-header__nav {
-    display: flex;
-    justify-content: flex-start;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .app-header__link {
-    padding: 8px 10px;
-    font-size: 13px;
-    white-space: nowrap;
-  }
-}
-
-/* ============================================================
-   AL BALQAN Ã— Landing â€” design fingerprint overlay
-   Visual layer only; no behavior / layout contract changes.
-   ============================================================ */
-
-@font-face {
-  font-family: 'Cal Sans';
-  src: url('../assets/fonts/CalSansVF.woff2') format('woff2-variations');
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
-
-::selection {
-  background: var(--ink);
-  color: #fff;
-}
-
-/* Eyebrow / micro labels (landing signature) */
-.page-header .subtitle,
-.subtitle {
-  font-size: 11px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-  color: var(--muted);
-}
-
-.field label,
-.stat-card .stat-card__label {
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: var(--muted);
-}
-
-.stat-card .stat-card__value {
-  font-family: var(--font-display);
-  letter-spacing: -0.01em;
-}
-
-/* Buttons: tracked uppercase micro type + expo-out easing */
-.btn {
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-  transition: background 0.25s var(--ease), border-color 0.25s var(--ease),
-    box-shadow 0.25s var(--ease), color 0.25s var(--ease),
-    transform 0.2s var(--ease);
-}
-
-/* Frosted white top bar (landing header) */
-.app-header {
-  background: rgba(255, 255, 255, 0.9);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
-  border-bottom-color: rgba(20, 20, 20, 0.08);
-  box-shadow: 0 1px 20px rgba(0, 0, 0, 0.06);
-}
-
-/* Gentle one-shot page entrance (neutralised by reduced-motion below) */
-@keyframes page-rise {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-.page {
-  animation: page-rise 0.55s var(--ease) both;
-}
-
-/* ============================================================
-   AL BALQAN Ã— Landing â€” fingerprint layer 2
-   Full visual restyle: ink controls, sharp geometry, dark gate.
-   Visual layer only; no behavior / layout contract changes.
-   ============================================================ */
-
-/* Sharp geometry â€” cards, controls and panels read like the landing.
-   The invoice sheet keeps its own radii from invoice.css tokens. */
-.card,
-.modal,
-.quick-action,
-.appr-row,
-.searchbar,
-.toast,
-.vat-fieldset {
-  border-radius: 4px;
-}
-
-.btn,
-.btn--sm,
-.field input:not([type='checkbox']):not([type='radio']),
-.field select,
-.field textarea {
-  border-radius: 0;
-}
-
-.card,
-.quick-action {
-  box-shadow: none;
-}
-
-.card--muted,
-.quick-action {
-  background: var(--surface);
-}
-
-/* Primary control = ink (the landing CTA), secondary = hairline outline */
-.btn--primary {
-  background: var(--ink);
-  color: #fff;
-}
-
-.btn--primary:hover:not(:disabled) {
-  background: #000;
-  box-shadow: none;
-}
-
-.btn--secondary {
-  color: var(--text);
-  background: var(--surface);
-  border-color: rgba(20, 20, 20, 0.2);
-}
-
-.btn--secondary:hover:not(:disabled) {
-  border-color: var(--ink);
-  background: var(--mist);
-}
-
-.btn--neutral:hover:not(:disabled) {
-  color: var(--ink);
-  border-color: var(--ink);
-}
-
-.btn--secondary .btn__spinner,
-.btn--neutral .btn__spinner {
-  border-color: rgba(20, 20, 20, 0.25);
-  border-top-color: var(--ink);
-}
-
-/* Ink focus rings instead of gold */
-:focus-visible {
-  outline-color: var(--ink);
-}
-
-.field input:focus,
-.field select:focus,
-.field textarea:focus {
-  border-color: var(--ink);
-  box-shadow: 0 0 0 3px rgba(20, 20, 20, 0.1);
-}
-
-.searchbar:focus-within {
-  border-color: var(--ink);
-  box-shadow: 0 0 0 3px rgba(20, 20, 20, 0.1);
-}
-
-/* Surfaces and copy go monochrome ink */
-a {
-  color: var(--ink);
-}
-
-.card__icon {
-  background: rgba(20, 20, 20, 0.06);
-  color: var(--ink);
-}
-
-.stat-card .stat-card__value {
-  color: var(--text);
-}
-
-.app-header__link.is-active {
-  color: var(--text);
-  background: var(--mist);
-}
-
-.spinner {
-  border-color: rgba(20, 20, 20, 0.18);
-  border-top-color: var(--ink);
-}
-
-.modal-overlay {
-  background: rgba(20, 20, 20, 0.5);
-}
-
-.toast {
-  border-left-color: var(--ink);
-}
-
-/* Dark gate â€” the landing hero, restated over its photography */
-.login-page {
-  background: linear-gradient(rgba(20, 20, 20, 0.84), rgba(20, 20, 20, 0.92)),
-    url('../assets/login-frame.jpg') center / cover no-repeat;
-}
-
-.login-card h1 {
-  color: var(--text);
-}
-
-.login-card__logo {
-  border: 1px solid rgba(20, 20, 20, 0.1);
-  border-radius: 4px;
-  box-shadow: none;
-}
-
-.login-card__logo-fallback {
-  color: var(--ink);
-}
-
-/* ============================================================
-   AL BALQAN Ã— Landing â€” fingerprint layer 3
-   Editorial scale & rhythm: landing proportions, airier frames.
-   ============================================================ */
-
-body {
-  font-size: 15px;
-  line-height: 1.6;
-}
-
-.page {
-  padding: 40px;
-}
-
-.page-header {
-  margin-bottom: 36px;
-}
-
-.page-header .subtitle,
-.subtitle {
-  font-size: 11px;
-  letter-spacing: 0.3em;
-}
-
-.card__header {
-  padding: 20px 26px;
-}
-
-.card__header h2 {
-  font-size: 17px;
-  letter-spacing: -0.01em;
-}
-
-.card__body {
-  padding: 26px;
-}
-
-.stat-card {
-  padding: 26px 28px;
-}
-
-.stat-card .stat-card__label {
-  font-size: 10.5px;
-  letter-spacing: 0.2em;
-  margin-bottom: 14px;
-}
-
-.stat-card .stat-card__value {
-  font-size: 40px;
-  letter-spacing: -0.02em;
-}
-
-.btn {
-  padding: 14px 30px;
-  letter-spacing: 0.25em;
-  gap: 10px;
-}
-
-.btn--sm {
-  padding: 10px 18px;
-}
-
-.field label {
-  letter-spacing: 0.16em;
-}
-
-.field input:not([type='checkbox']):not([type='radio']),
-.field select,
-.field textarea {
-  padding: 12px 14px;
-  font-size: 15px;
-  min-height: 46px;
-}
-
-.form-grid {
-  gap: 20px 22px;
-}
-
-.modal__header {
-  padding: 22px 26px;
-}
-
-.modal__body {
-  padding: 26px;
-}
-
-.modal__actions {
-  padding: 18px 26px 22px;
-}
-
-.searchbar input {
-  padding: 14px 0;
-  font-size: 15px;
-}
-
-.app-header__inner {
-  padding: 0 32px;
-}
-
-.app-header__link {
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  padding: 8px 16px;
-}
-
-.empty-state {
-  padding: 72px 24px;
-}
-
-/* ============================================================
-   AL BALQAN Ã— Landing â€” fingerprint layer 4
-   Exact landing language: white canvas, underline fields,
-   animated nav underlines, no decorative chrome.
-   ============================================================ */
-
-/* Fields exactly like the landing consultation form */
-.field input:not([type='checkbox']):not([type='radio']),
-.field select,
-.field textarea {
-  border: none;
-  border-bottom: 1px solid rgba(20, 20, 20, 0.2);
-  background: transparent;
-  border-radius: 0;
-  padding: 12px 2px 8px 0;
-  min-height: 44px;
-  box-shadow: none;
-}
-
-.field input:focus,
-.field select:focus,
-.field textarea:focus {
-  border-bottom-color: var(--ink);
-  box-shadow: none;
-}
-
-.field input::placeholder,
-.field textarea::placeholder {
-  color: rgba(20, 20, 20, 0.3);
-}
-
-.searchbar {
-  border: none;
-  border-bottom: 1px solid rgba(20, 20, 20, 0.2);
-  border-radius: 0;
-  background: transparent;
-}
-
-.searchbar:focus-within {
-  border-bottom-color: var(--ink);
-  box-shadow: none;
-}
-
-/* Header nav: landing hover underline (scale-x origin-right) */
-.app-header__link {
-  position: relative;
-  background: transparent;
-}
-
-.app-header__link:hover {
-  color: var(--ink);
-  background: transparent;
-}
-
-.app-header__link.is-active {
-  color: var(--ink);
-  background: transparent;
-  font-weight: 600;
-}
-
-.app-header__link::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 3px;
-  background: var(--ink);
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 0.3s ease-out;
-}
-
-.app-header__link:hover::after,
-.app-header__link.is-active::after {
-  transform: scaleX(1);
-}
-
-.app-header__bell:hover {
-  background: rgba(20, 20, 20, 0.06);
-}
-
-/* Header CTA â€” the landing's ink pill */
-.app-header__cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--ink);
-  color: #fff;
-  border: 1px solid var(--ink);
-  padding: 12px 24px;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-  text-decoration: none;
-  white-space: nowrap;
-  transition: background 0.25s var(--ease), color 0.25s var(--ease);
-}
-
-.app-header__cta:hover {
-  background: #fff;
-  color: var(--ink);
-  text-decoration: none;
-}
-
-@media (max-width: 767px) {
-  .app-header__cta {
-    display: none;
-  }
-}
-
-/* ============================================================
-   AL BALQAN Ã— Landing â€” fingerprint layer 5
-   Composition: centered section rhythm like the landing's
-   section headings, ink bands, dark table headers.
-   ============================================================ */
-
-/* Page titles read as centered landing section headings */
-.page-header {
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  text-align: center;
-  gap: 22px;
-  margin-bottom: 44px;
-}
-
-.page-header h1 {
-  font-size: 38px;
-  letter-spacing: -0.02em;
-  margin-bottom: 10px;
-}
-
-.page-header .subtitle {
-  letter-spacing: 0.35em;
-}
-
-/* Login headline at landing scale */
-.login-card h1 {
-  font-size: 26px;
-  letter-spacing: -0.02em;
-}
-
-/* Panel titles: keep left-aligned hierarchy under centered page titles */
-.card__header h2 {
-  font-weight: 700;
-}
-
-/* System logo renders pure black (the printed invoice keeps the gold mark) */
-.app-header__logo img,
-.login-card__logo img {
-  filter: brightness(0);
-}
-
-.app-header__logo-fallback {
-  color: var(--ink);
 }
 
-@media (max-width: 767px) {
+@media (max-width: 560px) {
   .page-header {
-    gap: 16px;
-    margin-bottom: 32px;
+    flex-direction: column;
+    align-items: stretch;
   }
 
   .page-header h1 {
-    font-size: 24px;
+    font-size: 21px;
   }
-}
-
-/* ============================================================
-   Login gate v2 â€” white patterned page, ink card, white mark
-   ============================================================ */
-
-.login-page {
-  background-color: #fff;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='84' height='42' viewBox='0 0 84 42'%3E%3Cpath d='M0 21 Q10.5 6 21 21 T42 21 T63 21 T84 21' fill='none' stroke='%23141414' stroke-opacity='.05' stroke-width='1.1'/%3E%3C/svg%3E");
-  background-size: 84px 42px;
-  background-repeat: repeat;
-}
-
-.login-card {
-  background: var(--ink);
-  border: none;
-  border-radius: 4px;
-  box-shadow: none;
-  padding: 40px 36px;
-  color-scheme: dark;
-}
-
-.login-card__logo {
-  width: 68px;
-  height: 68px;
-  background: transparent;
-  border: none;
-  border-radius: 0;
-  box-shadow: none;
-}
-
-.login-card__logo img {
-  filter: brightness(0) invert(1);
-}
-
-.login-card__logo-fallback {
-  color: #fff;
-}
-
-.login-card__tagline {
-  font-size: 10.5px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.24em;
-  color: rgba(255, 255, 255, 0.45);
-  margin: 14px 0 26px;
-}
-
-.login-card .field label {
-  color: rgba(255, 255, 255, 0.5);
-}
-
-.login-card .field input:not([type='checkbox']):not([type='radio']) {
-  color: #fff;
-  background-color: var(--ink);
-  border: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.22);
-}
-
-.login-card .field input:focus {
-  border-bottom-color: #fff;
-}
-
-.login-card .field input::placeholder {
-  color: rgba(255, 255, 255, 0.35);
-}
-
-/* Autofill must stay ink like the rest of the card â€” specificity must
-   outrank layer-4's `box-shadow: none` on .field input:not()... */
-.login-card .field input:not([type='checkbox']):not([type='radio']):-webkit-autofill,
-.login-card .field input:not([type='checkbox']):not([type='radio']):-webkit-autofill:hover,
-.login-card .field input:not([type='checkbox']):not([type='radio']):-webkit-autofill:focus,
-.login-card .field input:not([type='checkbox']):not([type='radio']):-webkit-autofill:focus-visible {
-  background-color: var(--ink);
-  -webkit-text-fill-color: #fff;
-  -webkit-box-shadow: 0 0 0 1000px var(--ink) inset;
-  caret-color: #fff;
-  transition: background-color 99999s ease-out 0s, box-shadow 99999s ease-out 0s;
-}
-
-.login-card .btn--primary {
-  background: #fff;
-  color: var(--ink);
-}
-
-.login-card .btn--primary:hover:not(:disabled) {
-  background: var(--mist);
-  box-shadow: none;
-}
-
-.login-card .btn__spinner {
-  border-color: rgba(20, 20, 20, 0.3);
-  border-top-color: var(--ink);
-}
-
-.login-card__note {
-  color: rgba(255, 255, 255, 0.45);
-}
-
-.login-card :focus-visible {
-  outline-color: #fff;
 }
 
 @media (prefers-reduced-motion: reduce) {

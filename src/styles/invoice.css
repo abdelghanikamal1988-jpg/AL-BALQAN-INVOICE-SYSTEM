@@ -93,11 +93,11 @@
 }
 
 .history-filters__field label {
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--text);
 }
 
 .history-filters__field select {
@@ -154,14 +154,14 @@
 
 .history-table th {
   text-align: left;
-  font-size: 12px;
+  font-size: 11px;
   text-transform: uppercase;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.08em;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.55);
-  background: var(--ink);
-  padding: 14px;
-  border-bottom: none;
+  color: var(--muted);
+  background: transparent;
+  padding: 11px 12px;
+  border-bottom: 1px solid var(--border);
   white-space: nowrap;
 }
 
@@ -260,7 +260,7 @@
   overflow: auto;
   max-height: calc(100vh - 220px);
   padding: 8px;
-  background: #e9ebef;
+  background: #edeeee;
   border-radius: var(--radius-md);
 }
 
@@ -278,7 +278,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #9aa4b0;
+  color: #9c9c9c;
   font-size: 14px;
   text-align: center;
   padding: 40px;
@@ -290,7 +290,7 @@
   display: flex;
   flex-direction: column;
   min-height: 100%;
-  color: #1c2430;
+  color: var(--text);
   font-size: 12.5px;
 }
 
@@ -394,7 +394,7 @@
 }
 
 .invoice__meta-box {
-  background: #f7f8fa;
+  background: #f7f7f7;
   border: 1px solid var(--border);
   border-radius: 6px;
   padding: 10px 12px;
@@ -583,10 +583,10 @@
 }
 
 .invoice__signature-line {
-  border-bottom: 1px solid #9aa4b0;
+  border-bottom: 1px solid #9c9c9c;
   padding: 26px 4px 2px;
   font-size: 11px;
-  color: #9aa4b0;
+  color: #9c9c9c;
   min-height: 30px;
 }
 

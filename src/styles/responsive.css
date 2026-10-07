@@ -154,7 +154,7 @@
     position: fixed;
     inset: var(--header-h) 0 0;
     z-index: 350;
-    background: rgba(16, 30, 54, 0.45);
+    background: rgba(20, 20, 20, 0.4);
     animation: fade-in 0.15s ease;
   }
 
@@ -174,8 +174,8 @@
   }
 
   .page-header .subtitle {
-    font-size: 10.5px;
-    letter-spacing: 0.22em;
+    font-size: 13px;
+    letter-spacing: normal;
   }
 
   /* ---------- touch-friendly controls ---------- */
@@ -224,8 +224,8 @@
   /* ---------- dashboard ---------- */
 
   .db-hero {
-    padding: 18px;
-    gap: 12px;
+    padding: 0;
+    gap: 0;
   }
 
   .db-approval {
