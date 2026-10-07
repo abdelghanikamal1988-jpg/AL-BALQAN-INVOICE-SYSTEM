@@ -1861,8 +1861,9 @@ body {
 
 .login-page {
   background-color: #fff;
-  background-image: radial-gradient(rgba(20, 20, 20, 0.055) 1.3px, transparent 1.3px);
-  background-size: 26px 26px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='84' height='42' viewBox='0 0 84 42'%3E%3Cpath d='M0 21 Q10.5 6 21 21 T42 21 T63 21 T84 21' fill='none' stroke='%23141414' stroke-opacity='.05' stroke-width='1.1'/%3E%3C/svg%3E");
+  background-size: 84px 42px;
+  background-repeat: repeat;
 }
 
 .login-card {
@@ -1877,8 +1878,8 @@ body {
   width: 68px;
   height: 68px;
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  border-radius: 4px;
+  border: none;
+  border-radius: 0;
   box-shadow: none;
 }
 
@@ -1920,8 +1921,9 @@ body {
 
 .login-card .field input:not([type='checkbox']):not([type='radio']) {
   color: #fff;
-  background: transparent;
-  border-bottom-color: rgba(255, 255, 255, 0.3);
+  background-color: var(--ink);
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.22);
 }
 
 .login-card .field input:focus {
@@ -1930,6 +1932,16 @@ body {
 
 .login-card .field input::placeholder {
   color: rgba(255, 255, 255, 0.35);
+}
+
+/* Autofill must stay ink like the rest of the card */
+.login-card input:-webkit-autofill,
+.login-card input:-webkit-autofill:hover,
+.login-card input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #fff;
+  -webkit-box-shadow: 0 0 0 1000px var(--ink) inset;
+  caret-color: #fff;
+  transition: background-color 99999s ease-out;
 }
 
 .login-card .btn--primary {
