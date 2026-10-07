@@ -1241,33 +1241,6 @@ button {
   margin: 0 0 22px;
 }
 
-.login-tabs {
-  display: flex;
-  background: var(--background);
-  border-radius: var(--radius-md);
-  padding: 4px;
-  margin-bottom: 22px;
-  gap: 4px;
-}
-
-.login-tab {
-  flex: 1;
-  border: none;
-  background: transparent;
-  color: var(--muted);
-  font-weight: 600;
-  font-size: 14px;
-  padding: 9px 0;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-}
-
-.login-tab.is-active {
-  background: var(--surface);
-  color: var(--primary);
-  box-shadow: var(--shadow-sm);
-}
-
 .login-form {
   display: flex;
   flex-direction: column;
@@ -1440,8 +1413,7 @@ button {
 .appr-row,
 .searchbar,
 .toast,
-.vat-fieldset,
-.login-tabs {
+.vat-fieldset {
   border-radius: 4px;
 }
 
@@ -1563,15 +1535,6 @@ a {
 
 .login-card__logo-fallback {
   color: var(--ink);
-}
-
-.login-tabs {
-  background: var(--mist);
-}
-
-.login-tab.is-active {
-  color: var(--ink);
-  box-shadow: none;
 }
 
 /* ============================================================
@@ -1899,21 +1862,6 @@ body {
   letter-spacing: 0.24em;
   color: rgba(255, 255, 255, 0.45);
   margin: 14px 0 26px;
-}
-
-.login-tabs {
-  background: rgba(255, 255, 255, 0.07);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.login-tab {
-  color: rgba(255, 255, 255, 0.5);
-}
-
-.login-tab.is-active {
-  background: #fff;
-  color: var(--ink);
-  box-shadow: none;
 }
 
 .login-card .field label {

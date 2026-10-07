@@ -267,11 +267,6 @@ export function AuthProvider({ children }) {
     return { error };
   }, []);
 
-  const signUp = useCallback(async (email, password) => {
-    const { data, error } = await supabase.auth.signUp({ email, password });
-    return { data, error };
-  }, []);
-
   const signOut = useCallback(async () => {
     await supabase.auth.signOut();
   }, []);
@@ -319,7 +314,6 @@ export function AuthProvider({ children }) {
         loading: loading || profileLoading,
         configured,
         signIn,
-        signUp,
         signOut,
       }}
     >
