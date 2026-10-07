@@ -1872,6 +1872,7 @@ body {
   border-radius: 4px;
   box-shadow: none;
   padding: 40px 36px;
+  color-scheme: dark;
 }
 
 .login-card__logo {
@@ -1934,14 +1935,17 @@ body {
   color: rgba(255, 255, 255, 0.35);
 }
 
-/* Autofill must stay ink like the rest of the card */
-.login-card input:-webkit-autofill,
-.login-card input:-webkit-autofill:hover,
-.login-card input:-webkit-autofill:focus {
+/* Autofill must stay ink like the rest of the card — specificity must
+   outrank layer-4's `box-shadow: none` on .field input:not()... */
+.login-card .field input:not([type='checkbox']):not([type='radio']):-webkit-autofill,
+.login-card .field input:not([type='checkbox']):not([type='radio']):-webkit-autofill:hover,
+.login-card .field input:not([type='checkbox']):not([type='radio']):-webkit-autofill:focus,
+.login-card .field input:not([type='checkbox']):not([type='radio']):-webkit-autofill:focus-visible {
+  background-color: var(--ink);
   -webkit-text-fill-color: #fff;
   -webkit-box-shadow: 0 0 0 1000px var(--ink) inset;
   caret-color: #fff;
-  transition: background-color 99999s ease-out;
+  transition: background-color 99999s ease-out 0s, box-shadow 99999s ease-out 0s;
 }
 
 .login-card .btn--primary {
