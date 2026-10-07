@@ -88,7 +88,6 @@ export default function Login() {
               <span className="login-card__logo-fallback">AB</span>
             )}
           </div>
-          <h1>AL BALQAN</h1>
           <p className="login-card__tagline">Tourism &amp; Visa Services · Invoice System</p>
         </div>
 
