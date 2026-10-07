@@ -1,4 +1,4 @@
-﻿/* ============================================================
+/* ============================================================
    AL BALQAN — Nexus design system (1:1 recreation)
    Ground #F5F7F6 · white cards · ink text · Nexus green #16A34A.
    --primary (ink) and --secondary (gold) stay for the invoice
@@ -7,11 +7,11 @@
 
 :root {
   /* UI accent (Nexus brand) */
-  --brand: #16A34A;
-  --brand-strong: #15803D;
-  --brand-tint: #E7F6EC;
-  --brand-soft: #DCFCE7;
-  --brand-ring: rgba(22, 163, 74, 0.14);
+  --brand: #22c55e;
+  --brand-strong: #16a34a;
+  --brand-tint: #e4f8ec;
+  --brand-soft: #dcfce7;
+  --brand-ring: rgba(34, 197, 94, 0.14);
 
   /* Ink + gold: invoice sheet & print identity (never used for UI chrome) */
   --primary: #141414;
@@ -46,7 +46,7 @@
   --radius-lg: 10px;
 
   --header-h: 52px;
-  --sidebar-w: 216px;
+  --sidebar-w: 256px;
 
   --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.04);
   --shadow-md: 0 6px 18px rgba(16, 24, 40, 0.08);
@@ -273,7 +273,7 @@ button {
 
 .btn--primary:hover:not(:disabled) {
   background: var(--brand-strong);
-  box-shadow: 0 6px 16px rgba(22, 163, 74, 0.28);
+  box-shadow: 0 6px 16px rgba(34, 197, 94, 0.28);
 }
 
 .btn--secondary {
@@ -332,7 +332,7 @@ button {
 
 .btn--secondary .btn__spinner,
 .btn--neutral .btn__spinner {
-  border-color: rgba(22, 163, 74, 0.25);
+  border-color: rgba(34, 197, 94, 0.25);
   border-top-color: var(--brand);
 }
 
@@ -492,7 +492,7 @@ button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 10px 24px rgba(22, 163, 74, 0.35);
+  box-shadow: 0 10px 24px rgba(34, 197, 94, 0.35);
   text-decoration: none;
   cursor: pointer;
   transition: background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
@@ -501,7 +501,7 @@ button {
 .fab:hover {
   background: var(--brand-strong);
   transform: translateY(-2px);
-  box-shadow: 0 14px 28px rgba(22, 163, 74, 0.4);
+  box-shadow: 0 14px 28px rgba(34, 197, 94, 0.4);
   text-decoration: none;
 }
 
@@ -1125,7 +1125,7 @@ button {
 .spinner {
   width: 20px;
   height: 20px;
-  border: 3px solid rgba(22, 163, 74, 0.18);
+  border: 3px solid rgba(34, 197, 94, 0.18);
   border-top-color: var(--brand);
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
@@ -1184,7 +1184,7 @@ button {
 }
 
 .app-header__menu {
-  display: none;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   flex: 0 0 36px;
@@ -1196,13 +1196,15 @@ button {
   background: transparent;
   color: var(--text);
   font-size: 18px;
+  cursor: pointer;
+  transition: background 0.15s ease;
 }
 
 .app-header__menu:hover {
   background: var(--pill);
 }
 
-/* Brand lives in the sidebar ≥768; the topbar keeps it on phones. */
+/* Brand only rides the topbar below lg (the sidebar carries it ≥1024). */
 .app-header__brand {
   display: none;
   align-items: center;
@@ -1211,29 +1213,46 @@ button {
   flex: 0 0 auto;
 }
 
+.app-header__brand-word {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+@media (max-width: 1023px) {
+  .app-header__brand {
+    display: inline-flex;
+  }
+}
+
 .app-header__brand:hover {
   text-decoration: none;
 }
 
 .app-header__logo {
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  flex: 0 0 32px;
+  flex: 0 0 30px;
+  border-radius: 8px;
+  background: var(--brand);
 }
 
 .app-header__logo img {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
+  filter: brightness(0) invert(1);
 }
 
 .app-header__logo-fallback {
   font-weight: 800;
-  color: var(--primary);
+  color: #fff;
   font-size: 14px;
 }
 
@@ -1255,25 +1274,157 @@ button {
 
 .app-header__cta:hover {
   background: var(--brand-strong);
-  box-shadow: 0 6px 16px rgba(22, 163, 74, 0.28);
+  box-shadow: 0 6px 16px rgba(34, 197, 94, 0.28);
   text-decoration: none;
 }
 
-.app-header__uname {
+.app-header__cta .icon {
+  font-size: 14px;
+}
+
+/* ---------- Topbar dropdown containers ---------- */
+
+.app-header__dd {
+  position: relative;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  left: auto;
+  min-width: 208px;
+  padding: 6px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  z-index: 600;
+  animation: dd-pop 0.12s var(--ease);
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 500;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background: var(--brand-tint);
+  color: var(--brand-strong);
+  text-decoration: none;
+}
+
+.dropdown-item .icon {
+  color: var(--muted);
+}
+
+.dropdown-item:hover .icon {
+  color: var(--brand-strong);
+}
+
+@keyframes dd-pop {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------- Topbar icon tool (fullscreen etc.) ---------- */
+
+.app-header__tool {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 36px;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text);
+  font-size: 17px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.app-header__tool:hover {
+  background: var(--pill);
+}
+
+/* ---------- User chip (Nexus nx-user-chip) ---------- */
+
+.app-header__user {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.app-header__user:hover {
+  background: var(--brand-tint);
+}
+
+.app-header__user-meta {
   display: none;
+  flex-direction: column;
+  align-items: flex-end;
+  min-width: 0;
+  line-height: 1.2;
+}
+
+@media (min-width: 1024px) {
+  .app-header__user-meta {
+    display: flex;
+  }
+}
+
+.app-header__uname {
   font-size: 13px;
   font-weight: 600;
   color: var(--text);
-  max-width: 150px;
+  max-width: 160px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-@media (min-width: 1024px) {
-  .app-header__uname {
-    display: inline;
-  }
+.app-header__urole {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--muted);
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app-header__ucharv {
+  font-size: 14px;
+  color: var(--faint);
 }
 
 .app-header__avatar {
@@ -1340,7 +1491,170 @@ button {
   padding: 2px 4px;
 }
 
-/* ---------- Login (white patterned page, ink card, white mark) ---------- */
+/* ---------- Topbar global search (Nexus nx-search) ---------- */
+
+.topsearch {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+@media (max-width: 767px) {
+  .topsearch {
+    display: none;
+  }
+}
+
+.topsearch__addon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  color: var(--faint);
+  pointer-events: none;
+}
+
+.topsearch__input {
+  width: 18rem;
+  max-width: 100%;
+  height: 36px;
+  padding: 0 46px 0 40px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 20px;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.topsearch__input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.topsearch__input::placeholder {
+  color: var(--faint);
+}
+
+.topsearch__input:focus {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px var(--brand-ring);
+}
+
+.topsearch__hint {
+  position: absolute;
+  right: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1;
+  color: var(--faint);
+  background: var(--pill);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 3px 6px;
+  pointer-events: none;
+}
+
+.topsearch__panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  width: min(30rem, calc(100vw - 2rem));
+  max-height: min(24rem, 70vh);
+  overflow-y: auto;
+  padding: 6px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  z-index: 600;
+  animation: dd-pop 0.12s var(--ease);
+}
+
+.topsearch__group + .topsearch__group {
+  margin-top: 4px;
+}
+
+.topsearch__heading {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.topsearch__item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: none;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.topsearch__item.is-active {
+  background: var(--brand-tint);
+}
+
+.topsearch__title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.topsearch__subtitle {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.topsearch__footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin-top: 4px;
+  padding: 8px 10px;
+  border-top: 1px solid var(--line-soft);
+  font-size: 11.5px;
+  color: var(--faint);
+}
+
+.topsearch__footer kbd {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  background: var(--pill);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0 4px;
+  margin-right: 3px;
+}
+
+.topsearch__status {
+  padding: 16px 12px;
+  font-size: 13px;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* ---------- Login (Nexus gate: dark screen, green accents, 1:1) ---------- */
 
 .login-page {
   min-height: 100vh;
@@ -1348,23 +1662,88 @@ button {
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background-color: #fff;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='84' height='42' viewBox='0 0 84 42'%3E%3Cpath d='M0 21 Q10.5 6 21 21 T42 21 T63 21 T84 21' fill='none' stroke='%23141414' stroke-opacity='.05' stroke-width='1.1'/%3E%3C/svg%3E");
-  background-size: 84px 42px;
-  background-repeat: repeat;
+  color-scheme: dark;
+  background-color: #111827;
+  background-image:
+    radial-gradient(60rem 40rem at 12% -10%, rgba(34, 197, 94, 0.14), transparent 65%),
+    radial-gradient(50rem 36rem at 110% 115%, rgba(34, 197, 94, 0.12), transparent 65%),
+    radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: auto, auto, 22px 22px;
+}
+
+.login-frame {
+  width: 100%;
+  max-width: 26rem;
+  padding: 16px 0;
+}
+
+.login-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.login-brand__tile {
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 30px;
+  overflow: hidden;
+  border-radius: 8px;
+  background: var(--brand);
+}
+
+.login-brand__tile img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+
+.login-brand__tile span {
+  font-size: 11.5px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.login-brand__name {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #fff;
 }
 
 .login-card {
+  position: relative;
   width: 100%;
-  max-width: 400px;
-  padding: 40px 36px;
-  text-align: center;
-  background: var(--ink);
+  padding: 28px 24px 24px;
+  overflow: hidden;
+  text-align: left;
+  background: #1f2937;
   border: none;
-  border-radius: 14px;
-  box-shadow: var(--shadow-lg);
-  color: #fff;
+  border-radius: 16px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05), 0 24px 48px -20px rgba(15, 23, 42, 0.25);
+  color: #e5e7eb;
   color-scheme: dark;
+}
+
+@media (min-width: 768px) {
+  .login-card {
+    padding: 52px 48px 48px;
+  }
+}
+
+.login-card__strip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #22c55e, #86efac);
 }
 
 .login-card--loading {
@@ -1376,49 +1755,32 @@ button {
   color: rgba(255, 255, 255, 0.6);
 }
 
-.login-card__logo {
-  width: 64px;
-  height: 64px;
-  margin: 0 auto 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: transparent;
-  border: none;
-  border-radius: 0;
-  overflow: hidden;
-  padding: 0;
-  box-shadow: none;
-}
-
-.login-card__logo img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-  filter: brightness(0) invert(1);
-}
-
-.login-card__logo-fallback {
-  font-weight: 800;
+.login-card__title {
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-align: center;
+  margin: 0 0 4px;
   color: #fff;
-  font-size: 24px;
 }
 
 .login-card h1 {
-  font-size: 24px;
+  font-size: 20px;
+  line-height: 28px;
   font-weight: 700;
-  letter-spacing: -0.02em;
-  margin-bottom: 2px;
+  letter-spacing: -0.01em;
+  text-align: center;
+  margin: 0 0 4px;
   color: #fff;
 }
 
-.login-card__tagline {
-  font-size: 10.5px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.24em;
-  color: rgba(255, 255, 255, 0.45);
-  margin: 14px 0 26px;
+.login-card__sub {
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  margin: 0 0 16px;
+  color: #9ca3af;
 }
 
 .login-form {
@@ -1428,60 +1790,96 @@ button {
   text-align: left;
 }
 
+.login-form .btn--block {
+  margin-top: 4px;
+}
+
 .login-card__note {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #9ca3af;
+  margin: 16px 0 0;
+  text-align: center;
+}
+
+/* Section head like the Nexus demo-hint block (border-top + rhythm). */
+.login-card__hint {
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid #374151;
+}
+
+.login-card__hint-title {
+  margin: 0 0 6px;
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.45);
-  margin: 18px 0 0;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #9ca3af;
+}
+
+.login-card__hint-text {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: #9ca3af;
+}
+
+.login-card__hint-text code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  background: #111827;
+  border: 1px solid #374151;
+  border-radius: 4px;
+  padding: 1px 5px;
+}
+
+.login-card .field {
+  gap: 8px;
 }
 
 .login-card .field label {
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 12.5px;
+  color: #e5e7eb;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .login-card .field input:not([type='checkbox']):not([type='radio']) {
-  color: #fff;
-  background-color: var(--ink);
-  border: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.22);
-  border-radius: 0;
-  padding-left: 2px;
-}
-
-.login-card .field input:focus {
-  border-bottom-color: #fff;
-  box-shadow: none;
+  color: #e5e7eb;
+  background-color: #111827;
+  border: 1px solid #374151;
+  border-radius: 8px;
+  padding: 9px 16px;
+  font-size: 14px;
+  line-height: 20px;
 }
 
 .login-card .field input::placeholder {
-  color: rgba(255, 255, 255, 0.35);
+  color: #6b7280;
 }
 
-/* Autofill must stay ink like the rest of the card. */
+/* Autofill must stay dark like the rest of the panel. */
 .login-card .field input:not([type='checkbox']):not([type='radio']):-webkit-autofill,
 .login-card .field input:not([type='checkbox']):not([type='radio']):-webkit-autofill:hover,
 .login-card .field input:not([type='checkbox']):not([type='radio']):-webkit-autofill:focus,
 .login-card .field input:not([type='checkbox']):not([type='radio']):-webkit-autofill:focus-visible {
-  background-color: var(--ink);
-  -webkit-text-fill-color: #fff;
-  -webkit-box-shadow: 0 0 0 1000px var(--ink) inset;
-  caret-color: #fff;
+  background-color: #111827;
+  -webkit-text-fill-color: #e5e7eb;
+  -webkit-box-shadow: 0 0 0 1000px #111827 inset;
+  caret-color: #e5e7eb;
   transition: background-color 99999s ease-out 0s, box-shadow 99999s ease-out 0s;
 }
 
 .login-card .btn--primary {
-  background: #fff;
-  color: var(--ink);
+  background: var(--brand);
+  color: #fff;
+  min-height: 42px;
+  font-size: 14px;
 }
 
 .login-card .btn--primary:hover:not(:disabled) {
-  background: var(--mist);
-  box-shadow: none;
-}
-
-.login-card .btn__spinner {
-  border-color: rgba(20, 20, 20, 0.3);
-  border-top-color: var(--ink);
+  background: var(--brand-strong);
+  box-shadow: 0 6px 16px rgba(34, 197, 94, 0.28);
 }
 
 .login-card .spinner {

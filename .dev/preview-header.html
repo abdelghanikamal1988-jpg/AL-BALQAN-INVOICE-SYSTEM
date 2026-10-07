@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
   <head>
-  <link rel="stylesheet" href="../dist/assets/index-DeNoCvyR.css" />
+  <link rel="stylesheet" href="../dist/assets/index-DiGaFdjm.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta charset="utf-8" />
     <title>Preview � nav bar</title>
@@ -28,27 +28,50 @@
 
     <header class="app-header no-print">
       <div class="app-header__inner">
-        <button type="button" class="app-header__menu" aria-label="Open navigation">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16" /><path d="M4 12h16" /><path d="M4 17h16" /></svg>
+        <button type="button" class="app-header__menu" aria-label="Close navigation" aria-expanded="true" aria-controls="app-sidebar">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/></svg>
         </button>
 
         <a href="#" class="app-header__brand" aria-label="AL BALQAN home">
           <span class="app-header__logo">
             <img src="../public/logo.svg" alt="AL BALQAN logo" />
           </span>
+          <span class="app-header__brand-word">AL BALQAN</span>
         </a>
 
+        <form class="topsearch" role="search" onsubmit="return false;">
+          <span class="topsearch__addon" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7.5"/><path d="M20.5 20.5l-4.4-4.4"/></svg></span>
+          <input class="topsearch__input" type="search" placeholder="Search clients, invoices…" aria-label="Search" />
+          <kbd class="topsearch__hint" aria-hidden="true">/</kbd>
+        </form>
+
         <div class="app-header__right">
-          <a href="#" class="app-header__cta">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14" /><path d="M5 12h14" /></svg>
-            New invoice
-          </a>
+          <div class="app-header__dd">
+            <button type="button" class="app-header__cta">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+              New
+            </button>
+          </div>
+
+          <button type="button" class="app-header__tool app-header__tool--wide" title="Toggle fullscreen" aria-label="Toggle fullscreen">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 3.5H5.5a2 2 0 0 0-2 2v3"/><path d="M15.5 3.5h3a2 2 0 0 1 2 2v3"/><path d="M8.5 20.5H5.5a2 2 0 0 1-2-2v-3"/><path d="M15.5 20.5h3a2 2 0 0 0 2-2v-3"/></svg>
+          </button>
+
           <button type="button" class="app-header__bell">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8.6a6 6 0 1 0-12 0c0 5.4-2.2 7-2.2 7h16.4s-2.2-1.6-2.2-7" /><path d="M13.8 19a2 2 0 0 1-3.6 0" /></svg>
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8.6a6 6 0 1 0-12 0c0 5.4-2.2 7-2.2 7h16.4s-2.2-1.6-2.2-7"/><path d="M13.8 19a2 2 0 0 1-3.6 0"/></svg>
             <span class="app-header__bell-count" aria-hidden="true">3</span>
           </button>
-          <span class="app-header__uname" aria-hidden="true">admin</span>
-          <span class="app-header__avatar" title="admin@albalqan.com">MA</span>
+
+          <div class="app-header__dd">
+            <button type="button" class="app-header__user">
+              <span class="app-header__user-meta">
+                <span class="app-header__uname">Maha Al Balqan</span>
+                <span class="app-header__urole">Administrator</span>
+              </span>
+              <span class="app-header__avatar" title="admin@albalqan.com">MA</span>
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 9.5L12 16l6.5-6.5"/></svg>
+            </button>
+          </div>
         </div>
       </div>
     </header>

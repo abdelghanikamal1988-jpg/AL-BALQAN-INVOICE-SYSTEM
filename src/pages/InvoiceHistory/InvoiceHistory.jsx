@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import Icon from '../../components/Icons/Icon.jsx';
 import InvoiceHistoryToolbar from '../../components/InvoiceHistory/InvoiceHistoryToolbar.jsx';
 import InvoicePreview from '../../components/InvoicePreview/InvoicePreview.jsx';
@@ -65,7 +65,8 @@ export default function InvoiceHistory() {
   const toast = useToast();
   const { user, isAdmin } = useAuth();
   const { refresh: refreshApprovals } = usePendingApprovals();
-  const [query, setQuery] = useState('');
+  const [searchParams] = useSearchParams();
+  const [query, setQuery] = useState(() => searchParams.get('q') || '');
   const [period, setPeriod] = useState(ANY);
   const [nationality, setNationality] = useState(ANY);
   const [destination, setDestination] = useState(ANY);
@@ -82,6 +83,11 @@ export default function InvoiceHistory() {
   const [deletePrompt, setDeletePrompt] = useState(null);
   const [authPrompt, setAuthPrompt] = useState(false);
   const fileInputRef = useRef(null);
+
+  /* Deep link from the topbar search: /history?q=… */
+  useEffect(() => {
+    setQuery(searchParams.get('q') || '');
+  }, [searchParams]);
 
   useEffect(() => {
     let active = true;

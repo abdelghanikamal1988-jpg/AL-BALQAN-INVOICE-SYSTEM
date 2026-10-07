@@ -116,18 +116,34 @@ export default function Sidebar({ open = false, onClose }) {
     items: group.items.filter((item) => hasPerm(item.perm)),
   })).filter((group) => group.items.length > 0);
 
+  const isDrawer = () => window.innerWidth < 1024;
+  const closeIfDrawer = () => {
+    if (isDrawer()) onClose();
+  };
+
   useEffect(() => {
     if (!open) return undefined;
+    const prevOverflow = document.body.style.overflow;
+    let wasDrawer = isDrawer();
+    if (wasDrawer) document.body.style.overflow = 'hidden';
+
     const onKey = (e) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape' && isDrawer()) onClose();
     };
     const onResize = () => {
-      if (window.innerWidth >= 768) onClose();
+      const now = isDrawer();
+      if (now === wasDrawer) return;
+      wasDrawer = now;
+      if (now) {
+        document.body.style.overflow = 'hidden';
+        onClose();
+      } else {
+        document.body.style.overflow = prevOverflow;
+      }
     };
-    const prevOverflow = document.body.style.overflow;
+
     document.addEventListener('keydown', onKey);
     window.addEventListener('resize', onResize);
-    document.body.style.overflow = 'hidden';
     return () => {
       document.removeEventListener('keydown', onKey);
       window.removeEventListener('resize', onResize);
@@ -142,7 +158,7 @@ export default function Sidebar({ open = false, onClose }) {
         className={`sidebar no-print${open ? ' is-open' : ''}`}
         aria-label="Primary"
       >
-        <NavLink to="/" className="sidebar__brand" onClick={onClose} aria-label={`${company.shortName || 'AL BALQAN'} home`}>
+        <NavLink to="/" className="sidebar__brand" onClick={closeIfDrawer} aria-label={`${company.shortName || 'AL BALQAN'} home`}>
           <span className="sidebar__brand-logo">
             {company.logoUI ? (
               <img src={company.logoUI} alt="" />
@@ -163,7 +179,7 @@ export default function Sidebar({ open = false, onClose }) {
                   to={to}
                   end={end}
                   title={label}
-                  onClick={onClose}
+                  onClick={closeIfDrawer}
                   className={({ isActive }) => `sidebar__link${isActive ? ' is-active' : ''}`}
                 >
                   <span className="sidebar__icon">
@@ -182,7 +198,7 @@ export default function Sidebar({ open = false, onClose }) {
             className="sidebar__link"
             title={`Sign Out${user ? ` — ${userInitials(user)}` : ''}`}
             onClick={() => {
-              onClose();
+              closeIfDrawer();
               signOut();
             }}
           >

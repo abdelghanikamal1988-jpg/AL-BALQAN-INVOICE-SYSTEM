@@ -52,7 +52,31 @@ function NoAccess({ onSignOut }) {
 
 function Shell() {
   const { session, loading, hasPerm, signOut } = useAuth();
-  const [navOpen, setNavOpen] = useState(false);
+  const [navOpen, setNavOpen] = useState(() => {
+    try {
+      if (window.innerWidth >= 1024) {
+        return localStorage.getItem('ab-sidebar') !== 'collapsed';
+      }
+    } catch {
+      /* storage unavailable */
+    }
+    return window.innerWidth >= 1024;
+  });
+
+  const toggleNav = () => {
+    setNavOpen((o) => {
+      const next = !o;
+      try {
+        if (window.innerWidth >= 1024) {
+          if (next) localStorage.removeItem('ab-sidebar');
+          else localStorage.setItem('ab-sidebar', 'collapsed');
+        }
+      } catch {
+        /* storage unavailable */
+      }
+      return next;
+    });
+  };
 
   if (loading) {
     return (
@@ -83,7 +107,7 @@ function Shell() {
         <div className="app-shell__body">
           <Sidebar open={navOpen} onClose={() => setNavOpen(false)} />
           <div className="app-shell__main">
-            <Header menuOpen={navOpen} onMenuToggle={() => setNavOpen((o) => !o)} />
+            <Header menuOpen={navOpen} onMenuToggle={toggleNav} />
             <Routes>
               {allowed.map((route) => (
                 <Route key={route.path} path={route.path} element={route.element} />

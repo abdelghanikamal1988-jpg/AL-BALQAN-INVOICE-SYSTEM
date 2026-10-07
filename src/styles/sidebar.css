@@ -14,8 +14,19 @@
   z-index: 300;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
   background: var(--surface);
   border-right: 1px solid var(--border);
+  transition: flex-basis 0.24s ease, width 0.24s ease;
+}
+
+/* Desktop rail collapses to 0 width when the topbar toggle is off. */
+@media (min-width: 1024px) {
+  .sidebar:not(.is-open) {
+    flex-basis: 0;
+    width: 0;
+    border-right: none;
+  }
 }
 
 .sidebar__brand {

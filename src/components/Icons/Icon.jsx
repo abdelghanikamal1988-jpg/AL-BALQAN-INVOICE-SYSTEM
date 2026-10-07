@@ -111,6 +111,29 @@ const PATHS = {
     </>
   ),
   chevronRight: <path d="M9.5 5.5L16 12l-6.5 6.5" />,
+  chevronDown: <path d="M5.5 9.5L12 16l6.5-6.5" />,
+  maximize: (
+    <>
+      <path d="M8.5 3.5H5.5a2 2 0 0 0-2 2v3" />
+      <path d="M15.5 3.5h3a2 2 0 0 1 2 2v3" />
+      <path d="M8.5 20.5H5.5a2 2 0 0 1-2-2v-3" />
+      <path d="M15.5 20.5h3a2 2 0 0 0 2-2v-3" />
+    </>
+  ),
+  login: (
+    <>
+      <path d="M14.5 3.5H17a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2h-2.5" />
+      <path d="M10 16.5l3.5-4.5L10 7.5" />
+      <path d="M13.5 12H3.8" />
+    </>
+  ),
+  logout: (
+    <>
+      <path d="M9.5 3.5H7a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h2.5" />
+      <path d="M16.5 16.5L20 12l-3.5-4.5" />
+      <path d="M20 12H10.5" />
+    </>
+  ),
   plus: (
     <>
       <path d="M12 5v14" />

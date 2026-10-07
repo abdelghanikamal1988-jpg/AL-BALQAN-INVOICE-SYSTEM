@@ -1,0 +1,1961 @@
+<html lang="en" dir="ltr" data-bs-theme="dark" style="color-scheme: dark;"><head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    
+    <meta name="nx-currency" content="USD">
+    <title>Dashboard — Nexus</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2044%2044%22%3E%3Crect%20width%3D%2244%22%20height%3D%2244%22%20rx%3D%2212%22%20fill%3D%22%2322c55e%22%2F%3E%3Cpath%20d%3D%22M14%2030%2022%2014l8%2016%22%20stroke%3D%22%23fff%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20fill%3D%22none%22%2F%3E%3Ccircle%20cx%3D%2214%22%20cy%3D%2230%22%20r%3D%223.4%22%20fill%3D%22%23fff%22%2F%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2230%22%20r%3D%223.4%22%20fill%3D%22%23fff%22%2F%3E%3Ccircle%20cx%3D%2222%22%20cy%3D%2214%22%20r%3D%223.4%22%20fill%3D%22%23fff%22%2F%3E%3Cpath%20d%3D%22M14%2030h16%22%20stroke%3D%22%23fff%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.7%22%2F%3E%3C%2Fsvg%3E">
+    <script src="https://nexus.getstocky.com/js/theme-boot.js"></script>
+    <link rel="preload" as="style" href="https://nexus.getstocky.com/build/assets/app-De8Bi6e6.css"><link rel="modulepreload" as="script" href="https://nexus.getstocky.com/build/assets/app-1vHUYfaA.js"><link rel="stylesheet" href="https://nexus.getstocky.com/build/assets/app-De8Bi6e6.css"><script type="module" src="https://nexus.getstocky.com/build/assets/app-1vHUYfaA.js"></script><style>:root{--swal2-outline: 0 0 0 3px rgba(100, 150, 200, 0.5);--swal2-container-padding: 0.625em;--swal2-backdrop: rgba(0, 0, 0, 0.4);--swal2-backdrop-transition: background-color 0.15s;--swal2-width: 32em;--swal2-padding: 0 0 1.25em;--swal2-border: none;--swal2-border-radius: 0.3125rem;--swal2-background: white;--swal2-color: #545454;--swal2-show-animation: swal2-show 0.3s;--swal2-hide-animation: swal2-hide 0.15s forwards;--swal2-icon-zoom: 1;--swal2-title-padding: 0.8em 1em 0;--swal2-html-container-padding: 1em 1.6em 0.3em;--swal2-input-border: 1px solid #d9d9d9;--swal2-input-border-radius: 0.1875em;--swal2-input-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.06), 0 0 0 3px transparent;--swal2-input-background: transparent;--swal2-input-transition: border-color 0.2s, box-shadow 0.2s;--swal2-input-hover-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.06), 0 0 0 3px transparent;--swal2-input-focus-border: 1px solid #b4dbed;--swal2-input-focus-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.06), 0 0 0 3px rgba(100, 150, 200, 0.5);--swal2-progress-step-background: #add8e6;--swal2-validation-message-background: #f0f0f0;--swal2-validation-message-color: #666;--swal2-footer-border-color: #eee;--swal2-footer-background: transparent;--swal2-footer-color: inherit;--swal2-timer-progress-bar-background: rgba(0, 0, 0, 0.3);--swal2-close-button-position: initial;--swal2-close-button-inset: auto;--swal2-close-button-font-size: 2.5em;--swal2-close-button-color: #ccc;--swal2-close-button-transition: color 0.2s, box-shadow 0.2s;--swal2-close-button-outline: initial;--swal2-close-button-box-shadow: inset 0 0 0 3px transparent;--swal2-close-button-focus-box-shadow: inset var(--swal2-outline);--swal2-close-button-hover-transform: none;--swal2-actions-justify-content: center;--swal2-actions-width: auto;--swal2-actions-margin: 1.25em auto 0;--swal2-actions-padding: 0;--swal2-actions-border-radius: 0;--swal2-actions-background: transparent;--swal2-action-button-transition: background-color 0.2s, box-shadow 0.2s;--swal2-action-button-hover: black 10%;--swal2-action-button-active: black 10%;--swal2-confirm-button-box-shadow: none;--swal2-confirm-button-border-radius: 0.25em;--swal2-confirm-button-background-color: #7066e0;--swal2-confirm-button-color: #fff;--swal2-deny-button-box-shadow: none;--swal2-deny-button-border-radius: 0.25em;--swal2-deny-button-background-color: #dc3741;--swal2-deny-button-color: #fff;--swal2-cancel-button-box-shadow: none;--swal2-cancel-button-border-radius: 0.25em;--swal2-cancel-button-background-color: #6e7881;--swal2-cancel-button-color: #fff;--swal2-toast-show-animation: swal2-toast-show 0.5s;--swal2-toast-hide-animation: swal2-toast-hide 0.1s forwards;--swal2-toast-border: none;--swal2-toast-box-shadow: 0 0 1px hsl(0deg 0% 0% / 0.075), 0 1px 2px hsl(0deg 0% 0% / 0.075), 1px 2px 4px hsl(0deg 0% 0% / 0.075), 1px 3px 8px hsl(0deg 0% 0% / 0.075), 2px 4px 16px hsl(0deg 0% 0% / 0.075)}[data-swal2-theme=dark]{--swal2-dark-theme-black: #19191a;--swal2-dark-theme-white: #e1e1e1;--swal2-background: var(--swal2-dark-theme-black);--swal2-color: var(--swal2-dark-theme-white);--swal2-footer-border-color: #555;--swal2-input-background: color-mix(in srgb, var(--swal2-dark-theme-black), var(--swal2-dark-theme-white) 10%);--swal2-validation-message-background: color-mix( in srgb, var(--swal2-dark-theme-black), var(--swal2-dark-theme-white) 10% );--swal2-validation-message-color: var(--swal2-dark-theme-white);--swal2-timer-progress-bar-background: rgba(255, 255, 255, 0.7)}@media(prefers-color-scheme: dark){[data-swal2-theme=auto]{--swal2-dark-theme-black: #19191a;--swal2-dark-theme-white: #e1e1e1;--swal2-background: var(--swal2-dark-theme-black);--swal2-color: var(--swal2-dark-theme-white);--swal2-footer-border-color: #555;--swal2-input-background: color-mix(in srgb, var(--swal2-dark-theme-black), var(--swal2-dark-theme-white) 10%);--swal2-validation-message-background: color-mix( in srgb, var(--swal2-dark-theme-black), var(--swal2-dark-theme-white) 10% );--swal2-validation-message-color: var(--swal2-dark-theme-white);--swal2-timer-progress-bar-background: rgba(255, 255, 255, 0.7)}}body.swal2-shown:not(.swal2-no-backdrop,.swal2-toast-shown){overflow:hidden}body.swal2-height-auto{height:auto !important}body.swal2-no-backdrop .swal2-container{background-color:rgba(0,0,0,0) !important;pointer-events:none}body.swal2-no-backdrop .swal2-container .swal2-popup{pointer-events:auto}body.swal2-no-backdrop .swal2-container .swal2-modal{box-shadow:0 0 10px var(--swal2-backdrop)}body.swal2-toast-shown .swal2-container{box-sizing:border-box;width:360px;max-width:100%;background-color:rgba(0,0,0,0);pointer-events:none}body.swal2-toast-shown .swal2-container.swal2-top{inset:0 auto auto 50%;transform:translateX(-50%)}body.swal2-toast-shown .swal2-container.swal2-top-end,body.swal2-toast-shown .swal2-container.swal2-top-right{inset:0 0 auto auto}body.swal2-toast-shown .swal2-container.swal2-top-start,body.swal2-toast-shown .swal2-container.swal2-top-left{inset:0 auto auto 0}body.swal2-toast-shown .swal2-container.swal2-center-start,body.swal2-toast-shown .swal2-container.swal2-center-left{inset:50% auto auto 0;transform:translateY(-50%)}body.swal2-toast-shown .swal2-container.swal2-center{inset:50% auto auto 50%;transform:translate(-50%, -50%)}body.swal2-toast-shown .swal2-container.swal2-center-end,body.swal2-toast-shown .swal2-container.swal2-center-right{inset:50% 0 auto auto;transform:translateY(-50%)}body.swal2-toast-shown .swal2-container.swal2-bottom-start,body.swal2-toast-shown .swal2-container.swal2-bottom-left{inset:auto auto 0 0}body.swal2-toast-shown .swal2-container.swal2-bottom{inset:auto auto 0 50%;transform:translateX(-50%)}body.swal2-toast-shown .swal2-container.swal2-bottom-end,body.swal2-toast-shown .swal2-container.swal2-bottom-right{inset:auto 0 0 auto}@media print{body.swal2-shown:not(.swal2-no-backdrop,.swal2-toast-shown){overflow-y:scroll !important}body.swal2-shown:not(.swal2-no-backdrop,.swal2-toast-shown)>[aria-hidden=true]{display:none}body.swal2-shown:not(.swal2-no-backdrop,.swal2-toast-shown) .swal2-container{position:static !important}}div:where(.swal2-container){display:grid;position:fixed;z-index:1060;inset:0;box-sizing:border-box;grid-template-areas:"top-start     top            top-end" "center-start  center         center-end" "bottom-start  bottom-center  bottom-end";grid-template-rows:minmax(min-content, auto) minmax(min-content, auto) minmax(min-content, auto);height:100%;padding:var(--swal2-container-padding);overflow-x:hidden;transition:var(--swal2-backdrop-transition);-webkit-overflow-scrolling:touch}div:where(.swal2-container).swal2-backdrop-show,div:where(.swal2-container).swal2-noanimation{background:var(--swal2-backdrop)}div:where(.swal2-container).swal2-backdrop-hide{background:rgba(0,0,0,0) !important}div:where(.swal2-container).swal2-top-start,div:where(.swal2-container).swal2-center-start,div:where(.swal2-container).swal2-bottom-start{grid-template-columns:minmax(0, 1fr) auto auto}div:where(.swal2-container).swal2-top,div:where(.swal2-container).swal2-center,div:where(.swal2-container).swal2-bottom{grid-template-columns:auto minmax(0, 1fr) auto}div:where(.swal2-container).swal2-top-end,div:where(.swal2-container).swal2-center-end,div:where(.swal2-container).swal2-bottom-end{grid-template-columns:auto auto minmax(0, 1fr)}div:where(.swal2-container).swal2-top-start>.swal2-popup{align-self:start}div:where(.swal2-container).swal2-top>.swal2-popup{grid-column:2;place-self:start center}div:where(.swal2-container).swal2-top-end>.swal2-popup,div:where(.swal2-container).swal2-top-right>.swal2-popup{grid-column:3;place-self:start end}div:where(.swal2-container).swal2-center-start>.swal2-popup,div:where(.swal2-container).swal2-center-left>.swal2-popup{grid-row:2;align-self:center}div:where(.swal2-container).swal2-center>.swal2-popup{grid-column:2;grid-row:2;place-self:center center}div:where(.swal2-container).swal2-center-end>.swal2-popup,div:where(.swal2-container).swal2-center-right>.swal2-popup{grid-column:3;grid-row:2;place-self:center end}div:where(.swal2-container).swal2-bottom-start>.swal2-popup,div:where(.swal2-container).swal2-bottom-left>.swal2-popup{grid-column:1;grid-row:3;align-self:end}div:where(.swal2-container).swal2-bottom>.swal2-popup{grid-column:2;grid-row:3;place-self:end center}div:where(.swal2-container).swal2-bottom-end>.swal2-popup,div:where(.swal2-container).swal2-bottom-right>.swal2-popup{grid-column:3;grid-row:3;place-self:end end}div:where(.swal2-container).swal2-grow-row>.swal2-popup,div:where(.swal2-container).swal2-grow-fullscreen>.swal2-popup{grid-column:1/4;width:100%}div:where(.swal2-container).swal2-grow-column>.swal2-popup,div:where(.swal2-container).swal2-grow-fullscreen>.swal2-popup{grid-row:1/4;align-self:stretch}div:where(.swal2-container).swal2-no-transition{transition:none !important}div:where(.swal2-container)[popover]{width:auto;border:0}div:where(.swal2-container) div:where(.swal2-popup){display:none;position:relative;box-sizing:border-box;grid-template-columns:minmax(0, 100%);width:var(--swal2-width);max-width:100%;padding:var(--swal2-padding);border:var(--swal2-border);border-radius:var(--swal2-border-radius);background:var(--swal2-background);color:var(--swal2-color);font-family:inherit;font-size:1rem}div:where(.swal2-container) div:where(.swal2-popup):focus{outline:none}div:where(.swal2-container) div:where(.swal2-popup).swal2-loading{overflow-y:hidden}div:where(.swal2-container) div:where(.swal2-popup).swal2-draggable{cursor:grab}div:where(.swal2-container) div:where(.swal2-popup).swal2-draggable div:where(.swal2-icon){cursor:grab}div:where(.swal2-container) div:where(.swal2-popup).swal2-dragging{cursor:grabbing}div:where(.swal2-container) div:where(.swal2-popup).swal2-dragging div:where(.swal2-icon){cursor:grabbing}div:where(.swal2-container) h2:where(.swal2-title){position:relative;max-width:100%;margin:0;padding:var(--swal2-title-padding);color:inherit;font-size:1.875em;font-weight:600;text-align:center;text-transform:none;overflow-wrap:break-word;cursor:initial}div:where(.swal2-container) div:where(.swal2-actions){display:flex;z-index:1;box-sizing:border-box;flex-wrap:wrap;align-items:center;justify-content:var(--swal2-actions-justify-content);width:var(--swal2-actions-width);margin:var(--swal2-actions-margin);padding:var(--swal2-actions-padding);border-radius:var(--swal2-actions-border-radius);background:var(--swal2-actions-background)}div:where(.swal2-container) div:where(.swal2-loader){display:none;align-items:center;justify-content:center;width:2.2em;height:2.2em;margin:0 1.875em;animation:swal2-rotate-loading 1.5s linear 0s infinite normal;border-width:.25em;border-style:solid;border-radius:100%;border-color:#2778c4 rgba(0,0,0,0) #2778c4 rgba(0,0,0,0)}div:where(.swal2-container) button:where(.swal2-styled){margin:.3125em;padding:.625em 1.1em;transition:var(--swal2-action-button-transition);border:none;box-shadow:0 0 0 3px rgba(0,0,0,0);font-weight:500}div:where(.swal2-container) button:where(.swal2-styled):not([disabled]){cursor:pointer}div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-confirm){border-radius:var(--swal2-confirm-button-border-radius);background:initial;background-color:var(--swal2-confirm-button-background-color);box-shadow:var(--swal2-confirm-button-box-shadow);color:var(--swal2-confirm-button-color);font-size:1em}div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-confirm):hover{background-color:color-mix(in srgb, var(--swal2-confirm-button-background-color), var(--swal2-action-button-hover))}div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-confirm):active{background-color:color-mix(in srgb, var(--swal2-confirm-button-background-color), var(--swal2-action-button-active))}div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-deny){border-radius:var(--swal2-deny-button-border-radius);background:initial;background-color:var(--swal2-deny-button-background-color);box-shadow:var(--swal2-deny-button-box-shadow);color:var(--swal2-deny-button-color);font-size:1em}div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-deny):hover{background-color:color-mix(in srgb, var(--swal2-deny-button-background-color), var(--swal2-action-button-hover))}div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-deny):active{background-color:color-mix(in srgb, var(--swal2-deny-button-background-color), var(--swal2-action-button-active))}div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-cancel){border-radius:var(--swal2-cancel-button-border-radius);background:initial;background-color:var(--swal2-cancel-button-background-color);box-shadow:var(--swal2-cancel-button-box-shadow);color:var(--swal2-cancel-button-color);font-size:1em}div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-cancel):hover{background-color:color-mix(in srgb, var(--swal2-cancel-button-background-color), var(--swal2-action-button-hover))}div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-cancel):active{background-color:color-mix(in srgb, var(--swal2-cancel-button-background-color), var(--swal2-action-button-active))}div:where(.swal2-container) button:where(.swal2-styled):focus-visible{outline:none;box-shadow:var(--swal2-action-button-focus-box-shadow)}div:where(.swal2-container) button:where(.swal2-styled)[disabled]:not(.swal2-loading){opacity:.4}div:where(.swal2-container) button:where(.swal2-styled)::-moz-focus-inner{border:0}div:where(.swal2-container) div:where(.swal2-footer){margin:1em 0 0;padding:1em 1em 0;border-top:1px solid var(--swal2-footer-border-color);background:var(--swal2-footer-background);color:var(--swal2-footer-color);font-size:1em;text-align:center;cursor:initial}div:where(.swal2-container) .swal2-timer-progress-bar-container{position:absolute;right:0;bottom:0;left:0;grid-column:auto !important;overflow:hidden;border-bottom-right-radius:var(--swal2-border-radius);border-bottom-left-radius:var(--swal2-border-radius)}div:where(.swal2-container) div:where(.swal2-timer-progress-bar){width:100%;height:.25em;background:var(--swal2-timer-progress-bar-background)}div:where(.swal2-container) img:where(.swal2-image){max-width:100%;margin:2em auto 1em;cursor:initial}div:where(.swal2-container) button:where(.swal2-close){position:var(--swal2-close-button-position);inset:var(--swal2-close-button-inset);z-index:2;align-items:center;justify-content:center;width:1.2em;height:1.2em;margin-top:0;margin-right:0;margin-bottom:-1.2em;padding:0;overflow:hidden;transition:var(--swal2-close-button-transition);border:none;border-radius:var(--swal2-border-radius);outline:var(--swal2-close-button-outline);background:rgba(0,0,0,0);color:var(--swal2-close-button-color);font-family:monospace;font-size:var(--swal2-close-button-font-size);cursor:pointer;justify-self:end}div:where(.swal2-container) button:where(.swal2-close):hover{transform:var(--swal2-close-button-hover-transform);background:rgba(0,0,0,0);color:#f27474}div:where(.swal2-container) button:where(.swal2-close):focus-visible{outline:none;box-shadow:var(--swal2-close-button-focus-box-shadow)}div:where(.swal2-container) button:where(.swal2-close)::-moz-focus-inner{border:0}div:where(.swal2-container) div:where(.swal2-html-container){z-index:1;justify-content:center;margin:0;padding:var(--swal2-html-container-padding);overflow:auto;color:inherit;font-size:1.125em;font-weight:normal;line-height:normal;text-align:center;overflow-wrap:break-word;word-break:break-word;cursor:initial}div:where(.swal2-container) input:where(.swal2-input),div:where(.swal2-container) input:where(.swal2-file),div:where(.swal2-container) textarea:where(.swal2-textarea),div:where(.swal2-container) select:where(.swal2-select),div:where(.swal2-container) div:where(.swal2-radio),div:where(.swal2-container) label:where(.swal2-checkbox){margin:1em 2em 3px}div:where(.swal2-container) input:where(.swal2-input),div:where(.swal2-container) input:where(.swal2-file),div:where(.swal2-container) textarea:where(.swal2-textarea){box-sizing:border-box;width:auto;transition:var(--swal2-input-transition);border:var(--swal2-input-border);border-radius:var(--swal2-input-border-radius);background:var(--swal2-input-background);box-shadow:var(--swal2-input-box-shadow);color:inherit;font-size:1.125em}div:where(.swal2-container) input:where(.swal2-input).swal2-inputerror,div:where(.swal2-container) input:where(.swal2-file).swal2-inputerror,div:where(.swal2-container) textarea:where(.swal2-textarea).swal2-inputerror{border-color:#f27474 !important;box-shadow:0 0 2px #f27474 !important}div:where(.swal2-container) input:where(.swal2-input):hover,div:where(.swal2-container) input:where(.swal2-file):hover,div:where(.swal2-container) textarea:where(.swal2-textarea):hover{box-shadow:var(--swal2-input-hover-box-shadow)}div:where(.swal2-container) input:where(.swal2-input):focus,div:where(.swal2-container) input:where(.swal2-file):focus,div:where(.swal2-container) textarea:where(.swal2-textarea):focus{border:var(--swal2-input-focus-border);outline:none;box-shadow:var(--swal2-input-focus-box-shadow)}div:where(.swal2-container) input:where(.swal2-input)::placeholder,div:where(.swal2-container) input:where(.swal2-file)::placeholder,div:where(.swal2-container) textarea:where(.swal2-textarea)::placeholder{color:#ccc}div:where(.swal2-container) .swal2-range{margin:1em 2em 3px;background:var(--swal2-background)}div:where(.swal2-container) .swal2-range input{width:80%}div:where(.swal2-container) .swal2-range output{width:20%;color:inherit;font-weight:600;text-align:center}div:where(.swal2-container) .swal2-range input,div:where(.swal2-container) .swal2-range output{height:2.625em;padding:0;font-size:1.125em;line-height:2.625em}div:where(.swal2-container) .swal2-input{height:2.625em;padding:0 .75em}div:where(.swal2-container) .swal2-file{width:75%;margin-right:auto;margin-left:auto;background:var(--swal2-input-background);font-size:1.125em}div:where(.swal2-container) .swal2-textarea{height:6.75em;padding:.75em}div:where(.swal2-container) .swal2-select{min-width:50%;max-width:100%;padding:.375em .625em;background:var(--swal2-input-background);color:inherit;font-size:1.125em}div:where(.swal2-container) .swal2-radio,div:where(.swal2-container) .swal2-checkbox{align-items:center;justify-content:center;background:var(--swal2-background);color:inherit}div:where(.swal2-container) .swal2-radio label,div:where(.swal2-container) .swal2-checkbox label{margin:0 .6em;font-size:1.125em}div:where(.swal2-container) .swal2-radio input,div:where(.swal2-container) .swal2-checkbox input{flex-shrink:0;margin:0 .4em}div:where(.swal2-container) label:where(.swal2-input-label){display:flex;justify-content:center;margin:1em auto 0}div:where(.swal2-container) div:where(.swal2-validation-message){align-items:center;justify-content:center;margin:1em 0 0;padding:.625em;overflow:hidden;background:var(--swal2-validation-message-background);color:var(--swal2-validation-message-color);font-size:1em;font-weight:300}div:where(.swal2-container) div:where(.swal2-validation-message)::before{content:"!";display:inline-block;width:1.5em;min-width:1.5em;height:1.5em;margin:0 .625em;border-radius:50%;background-color:#f27474;color:#fff;font-weight:600;line-height:1.5em;text-align:center}div:where(.swal2-container) .swal2-progress-steps{flex-wrap:wrap;align-items:center;max-width:100%;margin:1.25em auto;padding:0;background:rgba(0,0,0,0);font-weight:600}div:where(.swal2-container) .swal2-progress-steps li{display:inline-block;position:relative}div:where(.swal2-container) .swal2-progress-steps .swal2-progress-step{z-index:20;flex-shrink:0;width:2em;height:2em;border-radius:2em;background:#2778c4;color:#fff;line-height:2em;text-align:center}div:where(.swal2-container) .swal2-progress-steps .swal2-progress-step.swal2-active-progress-step{background:#2778c4}div:where(.swal2-container) .swal2-progress-steps .swal2-progress-step.swal2-active-progress-step~.swal2-progress-step{background:var(--swal2-progress-step-background);color:#fff}div:where(.swal2-container) .swal2-progress-steps .swal2-progress-step.swal2-active-progress-step~.swal2-progress-step-line{background:var(--swal2-progress-step-background)}div:where(.swal2-container) .swal2-progress-steps .swal2-progress-step-line{z-index:10;flex-shrink:0;width:2.5em;height:.4em;margin:0 -1px;background:#2778c4}div:where(.swal2-icon){position:relative;box-sizing:content-box;justify-content:center;width:5em;height:5em;margin:2.5em auto .6em;zoom:var(--swal2-icon-zoom);border:.25em solid rgba(0,0,0,0);border-radius:50%;border-color:#000;font-family:inherit;line-height:5em;cursor:default;user-select:none}div:where(.swal2-icon) .swal2-icon-content{display:flex;align-items:center;font-size:3.75em}div:where(.swal2-icon).swal2-error{border-color:#f27474;color:#f27474}div:where(.swal2-icon).swal2-error .swal2-x-mark{position:relative;flex-grow:1}div:where(.swal2-icon).swal2-error [class^=swal2-x-mark-line]{display:block;position:absolute;top:2.3125em;width:2.9375em;height:.3125em;border-radius:.125em;background-color:#f27474}div:where(.swal2-icon).swal2-error [class^=swal2-x-mark-line][class$=left]{left:1.0625em;transform:rotate(45deg)}div:where(.swal2-icon).swal2-error [class^=swal2-x-mark-line][class$=right]{right:1em;transform:rotate(-45deg)}div:where(.swal2-icon).swal2-error.swal2-icon-show{animation:swal2-animate-error-icon .5s}div:where(.swal2-icon).swal2-error.swal2-icon-show .swal2-x-mark{animation:swal2-animate-error-x-mark .5s}div:where(.swal2-icon).swal2-warning{border-color:#f8bb86;color:#f8bb86}div:where(.swal2-icon).swal2-warning.swal2-icon-show{animation:swal2-animate-error-icon .5s}div:where(.swal2-icon).swal2-warning.swal2-icon-show .swal2-icon-content{animation:swal2-animate-i-mark .5s}div:where(.swal2-icon).swal2-info{border-color:#3fc3ee;color:#3fc3ee}div:where(.swal2-icon).swal2-info.swal2-icon-show{animation:swal2-animate-error-icon .5s}div:where(.swal2-icon).swal2-info.swal2-icon-show .swal2-icon-content{animation:swal2-animate-i-mark .8s}div:where(.swal2-icon).swal2-question{border-color:#87adbd;color:#87adbd}div:where(.swal2-icon).swal2-question.swal2-icon-show{animation:swal2-animate-error-icon .5s}div:where(.swal2-icon).swal2-question.swal2-icon-show .swal2-icon-content{animation:swal2-animate-question-mark .8s}div:where(.swal2-icon).swal2-success{border-color:#a5dc86;color:#a5dc86}div:where(.swal2-icon).swal2-success [class^=swal2-success-circular-line]{position:absolute;width:3.75em;height:7.5em;border-radius:50%}div:where(.swal2-icon).swal2-success [class^=swal2-success-circular-line][class$=left]{top:-0.4375em;left:-2.0635em;transform:rotate(-45deg);transform-origin:3.75em 3.75em;border-radius:7.5em 0 0 7.5em}div:where(.swal2-icon).swal2-success [class^=swal2-success-circular-line][class$=right]{top:-0.6875em;left:1.875em;transform:rotate(-45deg);transform-origin:0 3.75em;border-radius:0 7.5em 7.5em 0}div:where(.swal2-icon).swal2-success .swal2-success-ring{position:absolute;z-index:2;top:-0.25em;left:-0.25em;box-sizing:content-box;width:100%;height:100%;border:.25em solid rgba(165,220,134,.3);border-radius:50%}div:where(.swal2-icon).swal2-success .swal2-success-fix{position:absolute;z-index:1;top:.5em;left:1.625em;width:.4375em;height:5.625em;transform:rotate(-45deg)}div:where(.swal2-icon).swal2-success [class^=swal2-success-line]{display:block;position:absolute;z-index:2;height:.3125em;border-radius:.125em;background-color:#a5dc86}div:where(.swal2-icon).swal2-success [class^=swal2-success-line][class$=tip]{top:2.875em;left:.8125em;width:1.5625em;transform:rotate(45deg)}div:where(.swal2-icon).swal2-success [class^=swal2-success-line][class$=long]{top:2.375em;right:.5em;width:2.9375em;transform:rotate(-45deg)}div:where(.swal2-icon).swal2-success.swal2-icon-show .swal2-success-line-tip{animation:swal2-animate-success-line-tip .75s}div:where(.swal2-icon).swal2-success.swal2-icon-show .swal2-success-line-long{animation:swal2-animate-success-line-long .75s}div:where(.swal2-icon).swal2-success.swal2-icon-show .swal2-success-circular-line-right{animation:swal2-rotate-success-circular-line 4.25s ease-in}[class^=swal2]{-webkit-tap-highlight-color:rgba(0,0,0,0)}.swal2-show{animation:var(--swal2-show-animation)}.swal2-hide{animation:var(--swal2-hide-animation)}.swal2-noanimation{transition:none}.swal2-scrollbar-measure{position:absolute;top:-9999px;width:50px;height:50px;overflow:scroll}.swal2-rtl .swal2-close{margin-right:initial;margin-left:0}.swal2-rtl .swal2-timer-progress-bar{right:0;left:auto}.swal2-toast{box-sizing:border-box;grid-column:1/4 !important;grid-row:1/4 !important;grid-template-columns:min-content auto min-content;padding:1em;overflow-y:hidden;border:var(--swal2-toast-border);background:var(--swal2-background);box-shadow:var(--swal2-toast-box-shadow);pointer-events:auto}.swal2-toast>*{grid-column:2}.swal2-toast h2:where(.swal2-title){margin:.5em 1em;padding:0;font-size:1em;text-align:initial}.swal2-toast .swal2-loading{justify-content:center}.swal2-toast input:where(.swal2-input){height:2em;margin:.5em;font-size:1em}.swal2-toast .swal2-validation-message{font-size:1em}.swal2-toast div:where(.swal2-footer){margin:.5em 0 0;padding:.5em 0 0;font-size:.8em}.swal2-toast button:where(.swal2-close){grid-column:3/3;grid-row:1/99;align-self:center;width:.8em;height:.8em;margin:0;font-size:2em}.swal2-toast div:where(.swal2-html-container){margin:.5em 1em;padding:0;overflow:initial;font-size:1em;text-align:initial}.swal2-toast div:where(.swal2-html-container):empty{padding:0}.swal2-toast .swal2-loader{grid-column:1;grid-row:1/99;align-self:center;width:2em;height:2em;margin:.25em}.swal2-toast .swal2-icon{grid-column:1;grid-row:1/99;align-self:center;width:2em;min-width:2em;height:2em;margin:0 .5em 0 0}.swal2-toast .swal2-icon .swal2-icon-content{display:flex;align-items:center;font-size:1.8em;font-weight:bold}.swal2-toast .swal2-icon.swal2-success .swal2-success-ring{width:2em;height:2em}.swal2-toast .swal2-icon.swal2-error [class^=swal2-x-mark-line]{top:.875em;width:1.375em}.swal2-toast .swal2-icon.swal2-error [class^=swal2-x-mark-line][class$=left]{left:.3125em}.swal2-toast .swal2-icon.swal2-error [class^=swal2-x-mark-line][class$=right]{right:.3125em}.swal2-toast div:where(.swal2-actions){justify-content:flex-start;height:auto;margin:0;margin-top:.5em;padding:0 .5em}.swal2-toast button:where(.swal2-styled){margin:.25em .5em;padding:.4em .6em;font-size:1em}.swal2-toast .swal2-success{border-color:#a5dc86}.swal2-toast .swal2-success [class^=swal2-success-circular-line]{position:absolute;width:1.6em;height:3em;border-radius:50%}.swal2-toast .swal2-success [class^=swal2-success-circular-line][class$=left]{top:-0.8em;left:-0.5em;transform:rotate(-45deg);transform-origin:2em 2em;border-radius:4em 0 0 4em}.swal2-toast .swal2-success [class^=swal2-success-circular-line][class$=right]{top:-0.25em;left:.9375em;transform-origin:0 1.5em;border-radius:0 4em 4em 0}.swal2-toast .swal2-success .swal2-success-ring{width:2em;height:2em}.swal2-toast .swal2-success .swal2-success-fix{top:0;left:.4375em;width:.4375em;height:2.6875em}.swal2-toast .swal2-success [class^=swal2-success-line]{height:.3125em}.swal2-toast .swal2-success [class^=swal2-success-line][class$=tip]{top:1.125em;left:.1875em;width:.75em}.swal2-toast .swal2-success [class^=swal2-success-line][class$=long]{top:.9375em;right:.1875em;width:1.375em}.swal2-toast .swal2-success.swal2-icon-show .swal2-success-line-tip{animation:swal2-toast-animate-success-line-tip .75s}.swal2-toast .swal2-success.swal2-icon-show .swal2-success-line-long{animation:swal2-toast-animate-success-line-long .75s}.swal2-toast.swal2-show{animation:var(--swal2-toast-show-animation)}.swal2-toast.swal2-hide{animation:var(--swal2-toast-hide-animation)}@keyframes swal2-show{0%{transform:translate3d(0, -50px, 0) scale(0.9);opacity:0}100%{transform:translate3d(0, 0, 0) scale(1);opacity:1}}@keyframes swal2-hide{0%{transform:translate3d(0, 0, 0) scale(1);opacity:1}100%{transform:translate3d(0, -50px, 0) scale(0.9);opacity:0}}@keyframes swal2-animate-success-line-tip{0%{top:1.1875em;left:.0625em;width:0}54%{top:1.0625em;left:.125em;width:0}70%{top:2.1875em;left:-0.375em;width:3.125em}84%{top:3em;left:1.3125em;width:1.0625em}100%{top:2.8125em;left:.8125em;width:1.5625em}}@keyframes swal2-animate-success-line-long{0%{top:3.375em;right:2.875em;width:0}65%{top:3.375em;right:2.875em;width:0}84%{top:2.1875em;right:0;width:3.4375em}100%{top:2.375em;right:.5em;width:2.9375em}}@keyframes swal2-rotate-success-circular-line{0%{transform:rotate(-45deg)}5%{transform:rotate(-45deg)}12%{transform:rotate(-405deg)}100%{transform:rotate(-405deg)}}@keyframes swal2-animate-error-x-mark{0%{margin-top:1.625em;transform:scale(0.4);opacity:0}50%{margin-top:1.625em;transform:scale(0.4);opacity:0}80%{margin-top:-0.375em;transform:scale(1.15)}100%{margin-top:0;transform:scale(1);opacity:1}}@keyframes swal2-animate-error-icon{0%{transform:rotateX(100deg);opacity:0}100%{transform:rotateX(0deg);opacity:1}}@keyframes swal2-rotate-loading{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}@keyframes swal2-animate-question-mark{0%{transform:rotateY(-360deg)}100%{transform:rotateY(0)}}@keyframes swal2-animate-i-mark{0%{transform:rotateZ(45deg);opacity:0}25%{transform:rotateZ(-25deg);opacity:.4}50%{transform:rotateZ(15deg);opacity:.8}75%{transform:rotateZ(-5deg);opacity:1}100%{transform:rotateX(0);opacity:1}}@keyframes swal2-toast-show{0%{transform:translateY(-0.625em) rotateZ(2deg)}33%{transform:translateY(0) rotateZ(-2deg)}66%{transform:translateY(0.3125em) rotateZ(2deg)}100%{transform:translateY(0) rotateZ(0deg)}}@keyframes swal2-toast-hide{100%{transform:rotateZ(1deg);opacity:0}}@keyframes swal2-toast-animate-success-line-tip{0%{top:.5625em;left:.0625em;width:0}54%{top:.125em;left:.125em;width:0}70%{top:.625em;left:-0.25em;width:1.625em}84%{top:1.0625em;left:.75em;width:.5em}100%{top:1.125em;left:.1875em;width:.75em}}@keyframes swal2-toast-animate-success-line-long{0%{top:1.625em;right:1.375em;width:0}65%{top:1.25em;right:.9375em;width:0}84%{top:.9375em;right:0;width:1.125em}100%{top:.9375em;right:.1875em;width:1.375em}}</style></head>
+<body class="nx-app layout-fluid">
+    <div class="page">
+        <aside class="navbar navbar-vertical navbar-expand-lg nx-sidenav">
+    <div class="container-fluid">
+        <div class="navbar-brand navbar-brand-autodark py-3 d-flex align-items-center justify-content-between">
+            <a href="https://nexus.getstocky.com/dashboard" class="text-decoration-none d-flex align-items-center gap-2">
+                <span class="d-inline-flex align-items-center gap-2">
+            
+        <svg width="30" height="30" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect width="44" height="44" rx="12" fill="var(--accent, #22c55e)"></rect>
+            <path d="M14 30 22 14l8 16" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"></path>
+            <circle cx="14" cy="30" r="3.4" fill="#fff"></circle>
+            <circle cx="30" cy="30" r="3.4" fill="#fff"></circle>
+            <circle cx="22" cy="14" r="3.4" fill="#fff"></circle>
+            <path d="M14 30h16" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity="0.7"></path>
+        </svg>
+    
+            <span class="fs-3 fw-bold nx-brand-word">Nexus</span>
+    </span>
+            </a>
+
+            
+            <button type="button" class="btn btn-icon nx-tool d-lg-none" data-nx-sidenav-close="" aria-label="Close menu" title="Close menu">
+                <i class="ti ti-x"></i>
+            </button>
+        </div>
+
+        <div class="collapse navbar-collapse" id="nx-sidenav-menu">
+            <ul class="navbar-nav pt-lg-2 pb-4">
+                                                        
+                    
+                                                                    <li class="nav-item">
+                            <a class="nav-link active " href="https://nexus.getstocky.com/dashboard">
+                                <i class="ti ti-layout-dashboard"></i>
+                                <span>Dashboard</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/calendar">
+                                <i class="ti ti-calendar"></i>
+                                <span>Calendar</span>
+                                                            </a>
+                        </li>
+                                                                            
+                                            <li class="nx-nav-heading">My workspace</li>
+                    
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/me/attendance">
+                                <i class="ti ti-clock-check"></i>
+                                <span>My Attendance</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/me/leave">
+                                <i class="ti ti-beach"></i>
+                                <span>My Leave</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/me/payslips">
+                                <i class="ti ti-receipt"></i>
+                                <span>My Payslips</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/me/expenses">
+                                <i class="ti ti-credit-card"></i>
+                                <span>My Expenses</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/me/tasks">
+                                <i class="ti ti-checkbox"></i>
+                                <span>My Tasks</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/me/timesheet">
+                                <i class="ti ti-hourglass"></i>
+                                <span>My Timesheet</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/me/goals">
+                                <i class="ti ti-target"></i>
+                                <span>My Goals</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/me/approvals">
+                                <i class="ti ti-checks"></i>
+                                <span>Approvals</span>
+                                                            </a>
+                        </li>
+                                                                            
+                                            <li class="nx-nav-heading">People</li>
+                    
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/hr/employees">
+                                <i class="ti ti-users"></i>
+                                <span>Employees</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/hr/org-chart">
+                                <i class="ti ti-hierarchy-2"></i>
+                                <span>Org Chart</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/hr/departments">
+                                <i class="ti ti-building"></i>
+                                <span>Departments</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/hr/designations">
+                                <i class="ti ti-id-badge-2"></i>
+                                <span>Designations</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/hr/onboarding">
+                                <i class="ti ti-user-plus"></i>
+                                <span>Onboarding</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/hr/documents">
+                                <i class="ti ti-file-certificate"></i>
+                                <span>Documents</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/hr/announcements">
+                                <i class="ti ti-speakerphone"></i>
+                                <span>Announcements</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/hr/assets">
+                                <i class="ti ti-device-laptop"></i>
+                                <span>Company Assets</span>
+                                                            </a>
+                        </li>
+                                                                            
+                                            <li class="nx-nav-heading">Time &amp; attendance</li>
+                    
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/hr/attendance">
+                                <i class="ti ti-clock"></i>
+                                <span>Attendance</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/hr/timesheets">
+                                <i class="ti ti-calendar-stats"></i>
+                                <span>Timesheets</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/hr/shifts">
+                                <i class="ti ti-calendar-time"></i>
+                                <span>Shifts &amp; Schedules</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/hr/holidays">
+                                <i class="ti ti-confetti"></i>
+                                <span>Holidays</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/hr/leave">
+                                <i class="ti ti-beach"></i>
+                                <span>Leave Requests</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/hr/leave-types">
+                                <i class="ti ti-list-details"></i>
+                                <span>Leave Types</span>
+                                                            </a>
+                        </li>
+                                                                            
+                                            <li class="nx-nav-heading">Payroll</li>
+                    
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/hr/payroll">
+                                <i class="ti ti-cash"></i>
+                                <span>Pay Runs</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/hr/salary-components">
+                                <i class="ti ti-stack-2"></i>
+                                <span>Salary Structures</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/hr/loans">
+                                <i class="ti ti-building-bank"></i>
+                                <span>Loans &amp; Advances</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/hr/expenses">
+                                <i class="ti ti-receipt-2"></i>
+                                <span>Expense Claims</span>
+                                                            </a>
+                        </li>
+                                                                            
+                                            <li class="nx-nav-heading">Talent</li>
+                    
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/hr/jobs">
+                                <i class="ti ti-briefcase"></i>
+                                <span>Job Openings</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/hr/candidates">
+                                <i class="ti ti-user-search"></i>
+                                <span>Candidates</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/hr/interviews">
+                                <i class="ti ti-messages"></i>
+                                <span>Interviews</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/hr/goals">
+                                <i class="ti ti-target-arrow"></i>
+                                <span>Goals &amp; OKRs</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/hr/reviews">
+                                <i class="ti ti-star"></i>
+                                <span>Reviews</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/hr/training">
+                                <i class="ti ti-school"></i>
+                                <span>Training</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/hr/warnings">
+                                <i class="ti ti-alert-triangle"></i>
+                                <span>Warnings</span>
+                                                            </a>
+                        </li>
+                                                                            
+                                            <li class="nx-nav-heading">CRM</li>
+                    
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/crm/leads">
+                                <i class="ti ti-user-star"></i>
+                                <span>Leads</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/crm/deals">
+                                <i class="ti ti-coin"></i>
+                                <span>Deals</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/crm/contacts">
+                                <i class="ti ti-address-book"></i>
+                                <span>Contacts</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/crm/companies">
+                                <i class="ti ti-building-skyscraper"></i>
+                                <span>Companies</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/crm/activities">
+                                <i class="ti ti-activity"></i>
+                                <span>Activities</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/crm/campaigns">
+                                <i class="ti ti-send"></i>
+                                <span>Campaigns</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/crm/templates">
+                                <i class="ti ti-mail"></i>
+                                <span>Email Templates</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/crm/forms">
+                                <i class="ti ti-forms"></i>
+                                <span>Web Forms</span>
+                                                            </a>
+                        </li>
+                                                                            
+                                            <li class="nx-nav-heading">Sales</li>
+                    
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/sales/products">
+                                <i class="ti ti-package"></i>
+                                <span>Products &amp; Services</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/sales/quotes">
+                                <i class="ti ti-file-description"></i>
+                                <span>Quotes</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/sales/invoices">
+                                <i class="ti ti-file-invoice"></i>
+                                <span>Invoices</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/sales/payments">
+                                <i class="ti ti-cash-banknote"></i>
+                                <span>Payments</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/sales/contracts">
+                                <i class="ti ti-file-signature"></i>
+                                <span>Contracts</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/support/tickets">
+                                <i class="ti ti-lifebuoy"></i>
+                                <span>Support Tickets</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/support/articles">
+                                <i class="ti ti-book-2"></i>
+                                <span>Knowledge Base</span>
+                                                            </a>
+                        </li>
+                                                                            
+                                            <li class="nx-nav-heading">Projects</li>
+                    
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/projects">
+                                <i class="ti ti-folders"></i>
+                                <span>Projects</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/projects/tasks">
+                                <i class="ti ti-checklist"></i>
+                                <span>All Tasks</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/projects/time">
+                                <i class="ti ti-stopwatch"></i>
+                                <span>Time Tracking</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/projects/workload">
+                                <i class="ti ti-chart-arcs"></i>
+                                <span>Workload</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/projects/templates">
+                                <i class="ti ti-template"></i>
+                                <span>Templates</span>
+                                                            </a>
+                        </li>
+                                                                            
+                                            <li class="nx-nav-heading">Reports</li>
+                    
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/reports/hr">
+                                <i class="ti ti-report"></i>
+                                <span>HR Reports</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/reports/sales">
+                                <i class="ti ti-chart-line"></i>
+                                <span>Sales Reports</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/reports/projects">
+                                <i class="ti ti-chart-bar"></i>
+                                <span>Project Reports</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/activity">
+                                <i class="ti ti-history"></i>
+                                <span>Activity Log</span>
+                                                            </a>
+                        </li>
+                                                                            
+                                            <li class="nx-nav-heading">Settings</li>
+                    
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/settings/general">
+                                <i class="ti ti-adjustments"></i>
+                                <span>General Settings</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/locations">
+                                <i class="ti ti-map-pin"></i>
+                                <span>Locations</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/users">
+                                <i class="ti ti-user-shield"></i>
+                                <span>Users &amp; Roles</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/hr/settings">
+                                <i class="ti ti-settings-2"></i>
+                                <span>HR Settings</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/crm/settings">
+                                <i class="ti ti-settings-cog"></i>
+                                <span>CRM Settings</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/projects/settings">
+                                <i class="ti ti-settings-check"></i>
+                                <span>Project Settings</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/settings/notifications">
+                                <i class="ti ti-mail-cog"></i>
+                                <span>Notifications</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/api-tokens">
+                                <i class="ti ti-key"></i>
+                                <span>API Tokens</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/settings/languages">
+                                <i class="ti ti-language"></i>
+                                <span>Languages</span>
+                                                            </a>
+                        </li>
+                                                                    <li class="nav-item">
+                            <a class="nav-link  " href="https://nexus.getstocky.com/settings/backup">
+                                <i class="ti ti-database-export"></i>
+                                <span>Backup &amp; Update</span>
+                                                            </a>
+                        </li>
+                                                </ul>
+        </div>
+    </div>
+</aside>
+
+
+<div class="nx-sidenav-backdrop d-print-none" data-nx-sidenav-close="" aria-hidden="true"></div>
+
+        <div class="page-wrapper">
+            <header class="navbar navbar-expand-md d-print-none">
+    <div class="container-xl">
+        
+        <button type="button" class="btn btn-icon nx-tool me-2" data-nx-sidenav-toggle="" aria-label="Collapse sidebar" title="Collapse sidebar" data-expand-label="Expand sidebar" data-menu-label="Open menu" aria-controls="nx-sidenav-menu" aria-expanded="true">
+            <i class="ti ti-menu-2"></i>
+        </button>
+
+        
+        <a href="https://nexus.getstocky.com/dashboard" class="nx-topbar-brand d-lg-none me-2">
+            <span class="d-inline-flex align-items-center gap-2">
+            
+        <svg width="30" height="30" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect width="44" height="44" rx="12" fill="var(--accent, #22c55e)"></rect>
+            <path d="M14 30 22 14l8 16" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"></path>
+            <circle cx="14" cy="30" r="3.4" fill="#fff"></circle>
+            <circle cx="30" cy="30" r="3.4" fill="#fff"></circle>
+            <circle cx="22" cy="14" r="3.4" fill="#fff"></circle>
+            <path d="M14 30h16" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity="0.7"></path>
+        </svg>
+    
+            <span class="fs-3 fw-bold nx-brand-word">Nexus</span>
+    </span>
+        </a>
+
+        
+        <form class="nx-search d-none d-md-block" role="search" action="https://nexus.getstocky.com/search" method="GET" x-data="globalSearch('https:\/\/nexus.getstocky.com\/search', '')" @click.outside="close()" @keydown.escape.prevent="close()">
+            <div class="input-icon">
+                <span class="input-icon-addon"><i class="ti ti-search"></i></span>
+                <input type="search" name="q" class="form-control" x-ref="input" x-model="query" placeholder="Search people, deals, projects…" aria-label="Search" autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" :aria-expanded="open ? 'true' : 'false'" @input="onInput()" @focus="onFocus()" @keydown.down.prevent="move(1)" @keydown.up.prevent="move(-1)" @keydown.enter.prevent="go()" aria-expanded="false">
+                <kbd class="nx-search__hint" x-show="!query" aria-hidden="true">/</kbd>
+            </div>
+
+            <div class="nx-search__panel" x-show="open" x-transition.opacity.duration.120ms="" style="display: none;">
+                <template x-if="loading &amp;&amp; !groups.length">
+                    <div class="nx-search__status">
+                        <span class="spinner-border spinner-border-sm me-2" role="status"></span>Searching…
+                    </div>
+                </template>
+
+                <template x-if="empty">
+                    <div class="nx-search__status">
+                        <i class="ti ti-zoom-cancel me-2"></i>Nothing matches “<span x-text="query"></span>”
+                    </div>
+                </template>
+
+                <template x-for="(group, g) in groups" :key="group.label">
+                    <div class="nx-search__group">
+                        <div class="nx-search__heading">
+                            <i :class="'ti ti-' + group.icon"></i><span x-text="group.label"></span>
+                        </div>
+                        <template x-for="(item, i) in group.items" :key="item.url + item.title">
+                            <a class="nx-search__item" :href="item.url" :class="{ 'is-active': active === indexOf(g, i) }" @mouseenter="active = indexOf(g, i)" @click.prevent="go(indexOf(g, i))">
+                                <span class="nx-search__title" x-text="item.title"></span>
+                                <span class="nx-search__subtitle" x-text="item.subtitle" x-show="item.subtitle"></span>
+                            </a>
+                        </template>
+                    </div>
+                </template>
+
+                <div class="nx-search__footer" x-show="flat.length" style="display: none;">
+                    <span><kbd>↑</kbd><kbd>↓</kbd> move</span>
+                    <span><kbd>↵</kbd> open</span>
+                    <span><kbd>esc</kbd> close</span>
+                    <a class="ms-auto" :href="allUrl" href="https://nexus.getstocky.com/search?q=">See all results</a>
+                </div>
+            </div>
+        </form>
+
+        <div class="ms-auto d-flex align-items-center gap-1">
+            
+            <div class="dropdown d-none d-md-block me-1">
+                <button type="button" class="btn btn-primary btn-sm d-inline-flex align-items-center" data-bs-toggle="dropdown" aria-label="Quick add">
+                    <i class="ti ti-plus me-1"></i>New
+                </button>
+                <div class="dropdown-menu dropdown-menu-end nx-menu">
+                                                                        <a class="dropdown-item" href="https://nexus.getstocky.com/hr/employees/create"><i class="ti ti-user-plus"></i>Employee</a>
+                                                                                                <a class="dropdown-item" href="https://nexus.getstocky.com/me/leave/new"><i class="ti ti-beach"></i>Leave request</a>
+                                                                                                <a class="dropdown-item" href="https://nexus.getstocky.com/crm/leads/create"><i class="ti ti-user-star"></i>Lead</a>
+                                                                                                <a class="dropdown-item" href="https://nexus.getstocky.com/crm/deals/create"><i class="ti ti-coin"></i>Deal</a>
+                                                                                                <a class="dropdown-item" href="https://nexus.getstocky.com/sales/invoices/create"><i class="ti ti-file-invoice"></i>Invoice</a>
+                                                                                                <a class="dropdown-item" href="https://nexus.getstocky.com/projects/create"><i class="ti ti-folder-plus"></i>Project</a>
+                                                                                                <a class="dropdown-item" href="https://nexus.getstocky.com/projects/tasks/create"><i class="ti ti-checkbox"></i>Task</a>
+                                                                                                <a class="dropdown-item" href="https://nexus.getstocky.com/support/tickets/create"><i class="ti ti-lifebuoy"></i>Ticket</a>
+                                                            </div>
+            </div>
+
+            <div class="dropdown">
+    <button type="button" class="btn btn-icon nx-tool" data-bs-toggle="dropdown" title="Language" aria-label="Language">
+        <i class="ti ti-world"></i>
+    </button>
+    <div class="dropdown-menu dropdown-menu-end nx-menu">
+        <div class="nx-menu-head">
+            <span class="nx-menu-title">Language</span>
+            <span class="nx-menu-count">English</span>
+        </div>
+                    <form method="POST" action="https://nexus.getstocky.com/locale/en">
+                <input type="hidden" name="_token" value="Wca0NFHDj8n5FsEYtTQ2ZGWtZGb6SlV5Dm9OhtTM" autocomplete="off">                <button type="submit" class="dropdown-item nx-lang active">
+                    <span class="nx-lang-code">en</span>
+                    <span class="nx-lang-name">English</span>
+                                            <i class="ti ti-check nx-lang-check"></i>
+                                    </button>
+            </form>
+                    <form method="POST" action="https://nexus.getstocky.com/locale/fr">
+                <input type="hidden" name="_token" value="Wca0NFHDj8n5FsEYtTQ2ZGWtZGb6SlV5Dm9OhtTM" autocomplete="off">                <button type="submit" class="dropdown-item nx-lang ">
+                    <span class="nx-lang-code">fr</span>
+                    <span class="nx-lang-name">Français</span>
+                                    </button>
+            </form>
+                    <form method="POST" action="https://nexus.getstocky.com/locale/es">
+                <input type="hidden" name="_token" value="Wca0NFHDj8n5FsEYtTQ2ZGWtZGb6SlV5Dm9OhtTM" autocomplete="off">                <button type="submit" class="dropdown-item nx-lang ">
+                    <span class="nx-lang-code">es</span>
+                    <span class="nx-lang-name">Español</span>
+                                    </button>
+            </form>
+                    <form method="POST" action="https://nexus.getstocky.com/locale/de">
+                <input type="hidden" name="_token" value="Wca0NFHDj8n5FsEYtTQ2ZGWtZGb6SlV5Dm9OhtTM" autocomplete="off">                <button type="submit" class="dropdown-item nx-lang ">
+                    <span class="nx-lang-code">de</span>
+                    <span class="nx-lang-name">Deutsch</span>
+                                    </button>
+            </form>
+                    <form method="POST" action="https://nexus.getstocky.com/locale/pt">
+                <input type="hidden" name="_token" value="Wca0NFHDj8n5FsEYtTQ2ZGWtZGb6SlV5Dm9OhtTM" autocomplete="off">                <button type="submit" class="dropdown-item nx-lang ">
+                    <span class="nx-lang-code">pt</span>
+                    <span class="nx-lang-name">Português</span>
+                                    </button>
+            </form>
+                    <form method="POST" action="https://nexus.getstocky.com/locale/tr">
+                <input type="hidden" name="_token" value="Wca0NFHDj8n5FsEYtTQ2ZGWtZGb6SlV5Dm9OhtTM" autocomplete="off">                <button type="submit" class="dropdown-item nx-lang ">
+                    <span class="nx-lang-code">tr</span>
+                    <span class="nx-lang-name">Türkçe</span>
+                                    </button>
+            </form>
+                    <form method="POST" action="https://nexus.getstocky.com/locale/hi">
+                <input type="hidden" name="_token" value="Wca0NFHDj8n5FsEYtTQ2ZGWtZGb6SlV5Dm9OhtTM" autocomplete="off">                <button type="submit" class="dropdown-item nx-lang ">
+                    <span class="nx-lang-code">hi</span>
+                    <span class="nx-lang-name">हिन्दी</span>
+                                    </button>
+            </form>
+                    <form method="POST" action="https://nexus.getstocky.com/locale/ar">
+                <input type="hidden" name="_token" value="Wca0NFHDj8n5FsEYtTQ2ZGWtZGb6SlV5Dm9OhtTM" autocomplete="off">                <button type="submit" class="dropdown-item nx-lang ">
+                    <span class="nx-lang-code">ar</span>
+                    <span class="nx-lang-name">العربية</span>
+                                    </button>
+            </form>
+            </div>
+</div>
+
+            <button type="button" class="btn btn-icon nx-tool d-none d-md-inline-flex" data-nx-fullscreen="" title="Toggle fullscreen" aria-label="Toggle fullscreen">
+                <i class="ti ti-arrows-maximize"></i>
+            </button>
+
+            <button type="button" class="btn btn-icon nx-tool" data-nx-theme-toggle="" title="Toggle theme" aria-label="Toggle theme">
+                <i class="ti ti-moon-stars"></i>
+            </button>
+
+            
+            <div class="dropdown">
+                <button type="button" class="btn btn-icon nx-tool nx-bell" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-label="Notifications" title="Notifications">
+                    <i class="ti ti-bell"></i>
+                                    </button>
+                <div class="dropdown-menu dropdown-menu-end nx-menu nx-menu-wide">
+                    <div class="nx-menu-head">
+                        <span class="nx-menu-title">Notifications</span>
+                                            </div>
+
+                                            <a href="https://nexus.getstocky.com/notifications/73/open" class="nx-alert ">
+                            <span class="nx-alert-icon nx-alert-accent">
+                                <i class="ti ti-checkbox"></i>
+                            </span>
+                            <span class="nx-alert-body">
+                                <span class="nx-alert-title">Task assigned: Home screen layout</span>
+                                <span class="nx-alert-meta">You were put on "Home screen layout" in Mobile app v2. · 1 hour ago</span>
+                            </span>
+                        </a>
+                                            <a href="https://nexus.getstocky.com/notifications/74/open" class="nx-alert ">
+                            <span class="nx-alert-icon nx-alert-accent">
+                                <i class="ti ti-checkbox"></i>
+                            </span>
+                            <span class="nx-alert-body">
+                                <span class="nx-alert-title">Task assigned: Empty states and skeletons</span>
+                                <span class="nx-alert-meta">You were put on "Empty states and skeletons" in Mobile app v2. · 1 hour ago</span>
+                            </span>
+                        </a>
+                                            <a href="https://nexus.getstocky.com/notifications/75/open" class="nx-alert ">
+                            <span class="nx-alert-icon nx-alert-accent">
+                                <i class="ti ti-checkbox"></i>
+                            </span>
+                            <span class="nx-alert-body">
+                                <span class="nx-alert-title">Task assigned: Crash reporting dashboard</span>
+                                <span class="nx-alert-meta">You were put on "Crash reporting dashboard" in Mobile app v2. · 1 hour ago</span>
+                            </span>
+                        </a>
+                                            <a href="https://nexus.getstocky.com/notifications/76/open" class="nx-alert ">
+                            <span class="nx-alert-icon nx-alert-accent">
+                                <i class="ti ti-checkbox"></i>
+                            </span>
+                            <span class="nx-alert-body">
+                                <span class="nx-alert-title">Task assigned: Triage new crash reports</span>
+                                <span class="nx-alert-meta">You were put on "Triage new crash reports" in Mobile app v2. · 1 hour ago</span>
+                            </span>
+                        </a>
+                                            <a href="https://nexus.getstocky.com/notifications/2/open" class="nx-alert ">
+                            <span class="nx-alert-icon nx-alert-accent">
+                                <i class="ti ti-star"></i>
+                            </span>
+                            <span class="nx-alert-body">
+                                <span class="nx-alert-title">Your self review for Q3 2026 review is open</span>
+                                <span class="nx-alert-meta">1 hour ago</span>
+                            </span>
+                        </a>
+                                            <a href="https://nexus.getstocky.com/notifications/27/open" class="nx-alert ">
+                            <span class="nx-alert-icon nx-alert-accent">
+                                <i class="ti ti-star"></i>
+                            </span>
+                            <span class="nx-alert-body">
+                                <span class="nx-alert-title">Your self review for Q4 2026 review is open</span>
+                                <span class="nx-alert-meta">1 hour ago</span>
+                            </span>
+                        </a>
+                    
+                    <div class="dropdown-divider"></div>
+                    <div class="d-flex justify-content-between align-items-center px-2 pb-1">
+                        <a href="https://nexus.getstocky.com/notifications" class="small">See all</a>
+                                            </div>
+                </div>
+            </div>
+
+            <div class="vr mx-2 d-none d-md-block opacity-25"></div>
+
+            
+            <div class="dropdown">
+                <a href="#" class="nx-user-chip" data-bs-toggle="dropdown" aria-label="Open user menu">
+                    <span class="avatar avatar-sm rounded-circle  nx-avatar-accent">
+    A</span>
+                    <span class="nx-user-meta d-none d-md-flex flex-column">
+                        <span class="fw-semibold">Administrator</span>
+                        <small class="text-secondary">System Administrator</small>
+                    </span>
+                    <i class="ti ti-chevron-down text-secondary d-none d-md-inline"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-end nx-menu">
+                    <div class="nx-menu-user">
+                        <span class="avatar  rounded-circle  nx-avatar-accent">
+    A</span>
+                        <span class="nx-menu-user-body">
+                            <span class="nx-menu-user-name">Administrator</span>
+                            <span class="nx-menu-user-mail">admin@nexus.test</span>
+                            <span class="nx-menu-role">Administrator</span>
+                        </span>
+                    </div>
+
+                    <div class="dropdown-divider"></div>
+
+                    <a class="dropdown-item" href="https://nexus.getstocky.com/profile">
+                        <i class="ti ti-user"></i>My Profile
+                    </a>
+
+                                            <a class="dropdown-item" href="https://nexus.getstocky.com/settings/general">
+                            <i class="ti ti-settings"></i>Settings
+                        </a>
+                    
+                                            <button type="button" class="dropdown-item" data-nx-open-customizer="">
+                            <i class="ti ti-palette"></i>Customize
+                        </button>
+                    
+                    <div class="dropdown-divider"></div>
+
+                    <form method="POST" action="https://nexus.getstocky.com/logout">
+                        <input type="hidden" name="_token" value="Wca0NFHDj8n5FsEYtTQ2ZGWtZGb6SlV5Dm9OhtTM" autocomplete="off">                        <button type="submit" class="dropdown-item nx-item-danger">
+                            <i class="ti ti-logout"></i>Sign out
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+            <div class="page-header d-print-none">
+                <div class="container-xl">
+                    <div class="row g-2 align-items-center">
+                        <div class="col">
+                                                            <div class="nx-pretitle">Nexus</div>
+                                                        <h2 class="page-title">Dashboard</h2>
+                        </div>
+                        <div class="col-auto d-none d-sm-block">
+                            <nav aria-label="breadcrumbs">
+                                <ol class="nx-crumbs">
+                                    <li>
+                                        <a href="https://nexus.getstocky.com/dashboard">
+                                            <i class="ti ti-home"></i>Home
+                                        </a>
+                                    </li>
+                                                                            <li><i class="ti ti-chevron-right nx-crumb-sep"></i></li>
+                                        <li><a href="#">Nexus</a></li>
+                                                                        <li><i class="ti ti-chevron-right nx-crumb-sep"></i></li>
+                                    <li aria-current="page"><span class="nx-crumb-now">Dashboard</span></li>
+                                </ol>
+                            </nav>
+                        </div>
+                        <div class="col-auto d-print-none">
+                                
+    <div class="btn-group btn-group-sm d-print-none" role="group" aria-label="Trend period">
+                    <a href="https://nexus.getstocky.com/dashboard?months=3" class="btn btn-outline-secondary">Last 3 months</a>
+                    <a href="https://nexus.getstocky.com/dashboard?months=6" class="btn btn-primary" aria-current="true">Last 6 months</a>
+                    <a href="https://nexus.getstocky.com/dashboard?months=12" class="btn btn-outline-secondary">Last 12 months</a>
+            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-body">
+                <div class="container-xl">
+                    <div class="mb-3">
+    <div class="h2 mb-0">Good evening, Administrator</div>
+    <div class="text-secondary">
+        Wednesday, 7 October 2026
+        <span class="mx-1">·</span>
+        Trends cover the last 6 months
+    </div>
+</div>
+
+
+    <div class="nx-section">
+    <h2 class="nx-section-title"><i class="ti ti-user"></i>Your day</h2>
+    <span class="nx-section-rule"></span>
+    <a href="https://nexus.getstocky.com/me/approvals" class="nx-section-link">Approvals<i class="ti ti-arrow-right ms-1"></i></a>
+</div>
+
+            <div class="row row-deck row-cards mb-3">
+    <div class="col-md-6 col-lg-3">
+        <div class="card h-100">
+            <div class="card-body nx-clock nx-widget-clock " x-data="clock({ state: 'done' })">
+                                    <div class="nx-clock-time nx-num">0m</div>
+                    <div class="nx-clock-state">Done for today · 20:33 – 20:33</div>
+                
+                <div class="nx-clock-buttons">
+                                            <form method="POST" action="https://nexus.getstocky.com/me/attendance/clock" @submit="submit($event)">
+                            <input type="hidden" name="_token" value="Wca0NFHDj8n5FsEYtTQ2ZGWtZGb6SlV5Dm9OhtTM" autocomplete="off">                            <input type="hidden" name="action" value="in">
+                            <button type="submit" class="btn btn-sm btn-success" :disabled="!can('in')" disabled="disabled"><i class="ti ti-player-play me-1"></i>Clock in</button>
+                        </form>
+                                            <form method="POST" action="https://nexus.getstocky.com/me/attendance/clock" @submit="submit($event)">
+                            <input type="hidden" name="_token" value="Wca0NFHDj8n5FsEYtTQ2ZGWtZGb6SlV5Dm9OhtTM" autocomplete="off">                            <input type="hidden" name="action" value="break_start">
+                            <button type="submit" class="btn btn-sm btn-outline-warning" :disabled="!can('break_start')" disabled="disabled"><i class="ti ti-coffee me-1"></i>Break</button>
+                        </form>
+                                            <form method="POST" action="https://nexus.getstocky.com/me/attendance/clock" @submit="submit($event)">
+                            <input type="hidden" name="_token" value="Wca0NFHDj8n5FsEYtTQ2ZGWtZGb6SlV5Dm9OhtTM" autocomplete="off">                            <input type="hidden" name="action" value="break_end">
+                            <button type="submit" class="btn btn-sm btn-outline-success" :disabled="!can('break_end')" disabled="disabled"><i class="ti ti-player-play me-1"></i>Back</button>
+                        </form>
+                                            <form method="POST" action="https://nexus.getstocky.com/me/attendance/clock" @submit="submit($event)">
+                            <input type="hidden" name="_token" value="Wca0NFHDj8n5FsEYtTQ2ZGWtZGb6SlV5Dm9OhtTM" autocomplete="off">                            <input type="hidden" name="action" value="out">
+                            <button type="submit" class="btn btn-sm btn-outline-danger" :disabled="!can('out')" disabled="disabled"><i class="ti ti-player-stop me-1"></i>Clock out</button>
+                        </form>
+                                    </div>
+                <a href="https://nexus.getstocky.com/me/attendance" class="d-block small mt-2">My attendance</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <div class="card h-100 nx-stat">
+    <div class="card-body d-flex align-items-center gap-3">
+        <span class="bg-blue-lt rounded-3 d-flex align-items-center justify-content-center flex-none nx-icon-tile">
+            <i class="ti ti-beach fs-2"></i>
+        </span>
+
+        <div class="min-w-0 flex-fill">
+            <div class="text-secondary text-truncate small">Leave left this year</div>
+            <div class="d-flex align-items-baseline gap-2">
+                <span class="h2 mb-0">29 days</span>
+
+                            </div>
+
+                            <div class="text-secondary small text-truncate">of 33 entitled</div>
+                    </div>
+
+                    <a href="https://nexus.getstocky.com/me/leave" class="nx-stat-link" aria-label="Leave left this year"><i class="ti ti-chevron-right"></i></a>
+            </div>
+
+    </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+                    <div class="card h-100 nx-stat">
+    <div class="card-body d-flex align-items-center gap-3">
+        <span class="bg-green-lt rounded-3 d-flex align-items-center justify-content-center flex-none nx-icon-tile">
+            <i class="ti ti-cash fs-2"></i>
+        </span>
+
+        <div class="min-w-0 flex-fill">
+            <div class="text-secondary text-truncate small">Latest payslip</div>
+            <div class="d-flex align-items-baseline gap-2">
+                <span class="h2 mb-0">$8,560.40</span>
+
+                            </div>
+
+                            <div class="text-secondary small text-truncate">1 Sep – 30 Sep 2026</div>
+                    </div>
+
+                    <a href="https://nexus.getstocky.com/me/payslips/1" class="nx-stat-link" aria-label="Latest payslip"><i class="ti ti-chevron-right"></i></a>
+            </div>
+
+    </div>
+            </div>
+
+    <div class="col-md-6 col-lg-3">
+        <div class="card h-100 nx-stat">
+    <div class="card-body d-flex align-items-center gap-3">
+        <span class="bg-orange-lt rounded-3 d-flex align-items-center justify-content-center flex-none nx-icon-tile">
+            <i class="ti ti-inbox fs-2"></i>
+        </span>
+
+        <div class="min-w-0 flex-fill">
+            <div class="text-secondary text-truncate small">Waiting for you</div>
+            <div class="d-flex align-items-baseline gap-2">
+                <span class="h2 mb-0">16</span>
+
+                            </div>
+
+                            <div class="text-secondary small text-truncate">leave, claims and timesheets to decide</div>
+                    </div>
+
+                    <a href="https://nexus.getstocky.com/me/approvals" class="nx-stat-link" aria-label="Waiting for you"><i class="ti ti-chevron-right"></i></a>
+            </div>
+
+    </div>
+    </div>
+</div>
+
+    <div class="card mb-3">
+        <div class="card-header">
+            <h3 class="card-title"><i class="ti ti-speakerphone me-2"></i>Announcements</h3>
+        </div>
+        <div class="list-group list-group-flush">
+                            <div class="list-group-item d-flex align-items-start gap-3 py-2">
+                    <span class="text-yellow pt-1"><i class="ti ti-pinned-filled"></i></span>
+                    <div class="min-w-0 flex-fill">
+                        <div class="fw-medium">Office closed on the public holiday</div>
+                        <div class="text-secondary small">The office is closed next public holiday. Support runs the usual on-call rota.</div>
+                    </div>
+                    <span class="text-secondary small text-nowrap">5 days ago</span>
+                </div>
+                            <div class="list-group-item d-flex align-items-start gap-3 py-2">
+                    <span class="text-secondary pt-1"><i class="ti ti-speakerphone"></i></span>
+                    <div class="min-w-0 flex-fill">
+                        <div class="fw-medium">New expense claim process</div>
+                        <div class="text-secondary small">Claims are now filed from My Expenses with the receipt attached. Paper forms are no longer accepted.</div>
+                    </div>
+                    <span class="text-secondary small text-nowrap">1 week ago</span>
+                </div>
+                            <div class="list-group-item d-flex align-items-start gap-3 py-2">
+                    <span class="text-secondary pt-1"><i class="ti ti-speakerphone"></i></span>
+                    <div class="min-w-0 flex-fill">
+                        <div class="fw-medium">Welcome our new hires</div>
+                        <div class="text-secondary small">Please give a warm welcome to the people who joined us this quarter.</div>
+                    </div>
+                    <span class="text-secondary small text-nowrap">2 weeks ago</span>
+                </div>
+                    </div>
+    </div>
+                <div class="row row-cards mb-3">
+    <div class="col-lg-8">
+        <div class="card h-100">
+            <div class="card-header">
+                <h3 class="card-title"><i class="ti ti-checkbox me-2"></i>My tasks due</h3>
+                <span class="ms-auto small"><a href="https://nexus.getstocky.com/me/tasks">4 open</a></span>
+            </div>
+            <div class="card-body py-2">
+                                    <div class="text-secondary small py-2">Nothing due today. Nice.</div>
+                            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-header"><h3 class="card-title"><i class="ti ti-stopwatch me-2"></i>My time</h3></div>
+            <div class="card-body">
+                                    <div class="text-secondary small">No timer running</div>
+                    <div class="h2 my-2">7h</div>
+                    <div class="text-secondary small mb-2">logged this week</div>
+                    <a href="https://nexus.getstocky.com/me/timesheet" class="btn btn-outline-primary w-100"><i class="ti ti-hourglass me-1"></i>Open timesheet</a>
+                            </div>
+        </div>
+    </div>
+</div>
+        <div class="nx-section">
+    <h2 class="nx-section-title"><i class="ti ti-users"></i>People</h2>
+    <span class="nx-section-rule"></span>
+            <a href="https://nexus.getstocky.com/reports/hr" class="nx-section-link">HR reports<i class="ti ti-arrow-right ms-1"></i></a>
+    </div>
+
+<div class="row row-deck row-cards mb-3">
+            <div class="col-sm-6 col-xl">
+            <div class="card h-100 nx-stat">
+    <div class="card-body d-flex align-items-center gap-3">
+        <span class="bg-green-lt rounded-3 d-flex align-items-center justify-content-center flex-none nx-icon-tile">
+            <i class="ti ti-users fs-2"></i>
+        </span>
+
+        <div class="min-w-0 flex-fill">
+            <div class="text-secondary text-truncate small">Headcount</div>
+            <div class="d-flex align-items-baseline gap-2">
+                <span class="h2 mb-0">13</span>
+
+                                    <span class="nx-stat-delta ">
+                        <i class="ti ti-minus"></i>
+                        0%
+                    </span>
+                            </div>
+
+                            <div class="text-secondary small text-truncate">0 joined this month</div>
+                    </div>
+
+                    <a href="https://nexus.getstocky.com/hr/employees" class="nx-stat-link" aria-label="Headcount"><i class="ti ti-chevron-right"></i></a>
+            </div>
+
+            <div class="nx-stat-spark" aria-hidden="true">
+            <div class="nx-chart" data-nx-h-px="44" style="height: 44px;">
+    <canvas data-nx-chart="{&quot;type&quot;:&quot;line&quot;,&quot;labels&quot;:[&quot;&quot;,&quot;&quot;,&quot;&quot;,&quot;&quot;,&quot;&quot;,&quot;&quot;],&quot;series&quot;:[{&quot;data&quot;:[13,13,13,13,13,13],&quot;color&quot;:&quot;accent&quot;,&quot;fillStrength&quot;:0.3}],&quot;format&quot;:&quot;number&quot;,&quot;decimals&quot;:2,&quot;legendPosition&quot;:&quot;bottom&quot;,&quot;ticks&quot;:5,&quot;spark&quot;:true}" role="img" aria-label="Chart" width="215" height="44" style="display: block; box-sizing: border-box; height: 44px; width: 215.6px;"></canvas>
+</div>
+        </div>
+    </div>
+        </div>
+    
+            <div class="col-sm-6 col-xl">
+            <div class="card h-100 nx-stat">
+    <div class="card-body d-flex align-items-center gap-3">
+        <span class="bg-orange-lt rounded-3 d-flex align-items-center justify-content-center flex-none nx-icon-tile">
+            <i class="ti ti-clock-check fs-2"></i>
+        </span>
+
+        <div class="min-w-0 flex-fill">
+            <div class="text-secondary text-truncate small">Present today</div>
+            <div class="d-flex align-items-baseline gap-2">
+                <span class="h2 mb-0">8%</span>
+
+                            </div>
+
+                            <div class="text-secondary small text-truncate">1 late today · 13 timesheets to approve</div>
+                    </div>
+
+                    <a href="https://nexus.getstocky.com/hr/attendance/day" class="nx-stat-link" aria-label="Present today"><i class="ti ti-chevron-right"></i></a>
+            </div>
+
+    </div>
+        </div>
+    
+            <div class="col-sm-6 col-xl">
+            <div class="card h-100 nx-stat">
+    <div class="card-body d-flex align-items-center gap-3">
+        <span class="bg-orange-lt rounded-3 d-flex align-items-center justify-content-center flex-none nx-icon-tile">
+            <i class="ti ti-beach fs-2"></i>
+        </span>
+
+        <div class="min-w-0 flex-fill">
+            <div class="text-secondary text-truncate small">Leave awaiting decision</div>
+            <div class="d-flex align-items-baseline gap-2">
+                <span class="h2 mb-0">3</span>
+
+                            </div>
+
+                            <div class="text-secondary small text-truncate">0 away today</div>
+                    </div>
+
+                    <a href="https://nexus.getstocky.com/hr/leave?status=pending" class="nx-stat-link" aria-label="Leave awaiting decision"><i class="ti ti-chevron-right"></i></a>
+            </div>
+
+    </div>
+        </div>
+    
+            <div class="col-sm-6 col-xl">
+            <div class="card h-100 nx-stat">
+    <div class="card-body d-flex align-items-center gap-3">
+        <span class="bg-purple-lt rounded-3 d-flex align-items-center justify-content-center flex-none nx-icon-tile">
+            <i class="ti ti-cash fs-2"></i>
+        </span>
+
+        <div class="min-w-0 flex-fill">
+            <div class="text-secondary text-truncate small">Payroll, last run</div>
+            <div class="d-flex align-items-baseline gap-2">
+                <span class="h2 mb-0">$61,245.00</span>
+
+                            </div>
+
+                            <div class="text-secondary small text-truncate">1 Oct – 31 Oct 2026 · Draft</div>
+                    </div>
+
+                    <a href="https://nexus.getstocky.com/hr/payroll/2" class="nx-stat-link" aria-label="Payroll, last run"><i class="ti ti-chevron-right"></i></a>
+            </div>
+
+            <div class="nx-stat-spark" aria-hidden="true">
+            <div class="nx-chart" data-nx-h-px="44" style="height: 44px;">
+    <canvas data-nx-chart="{&quot;type&quot;:&quot;line&quot;,&quot;labels&quot;:[&quot;&quot;,&quot;&quot;,&quot;&quot;,&quot;&quot;,&quot;&quot;,&quot;&quot;],&quot;series&quot;:[{&quot;data&quot;:[0,0,0,0,63053.2492,0],&quot;color&quot;:&quot;accent&quot;,&quot;fillStrength&quot;:0.3}],&quot;format&quot;:&quot;number&quot;,&quot;decimals&quot;:2,&quot;legendPosition&quot;:&quot;bottom&quot;,&quot;ticks&quot;:5,&quot;spark&quot;:true}" role="img" aria-label="Chart" width="215" height="44" style="display: block; box-sizing: border-box; height: 44px; width: 215.6px;"></canvas>
+</div>
+        </div>
+    </div>
+        </div>
+    
+            <div class="col-sm-6 col-xl">
+            <div class="card h-100 nx-stat">
+    <div class="card-body d-flex align-items-center gap-3">
+        <span class="bg-blue-lt rounded-3 d-flex align-items-center justify-content-center flex-none nx-icon-tile">
+            <i class="ti ti-briefcase fs-2"></i>
+        </span>
+
+        <div class="min-w-0 flex-fill">
+            <div class="text-secondary text-truncate small">Open jobs</div>
+            <div class="d-flex align-items-baseline gap-2">
+                <span class="h2 mb-0">2</span>
+
+                            </div>
+
+                            <div class="text-secondary small text-truncate">6 candidates in play · 7 new this week</div>
+                    </div>
+
+                    <a href="https://nexus.getstocky.com/hr/jobs" class="nx-stat-link" aria-label="Open jobs"><i class="ti ti-chevron-right"></i></a>
+            </div>
+
+    </div>
+        </div>
+    </div>
+
+    <div class="row row-cards mb-3">
+        <div class="col-lg-8">
+            <div class="card h-100 nx-chart-card">
+                <div class="card-header d-block">
+                    <h3 class="card-title">Headcount</h3>
+                    <p class="card-subtitle">People employed at the end of each month</p>
+                </div>
+                <div class="card-body">
+                    <div class="nx-chart" data-nx-h-px="240" style="height: 240px;">
+    <canvas data-nx-chart="{&quot;type&quot;:&quot;line&quot;,&quot;labels&quot;:[&quot;May 26&quot;,&quot;Jun 26&quot;,&quot;Jul 26&quot;,&quot;Aug 26&quot;,&quot;Sep 26&quot;,&quot;Oct 26&quot;],&quot;series&quot;:[{&quot;label&quot;:&quot;Headcount&quot;,&quot;data&quot;:[13,13,13,13,13,13],&quot;color&quot;:&quot;accent&quot;}],&quot;format&quot;:&quot;number&quot;,&quot;decimals&quot;:2,&quot;legendPosition&quot;:&quot;bottom&quot;,&quot;ticks&quot;:5}" role="img" aria-label="Headcount at each month end" width="720" height="240" style="display: block; box-sizing: border-box; height: 240px; width: 720.7px;"></canvas>
+</div>
+                </div>
+                <div class="card-footer">
+                    <div class="nx-figures">
+                        <span class="nx-figure"><span class="nx-figure-value">0</span><span class="nx-figure-label">finishing probation in 30 days</span></span>
+                        <span class="nx-figure"><span class="nx-figure-value">0</span><span class="nx-figure-label">contracts ending in 30 days</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card h-100 nx-chart-card">
+                <div class="card-header d-block">
+                    <h3 class="card-title">Joiners and leavers</h3>
+                    <p class="card-subtitle">People starting and finishing each month</p>
+                </div>
+                <div class="card-body">
+                    <div class="nx-chart" data-nx-h-px="240" style="height: 240px;">
+    <canvas data-nx-chart="{&quot;type&quot;:&quot;bar&quot;,&quot;labels&quot;:[&quot;May 26&quot;,&quot;Jun 26&quot;,&quot;Jul 26&quot;,&quot;Aug 26&quot;,&quot;Sep 26&quot;,&quot;Oct 26&quot;],&quot;series&quot;:[{&quot;label&quot;:&quot;Joined&quot;,&quot;data&quot;:[0,0,0,0,0,0],&quot;color&quot;:&quot;s1&quot;},{&quot;label&quot;:&quot;Left&quot;,&quot;data&quot;:[0,0,0,0,0,0],&quot;color&quot;:&quot;s2&quot;}],&quot;format&quot;:&quot;number&quot;,&quot;decimals&quot;:2,&quot;legendPosition&quot;:&quot;bottom&quot;,&quot;ticks&quot;:4}" role="img" aria-label="Joiners and leavers per month" width="331" height="240" style="display: block; box-sizing: border-box; height: 240px; width: 331.3px;"></canvas>
+</div>
+                </div>
+                <div class="card-footer">
+                    <div class="nx-figures">
+                        <span class="nx-figure"><span class="nx-legend-dot" data-nx-bg="var(--nx-s1)" style="background: var(--nx-s1);"></span><span class="nx-figure-value">0</span><span class="nx-figure-label">joined</span></span>
+                        <span class="nx-figure"><span class="nx-legend-dot" data-nx-bg="var(--nx-s2)" style="background: var(--nx-s2);"></span><span class="nx-figure-value">0</span><span class="nx-figure-label">left</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row row-cards mb-3">
+                    <div class="col-lg-6">
+                <div class="card h-100 nx-chart-card">
+                    <div class="card-header d-block">
+                        <h3 class="card-title">Hours worked</h3>
+                        <p class="card-subtitle">Time on the clock across the company, per month</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="nx-chart" data-nx-h-px="220" style="height: 220px;">
+    <canvas data-nx-chart="{&quot;type&quot;:&quot;line&quot;,&quot;labels&quot;:[&quot;May 26&quot;,&quot;Jun 26&quot;,&quot;Jul 26&quot;,&quot;Aug 26&quot;,&quot;Sep 26&quot;,&quot;Oct 26&quot;],&quot;series&quot;:[{&quot;label&quot;:&quot;Hours worked&quot;,&quot;data&quot;:[0,0,517.9,1864.4,1932.6,356.2],&quot;color&quot;:&quot;accent&quot;}],&quot;format&quot;:&quot;number&quot;,&quot;decimals&quot;:2,&quot;legendPosition&quot;:&quot;bottom&quot;,&quot;ticks&quot;:4}" role="img" aria-label="Hours worked per month" width="526" height="220" style="display: block; box-sizing: border-box; height: 220px; width: 526px;"></canvas>
+</div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="nx-figures">
+                            <span class="nx-figure"><span class="nx-figure-value">660</span><span class="nx-figure-label">days on the clock</span></span>
+                            <span class="nx-figure"><span class="nx-figure-value">63</span><span class="nx-figure-label">late arrivals</span></span>
+                            <span class="nx-figure"><span class="nx-figure-value">68h 30m</span><span class="nx-figure-label">overtime</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+                    <div class="col-lg-6">
+                <div class="card h-100 nx-chart-card">
+                    <div class="card-header d-block">
+                        <h3 class="card-title">Payroll cost</h3>
+                        <p class="card-subtitle">Net pay per month, from approved and paid runs</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="nx-chart" data-nx-h-px="220" style="height: 220px;">
+    <canvas data-nx-chart="{&quot;type&quot;:&quot;bar&quot;,&quot;labels&quot;:[&quot;May 26&quot;,&quot;Jun 26&quot;,&quot;Jul 26&quot;,&quot;Aug 26&quot;,&quot;Sep 26&quot;,&quot;Oct 26&quot;],&quot;series&quot;:[{&quot;label&quot;:&quot;Net pay&quot;,&quot;data&quot;:[0,0,0,0,63053.2492,0],&quot;color&quot;:&quot;accent&quot;}],&quot;format&quot;:&quot;currency&quot;,&quot;currency&quot;:&quot;$&quot;,&quot;decimals&quot;:2,&quot;legendPosition&quot;:&quot;bottom&quot;,&quot;ticks&quot;:4}" role="img" aria-label="Net pay per month" width="526" height="220" style="display: block; box-sizing: border-box; height: 220px; width: 526px;"></canvas>
+</div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="nx-figures">
+                            <span class="nx-figure"><span class="nx-figure-value">$63,053.25</span><span class="nx-figure-label">paid in the period</span></span>
+                            <span class="nx-figure"><span class="nx-figure-value">$719.99</span><span class="nx-figure-label">3 claims awaiting</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+<div class="row row-cards mb-3">
+            <div class="col-lg-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="ti ti-user-search me-2"></i>Hiring funnel</h3>
+                    <a href="https://nexus.getstocky.com/hr/candidates?view=board" class="ms-auto small">Board</a>
+                </div>
+                <div class="card-body py-2">
+                                                                                                                <div class="nx-meter-row">
+                            <span class="nx-meter-name">New</span>
+                            <div class="progress" role="progressbar" aria-valuenow="2" aria-valuemin="0" aria-valuemax="2">
+                                <div class="progress-bar" data-nx-w-pct="100" style="width: 100%;"></div>
+                            </div>
+                            <span class="nx-meter-value">2</span>
+                        </div>
+                                                                                            <div class="nx-meter-row">
+                            <span class="nx-meter-name">Screening</span>
+                            <div class="progress" role="progressbar" aria-valuenow="1" aria-valuemin="0" aria-valuemax="2">
+                                <div class="progress-bar" data-nx-w-pct="50" style="width: 50%;"></div>
+                            </div>
+                            <span class="nx-meter-value">1</span>
+                        </div>
+                                                                                            <div class="nx-meter-row">
+                            <span class="nx-meter-name">Interview</span>
+                            <div class="progress" role="progressbar" aria-valuenow="2" aria-valuemin="0" aria-valuemax="2">
+                                <div class="progress-bar" data-nx-w-pct="100" style="width: 100%;"></div>
+                            </div>
+                            <span class="nx-meter-value">2</span>
+                        </div>
+                                                                                            <div class="nx-meter-row">
+                            <span class="nx-meter-name">Offer</span>
+                            <div class="progress" role="progressbar" aria-valuenow="1" aria-valuemin="0" aria-valuemax="2">
+                                <div class="progress-bar" data-nx-w-pct="50" style="width: 50%;"></div>
+                            </div>
+                            <span class="nx-meter-value">1</span>
+                        </div>
+                                                                                    </div>
+                            </div>
+        </div>
+    
+            <div class="col-lg-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="ti ti-beach me-2"></i>On leave today</h3>
+                    <a href="https://nexus.getstocky.com/hr/leave/calendar" class="ms-auto small">Calendar</a>
+                </div>
+                <div class="card-body py-2">
+                                            <div class="text-secondary small py-2">Everybody is in today.</div>
+                                    </div>
+            </div>
+        </div>
+    
+            <div class="col-lg-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="ti ti-file-certificate me-2"></i>Expiring documents</h3>
+                    <a href="https://nexus.getstocky.com/hr/documents" class="ms-auto small">All documents</a>
+                </div>
+                <div class="card-body py-2">
+                                            <div class="text-secondary small py-2">Nothing expires in the next 30 days.</div>
+                                    </div>
+            </div>
+        </div>
+    </div>
+    <div class="nx-section">
+    <h2 class="nx-section-title"><i class="ti ti-coin"></i>Sales &amp; support</h2>
+    <span class="nx-section-rule"></span>
+            <a href="https://nexus.getstocky.com/reports/sales" class="nx-section-link">Sales reports<i class="ti ti-arrow-right ms-1"></i></a>
+    </div>
+
+<div class="row row-deck row-cards mb-3">
+            <div class="col-sm-6 col-xl">
+            <div class="card h-100 nx-stat">
+    <div class="card-body d-flex align-items-center gap-3">
+        <span class="bg-blue-lt rounded-3 d-flex align-items-center justify-content-center flex-none nx-icon-tile">
+            <i class="ti ti-chart-arrows fs-2"></i>
+        </span>
+
+        <div class="min-w-0 flex-fill">
+            <div class="text-secondary text-truncate small">Open pipeline</div>
+            <div class="d-flex align-items-baseline gap-2">
+                <span class="h2 mb-0">$31,200.00</span>
+
+                            </div>
+
+                            <div class="text-secondary small text-truncate">4 deals · $17,160.00 weighted</div>
+                    </div>
+
+                    <a href="https://nexus.getstocky.com/crm/deals/board" class="nx-stat-link" aria-label="Open pipeline"><i class="ti ti-chevron-right"></i></a>
+            </div>
+
+    </div>
+        </div>
+        <div class="col-sm-6 col-xl">
+            <div class="card h-100 nx-stat">
+    <div class="card-body d-flex align-items-center gap-3">
+        <span class="bg-green-lt rounded-3 d-flex align-items-center justify-content-center flex-none nx-icon-tile">
+            <i class="ti ti-trophy fs-2"></i>
+        </span>
+
+        <div class="min-w-0 flex-fill">
+            <div class="text-secondary text-truncate small">Won this month</div>
+            <div class="d-flex align-items-baseline gap-2">
+                <span class="h2 mb-0">$0.00</span>
+
+                                    <span class="nx-stat-delta is-bad">
+                        <i class="ti ti-trending-down"></i>
+                        -100%
+                    </span>
+                            </div>
+
+                            <div class="text-secondary small text-truncate">0 deals closed</div>
+                    </div>
+
+                    <a href="https://nexus.getstocky.com/crm/deals?status=won" class="nx-stat-link" aria-label="Won this month"><i class="ti ti-chevron-right"></i></a>
+            </div>
+
+            <div class="nx-stat-spark" aria-hidden="true">
+            <div class="nx-chart" data-nx-h-px="44" style="height: 44px;">
+    <canvas data-nx-chart="{&quot;type&quot;:&quot;line&quot;,&quot;labels&quot;:[&quot;&quot;,&quot;&quot;,&quot;&quot;,&quot;&quot;,&quot;&quot;,&quot;&quot;],&quot;series&quot;:[{&quot;data&quot;:[0,0,0,2400,7200,0],&quot;color&quot;:&quot;accent&quot;,&quot;fillStrength&quot;:0.3}],&quot;format&quot;:&quot;number&quot;,&quot;decimals&quot;:2,&quot;legendPosition&quot;:&quot;bottom&quot;,&quot;ticks&quot;:5,&quot;spark&quot;:true}" role="img" aria-label="Chart" width="215" height="44" style="display: block; box-sizing: border-box; height: 44px; width: 215.6px;"></canvas>
+</div>
+        </div>
+    </div>
+        </div>
+    
+            <div class="col-sm-6 col-xl">
+            <div class="card h-100 nx-stat">
+    <div class="card-body d-flex align-items-center gap-3">
+        <span class="bg-teal-lt rounded-3 d-flex align-items-center justify-content-center flex-none nx-icon-tile">
+            <i class="ti ti-cash-banknote fs-2"></i>
+        </span>
+
+        <div class="min-w-0 flex-fill">
+            <div class="text-secondary text-truncate small">Received this month</div>
+            <div class="d-flex align-items-baseline gap-2">
+                <span class="h2 mb-0">$0.00</span>
+
+                                    <span class="nx-stat-delta is-bad">
+                        <i class="ti ti-trending-down"></i>
+                        -100%
+                    </span>
+                            </div>
+
+                            <div class="text-secondary small text-truncate">2 quotes awaiting an answer</div>
+                    </div>
+
+                    <a href="https://nexus.getstocky.com/sales/payments" class="nx-stat-link" aria-label="Received this month"><i class="ti ti-chevron-right"></i></a>
+            </div>
+
+            <div class="nx-stat-spark" aria-hidden="true">
+            <div class="nx-chart" data-nx-h-px="44" style="height: 44px;">
+    <canvas data-nx-chart="{&quot;type&quot;:&quot;line&quot;,&quot;labels&quot;:[&quot;&quot;,&quot;&quot;,&quot;&quot;,&quot;&quot;,&quot;&quot;,&quot;&quot;],&quot;series&quot;:[{&quot;data&quot;:[0,0,0,1000,10100,0],&quot;color&quot;:&quot;accent&quot;,&quot;fillStrength&quot;:0.3}],&quot;format&quot;:&quot;number&quot;,&quot;decimals&quot;:2,&quot;legendPosition&quot;:&quot;bottom&quot;,&quot;ticks&quot;:5,&quot;spark&quot;:true}" role="img" aria-label="Chart" width="215" height="44" style="display: block; box-sizing: border-box; height: 44px; width: 215.6px;"></canvas>
+</div>
+        </div>
+    </div>
+        </div>
+        <div class="col-sm-6 col-xl">
+            <div class="card h-100 nx-stat">
+    <div class="card-body d-flex align-items-center gap-3">
+        <span class="bg-orange-lt rounded-3 d-flex align-items-center justify-content-center flex-none nx-icon-tile">
+            <i class="ti ti-file-invoice fs-2"></i>
+        </span>
+
+        <div class="min-w-0 flex-fill">
+            <div class="text-secondary text-truncate small">Outstanding</div>
+            <div class="d-flex align-items-baseline gap-2">
+                <span class="h2 mb-0">$5,100.00</span>
+
+                            </div>
+
+                            <div class="text-secondary small text-truncate">$2,400.00 overdue</div>
+                    </div>
+
+                    <a href="https://nexus.getstocky.com/sales/invoices?status=overdue" class="nx-stat-link" aria-label="Outstanding"><i class="ti ti-chevron-right"></i></a>
+            </div>
+
+    </div>
+        </div>
+    
+            <div class="col-sm-6 col-xl">
+            <div class="card h-100 nx-stat">
+    <div class="card-body d-flex align-items-center gap-3">
+        <span class="bg-azure-lt rounded-3 d-flex align-items-center justify-content-center flex-none nx-icon-tile">
+            <i class="ti ti-lifebuoy fs-2"></i>
+        </span>
+
+        <div class="min-w-0 flex-fill">
+            <div class="text-secondary text-truncate small">Open tickets</div>
+            <div class="d-flex align-items-baseline gap-2">
+                <span class="h2 mb-0">4</span>
+
+                            </div>
+
+                            <div class="text-secondary small text-truncate">0 past their SLA</div>
+                    </div>
+
+                    <a href="https://nexus.getstocky.com/support/tickets?status=unresolved" class="nx-stat-link" aria-label="Open tickets"><i class="ti ti-chevron-right"></i></a>
+            </div>
+
+    </div>
+        </div>
+    </div>
+
+    <div class="row row-cards mb-3">
+                    <div class="col-lg-8">
+                <div class="card h-100 nx-chart-card">
+                    <div class="card-header d-block">
+                        <h3 class="card-title">Invoiced and received</h3>
+                        <p class="card-subtitle">What went out against what came in, per month</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="nx-chart" data-nx-h-px="240" style="height: 240px;">
+    <canvas data-nx-chart="{&quot;type&quot;:&quot;line&quot;,&quot;labels&quot;:[&quot;May 26&quot;,&quot;Jun 26&quot;,&quot;Jul 26&quot;,&quot;Aug 26&quot;,&quot;Sep 26&quot;,&quot;Oct 26&quot;],&quot;series&quot;:[{&quot;label&quot;:&quot;Invoiced&quot;,&quot;data&quot;:[0,0,0,4800,10200,4800],&quot;color&quot;:&quot;s1&quot;},{&quot;label&quot;:&quot;Received&quot;,&quot;data&quot;:[0,0,0,1000,10100,0],&quot;color&quot;:&quot;s3&quot;}],&quot;format&quot;:&quot;currency&quot;,&quot;currency&quot;:&quot;$&quot;,&quot;decimals&quot;:2,&quot;legendPosition&quot;:&quot;bottom&quot;,&quot;ticks&quot;:5}" role="img" aria-label="Invoiced and received per month" width="720" height="240" style="display: block; box-sizing: border-box; height: 240px; width: 720.7px;"></canvas>
+</div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="nx-figures">
+                            <span class="nx-figure"><span class="nx-legend-dot" data-nx-bg="var(--nx-s1)" style="background: var(--nx-s1);"></span><span class="nx-figure-value">$19,800.00</span><span class="nx-figure-label">invoiced</span></span>
+                            <span class="nx-figure"><span class="nx-legend-dot" data-nx-bg="var(--nx-s3)" style="background: var(--nx-s3);"></span><span class="nx-figure-value">$11,100.00</span><span class="nx-figure-label">received</span></span>
+                            <span class="nx-figure"><span class="nx-figure-value">$24,480.00</span><span class="nx-figure-label">in open quotes</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+                    <div class="col-lg-4">
+                <div class="card h-100 nx-chart-card">
+                    <div class="card-header d-block">
+                        <h3 class="card-title">Open pipeline by stage</h3>
+                        <p class="card-subtitle">Value of the deals still in play</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="nx-chart" data-nx-h-px="240" style="height: 240px;">
+    <canvas data-nx-chart="{&quot;type&quot;:&quot;bar&quot;,&quot;labels&quot;:[&quot;New&quot;,&quot;Qualified&quot;,&quot;Proposal&quot;,&quot;Negotiation&quot;],&quot;series&quot;:[{&quot;label&quot;:&quot;Value&quot;,&quot;data&quot;:[3600,2400,10800,14400],&quot;color&quot;:&quot;accent&quot;}],&quot;format&quot;:&quot;currency&quot;,&quot;currency&quot;:&quot;$&quot;,&quot;decimals&quot;:2,&quot;horizontal&quot;:true,&quot;legendPosition&quot;:&quot;bottom&quot;,&quot;ticks&quot;:3}" role="img" aria-label="Open pipeline value by stage" width="331" height="240" style="display: block; box-sizing: border-box; height: 240px; width: 331.3px;"></canvas>
+</div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="nx-figures">
+                                                            <span class="nx-figure"><span class="nx-figure-value">1</span><span class="nx-figure-label">New</span></span>
+                                                            <span class="nx-figure"><span class="nx-figure-value">1</span><span class="nx-figure-label">Qualified</span></span>
+                                                            <span class="nx-figure"><span class="nx-figure-value">1</span><span class="nx-figure-label">Proposal</span></span>
+                                                            <span class="nx-figure"><span class="nx-figure-value">1</span><span class="nx-figure-label">Negotiation</span></span>
+                                                    </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+    <div class="row row-cards mb-3">
+                    <div class="col-lg-6">
+                <div class="card h-100 nx-chart-card">
+                    <div class="card-header d-block">
+                        <h3 class="card-title">Won and lost</h3>
+                        <p class="card-subtitle">Value of the deals closed each month</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="nx-chart" data-nx-h-px="220" style="height: 220px;">
+    <canvas data-nx-chart="{&quot;type&quot;:&quot;bar&quot;,&quot;labels&quot;:[&quot;May 26&quot;,&quot;Jun 26&quot;,&quot;Jul 26&quot;,&quot;Aug 26&quot;,&quot;Sep 26&quot;,&quot;Oct 26&quot;],&quot;series&quot;:[{&quot;label&quot;:&quot;Won&quot;,&quot;data&quot;:[0,0,0,2400,7200,0],&quot;color&quot;:&quot;success&quot;},{&quot;label&quot;:&quot;Lost&quot;,&quot;data&quot;:[0,0,0,0,2500,0],&quot;color&quot;:&quot;danger&quot;}],&quot;format&quot;:&quot;currency&quot;,&quot;currency&quot;:&quot;$&quot;,&quot;decimals&quot;:2,&quot;legendPosition&quot;:&quot;bottom&quot;,&quot;ticks&quot;:4}" role="img" aria-label="Deal value won and lost per month" width="526" height="220" style="display: block; box-sizing: border-box; height: 220px; width: 526px;"></canvas>
+</div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="nx-figures">
+                            <span class="nx-figure"><i class="ti ti-trophy text-success"></i><span class="nx-figure-value">$9,600.00</span><span class="nx-figure-label">won</span></span>
+                            <span class="nx-figure"><i class="ti ti-x text-danger"></i><span class="nx-figure-value">$2,500.00</span><span class="nx-figure-label">lost</span></span>
+                            <span class="nx-figure"><span class="nx-figure-value">5</span><span class="nx-figure-label">open leads</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+                    <div class="col-lg-6">
+                <div class="card h-100 nx-chart-card">
+                    <div class="card-header d-block">
+                        <h3 class="card-title">Tickets</h3>
+                        <p class="card-subtitle">Opened against resolved, per month</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="nx-chart" data-nx-h-px="220" style="height: 220px;">
+    <canvas data-nx-chart="{&quot;type&quot;:&quot;line&quot;,&quot;labels&quot;:[&quot;May 26&quot;,&quot;Jun 26&quot;,&quot;Jul 26&quot;,&quot;Aug 26&quot;,&quot;Sep 26&quot;,&quot;Oct 26&quot;],&quot;series&quot;:[{&quot;label&quot;:&quot;Opened&quot;,&quot;data&quot;:[0,0,0,0,1,5],&quot;color&quot;:&quot;s2&quot;},{&quot;label&quot;:&quot;Resolved&quot;,&quot;data&quot;:[0,0,0,0,1,1],&quot;color&quot;:&quot;s3&quot;}],&quot;format&quot;:&quot;number&quot;,&quot;decimals&quot;:2,&quot;legendPosition&quot;:&quot;bottom&quot;,&quot;ticks&quot;:4}" role="img" aria-label="Tickets opened and resolved per month" width="526" height="220" style="display: block; box-sizing: border-box; height: 220px; width: 526px;"></canvas>
+</div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="nx-figures">
+                            <span class="nx-figure"><span class="nx-legend-dot" data-nx-bg="var(--nx-s2)" style="background: var(--nx-s2);"></span><span class="nx-figure-value">6</span><span class="nx-figure-label">opened</span></span>
+                            <span class="nx-figure"><span class="nx-legend-dot" data-nx-bg="var(--nx-s3)" style="background: var(--nx-s3);"></span><span class="nx-figure-value">2</span><span class="nx-figure-label">resolved</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+<div class="row row-cards mb-3">
+            <div class="col-lg-6">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="ti ti-alert-circle me-2 text-danger"></i>Overdue invoices</h3>
+                    <a href="https://nexus.getstocky.com/sales/invoices?status=overdue" class="ms-auto small">All overdue</a>
+                </div>
+                <div class="card-body py-2">
+                                            <a href="https://nexus.getstocky.com/sales/invoices/3" class="d-flex align-items-center gap-2 py-1 text-reset ">
+                            <div class="min-w-0 flex-fill">
+                                <div class="fw-medium text-truncate">INV-0003 · Northwind Traders</div>
+                                <div class="text-secondary small">due 27 Sep 2026</div>
+                            </div>
+                            <span class="badge bg-red-lt nx-nowrap">10 days</span>
+                            <span class="fw-medium nx-num nx-nowrap">$2,400.00</span>
+                        </a>
+                                    </div>
+            </div>
+        </div>
+    
+            <div class="col-lg-6">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="ti ti-lifebuoy me-2"></i>Needs attention</h3>
+                    <a href="https://nexus.getstocky.com/support/tickets" class="ms-auto small">All tickets</a>
+                </div>
+                <div class="card-body py-2">
+                                            <a href="https://nexus.getstocky.com/support/tickets/3" class="d-flex align-items-center gap-2 py-1 text-reset border-bottom">
+                            <div class="min-w-0 flex-fill">
+                                <div class="fw-medium text-truncate">Feature request: export contacts to CSV</div>
+                                <div class="text-secondary small text-truncate">TKT-0003 · Elena Petrova · 2 days ago</div>
+                            </div>
+                                                        <span class="badge bg-secondary-lt"><i class="ti ti-arrow-down me-1"></i>Low</span>
+                        </a>
+                                            <a href="https://nexus.getstocky.com/support/tickets/6" class="d-flex align-items-center gap-2 py-1 text-reset border-bottom">
+                            <div class="min-w-0 flex-fill">
+                                <div class="fw-medium text-truncate">Slow report page</div>
+                                <div class="text-secondary small text-truncate">TKT-0006 · Dana Whitfield · 2 hours ago</div>
+                            </div>
+                                                        <span class="badge bg-azure-lt"><i class="ti ti-minus me-1"></i>Medium</span>
+                        </a>
+                                            <a href="https://nexus.getstocky.com/support/tickets/2" class="d-flex align-items-center gap-2 py-1 text-reset border-bottom">
+                            <div class="min-w-0 flex-fill">
+                                <div class="fw-medium text-truncate">Two-factor code never arrives</div>
+                                <div class="text-secondary small text-truncate">TKT-0002 · Chen Wei · 1 day ago</div>
+                            </div>
+                                                        <span class="badge bg-orange-lt"><i class="ti ti-arrow-up me-1"></i>High</span>
+                        </a>
+                                            <a href="https://nexus.getstocky.com/support/tickets/1" class="d-flex align-items-center gap-2 py-1 text-reset ">
+                            <div class="min-w-0 flex-fill">
+                                <div class="fw-medium text-truncate">Cannot download last month's invoice</div>
+                                <div class="text-secondary small text-truncate">TKT-0001 · Ana Costa · 4 hours ago</div>
+                            </div>
+                                                        <span class="badge bg-azure-lt"><i class="ti ti-minus me-1"></i>Medium</span>
+                        </a>
+                                    </div>
+            </div>
+        </div>
+    </div>
+    <div class="nx-section">
+    <h2 class="nx-section-title"><i class="ti ti-folders"></i>Delivery</h2>
+    <span class="nx-section-rule"></span>
+            <a href="https://nexus.getstocky.com/reports/projects" class="nx-section-link">Project reports<i class="ti ti-arrow-right ms-1"></i></a>
+    </div>
+
+<div class="row row-deck row-cards mb-3">
+    <div class="col-sm-6 col-xl">
+        <div class="card h-100 nx-stat">
+    <div class="card-body d-flex align-items-center gap-3">
+        <span class="bg-blue-lt rounded-3 d-flex align-items-center justify-content-center flex-none nx-icon-tile">
+            <i class="ti ti-folders fs-2"></i>
+        </span>
+
+        <div class="min-w-0 flex-fill">
+            <div class="text-secondary text-truncate small">Active projects</div>
+            <div class="d-flex align-items-baseline gap-2">
+                <span class="h2 mb-0">2</span>
+
+                            </div>
+
+                            <div class="text-secondary small text-truncate">1 tasks due this week</div>
+                    </div>
+
+                    <a href="https://nexus.getstocky.com/projects" class="nx-stat-link" aria-label="Active projects"><i class="ti ti-chevron-right"></i></a>
+            </div>
+
+    </div>
+    </div>
+    <div class="col-sm-6 col-xl">
+        <div class="card h-100 nx-stat">
+    <div class="card-body d-flex align-items-center gap-3">
+        <span class="bg-purple-lt rounded-3 d-flex align-items-center justify-content-center flex-none nx-icon-tile">
+            <i class="ti ti-stopwatch fs-2"></i>
+        </span>
+
+        <div class="min-w-0 flex-fill">
+            <div class="text-secondary text-truncate small">Hours this week</div>
+            <div class="d-flex align-items-baseline gap-2">
+                <span class="h2 mb-0">38h 30m</span>
+
+                                    <span class="nx-stat-delta is-bad">
+                        <i class="ti ti-trending-down"></i>
+                        -59%
+                    </span>
+                            </div>
+
+                            <div class="text-secondary small text-truncate">logged across the team</div>
+                    </div>
+
+                    <a href="https://nexus.getstocky.com/projects/time" class="nx-stat-link" aria-label="Hours this week"><i class="ti ti-chevron-right"></i></a>
+            </div>
+
+            <div class="nx-stat-spark" aria-hidden="true">
+            <div class="nx-chart" data-nx-h-px="44" style="height: 44px;">
+    <canvas data-nx-chart="{&quot;type&quot;:&quot;line&quot;,&quot;labels&quot;:[&quot;&quot;,&quot;&quot;,&quot;&quot;,&quot;&quot;,&quot;&quot;,&quot;&quot;,&quot;&quot;,&quot;&quot;,&quot;&quot;,&quot;&quot;,&quot;&quot;,&quot;&quot;],&quot;series&quot;:[{&quot;data&quot;:[0,0,0,0,0,0,0,0,57,93,93,38.5],&quot;color&quot;:&quot;accent&quot;,&quot;fillStrength&quot;:0.3}],&quot;format&quot;:&quot;number&quot;,&quot;decimals&quot;:2,&quot;legendPosition&quot;:&quot;bottom&quot;,&quot;ticks&quot;:5,&quot;spark&quot;:true}" role="img" aria-label="Chart" width="274" height="44" style="display: block; box-sizing: border-box; height: 44px; width: 274px;"></canvas>
+</div>
+        </div>
+    </div>
+    </div>
+    <div class="col-sm-6 col-xl">
+        <div class="card h-100 nx-stat">
+    <div class="card-body d-flex align-items-center gap-3">
+        <span class="bg-red-lt rounded-3 d-flex align-items-center justify-content-center flex-none nx-icon-tile">
+            <i class="ti ti-alert-triangle fs-2"></i>
+        </span>
+
+        <div class="min-w-0 flex-fill">
+            <div class="text-secondary text-truncate small">Overdue tasks</div>
+            <div class="d-flex align-items-baseline gap-2">
+                <span class="h2 mb-0">1</span>
+
+                            </div>
+
+                            <div class="text-secondary small text-truncate">past their due date</div>
+                    </div>
+
+                    <a href="https://nexus.getstocky.com/projects/tasks?due=overdue" class="nx-stat-link" aria-label="Overdue tasks"><i class="ti ti-chevron-right"></i></a>
+            </div>
+
+    </div>
+    </div>
+    <div class="col-sm-6 col-xl">
+        <div class="card h-100 nx-stat">
+    <div class="card-body d-flex align-items-center gap-3">
+        <span class="bg-orange-lt rounded-3 d-flex align-items-center justify-content-center flex-none nx-icon-tile">
+            <i class="ti ti-file-invoice fs-2"></i>
+        </span>
+
+        <div class="min-w-0 flex-fill">
+            <div class="text-secondary text-truncate small">Unbilled hours</div>
+            <div class="d-flex align-items-baseline gap-2">
+                <span class="h2 mb-0">93h 30m</span>
+
+                            </div>
+
+                            <div class="text-secondary small text-truncate">billable time not yet invoiced</div>
+                    </div>
+
+                    <a href="https://nexus.getstocky.com/projects/time?billable=1" class="nx-stat-link" aria-label="Unbilled hours"><i class="ti ti-chevron-right"></i></a>
+            </div>
+
+    </div>
+    </div>
+</div>
+
+<div class="row row-cards mb-3">
+    <div class="col-lg-7">
+        <div class="card h-100 nx-chart-card">
+            <div class="card-header d-block">
+                <h3 class="card-title">Hours logged</h3>
+                <p class="card-subtitle">Billable and non-billable time per week</p>
+            </div>
+            <div class="card-body">
+                <div class="nx-chart" data-nx-h-px="240" style="height: 240px;">
+    <canvas data-nx-chart="{&quot;type&quot;:&quot;bar&quot;,&quot;labels&quot;:[&quot;20 Jul&quot;,&quot;27 Jul&quot;,&quot;3 Aug&quot;,&quot;10 Aug&quot;,&quot;17 Aug&quot;,&quot;24 Aug&quot;,&quot;31 Aug&quot;,&quot;7 Sep&quot;,&quot;14 Sep&quot;,&quot;21 Sep&quot;,&quot;28 Sep&quot;,&quot;5 Oct&quot;],&quot;series&quot;:[{&quot;label&quot;:&quot;Billable&quot;,&quot;data&quot;:[0,0,0,0,0,0,0,0,19,31,31,12.5],&quot;color&quot;:&quot;accent&quot;},{&quot;label&quot;:&quot;Non-billable&quot;,&quot;data&quot;:[0,0,0,0,0,0,0,0,38,62,62,26],&quot;color&quot;:&quot;slate&quot;}],&quot;format&quot;:&quot;number&quot;,&quot;decimals&quot;:2,&quot;stacked&quot;:true,&quot;legendPosition&quot;:&quot;bottom&quot;,&quot;ticks&quot;:4}" role="img" aria-label="Hours logged per week, billable and non-billable" width="623" height="240" style="display: block; box-sizing: border-box; height: 240px; width: 623.3px;"></canvas>
+</div>
+            </div>
+            <div class="card-footer">
+                <div class="nx-figures">
+                    <span class="nx-figure"><span class="nx-figure-value">93h 30m</span><span class="nx-figure-label">billable in 12 weeks</span></span>
+                    <span class="nx-figure"><span class="nx-figure-value">33%</span><span class="nx-figure-label">billable share</span></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-5">
+        <div class="card h-100 nx-chart-card">
+            <div class="card-header d-block">
+                <h3 class="card-title">Task flow</h3>
+                <p class="card-subtitle">Tasks finished against tasks raised, per week</p>
+            </div>
+            <div class="card-body">
+                <div class="nx-chart" data-nx-h-px="240" style="height: 240px;">
+    <canvas data-nx-chart="{&quot;type&quot;:&quot;line&quot;,&quot;labels&quot;:[&quot;20 Jul&quot;,&quot;27 Jul&quot;,&quot;3 Aug&quot;,&quot;10 Aug&quot;,&quot;17 Aug&quot;,&quot;24 Aug&quot;,&quot;31 Aug&quot;,&quot;7 Sep&quot;,&quot;14 Sep&quot;,&quot;21 Sep&quot;,&quot;28 Sep&quot;,&quot;5 Oct&quot;],&quot;series&quot;:[{&quot;label&quot;:&quot;Completed&quot;,&quot;data&quot;:[1,0,0,0,0,0,0,1,4,2,4,1],&quot;color&quot;:&quot;s3&quot;},{&quot;label&quot;:&quot;Created&quot;,&quot;data&quot;:[0,0,0,0,0,0,0,0,0,0,0,37],&quot;color&quot;:&quot;slate&quot;,&quot;fill&quot;:false}],&quot;format&quot;:&quot;number&quot;,&quot;decimals&quot;:2,&quot;legendPosition&quot;:&quot;bottom&quot;,&quot;ticks&quot;:4}" role="img" aria-label="Tasks completed and created per week" width="428" height="240" style="display: block; box-sizing: border-box; height: 240px; width: 428.7px;"></canvas>
+</div>
+            </div>
+            <div class="card-footer">
+                <div class="nx-figures">
+                    <span class="nx-figure"><span class="nx-legend-dot" data-nx-bg="var(--nx-s3)" style="background: var(--nx-s3);"></span><span class="nx-figure-value">13</span><span class="nx-figure-label">completed</span></span>
+                    <span class="nx-figure"><span class="nx-figure-value">37</span><span class="nx-figure-label">created</span></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row row-cards mb-3">
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-header">
+                <h3 class="card-title"><i class="ti ti-folders me-2"></i>Active projects</h3>
+                <a href="https://nexus.getstocky.com/projects" class="ms-auto small">All projects</a>
+            </div>
+            <div class="card-body py-2">
+                                    <a href="https://nexus.getstocky.com/projects/1" class="d-flex align-items-center gap-3 py-2 text-reset border-bottom">
+                        <span class="nx-ring nx-ring-sm" data-nx-ring="47" data-label="47%" style="--value: 47;"></span>
+                        <div class="min-w-0 flex-fill">
+                            <div class="fw-medium text-truncate">Northwind website relaunch</div>
+                            <div class="text-secondary small">8 open of 15 tasks · due 06 Nov 2026</div>
+                        </div>
+                                            </a>
+                                    <a href="https://nexus.getstocky.com/projects/2" class="d-flex align-items-center gap-3 py-2 text-reset ">
+                        <span class="nx-ring nx-ring-sm" data-nx-ring="38" data-label="38%" style="--value: 38;"></span>
+                        <div class="min-w-0 flex-fill">
+                            <div class="fw-medium text-truncate">Mobile app v2</div>
+                            <div class="text-secondary small">8 open of 13 tasks · due 06 Dec 2026</div>
+                        </div>
+                                            </a>
+                            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3">
+        <div class="card h-100">
+            <div class="card-header"><h3 class="card-title"><i class="ti ti-bug me-2"></i>Open issues</h3></div>
+            <div class="card-body py-2">
+                                    <div class="d-flex justify-content-between align-items-center py-1">
+                        <span class="badge bg-secondary-lt"><i class="ti ti-arrow-down me-1"></i>Low</span>
+                        <span class="fw-medium nx-num">1</span>
+                    </div>
+                                    <div class="d-flex justify-content-between align-items-center py-1">
+                        <span class="badge bg-azure-lt"><i class="ti ti-minus me-1"></i>Medium</span>
+                        <span class="fw-medium nx-num">1</span>
+                    </div>
+                                    <div class="d-flex justify-content-between align-items-center py-1">
+                        <span class="badge bg-orange-lt"><i class="ti ti-arrow-up me-1"></i>High</span>
+                        <span class="fw-medium nx-num">1</span>
+                    </div>
+                                    <div class="d-flex justify-content-between align-items-center py-1">
+                        <span class="badge bg-red-lt"><i class="ti ti-flame me-1"></i>Critical</span>
+                        <span class="fw-medium nx-num">1</span>
+                    </div>
+                            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3">
+        <div class="card h-100">
+            <div class="card-header"><h3 class="card-title"><i class="ti ti-flag-3 me-2"></i>Upcoming milestones</h3></div>
+            <div class="card-body py-2">
+                                    <a href="https://nexus.getstocky.com/projects/1/milestones" class="d-block py-1 text-reset">
+                        <div class="fw-medium text-truncate">Build</div>
+                        <div class="text-secondary small text-truncate">Northwind website relaunch · 27 Oct</div>
+                    </a>
+                                    <a href="https://nexus.getstocky.com/projects/2/milestones" class="d-block py-1 text-reset">
+                        <div class="fw-medium text-truncate">Beta to testers</div>
+                        <div class="text-secondary small text-truncate">Mobile app v2 · 27 Oct</div>
+                    </a>
+                                    <a href="https://nexus.getstocky.com/projects/1/milestones" class="d-block py-1 text-reset">
+                        <div class="fw-medium text-truncate">Launch</div>
+                        <div class="text-secondary small text-truncate">Northwind website relaunch · 6 Nov</div>
+                    </a>
+                                    <a href="https://nexus.getstocky.com/projects/2/milestones" class="d-block py-1 text-reset">
+                        <div class="fw-medium text-truncate">Store release</div>
+                        <div class="text-secondary small text-truncate">Mobile app v2 · 1 Dec</div>
+                    </a>
+                            </div>
+        </div>
+    </div>
+</div>
+
+<div class="nx-section">
+    <h2 class="nx-section-title"><i class="ti ti-building"></i>Around the company</h2>
+    <span class="nx-section-rule"></span>
+</div>
+
+<div class="row row-cards mb-3">
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-header"><h3 class="card-title"><i class="ti ti-cake me-2 text-pink"></i>Birthdays this week</h3></div>
+            <div class="card-body py-2">
+                                    <div class="d-flex align-items-center gap-2 py-1">
+                        <span class="avatar rounded-circle avatar-sm nx-avatar-accent" aria-label="Olivia Bennett" title="Olivia Bennett">OB</span>
+                        <div class="min-w-0 flex-fill">
+                            <div class="fw-medium text-truncate">Olivia Bennett</div>
+                            <div class="text-secondary small text-truncate">Chief Executive Officer</div>
+                        </div>
+                        <span class="text-secondary small nx-nowrap">Wed 7 Oct</span>
+                    </div>
+                            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-8">
+        <div class="card h-100">
+            <div class="card-header">
+                <h3 class="card-title"><i class="ti ti-activity me-2"></i>Recent activity</h3>
+                                    <a href="https://nexus.getstocky.com/activity" class="ms-auto small">Full log</a>
+                            </div>
+            <div class="list-group list-group-flush">
+                                    <div class="list-group-item d-flex align-items-center gap-3 py-2">
+                        <span class="avatar rounded-circle avatar-xs nx-avatar-accent" aria-label="Administrator" title="Administrator">A</span>
+                        <div class="min-w-0 flex-fill">
+                            <span class="fw-medium">Administrator</span>
+                            <span class="text-secondary">Auth login</span>
+                                                    </div>
+                        <span class="text-secondary small nx-nowrap">1 second ago</span>
+                    </div>
+                                    <div class="list-group-item d-flex align-items-center gap-3 py-2">
+                        <span class="avatar rounded-circle avatar-xs nx-avatar-accent" aria-label="Administrator" title="Administrator">A</span>
+                        <div class="min-w-0 flex-fill">
+                            <span class="fw-medium">Administrator</span>
+                            <span class="text-secondary">Auth login</span>
+                                                    </div>
+                        <span class="text-secondary small nx-nowrap">16 minutes ago</span>
+                    </div>
+                                    <div class="list-group-item d-flex align-items-center gap-3 py-2">
+                        <span class="avatar rounded-circle avatar-xs nx-avatar-accent" aria-label="Administrator" title="Administrator">A</span>
+                        <div class="min-w-0 flex-fill">
+                            <span class="fw-medium">Administrator</span>
+                            <span class="text-secondary">Auth login</span>
+                                                    </div>
+                        <span class="text-secondary small nx-nowrap">35 minutes ago</span>
+                    </div>
+                                    <div class="list-group-item d-flex align-items-center gap-3 py-2">
+                        <span class="avatar rounded-circle avatar-xs nx-avatar-accent" aria-label="Administrator" title="Administrator">A</span>
+                        <div class="min-w-0 flex-fill">
+                            <span class="fw-medium">Administrator</span>
+                            <span class="text-secondary">Auth login</span>
+                                                    </div>
+                        <span class="text-secondary small nx-nowrap">44 minutes ago</span>
+                    </div>
+                                    <div class="list-group-item d-flex align-items-center gap-3 py-2">
+                        <span class="avatar rounded-circle avatar-xs nx-avatar-accent" aria-label="Administrator" title="Administrator">A</span>
+                        <div class="min-w-0 flex-fill">
+                            <span class="fw-medium">Administrator</span>
+                            <span class="text-secondary">Auth logout</span>
+                                                    </div>
+                        <span class="text-secondary small nx-nowrap">44 minutes ago</span>
+                    </div>
+                                    <div class="list-group-item d-flex align-items-center gap-3 py-2">
+                        <span class="avatar rounded-circle avatar-xs nx-avatar-accent" aria-label="Administrator" title="Administrator">A</span>
+                        <div class="min-w-0 flex-fill">
+                            <span class="fw-medium">Administrator</span>
+                            <span class="text-secondary">Attendance out</span>
+                            <span class="text-body">— Administrator</span>                        </div>
+                        <span class="text-secondary small nx-nowrap">1 hour ago</span>
+                    </div>
+                                    <div class="list-group-item d-flex align-items-center gap-3 py-2">
+                        <span class="avatar rounded-circle avatar-xs nx-avatar-accent" aria-label="Administrator" title="Administrator">A</span>
+                        <div class="min-w-0 flex-fill">
+                            <span class="fw-medium">Administrator</span>
+                            <span class="text-secondary">Attendance in</span>
+                            <span class="text-body">— Administrator</span>                        </div>
+                        <span class="text-secondary small nx-nowrap">1 hour ago</span>
+                    </div>
+                                    <div class="list-group-item d-flex align-items-center gap-3 py-2">
+                        <span class="avatar rounded-circle avatar-xs nx-avatar-accent" aria-label="Administrator" title="Administrator">A</span>
+                        <div class="min-w-0 flex-fill">
+                            <span class="fw-medium">Administrator</span>
+                            <span class="text-secondary">Auth login</span>
+                                                    </div>
+                        <span class="text-secondary small nx-nowrap">1 hour ago</span>
+                    </div>
+                            </div>
+        </div>
+    </div>
+</div>
+                </div>
+            </div>
+
+            <footer class="nx-footer d-print-none">
+                <div class="container-xl d-flex flex-wrap align-items-center justify-content-between gap-2 py-3 small">
+                    <span class="text-secondary">
+                        © 2026 Nexus — All rights reserved.
+                    </span>
+                    <span class="d-flex align-items-center gap-3">
+                                                    <span class="nx-footer-tag">v1.0.0</span>
+                                            </span>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+            <button type="button" class="nx-custom-fab d-print-none" id="nx-custom-fab" aria-label="Customize theme" title="Customize theme">
+    <i class="ti ti-palette"></i>
+</button>
+
+<div class="nx-custom-backdrop" id="nx-custom-backdrop"></div>
+
+<aside class="nx-custom-drawer" id="nx-custom-drawer" role="dialog" aria-labelledby="nx-custom-title" aria-hidden="true">
+    <div class="nx-custom-drawer-header">
+        <span id="nx-custom-title"><i class="ti ti-palette me-2 nx-accent-ink"></i>Customize</span>
+        <button type="button" class="btn btn-icon btn-ghost-secondary" id="nx-custom-close" aria-label="Close">
+            <i class="ti ti-x"></i>
+        </button>
+    </div>
+
+    <div class="nx-custom-drawer-body">
+        <div>
+            <div class="nx-custom-label">Theme</div>
+            <div class="nx-custom-segment" id="nx-custom-theme">
+                <button type="button" data-theme-choice="light"><i class="ti ti-sun"></i>Light</button>
+                <button type="button" data-theme-choice="dark" class="active"><i class="ti ti-moon"></i>Dark</button>
+                <button type="button" data-theme-choice="system"><i class="ti ti-device-desktop"></i>System</button>
+            </div>
+        </div>
+
+        <div>
+            <div class="nx-custom-label">Primary color</div>
+            <div class="nx-custom-swatches" id="nx-custom-swatches">
+                                    <button type="button" class="nx-custom-swatch active" data-color="#22c55e" data-nx-bg="#22c55e" aria-label="Green" style="background: rgb(34, 197, 94);"></button>
+                                    <button type="button" class="nx-custom-swatch" data-color="#10b981" data-nx-bg="#10b981" aria-label="Emerald" style="background: rgb(16, 185, 129);"></button>
+                                    <button type="button" class="nx-custom-swatch" data-color="#14b8a6" data-nx-bg="#14b8a6" aria-label="Teal" style="background: rgb(20, 184, 166);"></button>
+                                    <button type="button" class="nx-custom-swatch" data-color="#06b6d4" data-nx-bg="#06b6d4" aria-label="Cyan" style="background: rgb(6, 182, 212);"></button>
+                                    <button type="button" class="nx-custom-swatch" data-color="#3b82f6" data-nx-bg="#3b82f6" aria-label="Blue" style="background: rgb(59, 130, 246);"></button>
+                                    <button type="button" class="nx-custom-swatch" data-color="#6366f1" data-nx-bg="#6366f1" aria-label="Indigo" style="background: rgb(99, 102, 241);"></button>
+                                    <button type="button" class="nx-custom-swatch" data-color="#8b5cf6" data-nx-bg="#8b5cf6" aria-label="Purple" style="background: rgb(139, 92, 246);"></button>
+                                    <button type="button" class="nx-custom-swatch" data-color="#ec4899" data-nx-bg="#ec4899" aria-label="Pink" style="background: rgb(236, 72, 153);"></button>
+                                    <button type="button" class="nx-custom-swatch" data-color="#ef4444" data-nx-bg="#ef4444" aria-label="Red" style="background: rgb(239, 68, 68);"></button>
+                                    <button type="button" class="nx-custom-swatch" data-color="#f97316" data-nx-bg="#f97316" aria-label="Orange" style="background: rgb(249, 115, 22);"></button>
+                                    <button type="button" class="nx-custom-swatch" data-color="#f59e0b" data-nx-bg="#f59e0b" aria-label="Amber" style="background: rgb(245, 158, 11);"></button>
+                                    <button type="button" class="nx-custom-swatch" data-color="#64748b" data-nx-bg="#64748b" aria-label="Slate" style="background: rgb(100, 116, 139);"></button>
+                            </div>
+        </div>
+
+        <div>
+            <div class="nx-custom-label">Custom color</div>
+            <div class="nx-custom-picker-row">
+                <input type="color" id="nx-custom-color" value="#22c55e" aria-label="Pick a custom color">
+                <input type="text" id="nx-custom-hex" class="form-control" value="#22c55e" maxlength="7" aria-label="Hex color value">
+            </div>
+        </div>
+
+        <div>
+            <div class="nx-custom-label">Corner radius</div>
+            <div class="nx-custom-segment" id="nx-custom-radius">
+                <button type="button" data-radius-choice="sharp"><i class="ti ti-square"></i>Sharp</button>
+                <button type="button" data-radius-choice="regular" class="active"><i class="ti ti-squares"></i>Regular</button>
+                <button type="button" data-radius-choice="round"><i class="ti ti-circle-square"></i>Rounded</button>
+            </div>
+        </div>
+
+        <button type="button" class="btn btn-outline-secondary" id="nx-custom-reset">
+            <i class="ti ti-restore me-1"></i>Reset to defaults
+        </button>
+
+        <div class="text-secondary small">
+            Changes apply instantly and are remembered on this browser.
+        </div>
+    </div>
+</aside>
+    
+    <div hidden="" id="nx-dialog-strings" data-title="Are you sure?" data-yes="Yes" data-delete="Delete" data-cancel="Cancel"></div>
+
+
+    
+
+</body></html>

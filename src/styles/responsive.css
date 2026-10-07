@@ -10,11 +10,7 @@
      · <= 767px   phone  — off-canvas drawer, stacked layouts
    ============================================================ */
 
-/* ---------- small-screen-only elements (never on desktop) ---------- */
-
-.app-header__menu {
-  display: none;
-}
+/* ---------- elements that never leave the small screen ---------- */
 
 .sidebar-backdrop {
   display: none;
@@ -64,6 +60,38 @@
   .prv-diff td {
     padding: 8px 10px;
   }
+
+  /* ---------- off-canvas navigation drawer (below lg, Nexus-style) ---------- */
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    height: 100dvh;
+    display: flex;
+    flex: 0 0 auto;
+    width: min(var(--sidebar-w), 85vw);
+    transform: translateX(-101%);
+    transition: transform 0.22s ease;
+    z-index: 360;
+    box-shadow: none;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .sidebar.is-open {
+    transform: translateX(0);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 350;
+    background: rgba(20, 20, 20, 0.4);
+    animation: fade-in 0.15s ease;
+  }
 }
 
 /* =============================== PHONE ============================== */
@@ -97,55 +125,24 @@
     background: var(--background);
   }
 
-  .app-header__brand {
-    display: inline-flex;
-  }
-
-  .app-header__logo {
-    width: 46px;
-    height: 46px;
-    flex-basis: 46px;
+  /* Nexus drops +New / fullscreen from the topbar below md. */
+  .app-header__cta,
+  .app-header__tool {
+    display: none;
   }
 
   .app-header__avatar {
-    width: 38px;
-    height: 38px;
-    font-size: 13px;
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
   }
 
   .app-header__bell {
     padding: 10px;
   }
 
-  /* ---------- off-canvas navigation drawer ---------- */
+  /* ---------- off-canvas drawer: touch sizing ---------- */
 
-  .sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    height: 100dvh;
-    display: flex;
-    flex: 0 0 auto;
-    width: min(78vw, 300px);
-    transform: translateX(-101%);
-    transition: transform 0.22s ease;
-    z-index: 360;
-    box-shadow: none;
-    padding-bottom: env(safe-area-inset-bottom);
-  }
-
-  .sidebar.is-open {
-    transform: translateX(0);
-    box-shadow: var(--shadow-lg);
-  }
-
-  .sidebar:hover,
-  .sidebar:focus-within {
-    width: min(78vw, 300px);
-  }
-
-  /* Touch devices have no hover — always show the labels. */
   .sidebar__label {
     opacity: 1;
   }
@@ -153,15 +150,6 @@
   .sidebar__link {
     padding: 13px 14px;
     font-size: 15px;
-  }
-
-  .sidebar-backdrop {
-    display: block;
-    position: fixed;
-    inset: 0;
-    z-index: 350;
-    background: rgba(20, 20, 20, 0.4);
-    animation: fade-in 0.15s ease;
   }
 
   /* ---------- page rhythm ---------- */

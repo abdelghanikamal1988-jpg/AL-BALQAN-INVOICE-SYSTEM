@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import Icon from '../../components/Icons/Icon.jsx';
 import Modal from '../../components/Modal/Modal.jsx';
 import ConfirmAuthModal from '../../components/ConfirmAuth/ConfirmAuthModal.jsx';
@@ -43,6 +43,7 @@ export default function Clients() {
   const navigate = useNavigate();
   const { user, isAdmin } = useAuth();
   const { refresh: refreshApprovals } = usePendingApprovals();
+  const [searchParams] = useSearchParams();
 
   const [clients, setClients] = useState([]);
   const [agents, setAgents] = useState([]);
@@ -51,7 +52,7 @@ export default function Clients() {
   const [userNames, setUserNames] = useState({});
   const [review, setReview] = useState(null);
   const [reviewBusy, setReviewBusy] = useState(false);
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState(() => searchParams.get('q') || '');
   const [agent, setAgent] = useState(ANY);
   const [country, setCountry] = useState(ANY);
   const [status, setStatus] = useState(ANY);
@@ -61,6 +62,11 @@ export default function Clients() {
   const [invoiceOwner, setInvoiceOwner] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [authPrompt, setAuthPrompt] = useState(false);
+
+  /* Deep link from the topbar search: /clients?q=… */
+  useEffect(() => {
+    setQuery(searchParams.get('q') || '');
+  }, [searchParams]);
 
   useEffect(() => {
     let active = true;

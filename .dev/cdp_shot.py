@@ -42,7 +42,7 @@ def main():
     time.sleep(float(__import__("os").environ.get("CDP_WAIT", "6")))
     res = {}
     if eval_js:
-        r = cmd("Runtime.evaluate", {"expression": eval_js, "returnByValue": True, "awaitPromise": False})
+        r = cmd("Runtime.evaluate", {"expression": eval_js, "returnByValue": True, "awaitPromise": True})
         if "exceptionDetails" in r:
             res = {"ERROR": r["exceptionDetails"].get("text"), "detail": r["exceptionDetails"]}
         else:

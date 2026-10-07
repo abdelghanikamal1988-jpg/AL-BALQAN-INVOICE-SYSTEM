@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { useToast } from '../../components/Toast/ToastProvider.jsx';
 import company from '../../data/company.js';
+import Icon from '../../components/Icons/Icon.jsx';
 import { migrateLocalInvoices } from '../../utils/storage.js';
 
 export default function Login() {
@@ -49,51 +50,68 @@ export default function Login() {
 
   return (
     <div className="login-page">
-      <div className="card login-card">
-        <div className="login-card__brand">
-          <div className="login-card__logo">
+      <div className="login-frame">
+        <div className="login-brand">
+          <span className="login-brand__tile">
             {company.logoUI ? (
-              <img src={company.logoUI} alt="AL BALQAN logo" />
+              <img src={company.logoUI} alt="" />
             ) : (
-              <span className="login-card__logo-fallback">AB</span>
+              <span>AB</span>
             )}
-          </div>
-          <p className="login-card__tagline">Tourism &amp; Visa Services · Invoice System</p>
+          </span>
+          <span className="login-brand__name">{company.shortName || 'AL BALQAN'}</span>
         </div>
 
-        <form className="login-form" onSubmit={handleSubmit}>
-          <div className="field">
-            <label htmlFor="login-email">Email</label>
-            <input
-              id="login-email"
-              type="email"
-              autoComplete="email"
-              placeholder="you@company.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+        <div className="card login-card">
+          <span className="login-card__strip" aria-hidden="true" />
+          <h1 className="login-card__title">Sign in to your account</h1>
+          <p className="login-card__sub">Sign in with your work email.</p>
+
+          <form className="login-form" onSubmit={handleSubmit}>
+            <div className="field">
+              <label htmlFor="login-email">Email address</label>
+              <input
+                id="login-email"
+                type="email"
+                autoComplete="username"
+                placeholder="you@company.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+
+            <div className="field">
+              <label htmlFor="login-password">Password</label>
+              <input
+                id="login-password"
+                type="password"
+                autoComplete="current-password"
+                placeholder="Your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+
+            <button type="submit" className="btn btn--primary btn--block" disabled={busy}>
+              {busy ? (
+                <span className="btn__spinner" aria-hidden="true" />
+              ) : (
+                <>
+                  <Icon name="login" aria-hidden="true" />
+                  Sign in
+                </>
+              )}
+            </button>
+          </form>
+
+          <div className="login-card__hint">
+            <p className="login-card__hint-title">Account access</p>
+            <p className="login-card__hint-text">
+              Invoices are stored securely in the cloud under this account.
+              Use the work email and password your administrator gave you.
+            </p>
           </div>
-
-          <div className="field">
-            <label htmlFor="login-password">Password</label>
-            <input
-              id="login-password"
-              type="password"
-              autoComplete="current-password"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-
-          <button type="submit" className="btn btn--primary btn--block" disabled={busy}>
-            {busy ? <span className="btn__spinner" aria-hidden="true" /> : 'Sign In'}
-          </button>
-        </form>
-
-        <p className="login-card__note">
-          Invoices are stored securely in the cloud under this account.
-        </p>
+        </div>
       </div>
     </div>
   );
