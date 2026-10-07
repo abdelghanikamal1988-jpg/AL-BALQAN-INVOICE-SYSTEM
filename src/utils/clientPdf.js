@@ -20,11 +20,11 @@ import { statusClass } from '../data/clientStatuses.js';
 import { clientFullName, getClientInvoices } from './clients.js';
 import { documentBytes, uploadClientPdf, currentUserId } from './uploads.js';
 
-const NAVY = rgb(0.114, 0.208, 0.369);
+const INK = rgb(0.078, 0.078, 0.078);
 const GOLD = rgb(0.835, 0.686, 0.204);
-const GRAY = rgb(0.431, 0.471, 0.518);
-const DARK = rgb(0.11, 0.141, 0.188);
-const LINE = rgb(0.839, 0.859, 0.886);
+const GRAY = rgb(0.431, 0.431, 0.431);
+const DARK = rgb(0.078, 0.078, 0.078);
+const LINE = rgb(0.839, 0.839, 0.839);
 const WHITE = rgb(1, 1, 1);
 
 /** English-only safe text: guaranteed to exist in the Helvetica glyph set. */
@@ -180,7 +180,7 @@ export async function buildClientPdf(client, invoiceRows) {
     y: ty(172),
     size: 15,
     font: bold,
-    color: NAVY,
+    color: INK,
   });
   page.drawLine({
     start: { x: left, y: ty(181) },

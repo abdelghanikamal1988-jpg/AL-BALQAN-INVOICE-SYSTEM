@@ -1,23 +1,23 @@
-/* ============================================================
-   AL BALQAN — Design System
+﻿/* ============================================================
+   AL BALQAN â€” Design System
    All colors and tokens live here in one place.
    ============================================================ */
 
 :root {
-  --primary: #1D355E;
-  --primary-dark: #16294a;
-  --primary-darker: #101e36;
+  --primary: #141414;
+  --primary-dark: #000000;
+  --primary-darker: #000000;
   --secondary: #D5AF34;
   --secondary-dark: #b8952a;
 
-  /* Landing fingerprint: ink / ash / mist — canvas is pure white like the landing */
+  /* Landing fingerprint: ink / ash / mist â€” canvas is pure white like the landing */
   --background: #ffffff;
   --surface: #ffffff;
   --text: #141414;
   --muted: #555555;
   --border: rgba(20, 20, 20, 0.1);
   --ink: #141414;
-  --mist: #eff4f7;
+  --mist: #f4f4f4;
 
   --success: #2e7d32;
   --warning: #b26a00;
@@ -27,7 +27,7 @@
   --radius-md: 6px;
   --radius-lg: 10px;
 
-  /* Top bar height — the sidebar starts right below it. */
+  /* Top bar height â€” the sidebar starts right below it. */
   --header-h: 80px;
 
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
@@ -209,7 +209,7 @@ button {
 
 .btn--secondary:hover:not(:disabled) {
   border-color: var(--primary);
-  background: #f7f9fc;
+  background: #f7f7f7;
 }
 
 .btn--neutral {
@@ -256,7 +256,7 @@ button {
 
 .btn--secondary .btn__spinner,
 .btn--neutral .btn__spinner {
-  border-color: rgba(29, 53, 94, 0.3);
+  border-color: rgba(20, 20, 20, 0.3);
   border-top-color: var(--primary);
 }
 
@@ -296,7 +296,7 @@ button {
   width: 30px;
   height: 30px;
   border-radius: var(--radius-sm);
-  background: rgba(29, 53, 94, 0.08);
+  background: rgba(20, 20, 20, 0.08);
   color: var(--primary);
   font-size: 16px;
   flex: 0 0 30px;
@@ -307,7 +307,7 @@ button {
 }
 
 .card--muted {
-  background: #fafbfc;
+  background: #fafafa;
 }
 
 /* ---------- Forms ---------- */
@@ -350,7 +350,7 @@ button {
 .field textarea:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(29, 53, 94, 0.12);
+  box-shadow: 0 0 0 3px rgba(20, 20, 20, 0.12);
 }
 
 /* Native date/time pickers match the rest of the form. */
@@ -424,7 +424,7 @@ button {
   padding: 12px 14px;
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  background: #fafbfc;
+  background: #fafafa;
 }
 
 .vat-fieldset .field__legend {
@@ -929,7 +929,7 @@ button {
 .spinner {
   width: 20px;
   height: 20px;
-  border: 3px solid rgba(29, 53, 94, 0.2);
+  border: 3px solid rgba(20, 20, 20, 0.2);
   border-top-color: var(--primary);
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
@@ -1148,7 +1148,7 @@ button {
 
 .searchbar:focus-within {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(29, 53, 94, 0.12);
+  box-shadow: 0 0 0 3px rgba(20, 20, 20, 0.12);
 }
 
 .searchbar__icon {
@@ -1184,7 +1184,7 @@ button {
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background: linear-gradient(160deg, var(--primary-darker) 0%, var(--primary) 60%, #24406b 100%);
+  background: var(--ink);
 }
 
 .login-card {
@@ -1322,7 +1322,7 @@ button {
 }
 
 /* ============================================================
-   AL BALQAN × Landing — design fingerprint overlay
+   AL BALQAN Ã— Landing â€” design fingerprint overlay
    Visual layer only; no behavior / layout contract changes.
    ============================================================ */
 
@@ -1400,12 +1400,12 @@ button {
 }
 
 /* ============================================================
-   AL BALQAN × Landing — fingerprint layer 2
+   AL BALQAN Ã— Landing â€” fingerprint layer 2
    Full visual restyle: ink controls, sharp geometry, dark gate.
    Visual layer only; no behavior / layout contract changes.
    ============================================================ */
 
-/* Sharp geometry — cards, controls and panels read like the landing.
+/* Sharp geometry â€” cards, controls and panels read like the landing.
    The invoice sheet keeps its own radii from invoice.css tokens. */
 .card,
 .modal,
@@ -1517,7 +1517,7 @@ a {
   border-left-color: var(--ink);
 }
 
-/* Dark gate — the landing hero, restated over its photography */
+/* Dark gate â€” the landing hero, restated over its photography */
 .login-page {
   background: linear-gradient(rgba(20, 20, 20, 0.84), rgba(20, 20, 20, 0.92)),
     url('../assets/login-frame.jpg') center / cover no-repeat;
@@ -1538,7 +1538,7 @@ a {
 }
 
 /* ============================================================
-   AL BALQAN × Landing — fingerprint layer 3
+   AL BALQAN Ã— Landing â€” fingerprint layer 3
    Editorial scale & rhythm: landing proportions, airier frames.
    ============================================================ */
 
@@ -1649,7 +1649,7 @@ body {
 }
 
 /* ============================================================
-   AL BALQAN × Landing — fingerprint layer 4
+   AL BALQAN Ã— Landing â€” fingerprint layer 4
    Exact landing language: white canvas, underline fields,
    animated nav underlines, no decorative chrome.
    ============================================================ */
@@ -1730,7 +1730,7 @@ body {
   background: rgba(20, 20, 20, 0.06);
 }
 
-/* Header CTA — the landing's ink pill */
+/* Header CTA â€” the landing's ink pill */
 .app-header__cta {
   display: inline-flex;
   align-items: center;
@@ -1761,7 +1761,7 @@ body {
 }
 
 /* ============================================================
-   AL BALQAN × Landing — fingerprint layer 5
+   AL BALQAN Ã— Landing â€” fingerprint layer 5
    Composition: centered section rhythm like the landing's
    section headings, ink bands, dark table headers.
    ============================================================ */
@@ -1819,7 +1819,7 @@ body {
 }
 
 /* ============================================================
-   Login gate v2 — white patterned page, ink card, white mark
+   Login gate v2 â€” white patterned page, ink card, white mark
    ============================================================ */
 
 .login-page {
@@ -1883,7 +1883,7 @@ body {
   color: rgba(255, 255, 255, 0.35);
 }
 
-/* Autofill must stay ink like the rest of the card — specificity must
+/* Autofill must stay ink like the rest of the card â€” specificity must
    outrank layer-4's `box-shadow: none` on .field input:not()... */
 .login-card .field input:not([type='checkbox']):not([type='radio']):-webkit-autofill,
 .login-card .field input:not([type='checkbox']):not([type='radio']):-webkit-autofill:hover,

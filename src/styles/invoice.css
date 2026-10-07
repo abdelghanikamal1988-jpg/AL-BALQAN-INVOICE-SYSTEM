@@ -1,12 +1,12 @@
-/* ============================================================
-   AL BALQAN — Invoice editor + A4 preview + history styles
+﻿/* ============================================================
+   AL BALQAN â€” Invoice editor + A4 preview + history styles
    ============================================================ */
 
 /* ---------- Payment summary (in-form) ---------- */
 
 .payment-summary {
   margin-top: 16px;
-  background: #f7f9fc;
+  background: #f7f7f7;
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   overflow: hidden;
@@ -181,7 +181,7 @@
 }
 
 .history-table tbody tr:hover {
-  background: #f7f9fc;
+  background: #f7f7f7;
 }
 
 .history-table .mono {
@@ -445,7 +445,7 @@
 }
 
 .invoice__customer-item {
-  background: #fafbfc;
+  background: #fafafa;
   border: 1px solid var(--border);
   border-radius: 6px;
   padding: 7px 10px;

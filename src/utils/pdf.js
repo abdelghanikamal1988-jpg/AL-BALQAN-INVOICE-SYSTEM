@@ -15,11 +15,11 @@ import { formatCurrency } from './formatCurrency.js';
 import { serviceLabel, destinationLabel } from './labels.js';
 import { invoicePaymentBreakdown, VAT_MODE, VAT_RATE_LABEL } from './vat.js';
 
-const NAVY = [29, 53, 94];
+const INK = [20, 20, 20];
 const GOLD = [213, 175, 52];
-const GRAY = [110, 120, 132];
-const DARK = [28, 36, 48];
-const LIGHT = [245, 246, 248];
+const GRAY = [110, 110, 110];
+const DARK = [20, 20, 20];
+const LIGHT = [245, 245, 245];
 const GOLD_BG = [255, 248, 230];
 
 const A4_W = 210;
@@ -91,8 +91,8 @@ export async function buildInvoicePdf(invoice) {
   };
 
   const sectionTitle = (label, y) => {
-    text(label, M, y, { size: 7, style: 'bold', color: NAVY });
-    pdf.setDrawColor(...NAVY);
+    text(label, M, y, { size: 7, style: 'bold', color: INK });
+    pdf.setDrawColor(...INK);
     pdf.setLineWidth(0.25);
     pdf.line(M, y + 1.6, A4_W - M, y + 1.6);
   };
@@ -123,13 +123,13 @@ export async function buildInvoicePdf(invoice) {
     const oy = y + (logoBox - h) / 2;
     pdf.addImage(dataUrl, 'PNG', ox, oy, w, h);
   } else {
-    pdf.setFillColor(...NAVY);
+    pdf.setFillColor(...INK);
     pdf.roundedRect(M, y, logoBox, logoBox, 2, 2, 'F');
     text('AB', M + logoBox / 2, y + logoBox / 2 + 1.5, { size: 13, style: 'bold', color: [255, 255, 255], align: 'center' });
   }
 
   // Company info
-  text(company.name, M + logoBox + 6, y + 4, { size: 12, style: 'bold', color: NAVY });
+  text(company.name, M + logoBox + 6, y + 4, { size: 12, style: 'bold', color: INK });
   text('TOURISM & VISA SERVICES', M + logoBox + 6, y + 8.5, { size: 7, style: 'bold', color: GRAY });
   const addrLines = wrap(company.address, M + logoBox + 6, y + 13, 95, { size: 7.5, color: GRAY });
   let infoY = y + 13 + (addrLines - 1) * 3.4;
@@ -137,7 +137,7 @@ export async function buildInvoicePdf(invoice) {
   text(`${company.website}  ·  Commercial License No. ${company.licenseNo}`, M + logoBox + 6, infoY + 8, { size: 7.5, color: GRAY });
 
   // Invoice title + meta (right)
-  text('INVOICE', A4_W - M, y + 4, { size: 20, style: 'bold', color: NAVY, align: 'right' });
+  text('INVOICE', A4_W - M, y + 4, { size: 20, style: 'bold', color: INK, align: 'right' });
   pdf.setDrawColor(...GOLD);
   pdf.setLineWidth(1);
   pdf.line(A4_W - M - 46, y + 6.5, A4_W - M, y + 6.5);
@@ -148,7 +148,7 @@ export async function buildInvoicePdf(invoice) {
   pdf.roundedRect(A4_W - M - 62, y + 10, 62, 24, 1.2, 1.2, 'FD');
 
   text('INVOICE #', A4_W - M - 58, y + 15, { size: 6, style: 'bold', color: GRAY });
-  text(invoice.invoiceNumber || '—', A4_W - M - 58, y + 19.5, { size: 10, style: 'bold', color: NAVY });
+  text(invoice.invoiceNumber || '—', A4_W - M - 58, y + 19.5, { size: 10, style: 'bold', color: INK });
   text(`Issue Date: ${invoice.issueDate || '—'}`, A4_W - M - 58, y + 26, { size: 7.5, color: DARK });
   if (invoice.issueTime) {
     text(`Issue Time: ${invoice.issueTime}`, A4_W - M - 58, y + 30.5, { size: 7.5, color: DARK });
@@ -157,7 +157,7 @@ export async function buildInvoicePdf(invoice) {
   y = 15 + logoBox + 8;
 
   // Divider
-  pdf.setFillColor(...NAVY);
+  pdf.setFillColor(...INK);
   pdf.rect(M, y, CW, 1.3, 'F');
   y += 8;
 
@@ -212,9 +212,9 @@ export async function buildInvoicePdf(invoice) {
     y = payRow('SUBTOTAL', formatCurrency(payment.subtotal), y);
     y = payRow(`VAT (${VAT_RATE_LABEL})`, formatCurrency(payment.vat), y);
   }
-  y = payRow('TOTAL', formatCurrency(payment.grandTotal), y, { fill: NAVY, valueColor: [255, 255, 255], labelColor: [255, 255, 255] });
+  y = payRow('TOTAL', formatCurrency(payment.grandTotal), y, { fill: INK, valueColor: [255, 255, 255], labelColor: [255, 255, 255] });
   y = payRow('AMOUNT PAID', formatCurrency(calc.paid), y);
-  y = payRow('REMAINING BALANCE', formatCurrency(calc.remaining), y, { fill: GOLD_BG, valueColor: NAVY, labelColor: NAVY });
+  y = payRow('REMAINING BALANCE', formatCurrency(calc.remaining), y, { fill: GOLD_BG, valueColor: INK, labelColor: INK });
   y = payRow('STATUS', statusLabel(calc.status), y);
 
   /* ---------- notes ---------- */
@@ -253,7 +253,7 @@ export async function buildInvoicePdf(invoice) {
 
   /* ---------- footer ---------- */
 
-  pdf.setFillColor(...NAVY);
+  pdf.setFillColor(...INK);
   pdf.rect(0, A4_H - 14, A4_W, 14, 'F');
   text(
     `${company.name} · ${company.city} · Commercial License No. ${company.licenseNo}`,
