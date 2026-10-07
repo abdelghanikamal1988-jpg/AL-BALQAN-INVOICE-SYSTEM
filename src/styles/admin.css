@@ -22,24 +22,24 @@
 .au-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 14px;
+  font-size: 13.5px;
 }
 
 .au-table th {
   text-align: left;
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--muted);
   background: transparent;
-  padding: 11px 20px;
+  padding: 10px 20px;
   border-bottom: 1px solid var(--border);
 }
 
 .au-table td {
-  padding: 14px 20px;
-  border-bottom: 1px solid rgba(20, 20, 20, 0.06);
+  padding: 11px 20px;
+  border-bottom: 1px solid var(--line-soft);
   vertical-align: middle;
 }
 
@@ -52,7 +52,7 @@
 }
 
 .au-table tbody tr:hover {
-  background: rgba(20, 20, 20, 0.03);
+  background: var(--hover);
 }
 
 .au-row--off td {
@@ -81,14 +81,14 @@
 
 .au-chip {
   display: inline-block;
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.03em;
   text-transform: uppercase;
-  border-radius: 999px;
-  padding: 4px 10px;
+  border-radius: 6px;
+  padding: 3.5px 9px;
   white-space: nowrap;
-  background: var(--mist);
+  background: var(--pill);
   color: var(--text);
 }
 
@@ -98,24 +98,24 @@
 }
 
 .au-chip--employee {
-  background: var(--mist);
-  color: var(--text);
+  background: var(--brand-soft);
+  color: var(--brand-strong);
 }
 
 .au-chip--delegate {
-  background: #f3eee1;
-  color: #8a6d1f;
+  background: #FFF7E0;
+  color: #A16207;
 }
 
 .au-chip--custom {
-  background: #f1f1f1;
+  background: var(--pill);
   color: var(--muted);
 }
 
 .au-status {
   font-size: 12.5px;
   font-weight: 600;
-  color: #1f7a3d;
+  color: var(--brand-strong);
 }
 
 .au-status::before {
@@ -124,7 +124,7 @@
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: #21a053;
+  background: var(--brand);
   margin-right: 6px;
   vertical-align: 1px;
 }
@@ -144,8 +144,8 @@
   text-align: right;
 }
 
-.au-actions .btn {
-  margin-left: 6px;
+.au-actions .icon-btn + .icon-btn {
+  margin-left: 2px;
 }
 
 /* ------------------------------- the form ------------------------------- */
@@ -211,7 +211,7 @@
   width: 16px;
   height: 16px;
   margin: 0;
-  accent-color: var(--primary);
+  accent-color: var(--brand);
   cursor: pointer;
   flex: 0 0 16px;
 }

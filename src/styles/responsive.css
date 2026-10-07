@@ -28,13 +28,13 @@
 /* ============================== TABLET ============================== */
 
 @media (max-width: 1023px) {
-  /* The top nav links duplicate the sidebar rail — keep only the rail. */
-  .app-header__nav {
-    display: none;
-  }
-
   .page {
     padding: 20px;
+  }
+
+  /* KPI/stat cards wrap one column earlier on tablets. */
+  .statc-row {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   }
 
   /* The A4 sheet is 210mm wide — let the editor grid items shrink below
@@ -97,6 +97,10 @@
     background: var(--background);
   }
 
+  .app-header__brand {
+    display: inline-flex;
+  }
+
   .app-header__logo {
     width: 46px;
     height: 46px;
@@ -113,14 +117,16 @@
     padding: 10px;
   }
 
-  .app-header__nav {
-    display: none;
-  }
-
   /* ---------- off-canvas navigation drawer ---------- */
 
   .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    height: 100dvh;
     display: flex;
+    flex: 0 0 auto;
     width: min(78vw, 300px);
     transform: translateX(-101%);
     transition: transform 0.22s ease;
@@ -152,7 +158,7 @@
   .sidebar-backdrop {
     display: block;
     position: fixed;
-    inset: var(--header-h) 0 0;
+    inset: 0;
     z-index: 350;
     background: rgba(20, 20, 20, 0.4);
     animation: fade-in 0.15s ease;
@@ -351,13 +357,21 @@
 
   /* ---------- clients / client detail ---------- */
 
-  .cl-stats {
-    gap: 6px;
+  .statc-row {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
   }
 
-  .cl-stat {
-    flex: 1 1 calc(50% - 6px);
-    justify-content: center;
+  .statc {
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .statc__tile {
+    flex: 0 0 32px;
+    width: 32px;
+    height: 32px;
+    font-size: 15px;
   }
 
   .cd-grid {

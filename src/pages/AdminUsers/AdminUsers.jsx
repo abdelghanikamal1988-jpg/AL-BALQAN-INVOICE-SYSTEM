@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase.js';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { useToast } from '../../components/Toast/ToastProvider.jsx';
 import Modal from '../../components/Modal/Modal.jsx';
 import ConfirmAuthModal from '../../components/ConfirmAuth/ConfirmAuthModal.jsx';
+import Icon from '../../components/Icons/Icon.jsx';
 import {
   PAGE_PERMISSIONS,
   ACTION_PERMISSIONS,
@@ -229,16 +231,71 @@ export default function AdminUsers() {
     <div className="page page--wide">
       <div className="page-header">
         <div>
+          <p className="eyebrow">Settings</p>
           <h1>Users</h1>
           <p className="subtitle">
             Create accounts for employees and delegates, and turn any page or
             button on or off for each of them.
           </p>
         </div>
-        <button type="button" className="btn btn--primary" onClick={openCreate}>
-          + Add User
-        </button>
+        <div className="page-header__right">
+          <ul className="crumbs">
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+            <li>
+              <span className="crumbs__cur">Users</span>
+            </li>
+          </ul>
+          <button type="button" className="btn btn--primary" onClick={openCreate}>
+            <Icon name="plus" aria-hidden="true" />
+            Add User
+          </button>
+        </div>
       </div>
+
+      {!loading && rows.length > 0 && (
+        <div className="statc-row">
+          <div className="statc">
+            <span className="statc__tile statc__tile--slate" aria-hidden="true">
+              <Icon name="users" />
+            </span>
+            <span className="statc__text">
+              <span className="statc__label">Accounts</span>
+              <span className="statc__value">{rows.length}</span>
+            </span>
+            <span className="statc__chev" aria-hidden="true">
+              <Icon name="chevronRight" />
+            </span>
+          </div>
+          <div className="statc">
+            <span className="statc__tile statc__tile--green" aria-hidden="true">
+              <Icon name="userCheck" />
+            </span>
+            <span className="statc__text">
+              <span className="statc__label">Active</span>
+              <span className="statc__value">
+                {rows.filter((r) => r.is_active !== false).length}
+              </span>
+            </span>
+            <span className="statc__chev" aria-hidden="true">
+              <Icon name="chevronRight" />
+            </span>
+          </div>
+          <div className="statc">
+            <span className="statc__tile statc__tile--amber" aria-hidden="true">
+              <Icon name="lock" />
+            </span>
+            <span className="statc__text">
+              <span className="statc__label">Administrators</span>
+              <span className="statc__value">{rows.filter((r) => r.role === 'admin').length}</span>
+            </span>
+            <span className="statc__chev" aria-hidden="true">
+              <Icon name="chevronRight" />
+            </span>
+          </div>
+        </div>
+      )}
 
       <div className="card au-card">
         {loading ? (
@@ -286,40 +343,52 @@ export default function AdminUsers() {
                     <td className="au-date">{row.created_at ? formatDateShort(row.created_at) : '—'}</td>
                     <td className="au-actions">
                       {!isSelf && (
-                        <button type="button" className="btn btn--neutral btn--sm" onClick={() => openEdit(row)}>
-                          Edit
+                        <button
+                          type="button"
+                          className="icon-btn"
+                          title="Edit user"
+                          aria-label={`Edit ${row.email}`}
+                          onClick={() => openEdit(row)}
+                        >
+                          <Icon name="pencil" />
                         </button>
                       )}
                       <button
                         type="button"
-                        className="btn btn--neutral btn--sm"
+                        className="icon-btn"
+                        title="Set password"
+                        aria-label={`Set password for ${row.email}`}
                         onClick={() => {
                           setPwTarget(row);
                           setPwValue('');
                           setPwError('');
                         }}
                       >
-                        Password
+                        <Icon name="key" />
                       </button>
                       {!isSelf && (
                         <button
                           type="button"
-                          className="btn btn--neutral btn--sm"
+                          className="icon-btn"
+                          title={row.is_active === false ? 'Activate user' : 'Deactivate user'}
+                          aria-label={`${row.is_active === false ? 'Activate' : 'Deactivate'} ${row.email}`}
                           onClick={() => toggleActive(row)}
                         >
-                          {row.is_active === false ? 'Activate' : 'Deactivate'}
+                          <Icon name="userCheck" />
                         </button>
                       )}
                       {!isSelf && (
                         <button
                           type="button"
-                          className="btn btn--danger btn--sm"
+                          className="icon-btn icon-btn--danger"
+                          title="Delete user"
+                          aria-label={`Delete ${row.email}`}
                           onClick={() => {
                             setDeleteTarget(row);
                             setAuthPrompt(false);
                           }}
                         >
-                          Delete
+                          <Icon name="trash" />
                         </button>
                       )}
                     </td>

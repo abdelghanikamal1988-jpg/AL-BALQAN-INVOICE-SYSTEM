@@ -252,26 +252,77 @@ export default function Clients() {
     <div className="page page--wide clients-page">
       <div className="page-header">
         <div>
+          <p className="eyebrow">CRM</p>
           <h1>Clients</h1>
           <p className="subtitle">Client applications, documents and linked invoices.</p>
         </div>
-        <Can perm="page:clients.new">
-          <Link to="/clients/new" className="btn btn--primary cl-new-client">
-            + New Client
-          </Link>
-        </Can>
+        <div className="page-header__right">
+          <ul className="crumbs">
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+            <li>
+              <span className="crumbs__cur">Clients</span>
+            </li>
+          </ul>
+          <Can perm="page:clients.new">
+            <Link to="/clients/new" className="btn btn--primary cl-new-client">
+              <Icon name="plus" aria-hidden="true" />
+              New Client
+            </Link>
+          </Can>
+        </div>
       </div>
 
       {!loading && clients.length > 0 && (
-        <div className="cl-stats">
-          <span className="cl-stat">
-            <b>{stats.total}</b> Clients
-          </span>
-          {CLIENT_STATUSES.filter((s) => stats.counts[s]).map((s) => (
-            <span className={`cl-stat cl-stat--${STATUS_MOD[s] || 'new'}`} key={s}>
-              <b>{stats.counts[s]}</b> {s}
+        <div className="statc-row">
+          <div className="statc">
+            <span className="statc__tile statc__tile--slate" aria-hidden="true">
+              <Icon name="users" />
             </span>
-          ))}
+            <span className="statc__text">
+              <span className="statc__label">Clients</span>
+              <span className="statc__value">{stats.total}</span>
+            </span>
+            <span className="statc__chev" aria-hidden="true">
+              <Icon name="chevronRight" />
+            </span>
+          </div>
+          {CLIENT_STATUSES.filter((s) => stats.counts[s]).map((s) => {
+            const mod = STATUS_MOD[s] || 'new';
+            const tile =
+              mod === 'approved'
+                ? 'green'
+                : mod === 'rejected'
+                  ? 'red'
+                  : mod === 'review'
+                    ? 'purple'
+                    : mod === 'docs' || mod === 'submitted'
+                      ? 'amber'
+                      : 'slate';
+            const glyph =
+              mod === 'approved'
+                ? 'userCheck'
+                : mod === 'rejected'
+                  ? 'x'
+                  : mod === 'review'
+                    ? 'clock'
+                    : 'user';
+            return (
+              <div className="statc" key={s}>
+                <span className={`statc__tile statc__tile--${tile}`} aria-hidden="true">
+                  <Icon name={glyph} />
+                </span>
+                <span className="statc__text">
+                  <span className="statc__label">{s}</span>
+                  <span className="statc__value">{stats.counts[s]}</span>
+                </span>
+                <span className="statc__chev" aria-hidden="true">
+                  <Icon name="chevronRight" />
+                </span>
+              </div>
+            );
+          })}
         </div>
       )}
 
@@ -466,27 +517,33 @@ export default function Clients() {
                         <div className="cl-actions">
                           <button
                             type="button"
-                            className="btn btn--secondary btn--sm"
+                            className="icon-btn"
+                            title="View client"
+                            aria-label={`View ${clientFullName(client) || 'client'}`}
                             onClick={() => navigate(`/clients/${client.id}`)}
                           >
-                            View
+                            <Icon name="eye" />
                           </button>
                           <Can perm="action:client.save">
                             <button
                               type="button"
-                              className="btn btn--secondary btn--sm"
+                              className="icon-btn"
+                              title="Edit client"
+                              aria-label={`Edit ${clientFullName(client) || 'client'}`}
                               onClick={() => navigate(`/clients/${client.id}/edit`)}
                             >
-                              Edit
+                              <Icon name="pencil" />
                             </button>
                           </Can>
                           <Can perm="action:client.delete">
                             <button
                               type="button"
-                              className="btn btn--danger btn--sm"
+                              className="icon-btn icon-btn--danger"
+                              title="Delete client"
+                              aria-label={`Delete ${clientFullName(client) || 'client'}`}
                               onClick={() => setDeleteTarget(client)}
                             >
-                              Delete
+                              <Icon name="trash" />
                             </button>
                           </Can>
                         </div>
@@ -606,6 +663,12 @@ export default function Clients() {
           onClose={() => setReview(null)}
         />
       )}
+
+      <Can perm="page:clients.new">
+        <Link to="/clients/new" className="fab" title="New client" aria-label="New client">
+          <Icon name="plus" />
+        </Link>
+      </Can>
     </div>
   );
 }

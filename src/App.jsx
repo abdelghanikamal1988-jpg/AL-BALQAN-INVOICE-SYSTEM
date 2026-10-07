@@ -80,10 +80,10 @@ function Shell() {
   return (
     <PendingApprovalsProvider>
       <div className="app-shell">
-        <Header menuOpen={navOpen} onMenuToggle={() => setNavOpen((o) => !o)} />
         <div className="app-shell__body">
           <Sidebar open={navOpen} onClose={() => setNavOpen(false)} />
           <div className="app-shell__main">
+            <Header menuOpen={navOpen} onMenuToggle={() => setNavOpen((o) => !o)} />
             <Routes>
               {allowed.map((route) => (
                 <Route key={route.path} path={route.path} element={route.element} />

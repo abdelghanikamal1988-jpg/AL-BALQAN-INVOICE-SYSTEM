@@ -1,7 +1,7 @@
 ﻿<!doctype html>
 <html lang="en">
   <head>
-  <link rel="stylesheet" href="../dist/assets/index-CvsARsVr.css" />
+  <link rel="stylesheet" href="../dist/assets/index-DeNoCvyR.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta charset="utf-8" />
     <title>Preview — Invoice History</title>
@@ -10,10 +10,20 @@
     <div class="page page--wide">
       <div class="page-header">
         <div>
+          <p class="eyebrow">Invoices</p>
           <h1>Invoice History</h1>
           <p class="subtitle">Search, view, edit, print or export saved invoices.</p>
         </div>
-        <button type="button" class="btn btn--primary">+ New Invoice</button>
+        <div class="page-header__right">
+          <ul class="crumbs">
+            <li><a href="#">Home</a></li>
+            <li><span class="crumbs__cur">Invoices</span></li>
+          </ul>
+          <button type="button" class="btn btn--primary">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14" /><path d="M5 12h14" /></svg>
+            New Invoice
+          </button>
+        </div>
       </div>
 
       <div class="history-toolbar">
@@ -28,8 +38,14 @@
             />
           </label>
         </div>
-        <button type="button" class="btn btn--secondary btn--sm">Export Data</button>
-        <button type="button" class="btn btn--secondary btn--sm">Import Data</button>
+        <button type="button" class="btn btn--secondary btn--sm">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11" /><path d="m7.5 10.5 4.5 4.5 4.5-4.5" /><path d="M4.5 19.5h15" /></svg>
+          Export Data
+        </button>
+        <button type="button" class="btn btn--secondary btn--sm">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15.5V4.5" /><path d="m7.5 9 4.5-4.5L16.5 9" /><path d="M4.5 19.5h15" /></svg>
+          Import Data
+        </button>
         <button type="button" class="btn btn--neutral btn--sm">Clear Search</button>
       </div>
 
@@ -84,16 +100,22 @@
         </button>
       </div>
 
-      <div class="history-summary" aria-label="Financial summary">
-        <span class="history-summary__item">
-          <span class="history-summary__label">Showing</span><b>18 of 42</b>
-        </span>
-        <span class="history-summary__item">
-          <span class="history-summary__label">Total paid</span><b>AED 96,400.00</b>
-        </span>
-        <span class="history-summary__item">
-          <span class="history-summary__label">Total remaining</span><b>AED 41,150.00</b>
-        </span>
+      <div class="statc-row" aria-label="Financial summary">
+        <div class="statc">
+          <span class="statc__tile statc__tile--slate" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3.5h12v17l-3-1.6-3 1.6-3-1.6-3 1.6z" /><path d="M9 8h6M9 12h6" /></svg></span>
+          <span class="statc__text"><span class="statc__label">Showing</span><span class="statc__value">18 of 42</span></span>
+          <span class="statc__chev" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6" /></svg></span>
+        </div>
+        <div class="statc">
+          <span class="statc__tile statc__tile--green" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="6" width="17" height="12" rx="2" /><path d="M3.5 10.5h17" /></svg></span>
+          <span class="statc__text"><span class="statc__label">Total paid</span><span class="statc__value">AED 96,400.00</span></span>
+          <span class="statc__chev" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6" /></svg></span>
+        </div>
+        <div class="statc">
+          <span class="statc__tile statc__tile--amber" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.2" /><path d="M12 7.4V12l3 1.8" /></svg></span>
+          <span class="statc__text"><span class="statc__label">Total remaining</span><span class="statc__value">AED 41,150.00</span></span>
+          <span class="statc__chev" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6" /></svg></span>
+        </div>
       </div>
 
       <div class="card">

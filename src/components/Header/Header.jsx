@@ -32,37 +32,10 @@ export default function Header({ menuOpen = false, onMenuToggle }) {
           </span>
         </NavLink>
 
-        <nav className="app-header__nav" aria-label="Primary">
-          {hasPerm('page:dashboard') && (
-            <NavLink to="/" className={({ isActive }) => `app-header__link${isActive ? ' is-active' : ''}`} end>
-              Dashboard
-            </NavLink>
-          )}
-          {hasPerm('page:invoice.create') && (
-            <NavLink to="/create" className={({ isActive }) => `app-header__link${isActive ? ' is-active' : ''}`}>
-              New Invoice
-            </NavLink>
-          )}
-          {hasPerm('page:invoice.history') && (
-            <NavLink to="/history" className={({ isActive }) => `app-header__link${isActive ? ' is-active' : ''}`}>
-              Invoice History
-            </NavLink>
-          )}
-          {hasPerm('page:clients') && (
-            <NavLink to="/clients" className={({ isActive }) => `app-header__link${isActive ? ' is-active' : ''}`}>
-              Clients
-            </NavLink>
-          )}
-          {hasPerm('page:admin') && (
-            <NavLink to="/admin/users" className={({ isActive }) => `app-header__link${isActive ? ' is-active' : ''}`}>
-              Users
-            </NavLink>
-          )}
-        </nav>
-
         <div className="app-header__right">
           {hasPerm('page:invoice.create') && (
             <NavLink to="/create" className="app-header__cta">
+              <Icon name="plus" aria-hidden="true" />
               New invoice
             </NavLink>
           )}
@@ -80,6 +53,9 @@ export default function Header({ menuOpen = false, onMenuToggle }) {
               </span>
             </button>
           )}
+          <span className="app-header__uname" aria-hidden="true">
+            {user?.email ? user.email.split('@')[0] : ''}
+          </span>
           <span
             className="app-header__avatar"
             title={user?.email || 'Account'}

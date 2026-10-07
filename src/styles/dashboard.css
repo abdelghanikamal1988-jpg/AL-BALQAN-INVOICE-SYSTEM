@@ -1,6 +1,7 @@
 /* ============================================================
-   AL BALQAN — Dashboard (Nexus language)
-   Light greeting, white KPI cards, hairline tables.
+   AL BALQAN — Dashboard (Nexus 1:1)
+   Greeting head, section labels with hairline, statc KPI cards,
+   white panels with light tables.
    ============================================================ */
 
 /* ---------- Greeting / page head ---------- */
@@ -11,7 +12,7 @@
   border-radius: 0;
   box-shadow: none;
   padding: 0;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -22,26 +23,26 @@
 }
 
 .db-hero__eyebrow {
-  margin: 0 0 10px;
+  margin: 0 0 8px;
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--ink);
+  color: var(--muted);
 }
 
 .db-hero h1 {
-  font-size: 26px;
-  font-weight: 800;
+  font-size: 24px;
+  font-weight: 700;
   letter-spacing: -0.02em;
-  margin: 0 0 8px;
+  margin: 0 0 6px;
   color: var(--text);
 }
 
 .db-hero__sub {
   margin: 0;
   color: var(--muted);
-  font-size: 14px;
+  font-size: 13.5px;
   max-width: 640px;
 }
 
@@ -52,13 +53,13 @@
   gap: 10px;
   flex-wrap: wrap;
   flex: 0 0 auto;
-  margin-top: 20px;
+  margin-top: 16px;
 }
 
 /* ---------- Sections ---------- */
 
 .db-section {
-  margin-bottom: 40px;
+  margin-bottom: 32px;
 }
 
 .db-section__head {
@@ -68,7 +69,7 @@
   justify-content: flex-start;
   text-align: left;
   gap: 14px;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .db-section__head::after {
@@ -79,76 +80,48 @@
 }
 
 .db-section__head h2 {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--text);
+  color: var(--muted);
   margin: 0;
 }
 
 .db-section__hint {
-  font-size: 12px;
+  font-size: 12.5px;
   font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--muted);
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--brand-strong);
   white-space: nowrap;
 }
 
 .db-section__hint:hover {
-  color: var(--ink);
+  color: var(--brand-strong);
+  text-decoration: underline;
 }
 
-/* ---------- KPI cards (white, bordered, Nexus metric tiles) ---------- */
+/* ---------- KPI cards (Nexus stat cards) ---------- */
 
 .db-metrics {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(165px, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(195px, 1fr));
+  gap: 12px;
   background: transparent;
   border-radius: 0;
   overflow: visible;
 }
 
-.db-metric {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-  padding: 18px 20px;
-  animation: rise-in 0.42s ease backwards;
-}
-
-.db-metrics > .db-metric:nth-child(1) { animation-delay: 0.05s; }
-.db-metrics > .db-metric:nth-child(2) { animation-delay: 0.1s; }
-.db-metrics > .db-metric:nth-child(3) { animation-delay: 0.15s; }
-.db-metrics > .db-metric:nth-child(4) { animation-delay: 0.2s; }
-.db-metrics > .db-metric:nth-child(5) { animation-delay: 0.25s; }
-.db-metrics > .db-metric:nth-child(6) { animation-delay: 0.3s; }
-
-.db-metric__label {
-  display: block;
-  font-size: 12.5px;
-  font-weight: 500;
-  letter-spacing: 0;
-  text-transform: none;
-  color: var(--muted);
-  margin-bottom: 10px;
-}
-
-.db-metric__value {
-  display: block;
-  font-size: 26px;
-  font-weight: 800;
-  line-height: 1.1;
-  color: var(--text);
-  font-family: var(--font-display);
-  letter-spacing: -0.02em;
-}
+.db-metrics > .statc:nth-child(1) { animation: rise-in 0.42s ease backwards; animation-delay: 0.05s; }
+.db-metrics > .statc:nth-child(2) { animation: rise-in 0.42s ease backwards; animation-delay: 0.1s; }
+.db-metrics > .statc:nth-child(3) { animation: rise-in 0.42s ease backwards; animation-delay: 0.15s; }
+.db-metrics > .statc:nth-child(4) { animation: rise-in 0.42s ease backwards; animation-delay: 0.2s; }
+.db-metrics > .statc:nth-child(5) { animation: rise-in 0.42s ease backwards; animation-delay: 0.25s; }
+.db-metrics > .statc:nth-child(6) { animation: rise-in 0.42s ease backwards; animation-delay: 0.3s; }
 
 .db-metric__value--money {
-  font-size: 21px;
+  font-size: 16px;
 }
 
 /* ---------- Recent activity + status panels ---------- */
@@ -156,9 +129,9 @@
 .db-grid {
   display: grid;
   grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
-  gap: 16px;
+  gap: 14px;
   align-items: start;
-  margin-bottom: 36px;
+  margin-bottom: 32px;
 }
 
 .db-panel__head {
@@ -167,12 +140,12 @@
   justify-content: space-between;
   gap: 12px;
   flex-wrap: wrap;
-  padding: 16px 20px;
+  padding: 14px 18px;
   border-bottom: 1px solid var(--border);
 }
 
 .db-panel__head h2 {
-  font-size: 16px;
+  font-size: 15.5px;
   font-weight: 700;
   letter-spacing: -0.01em;
   text-transform: none;
@@ -181,13 +154,13 @@
 }
 
 .db-panel__hint {
-  font-size: 13px;
+  font-size: 12.5px;
   color: var(--muted);
 }
 
 .db-empty {
   margin: 0;
-  padding: 24px 20px;
+  padding: 24px 18px;
   font-size: 13.5px;
   color: var(--muted);
 }
@@ -195,24 +168,24 @@
 .db-act {
   width: 100%;
   border-collapse: collapse;
-  font-size: 14px;
+  font-size: 13.5px;
 }
 
 .db-act th {
   text-align: left;
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--muted);
   background: transparent;
-  padding: 10px 20px;
+  padding: 9px 18px;
   border-bottom: 1px solid var(--border);
 }
 
 .db-act td {
-  padding: 13px 20px;
-  border-bottom: 1px solid var(--border);
+  padding: 11px 18px;
+  border-bottom: 1px solid var(--line-soft);
   vertical-align: middle;
 }
 
@@ -221,7 +194,7 @@
 }
 
 .db-act tbody tr:hover td {
-  background: #fafafa;
+  background: var(--hover);
 }
 
 .db-act__date {
@@ -232,14 +205,14 @@
 
 .db-act__type {
   display: inline-block;
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 700;
   letter-spacing: 0.04em;
-  color: var(--text);
-  background: var(--mist);
-  border: 1px solid rgba(20, 20, 20, 0.1);
-  border-radius: 999px;
-  padding: 3px 9px;
+  color: var(--muted);
+  background: var(--pill);
+  border: 1px solid transparent;
+  border-radius: 6px;
+  padding: 3px 8px;
   white-space: nowrap;
 }
 
@@ -256,7 +229,7 @@
 /* ---------- Application status ---------- */
 
 .db-status {
-  padding: 14px 20px 20px;
+  padding: 12px 18px 18px;
 }
 
 .db-status__row {
@@ -279,7 +252,7 @@
 .db-status__bar {
   flex: 1;
   height: 8px;
-  background: rgba(20, 20, 20, 0.07);
+  background: rgba(22, 33, 27, 0.07);
   border-radius: 999px;
   overflow: hidden;
 }
@@ -287,7 +260,7 @@
 .db-status__fill {
   display: block;
   height: 100%;
-  background: var(--ink);
+  background: var(--text);
   border-radius: 999px;
   transition: width 0.6s var(--ease);
 }
@@ -330,19 +303,11 @@
 
 @media (max-width: 768px) {
   .db-hero h1 {
-    font-size: 22px;
+    font-size: 21px;
   }
 
   .db-hero__actions {
-    margin-top: 16px;
-  }
-
-  .db-section__head h2 {
-    font-size: 11.5px;
-  }
-
-  .db-metric {
-    padding: 16px 16px;
+    margin-top: 14px;
   }
 
   .db-metrics {

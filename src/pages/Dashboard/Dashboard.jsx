@@ -186,18 +186,18 @@ export default function Dashboard() {
   const dash = (value) => (loading ? '—' : value);
 
   const clientMetrics = [
-    ['Total clients', dash(clientStats.total)],
-    ['New clients', dash(clientStats.fresh)],
-    ['Under review', dash(clientStats.review)],
-    ['Approved', dash(clientStats.approved)],
-    ['Rejected', dash(clientStats.rejected)],
+    ['Total clients', dash(clientStats.total), 'users', 'slate'],
+    ['New clients', dash(clientStats.fresh), 'user', 'green'],
+    ['Under review', dash(clientStats.review), 'clock', 'amber'],
+    ['Approved', dash(clientStats.approved), 'userCheck', 'green'],
+    ['Rejected', dash(clientStats.rejected), 'x', 'red'],
   ];
 
   const moneyMetrics = [
-    ['Total invoiced', dash(formatCurrency(financials.invoiced))],
-    ['Total paid', dash(formatCurrency(financials.paid))],
-    ['Total remaining', dash(formatCurrency(financials.remaining))],
-    ['Partially paid', dash(`${financials.partiallyPaid} invoice${financials.partiallyPaid === 1 ? '' : 's'}`)],
+    ['Total invoiced', dash(formatCurrency(financials.invoiced)), 'receipt', 'slate', true],
+    ['Total paid', dash(formatCurrency(financials.paid)), 'card', 'green', true],
+    ['Total remaining', dash(formatCurrency(financials.remaining)), 'note', 'amber', true],
+    ['Partially paid', dash(`${financials.partiallyPaid} invoice${financials.partiallyPaid === 1 ? '' : 's'}`), 'clock', 'purple', false],
   ];
 
   const maxStatusCount = Math.max(1, ...CLIENT_STATUSES.map((s) => clientStats.counts[s] || 0));
@@ -254,10 +254,18 @@ export default function Dashboard() {
           </Can>
         </div>
         <div className="db-metrics">
-          {clientMetrics.map(([label, value]) => (
-            <div className="card db-metric" key={label}>
-              <span className="db-metric__label">{label}</span>
-              <span className="db-metric__value">{value}</span>
+          {clientMetrics.map(([label, value, icon, tile]) => (
+            <div className="statc" key={label}>
+              <span className={`statc__tile statc__tile--${tile}`} aria-hidden="true">
+                <Icon name={icon} />
+              </span>
+              <span className="statc__text">
+                <span className="statc__label">{label}</span>
+                <span className="statc__value">{value}</span>
+              </span>
+              <span className="statc__chev" aria-hidden="true">
+                <Icon name="chevronRight" />
+              </span>
             </div>
           ))}
         </div>
@@ -273,10 +281,18 @@ export default function Dashboard() {
           </Can>
         </div>
         <div className="db-metrics db-metrics--money">
-          {moneyMetrics.map(([label, value]) => (
-            <div className="card db-metric" key={label}>
-              <span className="db-metric__label">{label}</span>
-              <span className="db-metric__value db-metric__value--money">{value}</span>
+          {moneyMetrics.map(([label, value, icon, tile, money]) => (
+            <div className="statc" key={label}>
+              <span className={`statc__tile statc__tile--${tile}`} aria-hidden="true">
+                <Icon name={icon} />
+              </span>
+              <span className="statc__text">
+                <span className="statc__label">{label}</span>
+                <span className={`statc__value${money ? ' db-metric__value--money' : ''}`}>{value}</span>
+              </span>
+              <span className="statc__chev" aria-hidden="true">
+                <Icon name="chevronRight" />
+              </span>
             </div>
           ))}
         </div>
@@ -382,6 +398,12 @@ export default function Dashboard() {
             }}
           />
         </div>
+      )}
+
+      {hasPerm('page:invoice.create') && (
+        <Link to="/create" className="fab" title="New invoice" aria-label="New invoice">
+          <Icon name="pencil" />
+        </Link>
       )}
     </div>
   );

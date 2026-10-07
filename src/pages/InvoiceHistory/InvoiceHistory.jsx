@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Icon from '../../components/Icons/Icon.jsx';
 import InvoiceHistoryToolbar from '../../components/InvoiceHistory/InvoiceHistoryToolbar.jsx';
 import InvoicePreview from '../../components/InvoicePreview/InvoicePreview.jsx';
@@ -321,14 +321,26 @@ export default function InvoiceHistory() {
     <div className="page page--wide">
       <div className="page-header">
         <div>
+          <p className="eyebrow">Invoices</p>
           <h1>Invoice History</h1>
           <p className="subtitle">Search, view, edit, print or export saved invoices.</p>
         </div>
-        <Can perm="page:invoice.create">
-          <button type="button" className="btn btn--primary" onClick={() => navigate('/create')}>
-            + New Invoice
-          </button>
-        </Can>
+        <div className="page-header__right">
+          <ul className="crumbs">
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+            <li>
+              <span className="crumbs__cur">Invoices</span>
+            </li>
+          </ul>
+          <Can perm="page:invoice.create">
+            <button type="button" className="btn btn--primary" onClick={() => navigate('/create')}>
+              <Icon name="plus" aria-hidden="true" />
+              New Invoice
+            </button>
+          </Can>
+        </div>
       </div>
 
       <InvoiceHistoryToolbar
@@ -418,21 +430,45 @@ export default function InvoiceHistory() {
       </div>
 
       {!loading && invoices.length > 0 && (
-        <div className="history-summary" aria-label="Financial summary">
-          <span className="history-summary__item">
-            <span className="history-summary__label">Showing</span>
-            <b>
-              {visible.length} of {invoices.length}
-            </b>
-          </span>
-          <span className="history-summary__item">
-            <span className="history-summary__label">Total paid</span>
-            <b>{formatCurrency(totals.paid)}</b>
-          </span>
-          <span className="history-summary__item">
-            <span className="history-summary__label">Total remaining</span>
-            <b>{formatCurrency(totals.remaining)}</b>
-          </span>
+        <div className="statc-row" aria-label="Financial summary">
+          <div className="statc">
+            <span className="statc__tile statc__tile--slate" aria-hidden="true">
+              <Icon name="receipt" />
+            </span>
+            <span className="statc__text">
+              <span className="statc__label">Showing</span>
+              <span className="statc__value">
+                {visible.length} of {invoices.length}
+              </span>
+            </span>
+            <span className="statc__chev" aria-hidden="true">
+              <Icon name="chevronRight" />
+            </span>
+          </div>
+          <div className="statc">
+            <span className="statc__tile statc__tile--green" aria-hidden="true">
+              <Icon name="card" />
+            </span>
+            <span className="statc__text">
+              <span className="statc__label">Total paid</span>
+              <span className="statc__value">{formatCurrency(totals.paid)}</span>
+            </span>
+            <span className="statc__chev" aria-hidden="true">
+              <Icon name="chevronRight" />
+            </span>
+          </div>
+          <div className="statc">
+            <span className="statc__tile statc__tile--amber" aria-hidden="true">
+              <Icon name="clock" />
+            </span>
+            <span className="statc__text">
+              <span className="statc__label">Total remaining</span>
+              <span className="statc__value">{formatCurrency(totals.remaining)}</span>
+            </span>
+            <span className="statc__chev" aria-hidden="true">
+              <Icon name="chevronRight" />
+            </span>
+          </div>
         </div>
       )}
 

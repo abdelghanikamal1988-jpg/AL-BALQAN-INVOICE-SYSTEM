@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { userInitials } from '../../utils/userInitials.js';
+import company from '../../data/company.js';
 import '../../styles/sidebar.css';
 
 const STROKE = {
@@ -83,18 +84,37 @@ function IconUsers() {
   );
 }
 
-const NAV_ITEMS = [
-  { to: '/', label: 'Dashboard', Icon: IconDashboard, end: true, perm: 'page:dashboard' },
-  { to: '/create', label: 'New Invoice', Icon: IconNewInvoice, perm: 'page:invoice.create' },
-  { to: '/history', label: 'Invoice History', Icon: IconHistory, perm: 'page:invoice.history' },
-  { to: '/clients/new', label: 'New Client', Icon: IconNewClient, end: true, perm: 'page:clients.new' },
-  { to: '/clients', label: 'Clients History', Icon: IconClients, end: true, perm: 'page:clients' },
-  { to: '/admin/users', label: 'Users', Icon: IconUsers, end: true, perm: 'page:admin' },
+const NAV_GROUPS = [
+  {
+    label: null,
+    items: [{ to: '/', label: 'Dashboard', Icon: IconDashboard, end: true, perm: 'page:dashboard' }],
+  },
+  {
+    label: 'Invoices',
+    items: [
+      { to: '/create', label: 'New Invoice', Icon: IconNewInvoice, perm: 'page:invoice.create' },
+      { to: '/history', label: 'Invoice History', Icon: IconHistory, perm: 'page:invoice.history' },
+    ],
+  },
+  {
+    label: 'Clients',
+    items: [
+      { to: '/clients/new', label: 'New Client', Icon: IconNewClient, end: true, perm: 'page:clients.new' },
+      { to: '/clients', label: 'Clients History', Icon: IconClients, end: true, perm: 'page:clients' },
+    ],
+  },
+  {
+    label: 'Admin',
+    items: [{ to: '/admin/users', label: 'Users', Icon: IconUsers, end: true, perm: 'page:admin' }],
+  },
 ];
 
 export default function Sidebar({ open = false, onClose }) {
   const { user, signOut, hasPerm } = useAuth();
-  const items = NAV_ITEMS.filter((item) => hasPerm(item.perm));
+  const groups = NAV_GROUPS.map((group) => ({
+    ...group,
+    items: group.items.filter((item) => hasPerm(item.perm)),
+  })).filter((group) => group.items.length > 0);
 
   useEffect(() => {
     if (!open) return undefined;
@@ -122,21 +142,37 @@ export default function Sidebar({ open = false, onClose }) {
         className={`sidebar no-print${open ? ' is-open' : ''}`}
         aria-label="Primary"
       >
+        <NavLink to="/" className="sidebar__brand" onClick={onClose} aria-label={`${company.shortName || 'AL BALQAN'} home`}>
+          <span className="sidebar__brand-logo">
+            {company.logoUI ? (
+              <img src={company.logoUI} alt="" />
+            ) : (
+              <span>AB</span>
+            )}
+          </span>
+          <span className="sidebar__brand-name">{company.shortName || 'AL BALQAN'}</span>
+        </NavLink>
+
         <nav className="sidebar__nav" aria-label="Sections">
-          {items.map(({ to, label, Icon, end }) => (
-            <NavLink
-              key={to}
-              to={to}
-              end={end}
-              title={label}
-              onClick={onClose}
-              className={({ isActive }) => `sidebar__link${isActive ? ' is-active' : ''}`}
-            >
-              <span className="sidebar__icon">
-                <Icon />
-              </span>
-              <span className="sidebar__label">{label}</span>
-            </NavLink>
+          {groups.map((group) => (
+            <div key={group.label || 'main'} className="sidebar__nav-group">
+              {group.label && <p className="sidebar__group">{group.label}</p>}
+              {group.items.map(({ to, label, Icon, end }) => (
+                <NavLink
+                  key={to}
+                  to={to}
+                  end={end}
+                  title={label}
+                  onClick={onClose}
+                  className={({ isActive }) => `sidebar__link${isActive ? ' is-active' : ''}`}
+                >
+                  <span className="sidebar__icon">
+                    <Icon />
+                  </span>
+                  <span className="sidebar__label">{label}</span>
+                </NavLink>
+              ))}
+            </div>
           ))}
         </nav>
 
