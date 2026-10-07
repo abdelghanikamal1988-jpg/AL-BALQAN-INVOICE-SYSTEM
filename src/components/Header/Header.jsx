@@ -24,8 +24,8 @@ export default function Header({ menuOpen = false, onMenuToggle }) {
         </button>
         <NavLink to="/" className="app-header__brand" aria-label="AL BALQAN home">
           <span className="app-header__logo">
-            {company.logo ? (
-              <img src={company.logo} alt="AL BALQAN logo" />
+            {company.logoUI ? (
+              <img src={company.logoUI} alt="AL BALQAN logo" />
             ) : (
               <span className="app-header__logo-fallback">AB</span>
             )}

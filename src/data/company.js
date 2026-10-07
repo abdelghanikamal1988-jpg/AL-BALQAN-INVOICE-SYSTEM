@@ -24,6 +24,11 @@ const company = {
    */
   logo: `${import.meta.env.BASE_URL}logo.png`,
   /**
+   * Logo used across the app UI (header, login). The printed invoice
+   * keeps the gold PNG mark above.
+   */
+  logoUI: `${import.meta.env.BASE_URL}logo.svg`,
+  /**
    * Invoice disclaimer. Editable or removable from here.
    */
   invoiceDisclaimer:

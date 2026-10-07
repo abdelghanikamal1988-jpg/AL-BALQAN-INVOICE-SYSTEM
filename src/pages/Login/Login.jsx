@@ -82,8 +82,8 @@ export default function Login() {
       <div className="card login-card">
         <div className="login-card__brand">
           <div className="login-card__logo">
-            {company.logo ? (
-              <img src={company.logo} alt="AL BALQAN logo" />
+            {company.logoUI ? (
+              <img src={company.logoUI} alt="AL BALQAN logo" />
             ) : (
               <span className="login-card__logo-fallback">AB</span>
             )}
