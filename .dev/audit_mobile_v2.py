@@ -169,7 +169,7 @@ EVAL_JS = r"""
     const tds = Array.from(t.querySelectorAll('tbody td'));
     const labelled = tds.filter((td) => td.hasAttribute('data-label')).length;
     const firstTr = t.querySelector('tbody tr');
-    const stacked = firstTr ? getComputedStyle(firstTr).display === 'block' : false;
+    const stacked = firstTr ? ['block', 'grid'].includes(getComputedStyle(firstTr).display) : false;
     const missing = tds.length - labelled;
     const wrapCls = t.parentElement && typeof t.parentElement.className === 'string'
       ? t.parentElement.className.split(' ')[0] : '';

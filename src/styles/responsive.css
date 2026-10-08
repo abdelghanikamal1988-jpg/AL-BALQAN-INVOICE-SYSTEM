@@ -152,13 +152,14 @@
   }
 
   .sidebar__link {
-    padding: 13px 14px;
+    padding: 14px 16px;
     font-size: 15px;
   }
 
   .pending-chip {
     min-height: var(--tap-min);
     padding: 10px 14px;
+    margin-block: -8px;
   }
 
   .db-section__hint {
@@ -166,7 +167,7 @@
     align-items: center;
     min-height: var(--tap-min);
     padding: 0 8px;
-    margin: 0;
+    margin-block: -12px;
   }
 
   .app-header__menu,
@@ -387,14 +388,14 @@
   }
 
   .sidebar__link {
-    padding: 13px 14px;
+    padding: 14px 16px;
     font-size: 15px;
   }
 
   /* ---------- page rhythm ---------- */
 
   .page {
-    padding: 16px 14px calc(30px + env(safe-area-inset-bottom));
+    padding: 16px 16px calc(30px + env(safe-area-inset-bottom));
   }
 
   .page-header {
@@ -471,7 +472,7 @@
 
   .stat-grid {
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 10px;
+    gap: 12px;
   }
 
   /* ---------- dashboard ---------- */
@@ -484,7 +485,7 @@
   .db-approval {
     flex-wrap: wrap;
     gap: 10px 12px;
-    padding: 13px 14px;
+    padding: 14px 16px;
   }
 
   .db-approval__text {
@@ -520,7 +521,7 @@
   }
 
   .history-filters {
-    gap: 10px;
+    gap: 8px;
   }
 
   .history-filters__field {
@@ -539,7 +540,7 @@
     display: inline-flex;
     width: 100%;
     justify-content: space-between;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
   }
 
   .cl-toolbar__group.is-collapsed,
@@ -578,12 +579,13 @@
     align-items: center;
     min-height: var(--tap-min);
     padding: 0 8px;
-    margin: 0;
+    margin-block: -12px;
   }
 
   .pending-chip {
     min-height: var(--tap-min);
     padding: 10px 14px;
+    margin-block: -8px;
   }
 
   /* ---------- tables → stacked cards below 768px (spec §3 أ) ---------- */
@@ -644,7 +646,8 @@
   .cl-table tfoot tr,
   .db-inv tfoot tr,
   .au-table tfoot tr {
-    display: block;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     margin: 0 0 10px;
     padding: 2px 0;
     border: 1px solid var(--border);
@@ -665,8 +668,8 @@
     flex-wrap: wrap;
     align-items: flex-start;
     justify-content: space-between;
-    gap: 14px;
-    padding: 8px 13px;
+    gap: 4px 8px;
+    padding: 7px 10px;
     border: none;
     border-bottom: 1px solid var(--line-soft);
     white-space: normal;
@@ -678,6 +681,22 @@
   .db-inv td[data-label],
   .au-table td[data-label] {
     align-items: center;
+  }
+
+  .history-table td.actions-cell,
+  .cl-table td.actions-cell,
+  .au-table td.au-actions,
+  .history-table tfoot td:first-child,
+  .cl-table tfoot td:first-child,
+  .db-inv tfoot td:first-child,
+  .au-table tfoot td:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .history-table td.actions-cell::before,
+  .cl-table td.actions-cell::before,
+  .au-table td.au-actions::before {
+    margin-inline-end: auto;
   }
 
   .history-table tbody tr td:last-child,
@@ -702,7 +721,7 @@
     content: attr(data-label);
     flex: 0 0 auto;
     max-width: 45%;
-    font-size: 10.5px;
+    font-size: 11px;
     font-weight: 700;
     line-height: 1.5;
     letter-spacing: 0.05em;
@@ -798,7 +817,7 @@
   /* ---------- approvals inbox + review diff ---------- */
 
   .appr-row {
-    padding: 11px 12px;
+    padding: 12px;
     gap: 10px;
   }
 
@@ -828,7 +847,7 @@
 
   .statc-row {
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 10px;
+    gap: 12px;
   }
 
   .statc {
@@ -974,7 +993,7 @@
 
   .statc {
     gap: 6px;
-    padding: 11px 10px;
+    padding: 12px 10px;
   }
 
   .statc__tile {
