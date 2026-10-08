@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
+import { useLang } from '../../context/LangContext.jsx';
 import { userInitials } from '../../utils/userInitials.js';
 import company from '../../data/company.js';
 import '../../styles/sidebar.css';
@@ -87,30 +88,31 @@ function IconUsers() {
 const NAV_GROUPS = [
   {
     label: null,
-    items: [{ to: '/', label: 'Dashboard', Icon: IconDashboard, end: true, perm: 'page:dashboard' }],
+    items: [{ to: '/', label: 'shell.nav.dashboard', Icon: IconDashboard, end: true, perm: 'page:dashboard' }],
   },
   {
-    label: 'Invoices',
+    label: 'shell.nav.invoices',
     items: [
-      { to: '/create', label: 'New Invoice', Icon: IconNewInvoice, perm: 'page:invoice.create' },
-      { to: '/history', label: 'Invoice History', Icon: IconHistory, perm: 'page:invoice.history' },
+      { to: '/create', label: 'shell.nav.newInvoice', Icon: IconNewInvoice, perm: 'page:invoice.create' },
+      { to: '/history', label: 'shell.nav.invoiceHistory', Icon: IconHistory, perm: 'page:invoice.history' },
     ],
   },
   {
-    label: 'Clients',
+    label: 'shell.nav.clients',
     items: [
-      { to: '/clients/new', label: 'New Client', Icon: IconNewClient, end: true, perm: 'page:clients.new' },
-      { to: '/clients', label: 'Clients History', Icon: IconClients, end: true, perm: 'page:clients' },
+      { to: '/clients/new', label: 'shell.nav.newClient', Icon: IconNewClient, end: true, perm: 'page:clients.new' },
+      { to: '/clients', label: 'shell.nav.clientsHistory', Icon: IconClients, end: true, perm: 'page:clients' },
     ],
   },
   {
-    label: 'Admin',
-    items: [{ to: '/admin/users', label: 'Users', Icon: IconUsers, end: true, perm: 'page:admin' }],
+    label: 'shell.nav.admin',
+    items: [{ to: '/admin/users', label: 'shell.nav.users', Icon: IconUsers, end: true, perm: 'page:admin' }],
   },
 ];
 
 export default function Sidebar({ open = false, onClose }) {
   const { user, signOut, hasPerm } = useAuth();
+  const { t } = useLang();
   const groups = NAV_GROUPS.map((group) => ({
     ...group,
     items: group.items.filter((item) => hasPerm(item.perm)),
@@ -156,9 +158,14 @@ export default function Sidebar({ open = false, onClose }) {
       <aside
         id="app-sidebar"
         className={`sidebar no-print${open ? ' is-open' : ''}`}
-        aria-label="Primary"
+        aria-label={t('shell.nav.primary')}
       >
-        <NavLink to="/" className="sidebar__brand" onClick={closeIfDrawer} aria-label={`${company.shortName || 'AL BALQAN'} home`}>
+        <NavLink
+          to="/"
+          className="sidebar__brand"
+          onClick={closeIfDrawer}
+          aria-label={t('shell.brandHome', { brand: company.shortName || 'AL BALQAN' })}
+        >
           <span className="sidebar__brand-logo">
             {company.logoUI ? (
               <img src={company.logoUI} alt="" />
@@ -169,23 +176,23 @@ export default function Sidebar({ open = false, onClose }) {
           <span className="sidebar__brand-name">{company.shortName || 'AL BALQAN'}</span>
         </NavLink>
 
-        <nav className="sidebar__nav" aria-label="Sections">
+        <nav className="sidebar__nav" aria-label={t('shell.nav.sections')}>
           {groups.map((group) => (
             <div key={group.label || 'main'} className="sidebar__nav-group">
-              {group.label && <p className="sidebar__group">{group.label}</p>}
+              {group.label && <p className="sidebar__group">{t(group.label)}</p>}
               {group.items.map(({ to, label, Icon, end }) => (
                 <NavLink
                   key={to}
                   to={to}
                   end={end}
-                  title={label}
+                  title={t(label)}
                   onClick={closeIfDrawer}
                   className={({ isActive }) => `sidebar__link${isActive ? ' is-active' : ''}`}
                 >
                   <span className="sidebar__icon">
                     <Icon />
                   </span>
-                  <span className="sidebar__label">{label}</span>
+                  <span className="sidebar__label">{t(label)}</span>
                 </NavLink>
               ))}
             </div>
@@ -196,7 +203,7 @@ export default function Sidebar({ open = false, onClose }) {
           <button
             type="button"
             className="sidebar__link"
-            title={`Sign Out${user ? ` — ${userInitials(user)}` : ''}`}
+            title={`${t('shell.signOut')}${user ? ` — ${userInitials(user)}` : ''}`}
             onClick={() => {
               closeIfDrawer();
               signOut();
@@ -205,7 +212,7 @@ export default function Sidebar({ open = false, onClose }) {
             <span className="sidebar__icon">
               <IconSignOut />
             </span>
-            <span className="sidebar__label">Sign Out</span>
+            <span className="sidebar__label">{t('shell.signOut')}</span>
           </button>
         </div>
       </aside>

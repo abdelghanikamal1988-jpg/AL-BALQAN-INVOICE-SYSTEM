@@ -9,6 +9,7 @@ import Can from '../../components/Can/Can.jsx';
 import PendingReviewModal from '../../components/PendingReview/PendingReviewModal.jsx';
 import { useToast } from '../../components/Toast/ToastProvider.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
+import { useLang } from '../../context/LangContext.jsx';
 import { usePendingApprovals } from '../../context/PendingApprovalsContext.jsx';
 import {
   dbFetchPending,
@@ -23,10 +24,9 @@ import {
   filterInvoices,
   importInvoices,
 } from '../../utils/storage.js';
-import { calculatePayment, statusLabel, statusClass, PAYMENT_STATUS } from '../../utils/paymentCalculator.js';
+import { calculatePayment, statusClass, PAYMENT_STATUS } from '../../utils/paymentCalculator.js';
 import { formatCurrency } from '../../utils/formatCurrency.js';
 import { formatDateShort } from '../../utils/formatDate.js';
-import { serviceLabel, destinationLabel } from '../../utils/labels.js';
 import services from '../../data/services.js';
 import destinations from '../../data/destinations.js';
 import { exportInvoicePdf, printInvoicePdf } from '../../utils/pdf.js';
@@ -64,6 +64,7 @@ export default function InvoiceHistory() {
   const navigate = useNavigate();
   const toast = useToast();
   const { user, isAdmin } = useAuth();
+  const { t } = useLang();
   const { refresh: refreshApprovals } = usePendingApprovals();
   const [searchParams] = useSearchParams();
   const [query, setQuery] = useState(() => searchParams.get('q') || '');
@@ -140,13 +141,13 @@ export default function InvoiceHistory() {
     setReviewBusy(true);
     try {
       await dbApprovePending(review);
-      toast.success('Edit approved and applied.');
+      toast.success(t('invoice.editApprovedToast'));
       setReview(null);
       setRefreshKey((k) => k + 1);
       refreshApprovals();
     } catch (err) {
       console.error(err);
-      toast.error(`Unable to apply the edit. (${err.message || 'please try again'})`);
+      toast.error(t('invoice.applyEditFailed', { detail: err.message || t('invoice.pleaseTryAgain') }));
     } finally {
       setReviewBusy(false);
     }
@@ -157,13 +158,13 @@ export default function InvoiceHistory() {
     setReviewBusy(true);
     try {
       await dbRejectPending(review.id);
-      toast.info('Proposal rejected — the invoice keeps its current values.');
+      toast.info(t('invoice.proposalRejected'));
       setReview(null);
       setRefreshKey((k) => k + 1);
       refreshApprovals();
     } catch (err) {
       console.error(err);
-      toast.error(`Unable to reject the proposal. (${err.message || 'please try again'})`);
+      toast.error(t('invoice.rejectFailed', { detail: err.message || t('invoice.pleaseTryAgain') }));
     } finally {
       setReviewBusy(false);
     }
@@ -174,13 +175,13 @@ export default function InvoiceHistory() {
     setReviewBusy(true);
     try {
       await dbWithdrawPending(review.id);
-      toast.info('Your request was cancelled.');
+      toast.info(t('invoice.requestCancelled'));
       setReview(null);
       setRefreshKey((k) => k + 1);
       refreshApprovals();
     } catch (err) {
       console.error(err);
-      toast.error(`Unable to cancel the request. (${err.message || 'please try again'})`);
+      toast.error(t('invoice.cancelRequestFailed', { detail: err.message || t('invoice.pleaseTryAgain') }));
     } finally {
       setReviewBusy(false);
     }
@@ -213,12 +214,12 @@ export default function InvoiceHistory() {
 
   const destinationOptions = (() => {
     const ids = new Set(invoices.map((inv) => inv.travel?.destination).filter(Boolean));
-    return destinations.filter((d) => ids.has(d.id)).map((d) => ({ value: d.id, label: d.label }));
+    return destinations.filter((d) => ids.has(d.id)).map((d) => ({ value: d.id, label: t('data.destination.' + d.id) }));
   })();
 
   const serviceOptions = (() => {
     const ids = new Set(invoices.map((inv) => inv.travel?.service).filter(Boolean));
-    return services.filter((s) => ids.has(s.id)).map((s) => ({ value: s.id, label: s.label }));
+    return services.filter((s) => ids.has(s.id)).map((s) => ({ value: s.id, label: t('data.service.' + s.id) }));
   })();
 
   const visible = (() => {
@@ -260,11 +261,11 @@ export default function InvoiceHistory() {
     try {
       all = await getInvoices();
     } catch (err) {
-      toast.error('Unable to load invoices for export.');
+      toast.error(t('invoice.exportLoadFailed'));
       return;
     }
     if (all.length === 0) {
-      toast.info('No invoices to export yet.');
+      toast.info(t('invoice.nothingToExport'));
       return;
     }
     const stamp = new Date().toISOString().slice(0, 10);
@@ -277,7 +278,7 @@ export default function InvoiceHistory() {
     a.click();
     a.remove();
     URL.revokeObjectURL(url);
-    toast.success('Backup exported successfully.');
+    toast.success(t('invoice.backupExported'));
   };
 
   const handleImportFile = (file) => {
@@ -286,18 +287,18 @@ export default function InvoiceHistory() {
       importInvoices(JSON.parse(reader.result))
         .then((added) => {
           if (added === 0) {
-            toast.info('No new invoices were added (duplicates skipped).');
+            toast.info(t('invoice.noNewInvoices'));
           } else {
-            toast.success(`${added} invoice${added > 1 ? 's' : ''} imported.`);
+            toast.success(added > 1 ? t('invoice.importedMany', { n: added }) : t('invoice.importedOne', { n: added }));
             setRefreshKey((k) => k + 1);
           }
         })
         .catch(() => {
-          toast.error('Import failed. The file is not a valid AL BALQAN backup.');
+          toast.error(t('invoice.importFailedFile'));
         });
     };
     reader.onerror = () => {
-      toast.error('Import failed. Could not read the file.');
+      toast.error(t('invoice.importFailedRead'));
     };
     reader.readAsText(file);
   };
@@ -306,44 +307,44 @@ export default function InvoiceHistory() {
   const performDelete = async () => {
     if (!deletePrompt) return;
     await deleteInvoice(deletePrompt.id);
-    toast.info('Invoice deleted.');
+    toast.info(t('invoice.deleted'));
     setRefreshKey((k) => k + 1);
   };
 
   /* ---------- Print / PDF actions ---------- */
   const handlePdf = (invoice) => {
     exportInvoicePdf(invoice)
-      .then(() => toast.success('PDF exported successfully.'))
-      .catch(() => toast.error('Unable to export PDF. Please try again or use Print.'));
+      .then(() => toast.success(t('invoice.pdfExported')))
+      .catch(() => toast.error(t('invoice.pdfExportFailed')));
   };
 
   const handlePrint = (invoice) => {
     printInvoicePdf(invoice)
       .then(() => {})
-      .catch(() => toast.error("Unable to open the print dialog. Please use your browser's print command."));
+      .catch(() => toast.error(t('invoice.printDialogFailed')));
   };
 
   return (
     <div className="page page--wide">
       <div className="page-header">
         <div>
-          <p className="eyebrow">Invoices</p>
-          <h1>Invoice History</h1>
-          <p className="subtitle">Search, view, edit, print or export saved invoices.</p>
+          <p className="eyebrow">{t('invoice.eyebrow')}</p>
+          <h1>{t('invoice.historyTitle')}</h1>
+          <p className="subtitle">{t('invoice.historySubtitle')}</p>
         </div>
         <div className="page-header__right">
           <ul className="crumbs">
             <li>
-              <Link to="/">Home</Link>
+              <Link to="/">{t('invoice.home')}</Link>
             </li>
             <li>
-              <span className="crumbs__cur">Invoices</span>
+              <span className="crumbs__cur">{t('invoice.eyebrow')}</span>
             </li>
           </ul>
           <Can perm="page:invoice.create">
             <button type="button" className="btn btn--primary" onClick={() => navigate('/create')}>
               <Icon name="plus" aria-hidden="true" />
-              New Invoice
+              {t('invoice.newInvoice')}
             </button>
           </Can>
         </div>
@@ -357,11 +358,11 @@ export default function InvoiceHistory() {
         onClear={query ? () => setQuery('') : null}
       />
 
-      <div className="history-filters" aria-label="Invoice filters">
+      <div className="history-filters" aria-label={t('invoice.filtersAria')}>
         <div className="field history-filters__field">
-          <label htmlFor="inv-period">Date</label>
+          <label htmlFor="inv-period">{t('invoice.date')}</label>
           <select id="inv-period" value={period} onChange={(e) => setPeriod(e.target.value)}>
-            <option value={ANY}>All dates</option>
+            <option value={ANY}>{t('invoice.allDates')}</option>
             {periodOptions.map((opt) => (
               <option key={opt.value} value={opt.value}>
                 {opt.label}
@@ -371,13 +372,13 @@ export default function InvoiceHistory() {
         </div>
 
         <div className="field history-filters__field">
-          <label htmlFor="inv-nationality">Nationality</label>
+          <label htmlFor="inv-nationality">{t('invoice.nationality')}</label>
           <select
             id="inv-nationality"
             value={nationality}
             onChange={(e) => setNationality(e.target.value)}
           >
-            <option value={ANY}>All nationalities</option>
+            <option value={ANY}>{t('invoice.allNationalities')}</option>
             {nationalityOptions.map((opt) => (
               <option key={opt} value={opt}>
                 {opt}
@@ -387,13 +388,13 @@ export default function InvoiceHistory() {
         </div>
 
         <div className="field history-filters__field">
-          <label htmlFor="inv-destination">Destination</label>
+          <label htmlFor="inv-destination">{t('invoice.destination')}</label>
           <select
             id="inv-destination"
             value={destination}
             onChange={(e) => setDestination(e.target.value)}
           >
-            <option value={ANY}>All destinations</option>
+            <option value={ANY}>{t('invoice.allDestinations')}</option>
             {destinationOptions.map((opt) => (
               <option key={opt.value} value={opt.value}>
                 {opt.label}
@@ -403,9 +404,9 @@ export default function InvoiceHistory() {
         </div>
 
         <div className="field history-filters__field">
-          <label htmlFor="inv-service">Service</label>
+          <label htmlFor="inv-service">{t('invoice.service')}</label>
           <select id="inv-service" value={service} onChange={(e) => setService(e.target.value)}>
-            <option value={ANY}>All services</option>
+            <option value={ANY}>{t('invoice.allServices')}</option>
             {serviceOptions.map((opt) => (
               <option key={opt.value} value={opt.value}>
                 {opt.label}
@@ -415,12 +416,12 @@ export default function InvoiceHistory() {
         </div>
 
         <div className="field history-filters__field">
-          <label htmlFor="inv-status">Status</label>
+          <label htmlFor="inv-status">{t('common.status')}</label>
           <select id="inv-status" value={status} onChange={(e) => setStatus(e.target.value)}>
-            <option value={ANY}>All statuses</option>
-            <option value={PAYMENT_STATUS.PAID}>PAID</option>
-            <option value={PAYMENT_STATUS.PARTIALLY_PAID}>PARTIALLY PAID</option>
-            <option value={PAYMENT_STATUS.UNPAID}>UNPAID</option>
+            <option value={ANY}>{t('invoice.allStatuses')}</option>
+            <option value={PAYMENT_STATUS.PAID}>{t('invoice.status.PAID')}</option>
+            <option value={PAYMENT_STATUS.PARTIALLY_PAID}>{t('invoice.status.PARTIALLY_PAID')}</option>
+            <option value={PAYMENT_STATUS.UNPAID}>{t('invoice.status.UNPAID')}</option>
           </select>
         </div>
 
@@ -430,21 +431,21 @@ export default function InvoiceHistory() {
             className="btn btn--neutral btn--sm history-filters__reset"
             onClick={clearFilters}
           >
-            Clear filters
+            {t('invoice.clearFilters')}
           </button>
         )}
       </div>
 
       {!loading && invoices.length > 0 && (
-        <div className="statc-row" aria-label="Financial summary">
+        <div className="statc-row" aria-label={t('invoice.summaryAria')}>
           <div className="statc">
             <span className="statc__tile statc__tile--slate" aria-hidden="true">
               <Icon name="receipt" />
             </span>
             <span className="statc__text">
-              <span className="statc__label">Showing</span>
+              <span className="statc__label">{t('invoice.showing')}</span>
               <span className="statc__value">
-                {visible.length} of {invoices.length}
+                {visible.length} {t('common.of')} {invoices.length}
               </span>
             </span>
             <span className="statc__chev" aria-hidden="true">
@@ -456,7 +457,7 @@ export default function InvoiceHistory() {
               <Icon name="card" />
             </span>
             <span className="statc__text">
-              <span className="statc__label">Total paid</span>
+              <span className="statc__label">{t('invoice.totalPaid')}</span>
               <span className="statc__value">{formatCurrency(totals.paid)}</span>
             </span>
             <span className="statc__chev" aria-hidden="true">
@@ -468,7 +469,7 @@ export default function InvoiceHistory() {
               <Icon name="clock" />
             </span>
             <span className="statc__text">
-              <span className="statc__label">Total remaining</span>
+              <span className="statc__label">{t('invoice.totalRemaining')}</span>
               <span className="statc__value">{formatCurrency(totals.remaining)}</span>
             </span>
             <span className="statc__chev" aria-hidden="true">
@@ -482,7 +483,7 @@ export default function InvoiceHistory() {
         <div className="card">
           <div className="loading-row">
             <span className="spinner" aria-hidden="true" />
-            Loading invoices…
+            {t('invoice.loadingInvoices')}
           </div>
         </div>
       ) : visible.length === 0 ? (
@@ -491,20 +492,20 @@ export default function InvoiceHistory() {
             <div className="empty-state__icon" aria-hidden="true"><Icon name="receipt" /></div>
             {invoices.length === 0 ? (
               <>
-                <h3>No invoices yet</h3>
-                <p>Create your first invoice to see it here.</p>
+                <h3>{t('invoice.emptyTitle')}</h3>
+                <p>{t('invoice.emptyBody')}</p>
                 <Can perm="page:invoice.create">
                   <button type="button" className="btn btn--primary" onClick={() => navigate('/create')}>
-                    Create Invoice
+                    {t('invoice.createInvoice')}
                   </button>
                 </Can>
               </>
             ) : (
               <>
-                <h3>No matching invoices</h3>
-                <p>Try a different search term or clear the active filters.</p>
+                <h3>{t('invoice.noMatchTitle')}</h3>
+                <p>{t('invoice.noMatchBody')}</p>
                 <button type="button" className="btn btn--primary" onClick={clearFilters}>
-                  Clear filters
+                  {t('invoice.clearFilters')}
                 </button>
               </>
             )}
@@ -516,18 +517,18 @@ export default function InvoiceHistory() {
             <table className="history-table">
               <thead>
                 <tr>
-                  <th>Invoice No.</th>
-                  <th>Date</th>
-                  <th>Customer</th>
-                  <th>Passport</th>
-                  <th>Destination</th>
-                  <th>Service</th>
-                  <th>Total</th>
-                  <th>Paid</th>
-                  <th>Remaining</th>
-                  <th>Status</th>
-                  <th>User</th>
-                  <th>Actions</th>
+                  <th>{t('invoice.colInvoiceNo')}</th>
+                  <th>{t('invoice.date')}</th>
+                  <th>{t('invoice.colCustomer')}</th>
+                  <th>{t('invoice.colPassport')}</th>
+                  <th>{t('invoice.destination')}</th>
+                  <th>{t('invoice.service')}</th>
+                  <th>{t('common.total')}</th>
+                  <th>{t('invoice.colPaid')}</th>
+                  <th>{t('invoice.colRemaining')}</th>
+                  <th>{t('common.status')}</th>
+                  <th>{t('invoice.colUser')}</th>
+                  <th>{t('common.actions')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -541,14 +542,14 @@ export default function InvoiceHistory() {
                       <td>{inv.issueDate || '—'}</td>
                       <td>{inv.customer?.name || '—'}</td>
                       <td>{inv.customer?.passport || '—'}</td>
-                      <td>{destinationLabel(inv.travel?.destination)}</td>
-                      <td>{serviceLabel(inv.travel?.service)}</td>
+                      <td>{inv.travel?.destination ? t('data.destination.' + inv.travel.destination) : '—'}</td>
+                      <td>{inv.travel?.service ? t('data.service.' + inv.travel.service) : '—'}</td>
                       <td>{formatCurrency(calc.total)}</td>
                       <td>{formatCurrency(calc.paid)}</td>
                       <td>{formatCurrency(calc.remaining)}</td>
                       <td>
                         <span className={`badge ${statusClass(calc.status)}`}>
-                          {statusLabel(calc.status)}
+                          {t('invoice.status.' + calc.status)}
                         </span>
                       </td>
                       <td>
@@ -563,23 +564,23 @@ export default function InvoiceHistory() {
                               className="pending-chip"
                               onClick={() => setReview(pendingFor)}
                             >
-                              Edit pending
+                              {t('invoice.editPending')}
                             </button>
                           )}
                           {pendingFor?.status === 'approved' && (
                             <span
                               className="pending-chip pending-chip--approved"
-                              title="An administrator approved this edit"
+                              title={t('invoice.editApprovedTitle')}
                             >
-                              Edit approved
+                              {t('invoice.editApproved')}
                             </span>
                           )}
                           {pendingFor?.status === 'rejected' && (
                             <span
                               className="pending-chip pending-chip--rejected"
-                              title="This edit was rejected — the invoice kept its current values"
+                              title={t('invoice.editRejectedTitle')}
                             >
-                              Edit rejected
+                              {t('invoice.editRejected')}
                             </span>
                           )}
                         </div>
@@ -590,7 +591,7 @@ export default function InvoiceHistory() {
                           className="btn btn--neutral btn--sm"
                           onClick={() => setViewInvoice(inv)}
                         >
-                          View
+                          {t('invoice.view')}
                         </button>
                         <Can perm="action:invoice.save">
                           <button
@@ -598,7 +599,7 @@ export default function InvoiceHistory() {
                             className="btn btn--secondary btn--sm"
                             onClick={() => navigate(`/edit/${inv.id}`)}
                           >
-                            Edit
+                            {t('common.edit')}
                           </button>
                         </Can>
                         <Can perm="action:invoice.export_pdf">
@@ -607,24 +608,24 @@ export default function InvoiceHistory() {
                             className="btn btn--secondary btn--sm"
                             onClick={() => handlePrint(inv)}
                           >
-                            Print
+                            {t('common.print')}
                           </button>
                           <button
                             type="button"
                             className="btn btn--secondary btn--sm"
                             onClick={() => handlePdf(inv)}
                           >
-                            PDF
+                            {t('invoice.pdf')}
                           </button>
                         </Can>
                         <Can perm="action:invoice.delete">
                           <button
                             type="button"
                             className="btn btn--danger btn--sm"
-                            aria-label={`Delete invoice ${inv.invoiceNumber}`}
+                            aria-label={t('invoice.deleteInvoiceAria', { number: inv.invoiceNumber })}
                             onClick={() => setDeletePrompt(inv)}
                           >
-                            Delete
+                            {t('common.delete')}
                           </button>
                         </Can>
                       </td>
@@ -638,7 +639,7 @@ export default function InvoiceHistory() {
       )}
 
       <div className="history-note">
-        Invoices are stored securely in the cloud. Export Data regularly to keep a JSON backup.
+        {t('invoice.historyNote')}
       </div>
 
       <input
@@ -656,7 +657,7 @@ export default function InvoiceHistory() {
       {/* View modal */}
       {viewInvoice && (
         <Modal
-          title={`Invoice ${viewInvoice.invoiceNumber} · ${formatDateShort(viewInvoice.issueDate)}`}
+          title={t('invoice.viewTitle', { number: viewInvoice.invoiceNumber, date: formatDateShort(viewInvoice.issueDate) })}
           onClose={() => setViewInvoice(null)}
           actions={
             <>
@@ -666,7 +667,7 @@ export default function InvoiceHistory() {
                   className="btn btn--secondary"
                   onClick={() => handlePdf(viewInvoice)}
                 >
-                  Export PDF
+                  {t('invoice.exportPdf')}
                 </button>
                 <button
                   type="button"
@@ -676,7 +677,7 @@ export default function InvoiceHistory() {
                     handlePrint(viewInvoice);
                   }}
                 >
-                  Print
+                  {t('common.print')}
                 </button>
               </Can>
             </>
@@ -694,23 +695,22 @@ export default function InvoiceHistory() {
       {/* Delete confirmation */}
       {deletePrompt && !authPrompt && (
         <Modal
-          title="Delete invoice?"
+          title={t('invoice.deleteTitle')}
           danger
           onClose={() => setDeletePrompt(null)}
           actions={
             <>
               <button type="button" className="btn btn--neutral" onClick={() => setDeletePrompt(null)}>
-                Cancel
+                {t('common.cancel')}
               </button>
               <button type="button" className="btn btn--danger" onClick={() => setAuthPrompt(true)}>
-                Delete
+                {t('common.delete')}
               </button>
             </>
           }
         >
           <p>
-            This will permanently remove invoice {deletePrompt.invoiceNumber} from your
-            account. This action cannot be undone.
+            {t('invoice.deleteBody', { number: deletePrompt.invoiceNumber })}
           </p>
         </Modal>
       )}
@@ -718,8 +718,8 @@ export default function InvoiceHistory() {
       {/* Password gate before the invoice is actually deleted */}
       {deletePrompt && authPrompt && (
         <ConfirmAuthModal
-          title="Confirm your identity"
-          reason={`Enter your account credentials to permanently delete invoice ${deletePrompt.invoiceNumber}.`}
+          title={t('invoice.confirmIdentity')}
+          reason={t('invoice.deleteAuthReason', { number: deletePrompt.invoiceNumber })}
           onCancel={() => setAuthPrompt(false)}
           onConfirm={performDelete}
           onSuccess={() => {

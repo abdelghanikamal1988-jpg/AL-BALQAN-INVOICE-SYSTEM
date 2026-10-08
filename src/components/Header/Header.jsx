@@ -3,6 +3,8 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import company from '../../data/company.js';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { usePendingApprovals } from '../../context/PendingApprovalsContext.jsx';
+import { useLang } from '../../context/LangContext.jsx';
+import { useTheme } from '../../context/ThemeContext.jsx';
 import Icon from '../Icons/Icon.jsx';
 import { userInitials } from '../../utils/userInitials.js';
 import { dbFetchClients } from '../../lib/clientRepo.js';
@@ -12,6 +14,8 @@ import { clientFullName, normalizePassport, filterClients } from '../../utils/cl
 export default function Header({ menuOpen = false, onMenuToggle }) {
   const { user, profile, hasPerm, isAdmin, signOut } = useAuth();
   const { count, openApprovals } = usePendingApprovals();
+  const { t, lang, toggleLang } = useLang();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
   const [q, setQ] = useState('');
@@ -39,11 +43,11 @@ export default function Header({ menuOpen = false, onMenuToggle }) {
     const invoiceItems = results.invoices.map((inv) => ({
       key: `i-${inv.id}`,
       to: `/history?q=${encodeURIComponent(inv.invoiceNumber || '')}`,
-      title: String(inv.invoiceNumber || 'Invoice'),
+      title: String(inv.invoiceNumber || t('shell.invoice')),
       subtitle: String(inv.customer || ''),
     }));
     return [...clientItems, ...invoiceItems];
-  }, [results]);
+  }, [results, t]);
 
   const closeAll = () => {
     setSearchOpen(false);
@@ -155,7 +159,7 @@ export default function Header({ menuOpen = false, onMenuToggle }) {
   const displayName = profile?.full_name || (user?.email ? user.email.split('@')[0] : '');
   const roleLabel =
     profile?.role === 'admin'
-      ? 'Administrator'
+      ? t('shell.role.admin')
       : profile?.role
         ? String(profile.role).replace(/^./, (m) => m.toUpperCase())
         : '';
@@ -166,17 +170,21 @@ export default function Header({ menuOpen = false, onMenuToggle }) {
         <button
           type="button"
           className="app-header__menu"
-          aria-label={menuOpen ? 'Close navigation' : 'Open navigation'}
+          aria-label={menuOpen ? t('shell.closeNav') : t('shell.openNav')}
           aria-expanded={menuOpen}
           aria-controls="app-sidebar"
           onClick={onMenuToggle}
         >
           <Icon name="menu" />
         </button>
-        <NavLink to="/" className="app-header__brand" aria-label="AL BALQAN home">
+        <NavLink
+          to="/"
+          className="app-header__brand"
+          aria-label={t('shell.brandHome', { brand: company.shortName || 'AL BALQAN' })}
+        >
           <span className="app-header__logo">
             {company.logoUI ? (
-              <img src={company.logoUI} alt="AL BALQAN logo" />
+              <img src={company.logoUI} alt={t('shell.logoAlt')} />
             ) : (
               <span className="app-header__logo-fallback">AB</span>
             )}
@@ -188,7 +196,7 @@ export default function Header({ menuOpen = false, onMenuToggle }) {
           className="topsearch"
           role="search"
           onSubmit={(e) => e.preventDefault()}
-          aria-label="Global search"
+          aria-label={t('shell.globalSearch')}
         >
           <span className="topsearch__addon" aria-hidden="true">
             <Icon name="search" />
@@ -197,8 +205,8 @@ export default function Header({ menuOpen = false, onMenuToggle }) {
             ref={inputRef}
             type="search"
             className="topsearch__input"
-            placeholder="Search clients, invoices…"
-            aria-label="Search"
+            placeholder={t('shell.searchPlaceholder')}
+            aria-label={t('shell.search')}
             autoComplete="off"
             spellCheck="false"
             role="combobox"
@@ -218,7 +226,7 @@ export default function Header({ menuOpen = false, onMenuToggle }) {
             <div className="topsearch__panel" role="listbox">
               {flat.length === 0 ? (
                 <div className="topsearch__status">
-                  Nothing matches “{q.trim()}”
+                  {t('shell.noMatches', { q: q.trim() })}
                 </div>
               ) : (
                 <>
@@ -226,7 +234,7 @@ export default function Header({ menuOpen = false, onMenuToggle }) {
                     <div className="topsearch__group">
                       <div className="topsearch__heading">
                         <Icon name="users" />
-                        <span>Clients</span>
+                        <span>{t('shell.searchClients')}</span>
                       </div>
                       {flat.slice(0, clientCount).map((item, i) => (
                         <button
@@ -248,7 +256,7 @@ export default function Header({ menuOpen = false, onMenuToggle }) {
                     <div className="topsearch__group">
                       <div className="topsearch__heading">
                         <Icon name="receipt" />
-                        <span>Invoices</span>
+                        <span>{t('shell.searchInvoices')}</span>
                       </div>
                       {flat.slice(clientCount).map((item, i) => (
                         <button
@@ -271,13 +279,13 @@ export default function Header({ menuOpen = false, onMenuToggle }) {
                   <div className="topsearch__footer">
                     <span>
                       <kbd>↑</kbd>
-                      <kbd>↓</kbd> move
+                      <kbd>↓</kbd> {t('shell.kbMove')}
                     </span>
                     <span>
-                      <kbd>enter</kbd> open
+                      <kbd>enter</kbd> {t('shell.kbOpen')}
                     </span>
                     <span>
-                      <kbd>esc</kbd> close
+                      <kbd>esc</kbd> {t('shell.kbClose')}
                     </span>
                   </div>
                 </>
@@ -300,14 +308,14 @@ export default function Header({ menuOpen = false, onMenuToggle }) {
                 }}
               >
                 <Icon name="plus" aria-hidden="true" />
-                New
+                {t('shell.new')}
               </button>
               {newOpen && (
                 <div className="dropdown-menu" role="menu">
                   {canCreateInvoice && (
                     <NavLink to="/create" className="dropdown-item" role="menuitem" onClick={closeAll}>
                       <Icon name="receipt" />
-                      New invoice
+                      {t('shell.newInvoice')}
                     </NavLink>
                   )}
                   {canCreateClient && (
@@ -318,7 +326,7 @@ export default function Header({ menuOpen = false, onMenuToggle }) {
                       onClick={closeAll}
                     >
                       <Icon name="user" />
-                      New client
+                      {t('shell.newClient')}
                     </NavLink>
                   )}
                 </div>
@@ -328,9 +336,29 @@ export default function Header({ menuOpen = false, onMenuToggle }) {
 
           <button
             type="button"
+            className="app-header__tool app-header__tool--lang"
+            title={lang === 'ar' ? t('shell.switchToEnglish') : t('shell.switchToArabic')}
+            aria-label={lang === 'ar' ? t('shell.switchToEnglish') : t('shell.switchToArabic')}
+            onClick={toggleLang}
+          >
+            {lang === 'ar' ? 'EN' : 'ع'}
+          </button>
+
+          <button
+            type="button"
+            className="app-header__tool app-header__tool--theme"
+            title={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+            aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+            onClick={toggleTheme}
+          >
+            <Icon name={theme === 'dark' ? 'sun' : 'moon'} />
+          </button>
+
+          <button
+            type="button"
             className="app-header__tool app-header__tool--wide"
-            title="Toggle fullscreen"
-            aria-label="Toggle fullscreen"
+            title={t('shell.toggleFullscreen')}
+            aria-label={t('shell.toggleFullscreen')}
             onClick={toggleFullscreen}
           >
             <Icon name="maximize" />
@@ -341,8 +369,14 @@ export default function Header({ menuOpen = false, onMenuToggle }) {
               type="button"
               className="app-header__bell"
               onClick={openApprovals}
-              title={count > 0 ? `${count} edit${count > 1 ? 's' : ''} waiting for your approval` : 'Notifications'}
-              aria-label={count > 0 ? `${count} edits waiting for your approval` : 'Notifications'}
+              title={
+                count > 0
+                  ? t('shell.editsWaiting', { count, s: count > 1 ? 's' : '' })
+                  : t('shell.notifications')
+              }
+              aria-label={
+                count > 0 ? t('shell.editsWaiting', { count, s: 's' }) : t('shell.notifications')
+              }
             >
               <Icon name="bell" />
               {count > 0 && (
@@ -387,7 +421,7 @@ export default function Header({ menuOpen = false, onMenuToggle }) {
                   }}
                 >
                   <Icon name="logout" />
-                  Sign Out
+                  {t('shell.signOut')}
                 </button>
               </div>
             )}

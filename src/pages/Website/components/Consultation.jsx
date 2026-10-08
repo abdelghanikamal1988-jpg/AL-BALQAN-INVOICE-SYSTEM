@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useLang } from '../../../context/LangContext.jsx';
 
 const CheckIcon = () => (
   <svg viewBox="0 0 28 29" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -7,6 +8,7 @@ const CheckIcon = () => (
 );
 
 export default function Consultation() {
+  const { t } = useLang();
   const [form, setForm] = useState({
     name: '', phone: '', residence: '', email: '',
     nationality: '', country: '', service: '', details: '', consent: false,
@@ -19,7 +21,7 @@ export default function Consultation() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert('Thank you! We will contact you within 24 business hours.');
+    alert(t('website.consult.alert'));
     setForm({ name: '', phone: '', residence: '', email: '', nationality: '', country: '', service: '', details: '', consent: false });
   };
 
@@ -28,103 +30,106 @@ export default function Consultation() {
       <div className="ws-consultation__inner">
         <div className="ws-consultation__sidebar">
           <h2 className="ws-consultation__sidebar-title">
-            Start Your Sovereign Mobility Assessment
+            {t('website.consult.sidebarTitle')}
           </h2>
           <p className="ws-consultation__sidebar-desc">
-            Submit your profile for review. Our executive advisors verify
-            Balkan eligibility parameters prior to formal consultation scheduling.
+            {t('website.consult.sidebarDesc')}
           </p>
           <ul className="ws-consultation__features">
             <li>
               <div className="ws-consultation__feature-icon"><CheckIcon /></div>
               <div>
-                <span className="ws-consultation__feature-title">Evaluation Window</span>
-                <span className="ws-consultation__feature-desc">Initial eligibility review within 24 business hours.</span>
+                <span className="ws-consultation__feature-title">{t('website.consult.f1.title')}</span>
+                <span className="ws-consultation__feature-desc">{t('website.consult.f1.desc')}</span>
               </div>
             </li>
             <li>
               <div className="ws-consultation__feature-icon"><CheckIcon /></div>
               <div>
-                <span className="ws-consultation__feature-title ws-consultation__feature-title--bold">Strictly Confidential</span>
-                <span className="ws-consultation__feature-desc">Zero third-party broker dissemination. Fully UAE-regulated data storage.</span>
+                <span className="ws-consultation__feature-title ws-consultation__feature-title--bold">{t('website.consult.f2.title')}</span>
+                <span className="ws-consultation__feature-desc">{t('website.consult.f2.desc')}</span>
               </div>
             </li>
             <li>
               <div className="ws-consultation__feature-icon"><CheckIcon /></div>
               <div>
-                <span className="ws-consultation__feature-title">Direct Consular Support</span>
-                <span className="ws-consultation__feature-desc">advisory@albalqan.ae<br/>+971 4 000 2026</span>
+                <span className="ws-consultation__feature-title">{t('website.consult.f3.title')}</span>
+                <span className="ws-consultation__feature-desc">
+                  {t('website.consult.f3.desc')}
+                  <br />
+                  {t('website.consult.f3.phone')}
+                </span>
               </div>
             </li>
           </ul>
           <div className="ws-consultation__license">
-            <p>COMPANY LICENSE</p>
-            <p>UAE Commercial Reg: 135961</p>
+            <p>{t('website.consult.licenseTitle')}</p>
+            <p>{t('website.consult.licenseReg')}</p>
           </div>
         </div>
 
         <form className="ws-consultation__form" onSubmit={handleSubmit}>
           <h3 className="ws-consultation__form-title">
-            REQUEST A CONSULTATION
+            {t('website.consult.formTitle')}
           </h3>
           <p className="ws-consultation__form-desc">
-            Please fill out all mandatory criteria below. Nationality is required to assess sovereign bilateral visa protocols.
+            {t('website.consult.formDesc')}
           </p>
 
           <div className="ws-form-row">
             <div className="ws-form-group">
-              <label>Full Name *</label>
-              <input type="text" name="name" placeholder="e.g Tariq Al Mansoor" value={form.name} onChange={handleChange} required />
+              <label>{t('website.consult.label.name')}</label>
+              <input type="text" name="name" placeholder={t('website.consult.ph.name')} value={form.name} onChange={handleChange} required />
             </div>
             <div className="ws-form-group">
-              <label>Email Address *</label>
-              <input type="email" name="email" placeholder="e.g t.almansoor@domin.ae" value={form.email} onChange={handleChange} required />
-            </div>
-          </div>
-
-          <div className="ws-form-row">
-            <div className="ws-form-group">
-              <label>Phone Number (With Country Code) *</label>
-              <input type="tel" name="phone" placeholder="+971 50 000 0000" value={form.phone} onChange={handleChange} required />
-            </div>
-            <div className="ws-form-group">
-              <label>Nationality (Mandatory for Eligibility) *</label>
-              <input type="text" name="nationality" placeholder="e.g Emirati, Saudi, British, Egyptian" value={form.nationality} onChange={handleChange} required />
+              <label>{t('website.consult.label.email')}</label>
+              <input type="email" name="email" placeholder={t('website.consult.ph.email')} value={form.email} onChange={handleChange} required />
             </div>
           </div>
 
           <div className="ws-form-row">
             <div className="ws-form-group">
-              <label>Country of Residence *</label>
-              <input type="text" name="residence" placeholder="e.g United Arab Emirates" value={form.residence} onChange={handleChange} required />
+              <label>{t('website.consult.label.phone')}</label>
+              <input type="tel" name="phone" placeholder={t('website.consult.ph.phone')} value={form.phone} onChange={handleChange} required />
             </div>
             <div className="ws-form-group">
-              <label>Preferred Country *</label>
+              <label>{t('website.consult.label.nationality')}</label>
+              <input type="text" name="nationality" placeholder={t('website.consult.ph.nationality')} value={form.nationality} onChange={handleChange} required />
+            </div>
+          </div>
+
+          <div className="ws-form-row">
+            <div className="ws-form-group">
+              <label>{t('website.consult.label.residence')}</label>
+              <input type="text" name="residence" placeholder={t('website.consult.ph.residence')} value={form.residence} onChange={handleChange} required />
+            </div>
+            <div className="ws-form-group">
+              <label>{t('website.consult.label.country')}</label>
               <select name="country" value={form.country} onChange={handleChange} required>
-                <option value="">Select Destination</option>
-                <option value="albania">Albania</option>
-                <option value="kosovo">Kosovo</option>
-                <option value="montenegro">Montenegro</option>
-                <option value="north-macedonia">North Macedonia</option>
-                <option value="serbia">Serbia</option>
+                <option value="">{t('website.consult.selectDestination')}</option>
+                <option value="albania">{t('website.destinations.d1.name')}</option>
+                <option value="kosovo">{t('website.destinations.d2.name')}</option>
+                <option value="montenegro">{t('website.destinations.d3.name')}</option>
+                <option value="north-macedonia">{t('website.destinations.d4.name')}</option>
+                <option value="serbia">{t('website.destinations.d5.name')}</option>
               </select>
             </div>
             <div className="ws-form-group">
-              <label>Service Type *</label>
+              <label>{t('website.consult.label.service')}</label>
               <select name="service" value={form.service} onChange={handleChange} required>
-                <option value="">Select Pathway</option>
-                <option value="tourist-visa">Tourist Visa</option>
-                <option value="investor-residency">Investor Residency</option>
-                <option value="work-contract">Work Contract & Residency</option>
+                <option value="">{t('website.consult.selectPathway')}</option>
+                <option value="tourist-visa">{t('website.services.s1.title')}</option>
+                <option value="investor-residency">{t('website.services.s2.title')}</option>
+                <option value="work-contract">{t('website.consult.opt.workContract')}</option>
               </select>
             </div>
           </div>
 
           <div className="ws-form-group ws-form-group--full">
-            <label>Case Details or Specific Objectives *</label>
+            <label>{t('website.consult.label.details')}</label>
             <textarea
               name="details"
-              placeholder="Briefly detail your timeline, family members involved, and any specific objectives."
+              placeholder={t('website.consult.ph.details')}
               value={form.details}
               onChange={handleChange}
               rows={4}
@@ -135,13 +140,11 @@ export default function Consultation() {
           <label className="ws-checkbox">
             <input type="checkbox" name="consent" checked={form.consent} onChange={handleChange} required />
             <span>
-              hereby consent to AL BALQAN Tourism & Visa Services Company LLC
-              processing my biographical data for sovereign eligibility verification
-              under UAE Federal Data Protection standards.
+              {t('website.consult.consent')}
             </span>
           </label>
 
-          <button type="submit" className="ws-btn ws-btn--dark">Submit Consultation Request</button>
+          <button type="submit" className="ws-btn ws-btn--dark">{t('website.consult.submit')}</button>
         </form>
       </div>
     </section>

@@ -1,7 +1,9 @@
 import { useEffect, useRef } from 'react';
+import { useLang } from '../../context/LangContext.jsx';
 
 export default function Modal({ title, onClose, children, actions, danger = false, className = '' }) {
   const overlayRef = useRef(null);
+  const { t } = useLang();
 
   useEffect(() => {
     const handleKey = (e) => {
@@ -16,7 +18,7 @@ export default function Modal({ title, onClose, children, actions, danger = fals
       className="modal-overlay no-print"
       role="dialog"
       aria-modal="true"
-      aria-label={title}
+      aria-label={t(title)}
       ref={overlayRef}
       onMouseDown={(e) => {
         if (e.target === overlayRef.current) onClose();
@@ -24,7 +26,7 @@ export default function Modal({ title, onClose, children, actions, danger = fals
     >
       <div className={className ? `modal ${className}` : 'modal'}>
         <div className="modal__header">
-          <h3>{title}</h3>
+          <h3>{t(title)}</h3>
         </div>
         <div className="modal__body">{children}</div>
         {actions && <div className="modal__actions">{actions}</div>}

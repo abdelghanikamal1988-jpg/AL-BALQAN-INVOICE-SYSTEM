@@ -5,6 +5,7 @@ import ConfirmAuthModal from '../../components/ConfirmAuth/ConfirmAuthModal.jsx'
 import Icon from '../../components/Icons/Icon.jsx';
 import Can from '../../components/Can/Can.jsx';
 import { useToast } from '../../components/Toast/ToastProvider.jsx';
+import { useLang } from '../../context/LangContext.jsx';
 import { dbFetchClient, dbUpdateClient, dbDeleteClient } from '../../lib/clientRepo.js';
 import {
   clientFullName,
@@ -34,23 +35,33 @@ function fmtDate(iso) {
 }
 
 const DETAIL_FIELDS = [
-  ['Name', 'firstName'],
-  ['Father Name', 'fatherName'],
-  ['Surname', 'surname'],
-  ['Country Name', 'country'],
-  ['Passport No.', 'passport'],
-  ['Sex', 'sex'],
-  ['Date of Birth', 'dateOfBirth', true],
-  ['Place of Birth', 'placeOfBirth'],
-  ['Date of Issue', 'dateOfIssue', true],
-  ['Date of Expiry', 'dateOfExpiry', true],
-  ['Issuing Place', 'issuingPlace'],
-  ['Referral Agent', 'referralAgent'],
+  ['clients.field.name', 'firstName'],
+  ['clients.field.fatherName', 'fatherName'],
+  ['clients.field.surname', 'surname'],
+  ['clients.field.country', 'country'],
+  ['clients.field.passport', 'passport'],
+  ['clients.field.sex', 'sex'],
+  ['clients.field.dateOfBirth', 'dateOfBirth', true],
+  ['clients.field.placeOfBirth', 'placeOfBirth'],
+  ['clients.field.dateOfIssue', 'dateOfIssue', true],
+  ['clients.field.dateOfExpiry', 'dateOfExpiry', true],
+  ['clients.field.issuingPlace', 'issuingPlace'],
+  ['clients.field.referralAgent', 'referralAgent'],
 ];
+
+const STATUS_I18N = {
+  NEW: 'status.NEW',
+  'DOCUMENTS SUBMITTED': 'status.DOCUMENTS',
+  SUBMITTED: 'status.SUBMITTED',
+  'UNDER REVIEW': 'status.UNDER_REVIEW',
+  APPROVED: 'status.APPROVED',
+  REJECTED: 'status.REJECTED',
+};
 
 export default function ClientDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { t } = useLang();
   const toast = useToast();
 
   const [client, setClient] = useState(null);
@@ -61,11 +72,16 @@ export default function ClientDetail() {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [authPrompt, setAuthPrompt] = useState(false);
 
+  const statusText = (s) => {
+    const key = STATUS_I18N[s];
+    return key ? t(key) : s || t('status.NEW');
+  };
+
   const load = async () => {
     try {
       const record = await dbFetchClient(id);
       if (!record) {
-        toast.error('Client not found.');
+        toast.error(t('clients.toastNotFound'));
         navigate('/clients', { replace: true });
         return;
       }
@@ -86,7 +102,7 @@ export default function ClientDetail() {
       setDocUrls(urls);
     } catch (err) {
       console.error(err);
-      toast.error('Unable to load the client.');
+      toast.error(t('clients.toastLoadClient'));
       navigate('/clients', { replace: true });
     } finally {
       setLoading(false);
@@ -104,9 +120,9 @@ export default function ClientDetail() {
       const updated = { ...client, status, updatedAt: new Date().toISOString() };
       const saved = await dbUpdateClient(updated);
       setClient(saved || updated);
-      toast.success(`Status set to ${status}.`);
+      toast.success(t('clients.toastStatusSet', { status: statusText(status) }));
     } catch (err) {
-      toast.error('Unable to update the status.');
+      toast.error(t('clients.toastStatusError'));
     }
   };
 
@@ -116,10 +132,10 @@ export default function ClientDetail() {
       const { bytes, path } = await generateAndStoreClientPdf(client);
       setClient((prev) => ({ ...prev, pdfPath: path }));
       downloadBytes(bytes, clientPdfFilename(client));
-      toast.success('PDF generated, stored and downloaded.');
+      toast.success(t('clients.toastPdfOk'));
     } catch (err) {
       console.error(err);
-      toast.error('Unable to generate the PDF. Please try again.');
+      toast.error(t('clients.toastPdfError'));
     } finally {
       setBusyPdf(false);
     }
@@ -133,7 +149,7 @@ export default function ClientDetail() {
       const bytes = await res.arrayBuffer();
       downloadBytes(bytes, clientPdfFilename(client));
     } catch (err) {
-      toast.error('Unable to download the stored PDF.');
+      toast.error(t('clients.toastPdfDownloadError'));
     }
   };
 
@@ -145,7 +161,7 @@ export default function ClientDetail() {
     } catch (err) {
       console.warn('Uploaded files could not be removed', err);
     }
-    toast.info('Client deleted.');
+    toast.info(t('clients.toastDeleted'));
   };
 
   if (loading || !client) {
@@ -154,7 +170,7 @@ export default function ClientDetail() {
         <div className="card">
           <div className="loading-row">
             <span className="spinner" aria-hidden="true" />
-            Loading client…
+            {t('clients.loadingClient')}
           </div>
         </div>
       </div>
@@ -170,19 +186,19 @@ export default function ClientDetail() {
     <div className="page page--wide clients-page">
       <div className="page-header">
         <div>
-          <h1>{clientFullName(client) || 'Client'}</h1>
+          <h1>{clientFullName(client) || t('clients.client')}</h1>
           <p className="subtitle">
-            Passport <span className="mono">{client.passport || '—'}</span> · {client.country || '—'} · Agent{' '}
+            {t('clients.passportLabel')} <span className="mono">{client.passport || '—'}</span> · {client.country || '—'} · {t('clients.agentLabel')}{' '}
             {client.referralAgent || '—'}
           </p>
         </div>
         <div className="editor-actions">
           <Link to="/clients" className="btn btn--neutral">
-            Back to Clients
+            {t('clients.backToClients')}
           </Link>
           <Can perm="action:client.save">
             <Link to={`/clients/${client.id}/edit`} className="btn btn--secondary">
-              Edit
+              {t('common.edit')}
             </Link>
           </Can>
           <Can perm="action:client.delete">
@@ -191,7 +207,7 @@ export default function ClientDetail() {
               className="btn btn--danger"
               onClick={() => setConfirmDelete(true)}
             >
-              Delete
+              {t('common.delete')}
             </button>
           </Can>
         </div>
@@ -199,19 +215,19 @@ export default function ClientDetail() {
 
       <section className="card cd-profile">
         <div className="cd-profile__info">
-          <span className="cd-eyebrow">Client Application</span>
+          <span className="cd-eyebrow">{t('clients.application')}</span>
           <div className="cd-profile__chips">
             <span className="cl-passport">{client.passport || '—'}</span>
             <span className="cd-chip">{client.country || '—'}</span>
-            <span className="cd-chip">Agent · {client.referralAgent || '—'}</span>
+            <span className="cd-chip">{t('clients.agentLabel')} · {client.referralAgent || '—'}</span>
           </div>
           <div className="cd-profile__status">
             <span className={`cbadge ${statusClass(client.status)}`}>
-              {client.status || 'NEW'}
+              {statusText(client.status)}
             </span>
             <Can perm="action:client.status">
               <div className="field cd-profile__select">
-                <label htmlFor="client-status">Application status</label>
+                <label htmlFor="client-status">{t('clients.applicationStatus')}</label>
                 <select
                   id="client-status"
                   value={client.status || 'NEW'}
@@ -219,7 +235,7 @@ export default function ClientDetail() {
                 >
                   {CLIENT_STATUSES.map((s) => (
                     <option key={s} value={s}>
-                      {s}
+                      {statusText(s)}
                     </option>
                   ))}
                 </select>
@@ -234,28 +250,31 @@ export default function ClientDetail() {
                 onClick={handleGeneratePdf}
                 disabled={busyPdf}
               >
-                {busyPdf ? <span className="btn__spinner" aria-hidden="true" /> : 'Generate PDF'}
+                {busyPdf ? (
+                  <span className="btn__spinner" aria-hidden="true" />
+                ) : (
+                  t('clients.generatePdf')
+                )}
               </button>
             </Can>
             <Can perm="action:client.pdf">
               {client.pdfPath && (
                 <button type="button" className="btn btn--secondary" onClick={handleDownloadStored}>
-                  Download Stored PDF
+                  {t('clients.downloadStoredPdf')}
                 </button>
               )}
             </Can>
           </div>
           <p className="cd-profile__note">
-            The company letterhead is used exactly as provided — only the client information and
-            images are placed on it.
-            {client.pdfPath ? ' The last document is stored in Supabase Storage.' : ''}
+            {t('clients.pdfNote')}
+            {client.pdfPath ? t('clients.pdfNoteStored') : ''}
           </p>
         </div>
         <div className="cd-profile__photo">
           {photoUrl ? (
-            <img className="cd-photo" src={photoUrl} alt="Client" />
+            <img className="cd-photo" src={photoUrl} alt={t('clients.client')} />
           ) : (
-            <div className="cd-photo cd-photo--empty">No photo</div>
+            <div className="cd-photo cd-photo--empty">{t('clients.noPhoto')}</div>
           )}
         </div>
       </section>
@@ -263,13 +282,13 @@ export default function ClientDetail() {
       <section className="card" style={{ marginTop: 16 }}>
         <div className="card__header">
           <span className="card__icon" aria-hidden="true"><Icon name="user" /></span>
-          <h2>Client Record</h2>
+          <h2>{t('clients.recordTitle')}</h2>
         </div>
         <div className="card__body">
           <div className="cd-grid">
             {DETAIL_FIELDS.map(([label, key, isDate]) => (
               <div className="cd-item" key={key}>
-                <div className="cd-item__label">{label}</div>
+                <div className="cd-item__label">{t(label)}</div>
                 <div className="cd-item__value cd-item__value--caps">
                   {isDate ? fmtDate(client[key]) : client[key] || '—'}
                 </div>
@@ -282,26 +301,31 @@ export default function ClientDetail() {
       <section className="card" style={{ marginTop: 16 }}>
         <div className="card__header">
           <span className="card__icon" aria-hidden="true"><Icon name="paperclip" /></span>
-          <h2>Documents</h2>
+          <h2>{t('clients.documents')}</h2>
         </div>
         <div className="card__body">
           <div className="cd-docs">
             {DOCUMENT_TYPES.map((def) => {
               const meta = client.documents?.[def.id];
               const url = docUrls[def.id];
+              const defLabel = t(`clients.doc.${def.id}`);
               return (
                 <div className="cd-doc" key={def.id}>
                   {url ? (
                     meta?.type === 'application/pdf' ? (
-                      <div className="cd-doc__media cd-doc__media--missing">PDF document</div>
+                      <div className="cd-doc__media cd-doc__media--missing">
+                        {t('clients.pdfDocument')}
+                      </div>
                     ) : (
-                      <img className="cd-doc__media" src={url} alt={def.label} />
+                      <img className="cd-doc__media" src={url} alt={defLabel} />
                     )
                   ) : (
-                    <div className="cd-doc__media cd-doc__media--missing">Not uploaded</div>
+                    <div className="cd-doc__media cd-doc__media--missing">
+                      {t('clients.notUploaded')}
+                    </div>
                   )}
                   <div className="cd-doc__body">
-                    <strong>{def.label}</strong>
+                    <strong>{defLabel}</strong>
                     <span className="cd-doc__name">{meta?.name || '—'}</span>
                     <div className="cl-actions">
                       {url && (
@@ -311,7 +335,7 @@ export default function ClientDetail() {
                           target="_blank"
                           rel="noreferrer"
                         >
-                          Open
+                          {t('clients.open')}
                         </a>
                       )}
                       <Can perm="action:client.upload">
@@ -319,7 +343,7 @@ export default function ClientDetail() {
                           className="btn btn--neutral btn--sm"
                           to={`/clients/${client.id}/edit`}
                         >
-                          {meta ? 'Replace' : 'Upload'}
+                          {meta ? t('clients.replace') : t('common.upload')}
                         </Link>
                       </Can>
                     </div>
@@ -334,15 +358,16 @@ export default function ClientDetail() {
       <section className="card" style={{ marginTop: 16 }}>
         <div className="card__header">
           <span className="card__icon" aria-hidden="true"><Icon name="receipt" /></span>
-          <h2>Linked Invoices</h2>
+          <h2>{t('clients.linkedInvoices')}</h2>
         </div>
         <div className="card__body">
           {invoices.length === 0 ? (
             <div className="cd-empty">
-              No invoice has been created for this client yet.
+              {t('clients.noInvoiceBody1')}
               <br />
-              Create one in the <Link to="/create">Invoice System</Link> using passport number{' '}
-              <strong>{client.passport || '—'}</strong> and it will appear here automatically.
+              {t('clients.noInvoiceCreate1')} <Link to="/create">{t('clients.invoiceSystem')}</Link>{' '}
+              {t('clients.noInvoiceCreate2')}{' '}
+              <strong>{client.passport || '—'}</strong> {t('clients.noInvoiceCreate3')}
             </div>
           ) : (
             <>
@@ -350,12 +375,12 @@ export default function ClientDetail() {
                 <table className="cl-table">
                   <thead>
                     <tr>
-                      <th>Invoice No.</th>
-                      <th>Date</th>
-                      <th>Service</th>
-                      <th>Total</th>
-                      <th>Paid</th>
-                      <th>Remaining</th>
+                      <th>{t('clients.invoiceNo')}</th>
+                      <th>{t('clients.date')}</th>
+                      <th>{t('clients.service')}</th>
+                      <th>{t('common.total')}</th>
+                      <th>{t('clients.paid')}</th>
+                      <th>{t('clients.remaining')}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -374,13 +399,13 @@ export default function ClientDetail() {
               </div>
               <div className="cd-totals">
                 <span className="cd-total">
-                  Total <b>{formatCurrency(totalInvoice)}</b>
+                  {t('common.total')} <b>{formatCurrency(totalInvoice)}</b>
                 </span>
                 <span className="cd-total cd-total--paid">
-                  Paid <b>{formatCurrency(totalPaid)}</b>
+                  {t('clients.paid')} <b>{formatCurrency(totalPaid)}</b>
                 </span>
                 <span className="cd-total cd-total--remaining">
-                  Remaining <b>{formatCurrency(totalRemaining)}</b>
+                  {t('clients.remaining')} <b>{formatCurrency(totalRemaining)}</b>
                 </span>
               </div>
             </>
@@ -389,13 +414,12 @@ export default function ClientDetail() {
       </section>
 
       <p className="history-note">
-        Invoice amounts are read live from the Invoice System — this module never stores payment
-        data.
+        {t('clients.historyNote')}
       </p>
 
       {confirmDelete && !authPrompt && (
         <Modal
-          title="Delete client?"
+          title={t('clients.deleteConfirmTitle')}
           danger
           onClose={() => setConfirmDelete(false)}
           actions={
@@ -405,27 +429,26 @@ export default function ClientDetail() {
                 className="btn btn--neutral"
                 onClick={() => setConfirmDelete(false)}
               >
-                Cancel
+                {t('common.cancel')}
               </button>
               <button type="button" className="btn btn--danger" onClick={() => setAuthPrompt(true)}>
-                Delete Client
+                {t('clients.deleteClientBtn')}
               </button>
             </>
           }
         >
           <p>
-            This permanently removes <strong>{clientFullName(client)}</strong>, the uploaded
-            documents and the stored PDF. Invoice records are not affected.
+            {t('clients.deleteDetailBody1')}{' '}
+            <strong>{clientFullName(client)}</strong>
+            {t('clients.deleteDetailBody2')}
           </p>
         </Modal>
       )}
 
       {confirmDelete && authPrompt && (
         <ConfirmAuthModal
-          title="Confirm your identity"
-          reason={`Enter your account credentials to permanently delete ${clientFullName(
-            client
-          )} and their documents.`}
+          title={t('clients.confirmIdentity')}
+          reason={t('clients.deleteReason', { name: clientFullName(client) })}
           onCancel={() => setAuthPrompt(false)}
           onConfirm={performDelete}
           onSuccess={() => {

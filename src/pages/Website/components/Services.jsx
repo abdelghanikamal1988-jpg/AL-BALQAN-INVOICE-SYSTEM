@@ -1,42 +1,46 @@
+import { useLang } from '../../../context/LangContext.jsx';
+
 const services = [
   {
     id: 1,
-    title: 'Tourist Visa',
-    desc: 'Professional assistance with tourist visa applications, document preparation, and application processing for selected Balkan destinations.',
+    title: 'website.services.s1.title',
+    desc: 'website.services.s1.desc',
     image: '/website-images/tourist-visa.jpg',
     variant: 'gold',
   },
   {
     id: 2,
-    title: 'Investor Residency',
-    desc: 'Explore residency opportunities through business formation and investment solutions in selected Balkan countries.',
+    title: 'website.services.s2.title',
+    desc: 'website.services.s2.desc',
     image: '/website-images/investor-residency.jpg',
     variant: 'navy',
   },
   {
     id: 3,
-    title: 'Work Contracts & Residency',
-    desc: 'Assistances with work contract and residency procedures for individuals seeking professional opportunities in the Balkans.',
+    title: 'website.services.s3.title',
+    desc: 'website.services.s3.desc',
     image: '/website-images/investor-residency.jpg',
     variant: 'gold',
   },
 ];
 
 export default function Services() {
+  const { t } = useLang();
+
   return (
     <section className="ws-services" id="services">
-      <h2 className="ws-section-title">OUR SERVICES</h2>
+      <h2 className="ws-section-title">{t('website.services.title')}</h2>
       <div className="ws-services__grid">
         {services.map((s) => (
           <div key={s.id} className="ws-service-card">
             <div className="ws-service-card__img">
-              <img src={s.image} alt={s.title} />
+              <img src={s.image} alt={t(s.title)} />
             </div>
             <div className={`ws-service-card__body ws-service-card__body--${s.variant}`}>
-              <h3 className="ws-service-card__title">{s.title}</h3>
-              <p className="ws-service-card__desc">{s.desc}</p>
+              <h3 className="ws-service-card__title">{t(s.title)}</h3>
+              <p className="ws-service-card__desc">{t(s.desc)}</p>
               <a href="#contact" className="ws-explore-link ws-explore-link--gold">
-                Explore <span>→</span>
+                {t('website.explore')} <span>→</span>
               </a>
             </div>
           </div>

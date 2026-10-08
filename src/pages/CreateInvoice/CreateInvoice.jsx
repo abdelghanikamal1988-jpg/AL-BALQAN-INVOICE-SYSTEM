@@ -6,6 +6,7 @@ import Modal from '../../components/Modal/Modal.jsx';
 import Can from '../../components/Can/Can.jsx';
 import { useToast } from '../../components/Toast/ToastProvider.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
+import { useLang } from '../../context/LangContext.jsx';
 import { dbSubmitPending } from '../../lib/pendingRepo.js';
 import company from '../../data/company.js';
 import { nextInvoiceNumber, uniqueInvoiceNumber } from '../../utils/invoiceNumber.js';
@@ -47,6 +48,7 @@ export default function CreateInvoice() {
   const navigate = useNavigate();
   const toast = useToast();
   const { needsEditApproval } = useAuth();
+  const { t } = useLang();
 
   const editing = Boolean(id);
   const inputRef = useRef(null);
@@ -102,7 +104,7 @@ export default function CreateInvoice() {
           const inv = await getInvoiceById(id);
           if (!mountedRef.current || cancelled) return;
           if (!inv) {
-            toast.error('Invoice not found.');
+            toast.error(t('invoice.notFound'));
             navigate('/history', { replace: true });
             return;
           }
@@ -191,24 +193,24 @@ export default function CreateInvoice() {
   const validate = () => {
     const next = {};
     const name = normalizeName(form.name);
-    if (isEmptyField(name)) next.name = 'Customer full name is required.';
-    if (isEmptyField(form.nationality)) next.nationality = 'Nationality is required.';
-    if (isEmptyField(form.passport)) next.passport = 'Passport number is required.';
-    if (isEmptyField(form.phone)) next.phone = 'Phone number is required.';
-    if (isEmptyField(form.destination)) next.destination = 'Please select a destination.';
-    if (isEmptyField(form.service)) next.service = 'Please select a service type.';
+    if (isEmptyField(name)) next.name = t('invoice.errNameRequired');
+    if (isEmptyField(form.nationality)) next.nationality = t('invoice.errNationalityRequired');
+    if (isEmptyField(form.passport)) next.passport = t('invoice.errPassportRequired');
+    if (isEmptyField(form.phone)) next.phone = t('invoice.errPhoneRequired');
+    if (isEmptyField(form.destination)) next.destination = t('invoice.errDestinationRequired');
+    if (isEmptyField(form.service)) next.service = t('invoice.errServiceRequired');
 
     const total = Number(form.total);
     if (form.total === '' || form.total === null || Number.isNaN(total) || total <= 0) {
-      next.total = 'Total must be greater than zero.';
+      next.total = t('invoice.errTotalZero');
     }
 
     const paid = Number(form.paid) || 0;
     const grandTotal = calculateVat(form.total, form.vatMode).grandTotal;
-    if (paid > grandTotal) next.paid = 'Paid amount cannot be greater than the total.';
+    if (paid > grandTotal) next.paid = t('invoice.errPaidExceeds');
 
-    if (!isEmailValid(form.email)) next.email = 'Please enter a valid email address.';
-    if (!isPhoneValid(form.phone)) next.phone = 'Please enter a valid phone number.';
+    if (!isEmailValid(form.email)) next.email = t('invoice.errEmailInvalid');
+    if (!isPhoneValid(form.phone)) next.phone = t('invoice.errPhoneInvalid');
 
     return next;
   };
@@ -259,7 +261,7 @@ export default function CreateInvoice() {
     const nextErrors = validate();
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) {
-      toast.error('Please fix the highlighted fields.');
+      toast.error(t('invoice.fixFields'));
       return;
     }
 
@@ -270,23 +272,23 @@ export default function CreateInvoice() {
            keeps its current values until an admin applies it. */
         const { invoice } = await buildInvoice();
         await dbSubmitPending('invoice', invoice.id, invoice);
-        toast.success('Changes submitted for approval. The invoice stays unchanged until an administrator approves.');
+        toast.success(t('invoice.submittedForApproval'));
         navigate('/history');
         return;
       }
 
       const result = await persistInvoice();
       if (!result) {
-        toast.error('Unable to update the invoice. Please try again.');
+        toast.error(t('invoice.updateFailed'));
         return;
       }
       if (editing) {
-        toast.success('Invoice updated successfully.');
+        toast.success(t('invoice.updatedSuccess'));
       } else {
         setForm(EMPTY_FORM);
         setDirty(false);
         setSavedId(null);
-        toast.success('Invoice saved successfully.');
+        toast.success(t('invoice.savedSuccess'));
       }
 
       setSavedInvoice(result);
@@ -295,7 +297,7 @@ export default function CreateInvoice() {
       console.error('Failed to save invoice:', err);
       const detail =
         (err && (err.message || (err.error_description || ''))) || '';
-      toast.error(detail ? `Unable to save the invoice. (${detail})` : 'Unable to save the invoice. Please try again.');
+      toast.error(detail ? t('invoice.saveFailedDetail', { detail }) : t('invoice.saveFailed'));
     } finally {
       setSaving(false);
     }
@@ -306,9 +308,9 @@ export default function CreateInvoice() {
     setExporting(true);
     try {
       await exportInvoicePdf(saved);
-      toast.success('PDF exported successfully.');
+      toast.success(t('invoice.pdfExported'));
     } catch (err) {
-      toast.error('Unable to export PDF. Please try again or use Print.');
+      toast.error(t('invoice.pdfExportFailed'));
     } finally {
       setExporting(false);
     }
@@ -318,21 +320,21 @@ export default function CreateInvoice() {
     try {
       await printInvoicePdf(saved);
     } catch (err) {
-      toast.error("Unable to open the print dialog. Please use your browser's print command.");
+      toast.error(t('invoice.printDialogFailed'));
     }
   };
 
   /** Required behaviour: EXPORT PDF / PRINT INVOICE save the invoice first. */
   const saveThen = async (nextStep) => {
     if (editing && needsEditApproval) {
-      toast.error('Your changes must be approved by an administrator before exporting or printing. The invoice in the history stays print-ready.');
+      toast.error(t('invoice.approvalRequiredExport'));
       return;
     }
 
     const nextErrors = validate();
     if (Object.keys(nextErrors).length > 0) {
       setErrors(nextErrors);
-      toast.error('Please fix the highlighted fields before continuing.');
+      toast.error(t('invoice.fixFieldsBefore'));
       return;
     }
 
@@ -342,14 +344,14 @@ export default function CreateInvoice() {
       saved = await persistInvoice();
     } catch (err) {
       console.error('Failed to save invoice:', err);
-      toast.error('Unable to save the invoice. Please try again.');
+      toast.error(t('invoice.saveFailed'));
       return;
     } finally {
       setSaving(false);
     }
 
     if (!saved) {
-      toast.error('Unable to save the invoice. Please try again.');
+      toast.error(t('invoice.saveFailed'));
       return;
     }
     if (!editing) {
@@ -391,7 +393,7 @@ export default function CreateInvoice() {
   const confirmClear = () => {
     setClearPrompt(false);
     resetForm();
-    toast.info('Form cleared. Starting a new invoice.');
+    toast.info(t('invoice.formCleared'));
   };
 
   const handleResumeDraft = () => {
@@ -414,21 +416,21 @@ export default function CreateInvoice() {
     <div className="page page--wide">
       <div className="page-header">
         <div>
-          <h1>{editing ? 'Edit Invoice' : 'Create Invoice'}</h1>
+          <h1>{editing ? t('invoice.editTitle') : t('invoice.createTitle')}</h1>
           <p className="subtitle">
             {editing
-              ? 'Update the invoice. Invoice number, issue date and time stay unchanged.'
-              : 'Fill in the details — the preview updates instantly.'}
+              ? t('invoice.editSubtitle')
+              : t('invoice.createSubtitle')}
           </p>
         </div>
         <div className="editor-actions">
           {editing && (
             <button type="button" className="btn btn--neutral" onClick={() => navigate('/history')}>
-              Back to History
+              {t('invoice.backToHistory')}
             </button>
           )}
           <button type="button" className="btn btn--neutral" onClick={handleNew}>
-            New Invoice
+            {t('invoice.newInvoice')}
           </button>
           <button
             type="button"
@@ -437,7 +439,7 @@ export default function CreateInvoice() {
             disabled={saving || exporting}
             style={editing ? { display: 'none' } : undefined}
           >
-            Clear Form
+            {t('invoice.clearForm')}
           </button>
           <Can perm="action:invoice.export_pdf">
             <button
@@ -446,7 +448,7 @@ export default function CreateInvoice() {
               onClick={() => saveThen(printSaved)}
               disabled={saving || exporting}
             >
-              Print Invoice
+              {t('invoice.printInvoice')}
             </button>
             <button
               type="button"
@@ -454,7 +456,7 @@ export default function CreateInvoice() {
               onClick={() => saveThen(exportSaved)}
               disabled={saving || exporting}
             >
-              {exporting ? <span className="btn__spinner" aria-hidden="true" /> : 'Export PDF'}
+              {exporting ? <span className="btn__spinner" aria-hidden="true" /> : t('invoice.exportPdf')}
             </button>
           </Can>
           <Can perm="action:invoice.save">
@@ -464,7 +466,7 @@ export default function CreateInvoice() {
               onClick={handleSave}
               disabled={saving || exporting}
             >
-              {saving ? <span className="btn__spinner" aria-hidden="true" /> : editing ? 'Update Invoice' : 'Save Invoice'}
+              {saving ? <span className="btn__spinner" aria-hidden="true" /> : editing ? t('invoice.updateInvoice') : t('invoice.saveInvoice')}
             </button>
           </Can>
         </div>
@@ -474,7 +476,7 @@ export default function CreateInvoice() {
         <div className="card">
           <div className="loading-row">
             <span className="spinner" aria-hidden="true" />
-            Loading invoice…
+            {t('invoice.loadingInvoice')}
           </div>
         </div>
       ) : (
@@ -491,7 +493,7 @@ export default function CreateInvoice() {
 
           <div className="preview-sticky">
             <div className="preview-toolbar">
-              <h2>Live Preview</h2>
+              <h2>{t('invoice.livePreview')}</h2>
               <span className="preview-scale">A4 · {formatCurrency(calculateVat(form.total, form.vatMode).grandTotal)}</span>
             </div>
             <div className="invoice-sheet-wrap">
@@ -508,7 +510,7 @@ export default function CreateInvoice() {
                   onClick={() => saveThen(exportSaved)}
                   disabled={saving || exporting}
                 >
-                  {exporting ? <span className="btn__spinner" aria-hidden="true" /> : 'Export PDF'}
+                  {exporting ? <span className="btn__spinner" aria-hidden="true" /> : t('invoice.exportPdf')}
                 </button>
               </Can>
               <Can perm="action:invoice.save">
@@ -521,9 +523,9 @@ export default function CreateInvoice() {
                   {saving ? (
                     <span className="btn__spinner" aria-hidden="true" />
                   ) : editing ? (
-                    'Update Invoice'
+                    t('invoice.updateInvoice')
                   ) : (
-                    'Save Invoice'
+                    t('invoice.saveInvoice')
                   )}
                 </button>
               </Can>
@@ -534,46 +536,46 @@ export default function CreateInvoice() {
 
       {draftPrompt && (
         <Modal
-          title="Unfinished invoice found"
+          title={t('invoice.draftTitle')}
           onClose={() => setDraftPrompt(false)}
           actions={
             <>
               <button type="button" className="btn btn--neutral" onClick={handleDiscardDraft}>
-                Discard
+                {t('invoice.discard')}
               </button>
               <button type="button" className="btn btn--primary" onClick={handleResumeDraft}>
-                Resume
+                {t('invoice.resume')}
               </button>
             </>
           }
         >
-          <p>You have an unfinished invoice. Do you want to resume it?</p>
+          <p>{t('invoice.draftBody')}</p>
         </Modal>
       )}
 
       {clearPrompt && (
         <Modal
-          title="Clear current invoice?"
+          title={t('invoice.clearTitle')}
           onClose={() => setClearPrompt(false)}
           danger
           actions={
             <>
               <button type="button" className="btn btn--neutral" onClick={() => setClearPrompt(false)}>
-                Cancel
+                {t('common.cancel')}
               </button>
               <button type="button" className="btn btn--danger" onClick={confirmClear}>
-                Clear Invoice
+                {t('invoice.clearInvoice')}
               </button>
             </>
           }
         >
-          <p>Any unsaved changes in this form will be lost. Continue?</p>
+          <p>{t('invoice.clearBody')}</p>
         </Modal>
       )}
 
       {savedActionsOpen && savedInvoice && (
         <Modal
-          title={editing ? 'Invoice updated successfully' : 'Invoice saved successfully'}
+          title={editing ? t('invoice.updatedTitle') : t('invoice.savedTitle')}
           onClose={() => {
             setSavedActionsOpen(false);
             setSavedInvoice(null);
@@ -590,7 +592,7 @@ export default function CreateInvoice() {
                   if (editing) navigate('/create');
                 }}
               >
-                New Invoice
+                {t('invoice.newInvoice')}
               </button>
               <Can perm="action:invoice.export_pdf">
                 <button
@@ -598,11 +600,11 @@ export default function CreateInvoice() {
                   className="btn btn--secondary"
                   onClick={() => {
                     exportInvoicePdf(savedInvoice)
-                      .then(() => toast.success('PDF exported successfully.'))
-                      .catch(() => toast.error('Unable to export PDF. Please try again or use Print.'));
+                      .then(() => toast.success(t('invoice.pdfExported')))
+                      .catch(() => toast.error(t('invoice.pdfExportFailed')));
                   }}
                 >
-                  Export PDF
+                  {t('invoice.exportPdf')}
                 </button>
                 <button
                   type="button"
@@ -612,23 +614,22 @@ export default function CreateInvoice() {
                     setSavedInvoice(null);
                     printInvoicePdf(savedInvoice)
                       .then(() => {})
-                      .catch(() => toast.error("Unable to open the print dialog. Please use your browser's print command."));
+                      .catch(() => toast.error(t('invoice.printDialogFailed')));
                   }}
                 >
-                  Print
+                  {t('common.print')}
                 </button>
               </Can>
             </>
           }
         >
           <p>
-            Invoice <strong>{savedInvoice.invoiceNumber}</strong> has been saved to your local
-            invoice history.
+            {t('invoice.savedBefore')} <strong>{savedInvoice.invoiceNumber}</strong> {t('invoice.savedAfter')}
           </p>
         </Modal>
       )}
 
-      <p className="legend">{company.name} · Invoices are stored locally on this device.</p>
+      <p className="legend">{company.name} · {t('invoice.storedLocally')}</p>
     </div>
   );
 }

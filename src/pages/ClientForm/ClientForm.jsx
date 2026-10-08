@@ -5,6 +5,7 @@ import Modal from '../../components/Modal/Modal.jsx';
 import Can from '../../components/Can/Can.jsx';
 import { useToast } from '../../components/Toast/ToastProvider.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
+import { useLang } from '../../context/LangContext.jsx';
 import {
   dbFetchAgents,
   dbInsertAgent,
@@ -38,36 +39,38 @@ const FIELD_GROUPS = [
   {
     id: 'personal',
     icon: 'user',
-    title: 'Personal Details',
-    note: 'Exactly as written in the passport.',
+    title: 'clients.groupPersonal',
+    note: 'clients.groupPersonalNote',
     fields: [
-      { key: 'firstName', label: 'Name', type: 'text' },
-      { key: 'fatherName', label: 'Father Name', type: 'text' },
-      { key: 'surname', label: 'Surname', type: 'text' },
-      { key: 'sex', label: 'Sex', type: 'select', options: ['Male', 'Female'] },
-      { key: 'dateOfBirth', label: 'Date of Birth', type: 'date' },
-      { key: 'placeOfBirth', label: 'Place of Birth', type: 'text' },
+      { key: 'firstName', label: 'clients.field.name', type: 'text' },
+      { key: 'fatherName', label: 'clients.field.fatherName', type: 'text' },
+      { key: 'surname', label: 'clients.field.surname', type: 'text' },
+      { key: 'sex', label: 'clients.field.sex', type: 'select', options: ['Male', 'Female'] },
+      { key: 'dateOfBirth', label: 'clients.field.dateOfBirth', type: 'date' },
+      { key: 'placeOfBirth', label: 'clients.field.placeOfBirth', type: 'text' },
     ],
   },
   {
     id: 'passport',
     icon: 'folder',
-    title: 'Passport Details',
-    note: 'Text is converted to uppercase automatically.',
+    title: 'clients.groupPassport',
+    note: 'clients.groupPassportNote',
     fields: [
-      { key: 'passport', label: 'Passport No.', type: 'text' },
-      { key: 'country', label: 'Country Name', type: 'text' },
-      { key: 'dateOfIssue', label: 'Date of Issue', type: 'date' },
-      { key: 'dateOfExpiry', label: 'Date of Expiry', type: 'date' },
-      { key: 'issuingPlace', label: 'Issuing Place', type: 'text' },
+      { key: 'passport', label: 'clients.field.passport', type: 'text' },
+      { key: 'country', label: 'clients.field.country', type: 'text' },
+      { key: 'dateOfIssue', label: 'clients.field.dateOfIssue', type: 'date' },
+      { key: 'dateOfExpiry', label: 'clients.field.dateOfExpiry', type: 'date' },
+      { key: 'issuingPlace', label: 'clients.field.issuingPlace', type: 'text' },
     ],
   },
   {
     id: 'referral',
     icon: 'userCheck',
-    title: 'Referral',
-    note: 'Used to group clients by the agent who brought them.',
-    fields: [{ key: 'referralAgent', label: 'Referral Agent', type: 'agent' }],
+    title: 'clients.groupReferral',
+    note: 'clients.groupReferralNote',
+    fields: [
+      { key: 'referralAgent', label: 'clients.field.referralAgent', type: 'agent' },
+    ],
   },
 ];
 
@@ -75,6 +78,7 @@ export default function ClientForm() {
   const { id } = useParams();
   const editing = Boolean(id);
   const navigate = useNavigate();
+  const { t } = useLang();
   const toast = useToast();
   const { hasPerm, needsEditApproval } = useAuth();
   const canSave = hasPerm('action:client.save');
@@ -114,7 +118,7 @@ export default function ClientForm() {
           const client = await dbFetchClient(id);
           if (!active) return;
           if (!client) {
-            toast.error('Client not found.');
+            toast.error(t('clients.toastNotFound'));
             navigate('/clients', { replace: true });
             return;
           }
@@ -129,9 +133,7 @@ export default function ClientForm() {
       } catch (err) {
         console.error(err);
         if (active) {
-          toast.error(
-            'Unable to load the client form. Run supabase/clients.sql in the Supabase SQL Editor first.'
-          );
+          toast.error(t('clients.toastLoadFormError'));
         }
       } finally {
         if (active) setLoading(false);
@@ -205,7 +207,7 @@ export default function ClientForm() {
   const saveNewAgent = async () => {
     const name = newAgentName.trim();
     if (!name) {
-      toast.error('Enter the agent name.');
+      toast.error(t('clients.toastAgentName'));
       return;
     }
     try {
@@ -215,9 +217,9 @@ export default function ClientForm() {
       setForm((prev) => ({ ...prev, referralAgent: row.name }));
       setAddingAgent(false);
       setNewAgentName('');
-      toast.success('Agent added.');
+      toast.success(t('clients.toastAgentAdded'));
     } catch (err) {
-      toast.error(err.message || 'Unable to add the agent.');
+      toast.error(err.message || t('clients.toastAgentError'));
     }
   };
 
@@ -225,7 +227,7 @@ export default function ClientForm() {
   const handleFile = (docId, file) => {
     if (!file) return;
     if (file.size > MAX_UPLOAD_BYTES) {
-      toast.error('File is larger than 10 MB.');
+      toast.error(t('clients.toastFileTooBig'));
       return;
     }
     const previous = docs[docId];
@@ -309,23 +311,21 @@ export default function ClientForm() {
       if (editing) {
         if (pendingApproval) {
           await dbSubmitPending('client', client.id, client);
-          toast.success(
-            'Changes submitted for approval. The client stays unchanged until an administrator approves.'
-          );
+          toast.success(t('clients.toastPendingSubmit'));
           navigate(`/clients/${clientId}`);
         } else {
           await dbUpdateClient(client);
-          toast.success('Client updated successfully.');
+          toast.success(t('clients.toastUpdated'));
           navigate(`/clients/${clientId}`);
         }
       } else {
         await dbInsertClient(client);
-        toast.success('Client saved successfully.');
+        toast.success(t('clients.toastSaved'));
         navigate(`/clients/${clientId}`);
       }
     } catch (err) {
       console.error(err);
-      toast.error(err.message || 'Unable to save the client. Please try again.');
+      toast.error(err.message || t('clients.toastSaveError'));
     } finally {
       setSaving(false);
       setConfirmDocs(false);
@@ -337,7 +337,7 @@ export default function ClientForm() {
     const nextErrors = validateClientForm({ ...form, referralAgent: agentValue });
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) {
-      toast.error('Please fix the highlighted fields.');
+      toast.error(t('clients.toastFixFields'));
       return;
     }
     if (missingDocs.length > 0) {
@@ -353,7 +353,7 @@ export default function ClientForm() {
         <div className="card">
           <div className="loading-row">
             <span className="spinner" aria-hidden="true" />
-            Loading client…
+            {t('clients.loadingClient')}
           </div>
         </div>
       </div>
@@ -364,11 +364,9 @@ export default function ClientForm() {
     <div className="page page--wide clients-page">
       <div className="page-header">
         <div>
-          <h1>{editing ? 'Edit Client' : 'New Client'}</h1>
+          <h1>{editing ? t('clients.editClient') : t('clients.newClient')}</h1>
           <p className="subtitle">
-            {editing
-              ? 'Update the client record. Documents can be replaced at any time.'
-              : 'All fields are required. Documents are optional.'}
+            {editing ? t('clients.editSubtitle') : t('clients.newSubtitle')}
           </p>
         </div>
         <div className="editor-actions">
@@ -377,7 +375,7 @@ export default function ClientForm() {
             className="btn btn--neutral"
             onClick={() => navigate(editing ? `/clients/${id}` : '/clients')}
           >
-            Cancel
+            {t('common.cancel')}
           </button>
           <Can perm="action:client.save">
             <button
@@ -386,7 +384,11 @@ export default function ClientForm() {
               className="btn btn--primary"
               disabled={saving}
             >
-              {saving ? <span className="btn__spinner" aria-hidden="true" /> : editing ? 'Update Client' : 'Save Client'}
+              {saving ? (
+                <span className="btn__spinner" aria-hidden="true" />
+              ) : (
+                t(editing ? 'clients.updateClient' : 'clients.saveClient')
+              )}
             </button>
           </Can>
         </div>
@@ -395,13 +397,13 @@ export default function ClientForm() {
       <form id="client-form" className="editor-layout" onSubmit={handleSubmit}>
         <div className="editor-form">
           {FIELD_GROUPS.map((group) => (
-            <section className="card" aria-label={group.title} key={group.id}>
+            <section className="card" aria-label={t(group.title)} key={group.id}>
               <div className="card__header">
                 <span className="card__icon" aria-hidden="true"><Icon name={group.icon} /></span>
-                <h2>{group.title}</h2>
+                <h2>{t(group.title)}</h2>
               </div>
               <div className="card__body">
-                <p className="cf-section__note">{group.note}</p>
+                <p className="cf-section__note">{t(group.note)}</p>
                 <div className="cf-grid">
                   {group.fields.map((field) => {
                   const error = errors[field.key];
@@ -411,7 +413,7 @@ export default function ClientForm() {
                     return (
                       <div className={wrapperClass} key={field.key}>
                         <label htmlFor="client-agent">
-                          Referral Agent<span className="cf-req">*</span>
+                          {t(field.label)}<span className="cf-req">*</span>
                         </label>
                         <select
                           id="client-agent"
@@ -423,14 +425,16 @@ export default function ClientForm() {
                               {name}
                             </option>
                           ))}
-                          {canSave && <option value={ADD_AGENT}>+ Add new agent…</option>}
+                          {canSave && (
+                            <option value={ADD_AGENT}>{t('clients.addAgentOption')}</option>
+                          )}
                         </select>
                         {canSave && addingAgent && (
                           <div className="cf-agent-add">
                             <input
                               type="text"
                               value={newAgentName}
-                              placeholder="Agent name"
+                              placeholder={t('clients.agentNamePlaceholder')}
                               onChange={(e) => setNewAgentName(e.target.value)}
                               autoFocus
                             />
@@ -439,18 +443,18 @@ export default function ClientForm() {
                               className="btn btn--primary btn--sm"
                               onClick={saveNewAgent}
                             >
-                              Add
+                              {t('clients.add')}
                             </button>
                             <button
                               type="button"
                               className="btn btn--neutral btn--sm"
                               onClick={() => setAddingAgent(false)}
                             >
-                              Cancel
+                              {t('common.cancel')}
                             </button>
                           </div>
                         )}
-                        {error && <span className="field__error">{error}</span>}
+                        {error && <span className="field__error">{t(`clients.err.${field.key}`)}</span>}
                       </div>
                     );
                   }
@@ -458,7 +462,7 @@ export default function ClientForm() {
                   if (field.type === 'select') {
                     return (
                       <div className={wrapperClass} key={field.key}>
-                        <label htmlFor={`client-${field.key}`}>{field.label}<span className="cf-req">*</span></label>
+                        <label htmlFor={`client-${field.key}`}>{t(field.label)}<span className="cf-req">*</span></label>
                         <select
                           id={`client-${field.key}`}
                           value={form[field.key]}
@@ -471,21 +475,21 @@ export default function ClientForm() {
                             });
                           }}
                         >
-                          <option value="">Select…</option>
+                          <option value="">{t('clients.selectPlaceholder')}</option>
                           {field.options.map((opt) => (
                             <option key={opt} value={opt}>
-                              {opt}
+                              {t(`clients.opt.${field.key}.${opt}`)}
                             </option>
                           ))}
                         </select>
-                        {error && <span className="field__error">{error}</span>}
+                        {error && <span className="field__error">{t(`clients.err.${field.key}`)}</span>}
                       </div>
                     );
                   }
 
                   return (
                     <div className={wrapperClass} key={field.key}>
-                      <label htmlFor={`client-${field.key}`}>{field.label}<span className="cf-req">*</span></label>
+                      <label htmlFor={`client-${field.key}`}>{t(field.label)}<span className="cf-req">*</span></label>
                       <input
                         id={`client-${field.key}`}
                         ref={field.key === 'firstName' ? nameRef : undefined}
@@ -502,7 +506,7 @@ export default function ClientForm() {
                           });
                         }}
                       />
-                      {error && <span className="field__error">{error}</span>}
+                      {error && <span className="field__error">{t(`clients.err.${field.key}`)}</span>}
                     </div>
                   );
                   })}
@@ -511,33 +515,34 @@ export default function ClientForm() {
             </section>
           ))}
 
-          <section className="card" aria-label="Documents">
+          <section className="card" aria-label={t('clients.documents')}>
             <div className="card__header">
               <span className="card__icon" aria-hidden="true"><Icon name="paperclip" /></span>
-              <h2>Documents</h2>
+              <h2>{t('clients.documents')}</h2>
             </div>
             <div className="card__body">
               <div className="cf-docs">
                 {DOCUMENT_TYPES.map((def) => {
                   const meta = docs[def.id];
                   const preview = previews[def.id];
+                  const defLabel = t(`clients.doc.${def.id}`);
                   return (
                     <div className="cf-doc" key={def.id}>
-                      <div className="cf-doc__label">{def.label}</div>
+                      <div className="cf-doc__label">{defLabel}</div>
                       {preview ? (
                         meta && meta.type === 'application/pdf' ? (
-                          <div className="cf-doc__thumb">PDF document</div>
+                          <div className="cf-doc__thumb">{t('clients.pdfDocument')}</div>
                         ) : (
-                          <img className="cf-doc__thumb" src={preview} alt={def.label} />
+                          <img className="cf-doc__thumb" src={preview} alt={defLabel} />
                         )
                       ) : (
-                        <div className="cf-doc__thumb">No file</div>
+                        <div className="cf-doc__thumb">{t('clients.noFile')}</div>
                       )}
                       {meta && <div className="cf-doc__file">{meta.name}</div>}
                       <div className="cf-doc__btns">
                         <Can perm="action:client.upload">
                           <label className="btn btn--secondary btn--sm" style={{ cursor: 'pointer' }}>
-                            {meta ? 'Replace' : 'Upload'}
+                            {meta ? t('clients.replace') : t('common.upload')}
                             <input
                               type="file"
                               accept={DOCUMENT_ACCEPT}
@@ -557,7 +562,7 @@ export default function ClientForm() {
                               className="btn btn--danger btn--sm"
                               onClick={() => handleRemoveDoc(def.id)}
                             >
-                              Remove
+                              {t('clients.remove')}
                             </button>
                           )}
                         </Can>
@@ -566,9 +571,7 @@ export default function ClientForm() {
                   );
                 })}
               </div>
-              <p className="legend">
-                Documents are optional — you can save the client without them.
-              </p>
+              <p className="legend">{t('clients.docsLegend')}</p>
             </div>
           </section>
         </div>
@@ -576,7 +579,7 @@ export default function ClientForm() {
 
       {confirmDocs && (
         <Modal
-          title="Continue without documents?"
+          title={t('clients.confirmDocsTitle')}
           onClose={() => setConfirmDocs(false)}
           actions={
             <>
@@ -585,26 +588,26 @@ export default function ClientForm() {
                 className="btn btn--neutral"
                 onClick={() => setConfirmDocs(false)}
               >
-                Go back and upload
+                {t('clients.goBackUpload')}
               </button>
               <button type="button" className="btn btn--primary" onClick={performSave}>
-                Continue without them
+                {t('clients.continueNoDocs')}
               </button>
             </>
           }
         >
-          <p>The following documents were not uploaded:</p>
+          <p>{t('clients.missingDocsIntro')}</p>
           <ul>
             {missingDocs.map((def) => (
-              <li key={def.id}>{def.label}</li>
+              <li key={def.id}>{t(`clients.doc.${def.id}`)}</li>
             ))}
           </ul>
-          <p>You can still save the client and add the documents later.</p>
+          <p>{t('clients.missingDocsOutro')}</p>
         </Modal>
       )}
 
       <p className="legend">
-        <Link to="/clients">Back to clients</Link>
+        <Link to="/clients">{t('clients.backToClientsLink')}</Link>
       </p>
     </div>
   );

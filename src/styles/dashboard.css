@@ -17,7 +17,7 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
-  text-align: left;
+  text-align: start;
   gap: 0;
   animation: rise-in 0.4s ease backwards;
 }
@@ -67,7 +67,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
-  text-align: left;
+  text-align: start;
   gap: 14px;
   margin-bottom: 14px;
 }
@@ -194,7 +194,7 @@
 }
 
 .db-act th {
-  text-align: left;
+  text-align: start;
   font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.05em;
@@ -291,7 +291,7 @@
 .db-status__count {
   flex: 0 0 auto;
   width: 20px;
-  text-align: right;
+  text-align: end;
   font-size: 13px;
   font-weight: 700;
   color: var(--text);
@@ -311,7 +311,7 @@
 }
 
 .db-utility__note {
-  margin-right: auto;
+  margin-inline-end: auto;
   font-size: 12.5px;
   color: var(--muted);
 }
@@ -413,7 +413,7 @@
 .db-bars__yaxis span,
 .db-line__yaxis span {
   position: absolute;
-  right: 8px;
+  inset-inline-end: 8px;
   transform: translateY(50%);
   font-size: 11px;
   line-height: 1;
@@ -513,7 +513,7 @@
 
 .db-tip {
   position: absolute;
-  left: 50%;
+  inset-inline-start: 50%;
   bottom: calc(var(--tipb, 50%) + 14px);
   transform: translate(-50%, 6px);
   min-width: 136px;
@@ -530,14 +530,14 @@
   pointer-events: none;
   transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s;
   z-index: 5;
-  text-align: left;
+  text-align: start;
   white-space: nowrap;
 }
 
 .db-tip::after {
   content: '';
   position: absolute;
-  left: 50%;
+  inset-inline-start: 50%;
   bottom: -5px;
   transform: translateX(-50%) rotate(45deg);
   width: 8px;
@@ -561,14 +561,14 @@
 
 .db-bars__col:first-child .db-tip,
 .db-lhit:first-child .db-tip {
-  left: 0;
+  inset-inline-start: 0;
   transform: translate(0, 6px);
 }
 
 .db-bars__col:last-child .db-tip,
 .db-lhit:last-child .db-tip {
-  left: auto;
-  right: 0;
+  inset-inline-start: auto;
+  inset-inline-end: 0;
   transform: translate(0, 6px);
 }
 
@@ -585,13 +585,13 @@
 
 .db-bars__col:first-child .db-tip::after,
 .db-lhit:first-child .db-tip::after {
-  left: 16px;
+  inset-inline-start: 16px;
 }
 
 .db-bars__col:last-child .db-tip::after,
 .db-lhit:last-child .db-tip::after {
-  left: auto;
-  right: 16px;
+  inset-inline-start: auto;
+  inset-inline-end: 16px;
 }
 
 .db-tip b {
@@ -647,7 +647,7 @@
 .db-lhit::before {
   content: '';
   position: absolute;
-  left: 50%;
+  inset-inline-start: 50%;
   top: 0;
   bottom: 0;
   width: 1px;
@@ -726,7 +726,7 @@
 }
 
 .db-donut__legend .db-fig em {
-  margin-left: auto;
+  margin-inline-start: auto;
   font-style: normal;
   font-weight: 600;
   color: var(--text);
@@ -782,7 +782,7 @@
 .db-hbar__val {
   font-size: 13px;
   font-weight: 600;
-  text-align: right;
+  text-align: end;
   font-variant-numeric: tabular-nums;
   color: var(--text);
 }
@@ -802,7 +802,7 @@
 }
 
 .db-inv th {
-  text-align: left;
+  text-align: start;
   font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.05em;
@@ -848,7 +848,7 @@
 }
 
 .db-inv__amount {
-  text-align: right;
+  text-align: end;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
@@ -856,7 +856,7 @@
 
 .db-inv th.db-inv__amount {
   font-weight: 500;
-  text-align: right;
+  text-align: end;
 }
 
 .db-badge {
@@ -978,7 +978,55 @@
   }
 
   .db-utility__note {
-    margin-right: 0;
+    margin-inline-end: 0;
     flex: 1 1 100%;
   }
+}
+
+/* ============================================================
+   DARK THEME — scoped overrides (this sheet loads BEFORE
+   global.css, so plain selectors lose ties: each rule below is
+   html[data-theme='dark'] + class = 0,2,1 > global's 0,1,1).
+   Anything already using design tokens auto-flips via
+   global.css's dark block and is intentionally not repeated.
+   ============================================================ */
+
+html[data-theme='dark'] .db-status__bar {
+  background: rgba(233, 236, 234, 0.1);
+}
+
+html[data-theme='dark'] .db-fig__dot--muted {
+  background: var(--muted);
+}
+
+html[data-theme='dark'] .db-bars__bar--muted {
+  background: #4b5563;
+}
+
+html[data-theme='dark'] .db-badge--paid,
+html[data-theme='dark'] .db-badge--login {
+  background: rgba(74, 222, 128, 0.16);
+  color: #86efac;
+}
+
+html[data-theme='dark'] .db-badge--partial,
+html[data-theme='dark'] .db-badge--idle {
+  background: rgba(251, 146, 60, 0.16);
+  color: #fdba74;
+}
+
+html[data-theme='dark'] .db-badge--unpaid,
+html[data-theme='dark'] .db-badge--fail {
+  background: rgba(248, 113, 113, 0.16);
+  color: #fca5a5;
+}
+
+html[data-theme='dark'] .db-badge--logout {
+  background: rgba(156, 163, 175, 0.14);
+  color: #d1d5db;
+}
+
+html[data-theme='dark'] .db-badge--reauth {
+  background: rgba(192, 132, 252, 0.16);
+  color: #d8b4fe;
 }

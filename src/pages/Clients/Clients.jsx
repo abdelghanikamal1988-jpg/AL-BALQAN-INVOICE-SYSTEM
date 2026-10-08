@@ -8,6 +8,7 @@ import PendingReviewModal from '../../components/PendingReview/PendingReviewModa
 import { useToast } from '../../components/Toast/ToastProvider.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { usePendingApprovals } from '../../context/PendingApprovalsContext.jsx';
+import { useLang } from '../../context/LangContext.jsx';
 import { dbFetchClients, dbDeleteClient, dbFetchAgents } from '../../lib/clientRepo.js';
 import {
   dbFetchPending,
@@ -38,7 +39,17 @@ const STATUS_MOD = {
   REJECTED: 'rejected',
 };
 
+const STATUS_I18N = {
+  NEW: 'status.NEW',
+  'DOCUMENTS SUBMITTED': 'status.DOCUMENTS',
+  SUBMITTED: 'status.SUBMITTED',
+  'UNDER REVIEW': 'status.UNDER_REVIEW',
+  APPROVED: 'status.APPROVED',
+  REJECTED: 'status.REJECTED',
+};
+
 export default function Clients() {
+  const { t } = useLang();
   const toast = useToast();
   const navigate = useNavigate();
   const { user, isAdmin } = useAuth();
@@ -105,9 +116,7 @@ export default function Clients() {
         if (!active) return;
         setClients([]);
         console.error(err);
-        toast.error(
-          'Unable to load clients. Run supabase/clients.sql in the Supabase SQL Editor first.'
-        );
+        toast.error(t('clients.toastLoadError'));
       })
       .finally(() => {
         if (active) setLoading(false);
@@ -150,6 +159,11 @@ export default function Clients() {
 
   const refresh = () => setRefreshKey((k) => k + 1);
 
+  const statusText = (s) => {
+    const key = STATUS_I18N[s];
+    return key ? t(key) : s || t('status.NEW');
+  };
+
   const nameOf = (uid) => {
     if (!uid) return '—';
     if (userNames[uid]) return userNames[uid];
@@ -171,13 +185,15 @@ export default function Clients() {
     setReviewBusy(true);
     try {
       await dbApprovePending(review);
-      toast.success('Edit approved and applied.');
+      toast.success(t('clients.toastApproved'));
       setReview(null);
       refresh();
       refreshApprovals();
     } catch (err) {
       console.error(err);
-      toast.error(`Unable to apply the edit. (${err.message || 'please try again'})`);
+      toast.error(
+        t('clients.toastApplyError', { detail: err.message || t('clients.tryAgain') })
+      );
     } finally {
       setReviewBusy(false);
     }
@@ -188,13 +204,15 @@ export default function Clients() {
     setReviewBusy(true);
     try {
       await dbRejectPending(review.id);
-      toast.info('Proposal rejected — the client keeps its current values.');
+      toast.info(t('clients.toastRejected'));
       setReview(null);
       refresh();
       refreshApprovals();
     } catch (err) {
       console.error(err);
-      toast.error(`Unable to reject the proposal. (${err.message || 'please try again'})`);
+      toast.error(
+        t('clients.toastRejectError', { detail: err.message || t('clients.tryAgain') })
+      );
     } finally {
       setReviewBusy(false);
     }
@@ -205,13 +223,15 @@ export default function Clients() {
     setReviewBusy(true);
     try {
       await dbWithdrawPending(review.id);
-      toast.info('Your request was cancelled.');
+      toast.info(t('clients.toastWithdrawn'));
       setReview(null);
       refresh();
       refreshApprovals();
     } catch (err) {
       console.error(err);
-      toast.error(`Unable to cancel the request. (${err.message || 'please try again'})`);
+      toast.error(
+        t('clients.toastWithdrawError', { detail: err.message || t('clients.tryAgain') })
+      );
     } finally {
       setReviewBusy(false);
     }
@@ -249,7 +269,7 @@ export default function Clients() {
       console.warn('Uploaded files could not be removed', err);
     }
     refresh();
-    toast.info('Client deleted.');
+    toast.info(t('clients.toastDeleted'));
   };
 
   const ownerRows = invoiceOwner ? invoicesOf(invoiceOwner) : [];
@@ -259,22 +279,22 @@ export default function Clients() {
       <div className="page-header">
         <div>
           <p className="eyebrow">CRM</p>
-          <h1>Clients</h1>
-          <p className="subtitle">Client applications, documents and linked invoices.</p>
+          <h1>{t('clients.title')}</h1>
+          <p className="subtitle">{t('clients.subtitle')}</p>
         </div>
         <div className="page-header__right">
           <ul className="crumbs">
             <li>
-              <Link to="/">Home</Link>
+              <Link to="/">{t('clients.home')}</Link>
             </li>
             <li>
-              <span className="crumbs__cur">Clients</span>
+              <span className="crumbs__cur">{t('clients.title')}</span>
             </li>
           </ul>
           <Can perm="page:clients.new">
             <Link to="/clients/new" className="btn btn--primary cl-new-client">
               <Icon name="plus" aria-hidden="true" />
-              New Client
+              {t('clients.newClient')}
             </Link>
           </Can>
         </div>
@@ -287,7 +307,7 @@ export default function Clients() {
               <Icon name="users" />
             </span>
             <span className="statc__text">
-              <span className="statc__label">Clients</span>
+              <span className="statc__label">{t('clients.title')}</span>
               <span className="statc__value">{stats.total}</span>
             </span>
             <span className="statc__chev" aria-hidden="true">
@@ -320,7 +340,7 @@ export default function Clients() {
                   <Icon name={glyph} />
                 </span>
                 <span className="statc__text">
-                  <span className="statc__label">{s}</span>
+                  <span className="statc__label">{statusText(s)}</span>
                   <span className="statc__value">{stats.counts[s]}</span>
                 </span>
                 <span className="statc__chev" aria-hidden="true">
@@ -334,19 +354,19 @@ export default function Clients() {
 
       <div className="cl-toolbar">
         <div className="field cl-toolbar__search">
-          <label htmlFor="client-search">Search</label>
+          <label htmlFor="client-search">{t('common.search')}</label>
           <input
             id="client-search"
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Name, passport, country, agent, status…"
+            placeholder={t('clients.searchPlaceholder')}
           />
         </div>
         <div className="field cl-toolbar__agent">
-          <label htmlFor="client-agent">Referral agent</label>
+          <label htmlFor="client-agent">{t('clients.referralAgentField')}</label>
           <select id="client-agent" value={agent} onChange={(e) => setAgent(e.target.value)}>
-            <option value={ANY}>All agents</option>
+            <option value={ANY}>{t('clients.allAgents')}</option>
             <option value="CUSTOMER">CUSTOMER</option>
             {agents.map((a) => (
               <option key={a.id} value={a.name}>
@@ -357,9 +377,9 @@ export default function Clients() {
         </div>
 
         <div className="field cl-toolbar__filter">
-          <label htmlFor="client-country">Nationality / country</label>
+          <label htmlFor="client-country">{t('clients.countryFilter')}</label>
           <select id="client-country" value={country} onChange={(e) => setCountry(e.target.value)}>
-            <option value={ANY}>All countries</option>
+            <option value={ANY}>{t('clients.allCountries')}</option>
             {countryOptions.map((opt) => (
               <option key={opt} value={opt}>
                 {opt}
@@ -369,27 +389,27 @@ export default function Clients() {
         </div>
 
         <div className="field cl-toolbar__filter">
-          <label htmlFor="client-status">Status</label>
+          <label htmlFor="client-status">{t('common.status')}</label>
           <select id="client-status" value={status} onChange={(e) => setStatus(e.target.value)}>
-            <option value={ANY}>All statuses</option>
+            <option value={ANY}>{t('clients.allStatuses')}</option>
             {CLIENT_STATUSES.map((opt) => (
               <option key={opt} value={opt}>
-                {opt}
+                {statusText(opt)}
               </option>
             ))}
           </select>
         </div>
 
         <div className="field cl-toolbar__filter">
-          <label htmlFor="client-invoices">Invoices</label>
+          <label htmlFor="client-invoices">{t('clients.invoices')}</label>
           <select
             id="client-invoices"
             value={invoiceFilter}
             onChange={(e) => setInvoiceFilter(e.target.value)}
           >
-            <option value={ANY}>Any</option>
-            <option value="WITH">With invoices</option>
-            <option value="WITHOUT">Without invoices</option>
+            <option value={ANY}>{t('clients.any')}</option>
+            <option value="WITH">{t('clients.withInvoices')}</option>
+            <option value="WITHOUT">{t('clients.withoutInvoices')}</option>
           </select>
         </div>
 
@@ -399,36 +419,38 @@ export default function Clients() {
             className="btn btn--neutral btn--sm cl-toolbar__reset"
             onClick={clearFilters}
           >
-            Clear filters
+            {t('clients.clearFilters')}
           </button>
         )}
       </div>
 
       <p className="cl-summary">
-        {loading ? 'Loading…' : `${visible.length} of ${clients.length} clients`}
+        {loading
+          ? t('common.loading')
+          : `${visible.length} ${t('common.of')} ${clients.length} ${t('clients.clientsWord')}`}
       </p>
 
       {loading ? (
         <div className="card">
           <div className="loading-row">
             <span className="spinner" aria-hidden="true" />
-            Loading clients…
+            {t('clients.loadingClients')}
           </div>
         </div>
       ) : visible.length === 0 ? (
         <div className="card">
           <div className="empty-state">
             <div className="empty-state__icon" aria-hidden="true"><Icon name="users" /></div>
-            <h3>{clients.length === 0 ? 'No clients yet' : 'No matching clients'}</h3>
+            <h3>{clients.length === 0 ? t('clients.emptyTitle') : t('clients.noMatchTitle')}</h3>
             <p>
               {clients.length === 0
-                ? 'Create your first client record to see it here.'
-                : 'Try a different search term or clear the active filters.'}
+                ? t('clients.emptyBody')
+                : t('clients.noMatchBody')}
             </p>
             {clients.length === 0 && (
               <Can perm="page:clients.new">
                 <Link to="/clients/new" className="btn btn--primary">
-                  Create Client
+                  {t('clients.createClient')}
                 </Link>
               </Can>
             )}
@@ -440,14 +462,14 @@ export default function Clients() {
             <table className="cl-table">
               <thead>
                 <tr>
-                  <th>Client</th>
-                  <th>Passport</th>
-                  <th>Country</th>
-                  <th>Referral Agent</th>
-                  <th>Status</th>
-                  <th>Invoices</th>
-                  <th>User</th>
-                  <th>Actions</th>
+                  <th>{t('clients.client')}</th>
+                  <th>{t('clients.passportLabel')}</th>
+                  <th>{t('clients.colCountry')}</th>
+                  <th>{t('clients.referralAgent')}</th>
+                  <th>{t('common.status')}</th>
+                  <th>{t('clients.invoices')}</th>
+                  <th>{t('clients.colUser')}</th>
+                  <th>{t('common.actions')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -474,7 +496,7 @@ export default function Clients() {
                       <td>{client.referralAgent || '—'}</td>
                       <td>
                         <span className={`cbadge ${statusClass(client.status)}`}>
-                          {client.status || 'NEW'}
+                          {statusText(client.status)}
                         </span>
                       </td>
                       <td>
@@ -483,7 +505,11 @@ export default function Clients() {
                           className="btn btn--neutral btn--sm"
                           onClick={() => setInvoiceOwner(client)}
                         >
-                          {rows.length === 0 ? 'No invoice' : `${rows.length} invoice${rows.length > 1 ? 's' : ''}`}
+                          {rows.length === 0
+                            ? t('clients.noInvoice')
+                            : rows.length > 1
+                              ? t('clients.invoiceMany', { n: rows.length })
+                              : t('clients.invoiceOne', { n: rows.length })}
                         </button>
                       </td>
                       <td>
@@ -498,23 +524,23 @@ export default function Clients() {
                               className="pending-chip"
                               onClick={() => setReview(pendingFor)}
                             >
-                              Edit pending
+                              {t('clients.editPending')}
                             </button>
                           )}
                           {pendingFor?.status === 'approved' && (
                             <span
                               className="pending-chip pending-chip--approved"
-                              title="An administrator approved this edit"
+                              title={t('clients.pendingApprovedTitle')}
                             >
-                              Edit approved
+                              {t('clients.editApproved')}
                             </span>
                           )}
                           {pendingFor?.status === 'rejected' && (
                             <span
                               className="pending-chip pending-chip--rejected"
-                              title="This edit was rejected — the client kept its current values"
+                              title={t('clients.pendingRejectedTitle')}
                             >
-                              Edit rejected
+                              {t('clients.editRejected')}
                             </span>
                           )}
                         </div>
@@ -524,8 +550,10 @@ export default function Clients() {
                           <button
                             type="button"
                             className="icon-btn"
-                            title="View client"
-                            aria-label={`View ${clientFullName(client) || 'client'}`}
+                            title={t('clients.viewClient')}
+                            aria-label={t('clients.ariaView', {
+                              name: clientFullName(client) || t('clients.clientFallback'),
+                            })}
                             onClick={() => navigate(`/clients/${client.id}`)}
                           >
                             <Icon name="eye" />
@@ -534,8 +562,10 @@ export default function Clients() {
                             <button
                               type="button"
                               className="icon-btn"
-                              title="Edit client"
-                              aria-label={`Edit ${clientFullName(client) || 'client'}`}
+                              title={t('clients.editClientAction')}
+                              aria-label={t('clients.ariaEdit', {
+                                name: clientFullName(client) || t('clients.clientFallback'),
+                              })}
                               onClick={() => navigate(`/clients/${client.id}/edit`)}
                             >
                               <Icon name="pencil" />
@@ -545,8 +575,10 @@ export default function Clients() {
                             <button
                               type="button"
                               className="icon-btn icon-btn--danger"
-                              title="Delete client"
-                              aria-label={`Delete ${clientFullName(client) || 'client'}`}
+                              title={t('clients.deleteClientAction')}
+                              aria-label={t('clients.ariaDelete', {
+                                name: clientFullName(client) || t('clients.clientFallback'),
+                              })}
                               onClick={() => setDeleteTarget(client)}
                             >
                               <Icon name="trash" />
@@ -564,36 +596,37 @@ export default function Clients() {
       )}
 
       <p className="history-note">
-        Paid and remaining amounts are always read live from the invoice system — no payment
-        data is stored in the client record.
+        {t('clients.invoiceNote')}
       </p>
 
       {invoiceOwner && (
         <Modal
-          title={`Invoices — ${clientFullName(invoiceOwner) || 'Client'}`}
+          title={t('clients.invoicesModalTitle', {
+            name: clientFullName(invoiceOwner) || t('clients.client'),
+          })}
           onClose={() => setInvoiceOwner(null)}
           actions={
             <button type="button" className="btn btn--primary" onClick={() => setInvoiceOwner(null)}>
-              Close
+              {t('common.close')}
             </button>
           }
         >
           {ownerRows.length === 0 ? (
             <div className="cd-empty">
-              No invoice has been created for this client yet.
+              {t('clients.noInvoiceBody1')}
               <br />
-              Create one in the Invoice System using passport number{' '}
+              {t('clients.noInvoiceBody2')}{' '}
               <strong>{invoiceOwner.passport || '—'}</strong>.
             </div>
           ) : (
             <table className="cl-modal-inv">
               <thead>
                 <tr>
-                  <th>Invoice No.</th>
-                  <th>Date</th>
-                  <th>Total</th>
-                  <th>Paid</th>
-                  <th>Remaining</th>
+                  <th>{t('clients.invoiceNo')}</th>
+                  <th>{t('clients.date')}</th>
+                  <th>{t('common.total')}</th>
+                  <th>{t('clients.paid')}</th>
+                  <th>{t('clients.remaining')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -614,7 +647,7 @@ export default function Clients() {
 
       {deleteTarget && !authPrompt && (
         <Modal
-          title="Delete client?"
+          title={t('clients.deleteConfirmTitle')}
           danger
           onClose={() => setDeleteTarget(null)}
           actions={
@@ -624,27 +657,26 @@ export default function Clients() {
                 className="btn btn--neutral"
                 onClick={() => setDeleteTarget(null)}
               >
-                Cancel
+                {t('common.cancel')}
               </button>
               <button type="button" className="btn btn--danger" onClick={() => setAuthPrompt(true)}>
-                Delete Client
+                {t('clients.deleteClientBtn')}
               </button>
             </>
           }
         >
           <p>
-            This permanently removes <strong>{clientFullName(deleteTarget)}</strong>, their uploaded
-            documents and the stored PDF. Invoice records are not affected. This cannot be undone.
+            {t('clients.deleteListBody1')}{' '}
+            <strong>{clientFullName(deleteTarget)}</strong>
+            {t('clients.deleteListBody2')}
           </p>
         </Modal>
       )}
 
       {deleteTarget && authPrompt && (
         <ConfirmAuthModal
-          title="Confirm your identity"
-          reason={`Enter your account credentials to permanently delete ${clientFullName(
-            deleteTarget
-          )} and their documents.`}
+          title={t('clients.confirmIdentity')}
+          reason={t('clients.deleteReason', { name: clientFullName(deleteTarget) })}
           onCancel={() => setAuthPrompt(false)}
           onConfirm={performDelete}
           onSuccess={() => {
@@ -671,7 +703,12 @@ export default function Clients() {
       )}
 
       <Can perm="page:clients.new">
-        <Link to="/clients/new" className="fab" title="New client" aria-label="New client">
+        <Link
+          to="/clients/new"
+          className="fab"
+          title={t('clients.newClientLabel')}
+          aria-label={t('clients.newClientLabel')}
+        >
           <Icon name="plus" />
         </Link>
       </Can>

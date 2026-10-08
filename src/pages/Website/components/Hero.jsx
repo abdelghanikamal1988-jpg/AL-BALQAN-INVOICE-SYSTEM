@@ -1,4 +1,8 @@
+import { useLang } from '../../../context/LangContext.jsx';
+
 export default function Hero() {
+  const { t } = useLang();
+
   return (
     <section className="ws-hero" id="home">
       <div className="ws-hero__bg">
@@ -7,16 +11,14 @@ export default function Hero() {
       </div>
       <div className="ws-hero__bottom-fade" />
       <div className="ws-hero__content">
-        <p className="ws-hero__subtitle">YOUR GATEWAY TO</p>
-        <h1 className="ws-hero__title">BALKANS</h1>
+        <p className="ws-hero__subtitle">{t('website.hero.subtitle')}</p>
+        <h1 className="ws-hero__title">{t('website.hero.title')}</h1>
         <p className="ws-hero__desc">
-          Government-approved European residency, business establishment,
-          work contracts, and bespoke travel advisory for distinguished
-          individuals and corporations from the UAE.
+          {t('website.hero.desc')}
         </p>
         <div className="ws-hero__actions">
-          <a href="#contact" className="ws-btn ws-btn--white">Request a Consultation</a>
-          <a href="#countries" className="ws-btn ws-btn--white">Explore our Countries</a>
+          <a href="#contact" className="ws-btn ws-btn--white">{t('website.hero.ctaConsult')}</a>
+          <a href="#countries" className="ws-btn ws-btn--white">{t('website.hero.ctaCountries')}</a>
         </div>
       </div>
     </section>

@@ -444,7 +444,7 @@ button {
 }
 
 .statc__tile--slate {
-  background: #EEF1F0;
+  background: var(--pill);
   color: var(--muted);
 }
 
@@ -483,7 +483,7 @@ button {
 
 .fab {
   position: fixed;
-  right: 22px;
+  inset-inline-end: 22px;
   bottom: 22px;
   z-index: 350;
   width: 44px;
@@ -585,7 +585,7 @@ button {
 
 .field input::placeholder,
 .field textarea::placeholder {
-  color: #9AA1A6;
+  color: var(--faint);
 }
 
 .field textarea {
@@ -705,7 +705,7 @@ button {
 .toast-container {
   position: fixed;
   top: 16px;
-  right: 16px;
+  inset-inline-end: 16px;
   z-index: 1200;
   display: flex;
   flex-direction: column;
@@ -721,7 +721,7 @@ button {
   gap: 10px;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-left: 4px solid var(--brand);
+  border-inline-start: 4px solid var(--brand);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-lg);
   padding: 12px 14px;
@@ -730,15 +730,15 @@ button {
 }
 
 .toast--success {
-  border-left-color: var(--brand);
+  border-inline-start-color: var(--brand);
 }
 
 .toast--error {
-  border-left-color: var(--danger);
+  border-inline-start-color: var(--danger);
 }
 
 .toast--info {
-  border-left-color: #F59E0B;
+  border-inline-start-color: #F59E0B;
 }
 
 .toast__msg {
@@ -954,7 +954,7 @@ button {
 /* ---------- Header approval bell ---------- */
 
 .app-header__right {
-  margin-left: auto;
+  margin-inline-start: auto;
   display: flex;
   align-items: center;
   gap: 4px;
@@ -997,7 +997,7 @@ button {
 .app-header__bell-count {
   position: absolute;
   top: -3px;
-  right: -5px;
+  inset-inline-end: -5px;
   min-width: 17px;
   height: 17px;
   padding: 0 4px;
@@ -1071,7 +1071,7 @@ button {
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.05em;
-  text-align: left;
+  text-align: start;
   text-transform: uppercase;
 }
 
@@ -1314,8 +1314,8 @@ button {
 .dropdown-menu {
   position: absolute;
   top: calc(100% + 8px);
-  right: 0;
-  left: auto;
+  inset-inline-end: 0;
+  inset-inline-start: auto;
   min-width: 208px;
   padding: 6px;
   background: var(--surface);
@@ -1339,7 +1339,7 @@ button {
   font-family: inherit;
   font-size: 13.5px;
   font-weight: 500;
-  text-align: left;
+  text-align: start;
   text-decoration: none;
   cursor: pointer;
 }
@@ -1419,7 +1419,7 @@ button {
   align-items: flex-start;
   min-width: 0;
   line-height: 1.15;
-  text-align: left;
+  text-align: start;
 }
 
 @media (min-width: 1024px) {
@@ -1506,7 +1506,7 @@ button {
 }
 
 .searchbar input::placeholder {
-  color: #9AA1A6;
+  color: var(--faint);
 }
 
 .searchbar__clear {
@@ -1536,7 +1536,7 @@ button {
 
 .topsearch__addon {
   position: absolute;
-  left: 14px;
+  inset-inline-start: 14px;
   top: 50%;
   transform: translateY(-50%);
   display: flex;
@@ -1548,7 +1548,8 @@ button {
   width: 18rem;
   max-width: 100%;
   height: 40px;
-  padding: 0 46px 0 40px;
+  padding-block: 0;
+  padding-inline: 40px 46px;
   border: 1px solid var(--border);
   border-radius: 999px;
   background: var(--ground);
@@ -1578,7 +1579,7 @@ button {
 
 .topsearch__hint {
   position: absolute;
-  right: 13px;
+  inset-inline-end: 13px;
   top: 50%;
   transform: translateY(-50%);
   font-family: var(--font-mono);
@@ -1595,7 +1596,7 @@ button {
 .topsearch__panel {
   position: absolute;
   top: calc(100% + 8px);
-  left: 0;
+  inset-inline-start: 0;
   width: min(30rem, calc(100vw - 2rem));
   max-height: min(24rem, 70vh);
   overflow-y: auto;
@@ -1635,7 +1636,7 @@ button {
   border-radius: var(--radius-sm);
   background: none;
   font-family: inherit;
-  text-align: left;
+  text-align: start;
   cursor: pointer;
 }
 
@@ -1672,7 +1673,7 @@ button {
   border: 1px solid var(--border);
   border-radius: 4px;
   padding: 0 4px;
-  margin-right: 3px;
+  margin-inline-end: 3px;
 }
 
 .topsearch__status {
@@ -1750,7 +1751,7 @@ button {
   width: 100%;
   padding: 28px 24px 24px;
   overflow: hidden;
-  text-align: left;
+  text-align: start;
   background: #1f2937;
   border: none;
   border-radius: 16px;
@@ -1768,8 +1769,8 @@ button {
 .login-card__strip {
   position: absolute;
   top: 0;
-  left: 0;
-  right: 0;
+  inset-inline-start: 0;
+  inset-inline-end: 0;
   height: 4px;
   background: linear-gradient(90deg, #22c55e, #86efac);
 }
@@ -1815,7 +1816,7 @@ button {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  text-align: left;
+  text-align: start;
 }
 
 .login-form .btn--block {
@@ -1994,8 +1995,8 @@ button {
   }
 
   .toast-container {
-    left: 16px;
-    right: 16px;
+    inset-inline-start: 16px;
+    inset-inline-end: 16px;
     max-width: none;
   }
 
@@ -2028,4 +2029,180 @@ button {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* ============================================================
+   THEME: dark palette (html[data-theme="dark"] beats :root
+   regardless of stylesheet order — attribute + element = 0,1,1).
+   ============================================================ */
+
+html[data-theme='dark'] {
+  color-scheme: dark;
+  --brand: #22c55e;
+  --brand-strong: #4ade80;
+  --brand-tint: rgba(34, 197, 94, 0.14);
+  --brand-soft: #16351f;
+  --brand-ring: rgba(34, 197, 94, 0.24);
+  --primary: #e9ecea;
+  --primary-dark: #ffffff;
+  --primary-darker: #ffffff;
+  --secondary: #d5af34;
+  --secondary-dark: #e5c255;
+  --ground: #0d1012;
+  --background: #13171a;
+  --surface: #171b1e;
+  --text: #e9ecea;
+  --muted: #a3aca8;
+  --faint: #7a827e;
+  --border: #272d31;
+  --line: #272d31;
+  --line-soft: #20262a;
+  --ink: #e9ecea;
+  --mist: #1d2226;
+  --pill: #222829;
+  --hover: #1e2428;
+  --success: #4ade80;
+  --warning: #fb923c;
+  --danger: #f87171;
+  --purple: #c084fc;
+  --card-border: 1px solid rgba(255, 255, 255, 0.08);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.45), 0 12px 24px -16px rgba(0, 0, 0, 0.7);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.45);
+  --shadow-md: 0 6px 18px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.6);
+}
+
+/* Fixed surfaces that must keep paper-white semantics (document
+   sheets, print output) re-declare light tokens in their own scope. */
+
+/* ---------- Header: language toggle (text button, 40x40) ---------- */
+
+.app-header__tool--lang {
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* ---------- Arabic typography ---------- */
+
+html[lang='ar'] body,
+html[lang='ar'] input,
+html[lang='ar'] textarea,
+html[lang='ar'] select,
+html[lang='ar'] button {
+  font-family: 'Inter', 'Segoe UI', Tahoma, 'Noto Sans Arabic', Arial, sans-serif;
+}
+
+html[lang='ar'] {
+  letter-spacing: normal;
+}
+
+/* ============================================================
+   THEME: dark — light-only hardcoded colors the token block above
+   cannot reach (pastel chips, tinted borders, cream callouts).
+   Every rule is scoped to html[data-theme='dark'] so the light
+   palette stays exactly as designed. Print + login-gate rules are
+   intentionally untouched (paper-white / already dark).
+   ============================================================ */
+
+/* Hover borders tuned against a white page. */
+html[data-theme='dark'] .crumbs a:hover {
+  border-color: rgba(34, 197, 94, 0.45);
+}
+
+html[data-theme='dark'] .btn--secondary:hover:not(:disabled),
+html[data-theme='dark'] .btn--neutral:hover:not(:disabled) {
+  border-color: #3d464b;
+}
+
+html[data-theme='dark'] .btn--danger {
+  border-color: rgba(248, 113, 113, 0.38);
+}
+
+/* --brand-strong flips to a light green in dark, so filled states
+   need dark ink instead of white to keep their contrast. */
+html[data-theme='dark'] .btn--primary:hover:not(:disabled),
+html[data-theme='dark'] .fab:hover,
+html[data-theme='dark'] .app-header__cta:hover {
+  color: #06210f;
+}
+
+html[data-theme='dark'] .btn--danger:hover:not(:disabled) {
+  color: #2b0d0d;
+}
+
+/* Pastel stat tiles → darkened backgrounds + lightened hues. */
+html[data-theme='dark'] .statc__tile--amber {
+  background: rgba(251, 146, 60, 0.16);
+  color: #fdba74;
+}
+
+html[data-theme='dark'] .statc__tile--red {
+  background: rgba(248, 113, 113, 0.14);
+  color: #fca5a5;
+}
+
+html[data-theme='dark'] .statc__tile--purple {
+  background: rgba(192, 132, 252, 0.16);
+  color: #d8b4fe;
+}
+
+html[data-theme='dark'] .statc__chev {
+  color: #454e53;
+}
+
+/* Status badges keep their hue, lose the paper background. */
+html[data-theme='dark'] .badge--unpaid {
+  background: rgba(248, 113, 113, 0.14);
+  color: #fca5a5;
+}
+
+html[data-theme='dark'] .badge--partial {
+  background: rgba(251, 146, 60, 0.16);
+  color: #fdba74;
+}
+
+html[data-theme='dark'] .icon-btn--danger:hover {
+  background: rgba(248, 113, 113, 0.16);
+  color: #fca5a5;
+}
+
+/* Pending-edit chips (amber / green / red paper tints). */
+html[data-theme='dark'] .pending-chip {
+  border-color: rgba(251, 146, 60, 0.42);
+  background: rgba(251, 146, 60, 0.12);
+}
+
+html[data-theme='dark'] .pending-chip:hover {
+  background: rgba(251, 146, 60, 0.2);
+}
+
+html[data-theme='dark'] .pending-chip--approved {
+  border-color: rgba(74, 222, 128, 0.4);
+}
+
+html[data-theme='dark'] .pending-chip--approved:hover {
+  background: rgba(34, 197, 94, 0.16);
+}
+
+html[data-theme='dark'] .pending-chip--rejected {
+  border-color: rgba(248, 113, 113, 0.4);
+  background: rgba(248, 113, 113, 0.12);
+}
+
+html[data-theme='dark'] .pending-chip--rejected:hover {
+  background: rgba(248, 113, 113, 0.16);
+}
+
+/* Dashboard approval banner (cream callout). */
+html[data-theme='dark'] .db-approval {
+  border-color: rgba(251, 146, 60, 0.32);
+  background: rgba(251, 146, 60, 0.1);
+}
+
+/* Native date/time pickers follow the theme, not a forced light UI. */
+html[data-theme='dark'] .field input[type='date'],
+html[data-theme='dark'] .field input[type='time'],
+html[data-theme='dark'] .field input[type='month'] {
+  color-scheme: dark;
 }

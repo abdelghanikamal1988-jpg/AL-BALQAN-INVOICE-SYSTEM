@@ -1,0 +1,40 @@
+/**
+ * Shared vocabulary used across pages: generic actions,
+ * client statuses, common empty states.
+ */
+
+export default {
+  'common.save': 'Save',
+  'common.saving': 'Saving…',
+  'common.cancel': 'Cancel',
+  'common.close': 'Close',
+  'common.delete': 'Delete',
+  'common.edit': 'Edit',
+  'common.search': 'Search',
+  'common.back': 'Back',
+  'common.next': 'Next',
+  'common.confirm': 'Confirm',
+  'common.loading': 'Loading…',
+  'common.retry': 'Retry',
+  'common.yes': 'Yes',
+  'common.no': 'No',
+  'common.none': 'None',
+  'common.all': 'All',
+  'common.actions': 'Actions',
+  'common.status': 'Status',
+  'common.total': 'Total',
+  'common.print': 'Print',
+  'common.download': 'Download',
+  'common.upload': 'Upload',
+  'common.optional': 'Optional',
+  'common.required': 'Required',
+  'common.unknown': 'Unknown',
+  'common.of': 'of',
+
+  'status.NEW': 'NEW',
+  'status.DOCUMENTS': 'DOCUMENTS SUBMITTED',
+  'status.SUBMITTED': 'SUBMITTED',
+  'status.UNDER_REVIEW': 'UNDER REVIEW',
+  'status.APPROVED': 'APPROVED',
+  'status.REJECTED': 'REJECTED',
+};

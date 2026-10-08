@@ -10,6 +10,12 @@
   --cl-line: #EEF1EF;
 }
 
+/* component vars follow the theme (scoped: 0,2,1 beats .clients-page) */
+html[data-theme='dark'] .clients-page {
+  --cl-tile: #1d2226;
+  --cl-line: #272d31;
+}
+
 /* ------------------------------ page header ------------------------------ */
 
 .clients-page .page-header {
@@ -90,14 +96,19 @@
 }
 
 .clients-page .cl-toolbar__reset {
-  margin-left: auto;
+  margin-inline-start: auto;
 }
 
 .clients-page #client-search {
-  padding-left: 36px;
+  padding-inline-start: 36px;
   background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236a6a6a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: 12px center;
+}
+
+/* background-position has no logical keywords — mirror it manually */
+html[dir='rtl'] .clients-page #client-search {
+  background-position: right 12px center;
 }
 
 .clients-page .field input,
@@ -151,7 +162,7 @@
 }
 
 .cl-table th {
-  text-align: left;
+  text-align: start;
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
@@ -385,7 +396,7 @@
 .cf-req {
   color: var(--danger);
   font-weight: 800;
-  margin-left: 2px;
+  margin-inline-start: 2px;
 }
 
 .clients-page .cf-grid .field__error {
@@ -578,7 +589,7 @@
 .cd-item {
   background: var(--cl-tile);
   border: 1px solid var(--cl-line);
-  border-left: 3px solid var(--cl-accent);
+  border-inline-start: 3px solid var(--cl-accent);
   border-radius: 8px;
   padding: 10px 12px;
 }
@@ -737,7 +748,7 @@
 .cl-modal-inv td {
   padding: 9px 10px;
   border-bottom: 1px solid var(--cl-line);
-  text-align: left;
+  text-align: start;
 }
 
 .cl-modal-inv th {
@@ -772,9 +783,9 @@
   display: flex;
   gap: 10px;
   align-items: flex-start;
-  background: #FAFBFA;
+  background: var(--hover);
   border: 1px solid var(--cl-line);
-  border-left: 4px solid var(--cl-accent);
+  border-inline-start: 4px solid var(--cl-accent);
   border-radius: var(--radius-md);
   padding: 12px 16px;
   font-size: 13px;
@@ -821,4 +832,71 @@
   .clients-page .page-header h1 {
     font-size: 21px;
   }
+}
+
+/* ============================================================
+   DARK THEME — scoped overrides (this sheet loads BEFORE
+   global.css, so plain selectors lose ties: each rule below is
+   html[data-theme='dark'] + class = 0,2,1 > global's 0,1,1).
+   Token-driven chrome (--surface/--text/--border/--cl-tile/…)
+   flips on its own and is intentionally not repeated.
+   ============================================================ */
+
+html[data-theme='dark'] .clients-page .field--error input,
+html[data-theme='dark'] .clients-page .field--error select {
+  box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.22);
+}
+
+html[data-theme='dark'] .clients-page .cl-table .btn--secondary {
+  background: var(--pill);
+}
+
+html[data-theme='dark'] .clients-page .cl-table .btn--secondary:hover {
+  background: var(--border);
+}
+
+html[data-theme='dark'] .clients-page .cl-table .btn--neutral:hover {
+  background: var(--hover);
+}
+
+/* --danger inverts to a light red in dark: invert the label too */
+html[data-theme='dark'] .clients-page .cl-table .btn--danger:hover {
+  color: var(--ground);
+}
+
+/* --ink inverts in dark, so the badge needs dark text */
+html[data-theme='dark'] .cbadge--new {
+  color: var(--ground);
+}
+
+html[data-theme='dark'] .cbadge--docs {
+  background: rgba(250, 204, 21, 0.14);
+  color: #fde68a;
+}
+
+html[data-theme='dark'] .cbadge--review {
+  background: rgba(192, 132, 252, 0.16);
+  color: #d8b4fe;
+}
+
+html[data-theme='dark'] .cbadge--rejected {
+  background: rgba(248, 113, 113, 0.16);
+}
+
+html[data-theme='dark'] .cf-doc {
+  background: var(--mist);
+  border-color: var(--border);
+}
+
+html[data-theme='dark'] .cf-doc:hover {
+  background: var(--brand-tint);
+}
+
+html[data-theme='dark'] .cf-doc__label {
+  background: var(--pill);
+  border-color: var(--border);
+}
+
+html[data-theme='dark'] .cd-photo {
+  border-color: var(--border);
 }

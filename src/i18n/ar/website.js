@@ -1,0 +1,151 @@
+﻿/**
+ * الملف التسويقي العام (/website) — النسخة العربية.
+ * كل مفتاح مُسبوق بـ `website.` ومطابق لـ ../en/website.js.
+ */
+
+export default {
+  'website.brand': 'AL BALQAN',
+
+  /* شريط التنقل */
+  'website.nav.home': 'الرئيسية',
+  'website.nav.about': 'من نحن',
+  'website.nav.services': 'الخدمات',
+  'website.nav.countries': 'الدول',
+  'website.nav.contact': 'تواصل معنا',
+  'website.nav.menuToggle': 'فتح/إغلاق القائمة',
+
+  /* البطل */
+  'website.hero.subtitle': 'بوابتك إلى',
+  'website.hero.title': 'البلقان',
+  'website.hero.desc': 'إقامة أوروبية معتمدة حكوميًا، وتأسيس شركات، وعقود عمل، واستشارات سفر مخصّصة للأفراد والشركات المميّزين من دولة الإمارات العربية المتحدة.',
+  'website.hero.ctaConsult': 'اطلب استشارة',
+  'website.hero.ctaCountries': 'استكشف دولنا',
+
+  /* مشترك */
+  'website.explore': 'استكشف',
+
+  /* الخدمات */
+  'website.services.title': 'خدماتنا',
+  'website.services.s1.title': 'تأشيرة سياحية',
+  'website.services.s1.desc': 'مساعدة احترافية في طلبات التأشيرة السياحية وإعداد المستندات ومعالجة الطلبات إلى وجهات بلقانية مختارة.',
+  'website.services.s2.title': 'إقامة المستثمرين',
+  'website.services.s2.desc': 'اكتشف فرص الإقامة من خلال تأسيس الشركات وحلول الاستثمار في دول بلقانية مختارة.',
+  'website.services.s3.title': 'عقود العمل والإقامة',
+  'website.services.s3.desc': 'المساعدة في إجراءات عقود العمل والإقامة للأفراد الباحثين عن فرص مهنية في دول البلقان.',
+
+  /* الوجهات */
+  'website.destinations.title': 'الوجهات',
+  'website.destinations.subtitle': 'اكتشف دول البلقان',
+  'website.destinations.d1.name': 'ألبانيا',
+  'website.destinations.d1.desc': 'بوابة ساحلية لفرص الاستثمار في البلقان',
+  'website.destinations.d2.name': 'كوسوفو',
+  'website.destinations.d2.desc': 'سوق ناشئة ذات إمكانات عمل سريعة النمو',
+  'website.destinations.d3.name': 'الجبل الأسود',
+  'website.destinations.d3.desc': 'مركز أدرياتيكي للإقامة والسياحة',
+  'website.destinations.d4.name': 'مقدونيا الشمالية',
+  'website.destinations.d4.desc': 'تقاطع استراتيجي للوصول إلى التجارة الإقليمية',
+  'website.destinations.d5.name': 'صربيا',
+  'website.destinations.d5.desc': 'قوة فاعلة في الأعمال والاستثمار',
+
+  /* لماذا AL BALQAN */
+  'website.why.title': 'الأسس المؤسسية',
+  'website.why.subtitle': 'لماذا AL BALQAN',
+  'website.why.f1.title': 'خبرة فريق تتجاوز 20 عامًا',
+  'website.why.f1.desc': 'ضباط قنصليون ومحامون مرخّصون ومديرون لعمليات توطين الشركات، يجمعون عشرين عامًا من التنفيذ الميداني الراسخ.',
+  'website.why.f2.title': 'خدمات متكاملة',
+  'website.why.f2.desc': 'حلول شاملة تشمل التأشيرات، وإحاطة افتتاح الحسابات البنكية، وتصديقات الموثق، وإصدار الهوية الضريبية، ومراجعة العقارات.',
+  'website.why.f3.title': 'تخصص يركّز على البلقان',
+  'website.why.f3.desc': 'تركيز تخصصي عالٍ حصريًا على دول البلقان الخمس بدلًا من خدمات عامة متناثرة على مستوى العالم.',
+  'website.why.f4.title': 'حلول للأسرة',
+  'website.why.f4.desc': 'تكامل متماسك للأفراد التابعين يضمن موافقات الالتحاق بالمدارس، والتغطية الصحية الأوروبية، ودورات موحّدة لتجديد الإقامة.',
+  'website.why.f5.title': 'إرشاد شخصي',
+  'website.why.f5.desc': 'مدير حالات كبار مخصصون مقيمون في دبي وأبوظبي يضمنون مساءلة مباشرة من نقطة تواصل واحدة.',
+  'website.why.f6.title': 'سرية تامة',
+  'website.why.f6.desc': 'التزام مؤسسي بعدم الإفصاح، وبنية تحتية مشفرة لبيانات العملاء، وحرص لا يقبل المساومة لعملائنا من الأفراد.',
+
+  /* كيف تسير العملية */
+  'website.how.title': 'كيف تعمل الخدمة',
+  'website.how.subtitle': 'مسار واضح من الاستشارة حتى الإتمام',
+  'website.how.step1': 'الاستشارة',
+  'website.how.step2': 'إعداد المستندات',
+  'website.how.step3': 'تقديم الطلب ومعالجته',
+  'website.how.step4': 'إتمام التأشيرة / الإقامة',
+
+  /* الشركاء */
+  'website.partners.title': 'شركاؤنا',
+  'website.partners.subtitle': 'الجهات والمنظمات التي نعمل معها',
+  'website.partners.logoAlt': 'شريك {n}',
+
+  /* الاستشارة */
+  'website.consult.alert': 'شكرًا لك! سنتواصل معك خلال 24 ساعة عمل.',
+  'website.consult.sidebarTitle': 'ابدأ تقييم فرص تنقلاتك بين الدول',
+  'website.consult.sidebarDesc': 'أرسل ملفك للمراجعة. يتحقق مستشارونا التنفيذيون من معايير الأهلية في دول البلقان قبل جدولة الاستشارة الرسمية.',
+  'website.consult.f1.title': 'نافذة التقييم',
+  'website.consult.f1.desc': 'مراجعة مبدئية للأهلية خلال 24 ساعة عمل.',
+  'website.consult.f2.title': 'سرية تامة',
+  'website.consult.f2.desc': 'لا تُشارك أي بيانات مع وسطاء أطراف ثالثة. تخزين بيانات يلتزم بالكامل باللائحة التنظيمية في الإمارات.',
+  'website.consult.f3.title': 'دعم قنصلي مباشر',
+  'website.consult.f3.desc': 'advisory@albalqan.ae',
+  'website.consult.f3.phone': '+971 4 000 2026',
+  'website.consult.licenseTitle': 'رخصة الشركة',
+  'website.consult.licenseReg': 'السجل التجاري الإماراتي: 135961',
+  'website.consult.formTitle': 'اطلب استشارة',
+  'website.consult.formDesc': 'يرجى تعبئة جميع البيانات الإلزامية أدناه. إن الجنسية مطلوبة لتقييم بروتوكولات التأشيرات الثنائية.',
+  'website.consult.label.name': 'الاسم الكامل *',
+  'website.consult.label.email': 'البريد الإلكتروني *',
+  'website.consult.label.phone': 'رقم الهاتف (مع رمز الدولة) *',
+  'website.consult.label.nationality': 'الجنسية (إلزامية لتحديد الأهلية) *',
+  'website.consult.label.residence': 'دولة الإقامة *',
+  'website.consult.label.country': 'الدولة المفضلة *',
+  'website.consult.label.service': 'نوع الخدمة *',
+  'website.consult.label.details': 'تفاصيل الحالة أو الأهداف المطلوبة *',
+  'website.consult.ph.name': 'مثال: طارق المنصوري',
+  'website.consult.ph.email': 'مثال: t.almansoor@domin.ae',
+  'website.consult.ph.phone': '+971 50 000 0000',
+  'website.consult.ph.nationality': 'مثال: إماراتي، سعودي، بريطاني، مصري',
+  'website.consult.ph.residence': 'مثال: الإمارات العربية المتحدة',
+  'website.consult.ph.details': 'اذكر بإيجاز الجدول الزمني المطلوب، وأفراد الأسرة المعنيين، وأي أهداف محددة.',
+  'website.consult.selectDestination': 'اختر الوجهة',
+  'website.consult.selectPathway': 'اختر المسار',
+  'website.consult.opt.workContract': 'عقد عمل وإقامة',
+  'website.consult.consent': 'أوافق بموجب هذا على أن تقوم شركة AL BALQAN للسياحة وخدمات التأشيرات ذ.م.م بمعالجة بياناتي الشخصية بهدف التحقق من أهليتي وفق معايير حماية البيانات الفيدرالية في دولة الإمارات.',
+  'website.consult.submit': 'إرسال طلب الاستشارة',
+
+  /* الأسئلة الشائعة */
+  'website.faq.title': 'الوضوح التنظيمي',
+  'website.faq.subtitle': 'الأسئلة الشائعة',
+  'website.faq.q1': 'ما متطلبات التأشيرة العامة لمواطني الإمارات المقيمين الراغبين في الدخول إلى دول البلقان الغربية؟',
+  'website.faq.a1': 'تختلف المتطلبات من دولة إلى أخرى، لكنها تشمل عمومًا جوازًا ساريًا، وإثباتًا لمكان الإقامة، وتأمينًا على السفر، ووسائل مالية كافية. تواصل معنا لمعرفة المتطلبات الخاصة بجنسيةتك.',
+  'website.faq.q2': 'كيف تتم مراجعة عقود العمل وأذونات العمل ومصادقتها قانونيًا؟',
+  'website.faq.a2': 'نتعامل مباشرة مع الجهات الحكومية والجهات المعتمدة لضمان المصادقة القانونية على جميع العقود وملاءمتها لاشتراطات قانون العمل المحلي.',
+  'website.faq.q3': 'ما الحد الأدنى من الاستثمار اللازم للحصول على إقامة المستثمرين في دول البلقان الأوروبية؟',
+  'website.faq.a3': 'تختلف حدود الاستثمار من دولة إلى أخرى. تقدّم ألبانيا وكوسوفو من أكثر البرامج تنافسية في أوروبا. تواصل معنا لمعرفة المتطلبات الحالية.',
+  'website.faq.q4': 'ما المدة المعتادة للمعالجة من تقديم الملف حتى إصدار الإذن؟',
+  'website.faq.a4': 'تتراوح مدد المعالجة من أسبوعين إلى ثمانية أسابيع حسب الدولة ونوع الخدمة. ونزوّدك بتحديثات منتظمة طوال فترة المعالجة.',
+
+  /* التذييل */
+  'website.footer.about': 'خدمات سيادية رائدة عبر الحدود في التنقل والإقامة الذهبية والخدمات القنصلية التنفيذية، تربط دولة الإمارات العربية المتحدة بفرص ممرات البلقان.',
+  'website.footer.license': 'رخصة تجارية في الإمارات رقم 1359681',
+  'website.footer.colPortfolios': 'محفظة الممرات',
+  'website.footer.p1': 'إقامة ألبانيا',
+  'website.footer.p2': 'استثمار كوسوفو',
+  'website.footer.p3': 'التأشيرة الذهبية لصربيا',
+  'website.footer.p4': 'الشركات في الجبل الأسود',
+  'website.footer.p5': 'مسار مقدونيا الشمالية',
+  'website.footer.colServices': 'الخدمات التنفيذية',
+  'website.footer.s1': 'تأشيرات المستثمرين والتأشيرة الذهبية',
+  'website.footer.s2': 'إعادة توطين الشركات وفتح الفروع',
+  'website.footer.s3': 'معالجة تنفيذية متسارعة',
+  'website.footer.s4': 'استحواذ عقاري عبر الحدود',
+  'website.footer.s5': 'التصديق القنصلي وتصديق وزارة الخارجية',
+  'website.footer.colOffice': 'المكتب الرئيسي في الإمارات',
+  'website.footer.addr1': 'جزيرة المرية / طريق الشيخ زايد',
+  'website.footer.addr2': 'البرج التنفيذي، دبي وأبوظبي،',
+  'website.footer.addr3': 'الإمارات العربية المتحدة',
+  'website.footer.phone': '(+971) 4 000 2026 / (+971) 2 000 2026',
+  'website.footer.email': 'advisory@albalqan.ae',
+  'website.footer.copyright': '2026 شركة AL BALQAN للسياحة وخدمات التأشيرات ذ.م.م. جميع الحقوق محفوظة.',
+  'website.footer.privacy': 'سياسة الخصوصية',
+  'website.footer.terms': 'شروط الخدمة',
+  'website.footer.disclosures': 'الإفصاحات التنظيمية',
+};

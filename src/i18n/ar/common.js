@@ -1,0 +1,39 @@
+/**
+ * المعجم العربي — مفردات مشتركة بين الصفحات.
+ */
+
+export default {
+  'common.save': 'حفظ',
+  'common.saving': 'جارٍ الحفظ…',
+  'common.cancel': 'إلغاء',
+  'common.close': 'إغلاق',
+  'common.delete': 'حذف',
+  'common.edit': 'تعديل',
+  'common.search': 'بحث',
+  'common.back': 'رجوع',
+  'common.next': 'التالي',
+  'common.confirm': 'تأكيد',
+  'common.loading': 'جارٍ التحميل…',
+  'common.retry': 'إعادة المحاولة',
+  'common.yes': 'نعم',
+  'common.no': 'لا',
+  'common.none': 'لا يوجد',
+  'common.all': 'الكل',
+  'common.actions': 'إجراءات',
+  'common.status': 'الحالة',
+  'common.total': 'الإجمالي',
+  'common.print': 'طباعة',
+  'common.download': 'تنزيل',
+  'common.upload': 'رفع',
+  'common.optional': 'اختياري',
+  'common.required': 'مطلوب',
+  'common.unknown': 'غير معروف',
+  'common.of': 'من',
+
+  'status.NEW': 'جديد',
+  'status.DOCUMENTS': 'تم رفع المستندات',
+  'status.SUBMITTED': 'مُقدَّم',
+  'status.UNDER_REVIEW': 'قيد المراجعة',
+  'status.APPROVED': 'مقبول',
+  'status.REJECTED': 'مرفوض',
+};

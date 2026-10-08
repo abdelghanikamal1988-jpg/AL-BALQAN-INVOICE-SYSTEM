@@ -1,3 +1,5 @@
+import { useLang } from '../../../context/LangContext.jsx';
+
 const partners = [
   { id: 1, image: '/website-images/partner-1.jpg' },
   { id: 2, image: '/website-images/partner-2.jpg' },
@@ -10,15 +12,17 @@ const partners = [
 ];
 
 export default function Partners() {
+  const { t } = useLang();
+
   return (
     <section className="ws-partners">
-      <h2 className="ws-section-title">OUR PARTNERS</h2>
-      <p className="ws-section-subtitle">Entities & Organizations We Work With</p>
+      <h2 className="ws-section-title">{t('website.partners.title')}</h2>
+      <p className="ws-section-subtitle">{t('website.partners.subtitle')}</p>
       <div className="ws-partners__track">
         <div className="ws-partners__scroll">
           {[...partners, ...partners].map((p, i) => (
             <div key={i} className="ws-partner-logo">
-              <img src={p.image} alt={`Partner ${p.id}`} />
+              <img src={p.image} alt={t('website.partners.logoAlt', { n: p.id })} />
             </div>
           ))}
         </div>

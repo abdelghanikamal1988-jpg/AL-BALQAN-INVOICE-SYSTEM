@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Modal from '../Modal/Modal.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
+import { useLang } from '../../context/LangContext.jsx';
 import { supabase } from '../../lib/supabase.js';
 import { recordAccess } from '../../utils/accessLog.js';
 
@@ -13,14 +14,15 @@ import { recordAccess } from '../../utils/accessLog.js';
  * never switch user. On success the parent's confirm action runs.
  */
 export default function ConfirmAuthModal({
-  title = 'Confirm your identity',
+  title = 'shell.confirmIdentity',
   reason,
-  confirmLabel = 'Confirm & Delete',
+  confirmLabel = 'shell.confirmAndDelete',
   onCancel,
   onConfirm,
   onSuccess,
 }) {
   const { user } = useAuth();
+  const { t } = useLang();
   const signedIn = String(user?.email || '').trim().toLowerCase();
 
   const [email, setEmail] = useState(user?.email || '');
@@ -33,11 +35,11 @@ export default function ConfirmAuthModal({
     const mail = String(email || '').trim().toLowerCase();
 
     if (!mail || !password) {
-      setError('Enter your email and password.');
+      setError('shell.errEnterEmailPassword');
       return;
     }
     if (mail !== signedIn) {
-      setError('Enter the account you are signed in with.');
+      setError('shell.errEnterSignedInAccount');
       return;
     }
 
@@ -54,7 +56,7 @@ export default function ConfirmAuthModal({
           account: mail,
           details: 'Wrong password at confirmation prompt',
         });
-        setError('Incorrect email or password.');
+        setError('shell.errIncorrectCredentials');
         return;
       }
       recordAccess({
@@ -65,7 +67,7 @@ export default function ConfirmAuthModal({
       await onConfirm();
       onSuccess();
     } catch (err) {
-      setError((err && err.message) || 'Verification failed. Please try again.');
+      setError((err && err.message) || 'shell.errVerificationFailed');
     } finally {
       setBusy(false);
     }
@@ -83,7 +85,7 @@ export default function ConfirmAuthModal({
             onClick={onCancel}
             disabled={busy}
           >
-            Cancel
+            {t('shell.cancel')}
           </button>
           <button
             type="submit"
@@ -91,16 +93,16 @@ export default function ConfirmAuthModal({
             className="btn btn--danger"
             disabled={busy}
           >
-            {busy ? <span className="btn__spinner" aria-hidden="true" /> : confirmLabel}
+            {busy ? <span className="btn__spinner" aria-hidden="true" /> : t(confirmLabel)}
           </button>
         </>
       }
     >
       <form id="confirm-auth-form" className="confirm-auth" onSubmit={handleSubmit}>
-        <p className="confirm-auth__reason">{reason}</p>
+        <p className="confirm-auth__reason">{t(reason)}</p>
 
         <div className="field">
-          <label htmlFor="confirm-auth-email">Email</label>
+          <label htmlFor="confirm-auth-email">{t('shell.email')}</label>
           <input
             id="confirm-auth-email"
             type="email"
@@ -113,7 +115,7 @@ export default function ConfirmAuthModal({
         </div>
 
         <div className="field">
-          <label htmlFor="confirm-auth-password">Password</label>
+          <label htmlFor="confirm-auth-password">{t('shell.password')}</label>
           <input
             id="confirm-auth-password"
             type="password"
@@ -124,7 +126,7 @@ export default function ConfirmAuthModal({
           />
         </div>
 
-        {error && <span className="field__error confirm-auth__error">{error}</span>}
+        {error && <span className="field__error confirm-auth__error">{t(error)}</span>}
       </form>
     </Modal>
   );

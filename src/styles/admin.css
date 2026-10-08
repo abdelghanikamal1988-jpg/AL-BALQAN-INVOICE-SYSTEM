@@ -26,7 +26,7 @@
 }
 
 .au-table th {
-  text-align: left;
+  text-align: start;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -125,7 +125,7 @@
   height: 7px;
   border-radius: 50%;
   background: var(--brand);
-  margin-right: 6px;
+  margin-inline-end: 6px;
   vertical-align: 1px;
 }
 
@@ -141,11 +141,11 @@
 
 .au-actions {
   white-space: nowrap;
-  text-align: right;
+  text-align: end;
 }
 
 .au-actions .icon-btn + .icon-btn {
-  margin-left: 2px;
+  margin-inline-start: 2px;
 }
 
 /* ------------------------------- the form ------------------------------- */
@@ -311,7 +311,24 @@
   }
 
   .au-actions {
-    text-align: left;
+    text-align: start;
     flex-wrap: wrap;
   }
+}
+
+/* ============================================================
+   DARK THEME — scoped overrides (this sheet loads BEFORE
+   global.css, so plain selectors lose ties: each rule below is
+   html[data-theme='dark'] + class = 0,2,1 > global's 0,1,1).
+   Token-driven chrome (--pill/--text/--border/…) flips on its own.
+   ============================================================ */
+
+/* --ink inverts in dark (light text), so the chip needs dark text */
+html[data-theme='dark'] .au-chip--admin {
+  color: var(--ground);
+}
+
+html[data-theme='dark'] .au-chip--delegate {
+  background: rgba(250, 204, 21, 0.14);
+  color: #fde68a;
 }

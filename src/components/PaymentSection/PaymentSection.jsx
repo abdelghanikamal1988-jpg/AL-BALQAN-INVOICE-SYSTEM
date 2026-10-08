@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import Icon from '../Icons/Icon.jsx';
 import { formatNumber } from '../../utils/formatCurrency.js';
-import { calculatePayment, statusLabel, statusClass } from '../../utils/paymentCalculator.js';
+import { calculatePayment, statusClass } from '../../utils/paymentCalculator.js';
 import { calculateVat, VAT_MODE, VAT_RATE_LABEL } from '../../utils/vat.js';
+import { useLang } from '../../context/LangContext.jsx';
 
 export default function PaymentSection({ form, errors, onChange }) {
+  const { t } = useLang();
   const [totalInput, setTotalInput] = useState('');
   const [paidInput, setPaidInput] = useState('');
 
@@ -48,15 +50,15 @@ export default function PaymentSection({ form, errors, onChange }) {
   const hasVat = form.vatMode && form.vatMode !== VAT_MODE.NONE;
 
   return (
-    <section className="card" aria-label="Payment Details">
+    <section className="card" aria-label={t('invoice.paymentSection')}>
       <div className="card__header">
         <span className="card__icon" aria-hidden="true"><Icon name="card" /></span>
-        <h2>Payment Details</h2>
+        <h2>{t('invoice.paymentSection')}</h2>
       </div>
       <div className="card__body">
         <div className="form-grid">
           <div className={`field ${errors.total ? 'field--error' : ''}`}>
-            <label htmlFor="total">Total Service (AED) *</label>
+            <label htmlFor="total">{t('invoice.totalServiceLabel')}</label>
             <input
               id="total"
               type="number"
@@ -72,7 +74,7 @@ export default function PaymentSection({ form, errors, onChange }) {
           </div>
 
           <div className={`field ${paidExceeds ? 'field--error' : ''}`}>
-            <label htmlFor="paid">Amount Paid (AED)</label>
+            <label htmlFor="paid">{t('invoice.amountPaidLabel')}</label>
             <input
               id="paid"
               type="number"
@@ -86,14 +88,14 @@ export default function PaymentSection({ form, errors, onChange }) {
             />
             {paidExceeds && (
               <span className="field__error">
-                Paid amount cannot be greater than the total.
+                {t('invoice.errPaidExceeds')}
               </span>
             )}
           </div>
         </div>
 
         <fieldset className="field vat-fieldset">
-          <legend className="field__legend">VAT (UAE · {VAT_RATE_LABEL})</legend>
+          <legend className="field__legend">{t('invoice.vatLegend', { rate: VAT_RATE_LABEL })}</legend>
           <div className="vat-options">
             <label className="vat-option">
               <input
@@ -103,7 +105,7 @@ export default function PaymentSection({ form, errors, onChange }) {
                 checked={form.vatMode === VAT_MODE.NONE}
                 onChange={() => setVatMode(VAT_MODE.NONE)}
               />
-              <span>No VAT</span>
+              <span>{t('invoice.vatNone')}</span>
             </label>
             <label className="vat-option">
               <input
@@ -113,7 +115,7 @@ export default function PaymentSection({ form, errors, onChange }) {
                 checked={form.vatMode === VAT_MODE.INCLUDED}
                 onChange={() => setVatMode(VAT_MODE.INCLUDED)}
               />
-              <span>Included in total</span>
+              <span>{t('invoice.vatIncluded')}</span>
             </label>
             <label className="vat-option">
               <input
@@ -123,16 +125,16 @@ export default function PaymentSection({ form, errors, onChange }) {
                 checked={form.vatMode === VAT_MODE.EXCLUDED}
                 onChange={() => setVatMode(VAT_MODE.EXCLUDED)}
               />
-              <span>Added on top</span>
+              <span>{t('invoice.vatExcluded')}</span>
             </label>
           </div>
           <span className="field__hint">
             {form.vatMode === VAT_MODE.INCLUDED &&
-              'The total you entered already includes VAT.'}
+              t('invoice.vatHintIncluded')}
             {form.vatMode === VAT_MODE.EXCLUDED &&
-              'VAT is added on top of the total you entered.'}
+              t('invoice.vatHintExcluded')}
             {(!form.vatMode || form.vatMode === VAT_MODE.NONE) &&
-              'No value added tax is applied.'}
+              t('invoice.vatHintNone')}
           </span>
         </fieldset>
 
@@ -140,26 +142,26 @@ export default function PaymentSection({ form, errors, onChange }) {
           {hasVat && (
             <>
               <div className="payment-summary__row">
-                <span>Subtotal</span>
+                <span>{t('invoice.subtotal')}</span>
                 <strong>AED {formatNumber(vat.subtotal)}</strong>
               </div>
               <div className="payment-summary__row">
-                <span>VAT ({VAT_RATE_LABEL})</span>
+                <span>{t('invoice.vatRate', { rate: VAT_RATE_LABEL })}</span>
                 <strong>AED {formatNumber(vat.vat)}</strong>
               </div>
             </>
           )}
           <div className="payment-summary__row">
-            <span>Total</span>
+            <span>{t('common.total')}</span>
             <strong>AED {formatNumber(vat.grandTotal)}</strong>
           </div>
           <div className="payment-summary__row">
-            <span>Remaining Balance</span>
+            <span>{t('invoice.remainingBalance')}</span>
             <strong>AED {formatNumber(calc.remaining)}</strong>
           </div>
           <div className="payment-summary__row payment-summary__row--status">
-            <span>Status</span>
-            <span className={`badge ${statusClass(calc.status)}`}>{statusLabel(calc.status)}</span>
+            <span>{t('common.status')}</span>
+            <span className={`badge ${statusClass(calc.status)}`}>{t('invoice.status.' + calc.status)}</span>
           </div>
         </div>
       </div>

@@ -15,13 +15,27 @@ import { CLIENT_STATUSES } from '../../data/clientStatuses.js';
 import { useToast } from '../../components/Toast/ToastProvider.jsx';
 import { usePendingApprovals } from '../../context/PendingApprovalsContext.jsx';
 import Can from '../../components/Can/Can.jsx';
+import { useLang } from '../../context/LangContext.jsx';
 
 const round2 = (n) => Math.round(Number(n || 0) * 100) / 100;
 
-function greetingFor(user) {
+const STATUS_I18N = {
+  NEW: 'status.NEW',
+  'DOCUMENTS SUBMITTED': 'status.DOCUMENTS',
+  SUBMITTED: 'status.SUBMITTED',
+  'UNDER REVIEW': 'status.UNDER_REVIEW',
+  APPROVED: 'status.APPROVED',
+  REJECTED: 'status.REJECTED',
+};
+
+function statusLabel(raw, t) {
+  return t(STATUS_I18N[raw] || raw);
+}
+
+function greetingFor(user, t) {
   const label = (user?.email || '').split('@')[0].replace(/[._-]+/g, ' ').trim();
   const hour = new Date().getHours();
-  const part = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
+  const part = hour < 12 ? t('dashboard.greeting.morning') : hour < 18 ? t('dashboard.greeting.afternoon') : t('dashboard.greeting.evening');
   return label ? `${part}, ${label}` : part;
 }
 
@@ -71,6 +85,7 @@ function smoothPath(pts) {
 }
 
 function BarsChart({ labels, values }) {
+  const { t } = useLang();
   const [pin, setPin] = useState(null);
   const step = axisStep(Math.max(0, ...values), 'count');
   const max = step * 4 || 1;
@@ -99,7 +114,7 @@ function BarsChart({ labels, values }) {
                 key={`${labels[i]}-${i}`}
                 role="button"
                 tabIndex={0}
-                aria-label={`${labels[i]}: ${v} invoices`}
+                aria-label={`${labels[i]}: ${v === 1 ? t('dashboard.tip.invoice', { v }) : t('dashboard.tip.invoices', { v })}`}
                 onClick={toggle}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
@@ -116,7 +131,7 @@ function BarsChart({ labels, values }) {
                   <b>{labels[i]}</b>
                   <span className="db-tip__row">
                     <i className="db-fig__dot" aria-hidden="true" />
-                    {v} invoice{v === 1 ? '' : 's'}
+                    {v === 1 ? t('dashboard.tip.invoice', { v }) : t('dashboard.tip.invoices', { v })}
                   </span>
                 </div>
               </div>
@@ -134,6 +149,7 @@ function BarsChart({ labels, values }) {
 }
 
 function LineChart({ labels, invoiced, paid }) {
+  const { t } = useLang();
   const [pin, setPin] = useState(null);
   const step = axisStep(Math.max(0, ...invoiced, ...paid), 'money');
   const max = step * 4 || 1;
@@ -164,7 +180,7 @@ function LineChart({ labels, invoiced, paid }) {
           viewBox="0 0 100 100"
           preserveAspectRatio="none"
           role="img"
-          aria-label="Invoiced versus paid per month, last 6 months"
+          aria-label={t('dashboard.a11y.lineChart')}
         >
           <defs>
             <linearGradient id="dbLineFill" x1="0" y1="0" x2="0" y2="1">
@@ -203,7 +219,7 @@ function LineChart({ labels, invoiced, paid }) {
                 key={l}
                 role="button"
                 tabIndex={0}
-                aria-label={`${l}: invoiced ${formatCurrency(invoiced[i])}, paid ${formatCurrency(paid[i])}`}
+                aria-label={t('dashboard.a11y.lineHit', { label: l, invoiced: formatCurrency(invoiced[i]), paid: formatCurrency(paid[i]) })}
                 onClick={toggle}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
@@ -216,14 +232,14 @@ function LineChart({ labels, invoiced, paid }) {
                   <b>{l}</b>
                   <span className="db-tip__row">
                     <i className="db-fig__dot" aria-hidden="true" />
-                    Invoiced {formatCurrency(invoiced[i])}
+                    {t('dashboard.tip.invoiced', { v: formatCurrency(invoiced[i]) })}
                   </span>
                   <span className="db-tip__row">
                     <i className="db-fig__dot db-fig__dot--amber" aria-hidden="true" />
-                    Paid {formatCurrency(paid[i])}
+                    {t('dashboard.tip.paid', { v: formatCurrency(paid[i]) })}
                   </span>
                   <span className="db-tip__row db-tip__row--muted">
-                    Remaining {formatCurrency(remaining)}
+                    {t('dashboard.tip.remaining', { v: formatCurrency(remaining) })}
                   </span>
                 </div>
               </div>
@@ -241,19 +257,26 @@ function LineChart({ labels, invoiced, paid }) {
 }
 
 function invoiceBadge(status) {
-  if (status === 'PAID') return { cls: 'db-badge db-badge--paid', text: 'Paid' };
-  if (status === 'PARTIALLY_PAID') return { cls: 'db-badge db-badge--partial', text: 'Partial' };
-  return { cls: 'db-badge db-badge--unpaid', text: 'Unpaid' };
+  if (status === 'PAID') return { cls: 'db-badge db-badge--paid', text: 'dashboard.badge.paid' };
+  if (status === 'PARTIALLY_PAID') return { cls: 'db-badge db-badge--partial', text: 'dashboard.badge.partial' };
+  return { cls: 'db-badge db-badge--unpaid', text: 'dashboard.badge.unpaid' };
 }
 
 const LOG_BADGE = {
-  LOGIN: { cls: 'db-badge db-badge--login', text: 'LOGIN' },
-  'FAILED LOGIN': { cls: 'db-badge db-badge--fail', text: 'FAILED LOGIN' },
-  LOGOUT: { cls: 'db-badge db-badge--logout', text: 'LOGOUT' },
-  'IDLE LOGOUT': { cls: 'db-badge db-badge--idle', text: 'IDLE LOGOUT' },
-  'RE-AUTH': { cls: 'db-badge db-badge--reauth', text: 'RE-AUTH' },
-  'FAILED RE-AUTH': { cls: 'db-badge db-badge--fail', text: 'FAILED RE-AUTH' },
-  'ACCOUNT DISABLED': { cls: 'db-badge db-badge--fail', text: 'ACCOUNT DISABLED' },
+  LOGIN: { cls: 'db-badge db-badge--login', text: 'dashboard.log.login' },
+  'FAILED LOGIN': { cls: 'db-badge db-badge--fail', text: 'dashboard.log.failedLogin' },
+  LOGOUT: { cls: 'db-badge db-badge--logout', text: 'dashboard.log.logout' },
+  'IDLE LOGOUT': { cls: 'db-badge db-badge--idle', text: 'dashboard.log.idleLogout' },
+  'RE-AUTH': { cls: 'db-badge db-badge--reauth', text: 'dashboard.log.reauth' },
+  'FAILED RE-AUTH': { cls: 'db-badge db-badge--fail', text: 'dashboard.log.failedReauth' },
+  'ACCOUNT DISABLED': { cls: 'db-badge db-badge--fail', text: 'dashboard.log.accountDisabled' },
+};
+
+const ACT_TYPE_I18N = {
+  APPLICATION: 'dashboard.type.application',
+  STATUS: 'dashboard.type.status',
+  INVOICE: 'dashboard.type.invoice',
+  PAYMENT: 'dashboard.type.payment',
 };
 
 function logBadge(action) {
@@ -269,6 +292,7 @@ function logTime(ts) {
 
 export default function Dashboard() {
   const toast = useToast();
+  const { t } = useLang();
   const { user, hasPerm, isAdmin } = useAuth();
   const { count: pendingCount, openApprovals } = usePendingApprovals();
   const [refreshKey, setRefreshKey] = useState(0);
@@ -355,27 +379,27 @@ export default function Dashboard() {
     };
 
     clients.forEach((c) => {
-      const name = clientFullName(c) || 'Client';
-      push(c.createdAt, 'APPLICATION', `${name} — application created`, c.status || 'NEW');
+      const name = clientFullName(c) || t('dashboard.activity.clientFallback');
+      push(c.createdAt, 'APPLICATION', t('dashboard.activity.applicationCreated', { name }), statusLabel(c.status || 'NEW', t));
       if (c.updatedAt && c.createdAt && c.updatedAt !== c.createdAt) {
-        push(c.updatedAt, 'STATUS', `${name} — record updated`, c.status || 'NEW');
+        push(c.updatedAt, 'STATUS', t('dashboard.activity.recordUpdated', { name }), statusLabel(c.status || 'NEW', t));
       }
     });
 
     invoices.forEach((inv) => {
       const breakdown = invoicePaymentBreakdown(inv.payment);
       const calc = calculatePayment(breakdown.grandTotal, breakdown.paid);
-      const label = inv.invoiceNumber || 'Invoice';
-      const who = inv.customer?.name ? `${label} — ${inv.customer.name}` : label;
+      const label = inv.invoiceNumber || t('dashboard.activity.invoiceFallback');
+      const who = inv.customer?.name ? t('dashboard.activity.invoiceCustomer', { label, name: inv.customer.name }) : label;
       push(inv.issueDate, 'INVOICE', who, formatCurrency(calc.total));
       if (Number(calc.paid) > 0) {
-        push(inv.issueDate, 'PAYMENT', `${label} — payment recorded`, formatCurrency(calc.paid));
+        push(inv.issueDate, 'PAYMENT', t('dashboard.activity.paymentRecorded', { label }), formatCurrency(calc.paid));
       }
     });
 
     rows.sort((a, b) => b.ts - a.ts);
     return rows.slice(0, 7);
-  }, [clients, invoices]);
+  }, [clients, invoices, t]);
 
   const monthSeries = useMemo(() => {
     const now = new Date();
@@ -444,7 +468,7 @@ export default function Dashboard() {
 
     const map = new Map();
     clients.forEach((c) => {
-      const name = String(c.referralAgent || '').trim() || 'Unassigned';
+      const name = String(c.referralAgent || '').trim() || t('dashboard.agent.unassigned');
       const row = map.get(name) || {
         agent: name,
         clients: 0,
@@ -469,13 +493,13 @@ export default function Dashboard() {
     return [...map.values()]
       .map((r) => ({ ...r, invoiced: round2(r.invoiced), paid: round2(r.paid) }))
       .sort((a, b) => b.thisMonth - a.thisMonth || b.clients - a.clients || a.agent.localeCompare(b.agent));
-  }, [clients, invoices]);
+  }, [clients, invoices, t]);
 
   /* Customers ranked by invoiced total. */
   const topCustomers = useMemo(() => {
     const map = new Map();
     invoices.forEach((inv) => {
-      const name = inv.customer?.name || 'Unknown customer';
+      const name = inv.customer?.name || t('dashboard.customer.unknown');
       const key = `${name}|${normalizePassport(inv.customer?.passport)}`;
       const breakdown = invoicePaymentBreakdown(inv.payment);
       const calc = calculatePayment(breakdown.grandTotal, breakdown.paid);
@@ -495,7 +519,7 @@ export default function Dashboard() {
       }))
       .sort((a, b) => b.invoiced - a.invoiced)
       .slice(0, 8);
-  }, [invoices]);
+  }, [invoices, t]);
 
   /* Sign-in / sign-out events for every account on this device. */
   const accessLogs = useMemo(() => getAccessLogs(), [refreshKey]);
@@ -505,11 +529,11 @@ export default function Dashboard() {
     try {
       list = await getInvoices();
     } catch (err) {
-      toast.error('Unable to load invoices for export.');
+      toast.error(t('dashboard.export.loadError'));
       return;
     }
     if (list.length === 0) {
-      toast.info('No invoices to export yet.');
+      toast.info(t('dashboard.export.empty'));
       return;
     }
     const stamp = new Date().toISOString().slice(0, 10);
@@ -524,7 +548,7 @@ export default function Dashboard() {
     a.click();
     a.remove();
     URL.revokeObjectURL(url);
-    toast.success('Backup exported successfully.');
+    toast.success(t('dashboard.export.success'));
   };
 
   const handleImportFile = (file) => {
@@ -533,18 +557,18 @@ export default function Dashboard() {
       importInvoices(JSON.parse(reader.result))
         .then((added) => {
           if (added === 0) {
-            toast.info('No new invoices were added (duplicates skipped).');
+            toast.info(t('dashboard.import.none'));
           } else {
-            toast.success(`${added} invoice${added > 1 ? 's' : ''} imported.`);
+            toast.success(added > 1 ? t('dashboard.import.many', { v: added }) : t('dashboard.import.one', { v: added }));
             setRefreshKey((k) => k + 1);
           }
         })
         .catch(() => {
-          toast.error('Import failed. The file is not a valid AL BALQAN backup.');
+          toast.error(t('dashboard.import.invalid'));
         });
     };
     reader.onerror = () => {
-      toast.error('Import failed. Could not read the file.');
+      toast.error(t('dashboard.import.readError'));
     };
     reader.readAsText(file);
   };
@@ -552,18 +576,18 @@ export default function Dashboard() {
   const dash = (value) => (loading ? '—' : value);
 
   const clientMetrics = [
-    ['Total clients', dash(clientStats.total), 'users', 'slate'],
-    ['New clients', dash(clientStats.fresh), 'user', 'green'],
-    ['Under review', dash(clientStats.review), 'clock', 'amber'],
-    ['Approved', dash(clientStats.approved), 'userCheck', 'green'],
-    ['Rejected', dash(clientStats.rejected), 'x', 'red'],
+    ['dashboard.metric.totalClients', dash(clientStats.total), 'users', 'slate'],
+    ['dashboard.metric.newClients', dash(clientStats.fresh), 'user', 'green'],
+    ['dashboard.metric.underReview', dash(clientStats.review), 'clock', 'amber'],
+    ['dashboard.metric.approved', dash(clientStats.approved), 'userCheck', 'green'],
+    ['dashboard.metric.rejected', dash(clientStats.rejected), 'x', 'red'],
   ];
 
   const moneyMetrics = [
-    ['Total invoiced', dash(formatCurrency(financials.invoiced)), 'receipt', 'slate', true],
-    ['Total paid', dash(formatCurrency(financials.paid)), 'card', 'green', true],
-    ['Total remaining', dash(formatCurrency(financials.remaining)), 'note', 'amber', true],
-    ['Partially paid', dash(`${financials.partiallyPaid} invoice${financials.partiallyPaid === 1 ? '' : 's'}`), 'clock', 'purple', false],
+    ['dashboard.metric.totalInvoiced', dash(formatCurrency(financials.invoiced)), 'receipt', 'slate', true],
+    ['dashboard.metric.totalPaid', dash(formatCurrency(financials.paid)), 'card', 'green', true],
+    ['dashboard.metric.totalRemaining', dash(formatCurrency(financials.remaining)), 'note', 'amber', true],
+    ['dashboard.metric.partiallyPaid', dash(financials.partiallyPaid === 1 ? t('dashboard.tip.invoice', { v: financials.partiallyPaid }) : t('dashboard.tip.invoices', { v: financials.partiallyPaid })), 'clock', 'purple', false],
   ];
 
   const maxStatusCount = Math.max(1, ...CLIENT_STATUSES.map((s) => clientStats.counts[s] || 0));
@@ -611,22 +635,21 @@ export default function Dashboard() {
     <div className="page">
       <section className="db-hero">
         <div className="db-hero__text">
-          <p className="db-hero__eyebrow">Dashboard</p>
-          <h1>{greetingFor(user)}</h1>
+          <p className="db-hero__eyebrow">{t('dashboard.eyebrow')}</p>
+          <h1>{greetingFor(user, t)}</h1>
           <p className="db-hero__sub">
-            Client applications and invoicing for {company.shortName} — every number below is read
-            live from your records.
+            {t('dashboard.hero.sub', { company: company.shortName })}
           </p>
         </div>
         <div className="db-hero__actions">
           <Can perm="page:clients.new">
             <Link to="/clients/new" className="btn btn--primary">
-              + New Client
+              {t('dashboard.action.newClient')}
             </Link>
           </Can>
           <Can perm="page:invoice.create">
             <Link to="/create" className="btn btn--secondary">
-              + New Invoice
+              {t('dashboard.action.newInvoice')}
             </Link>
           </Can>
         </div>
@@ -637,27 +660,29 @@ export default function Dashboard() {
           <span className="db-approval__icon" aria-hidden="true"><Icon name="clock" /></span>
           <span className="db-approval__text">
             <b>
-              {pendingCount} edit{pendingCount > 1 ? 's' : ''} waiting for your approval
+              {pendingCount > 1
+                ? t('dashboard.approval.edits', { v: pendingCount })
+                : t('dashboard.approval.edit', { v: pendingCount })}
             </b>
             <span>
-              Invoice and client changes submitted by your team won’t apply until you review them.
+              {t('dashboard.approval.note')}
             </span>
           </span>
           <button type="button" className="btn btn--primary" onClick={openApprovals}>
-            Review
+            {t('dashboard.approval.review')}
           </button>
         </div>
       )}
 
-      <section className="db-section" aria-label="Client overview">
+      <section className="db-section" aria-label={t('dashboard.section.clientOverview')}>
         <div className="db-section__head">
           <h2>
             <Icon name="users" aria-hidden="true" />
-            Client overview
+            {t('dashboard.section.clientOverview')}
           </h2>
           <Can perm="page:clients">
             <Link to="/clients" className="db-section__hint">
-              View clients →
+              {t('dashboard.link.viewClients')}
             </Link>
           </Can>
         </div>
@@ -668,7 +693,7 @@ export default function Dashboard() {
                 <Icon name={icon} />
               </span>
               <span className="statc__text">
-                <span className="statc__label">{label}</span>
+                <span className="statc__label">{t(label)}</span>
                 <span className="statc__value">{value}</span>
               </span>
               <span className="statc__chev" aria-hidden="true">
@@ -679,15 +704,15 @@ export default function Dashboard() {
         </div>
       </section>
 
-      <section className="db-section" aria-label="Financial overview">
+      <section className="db-section" aria-label={t('dashboard.section.financialOverview')}>
         <div className="db-section__head">
           <h2>
             <Icon name="receipt" aria-hidden="true" />
-            Financial overview
+            {t('dashboard.section.financialOverview')}
           </h2>
           <Can perm="page:invoice.history">
             <Link to="/history" className="db-section__hint">
-              Invoice history →
+              {t('dashboard.link.invoiceHistory')}
             </Link>
           </Can>
         </div>
@@ -698,7 +723,7 @@ export default function Dashboard() {
                 <Icon name={icon} />
               </span>
               <span className="statc__text">
-                <span className="statc__label">{label}</span>
+                <span className="statc__label">{t(label)}</span>
                 <span className={`statc__value${money ? ' db-metric__value--money' : ''}`}>{value}</span>
               </span>
               <span className="statc__chev" aria-hidden="true">
@@ -709,30 +734,30 @@ export default function Dashboard() {
         </div>
       </section>
 
-      <section className="db-section" aria-label="Reports">
+      <section className="db-section" aria-label={t('dashboard.section.reports')}>
         <div className="db-section__head">
           <h2>
             <Icon name="chartBar" aria-hidden="true" />
-            Reports
+            {t('dashboard.section.reports')}
           </h2>
           <Can perm="page:invoice.history">
             <Link to="/history" className="db-section__hint">
-              View all →
+              {t('dashboard.link.viewAll')}
             </Link>
           </Can>
         </div>
 
         <div className="db-charts">
-          <section className="card db-chart-card" aria-label="Invoices per month">
+          <section className="card db-chart-card" aria-label={t('dashboard.chart.invoicesPerMonth')}>
             <div className="db-chart-card__head">
-              <h2>Invoices per month</h2>
-              <p className="db-chart-card__sub">Issued invoices over the last 6 months</p>
+              <h2>{t('dashboard.chart.invoicesPerMonth')}</h2>
+              <p className="db-chart-card__sub">{t('dashboard.chart.invoicesPerMonthSub')}</p>
             </div>
             <div className="db-chart-card__body">
               {loading ? (
                 <div className="loading-row">
                   <span className="spinner" aria-hidden="true" />
-                  Loading chart…
+                  {t('dashboard.loading.chart')}
                 </div>
               ) : (
                 <BarsChart labels={seriesLabels} values={seriesCounts} />
@@ -740,24 +765,24 @@ export default function Dashboard() {
             </div>
             <div className="db-chart-card__foot">
               <span className="db-fig">
-                <b>{loading ? '—' : seriesTotals.count}</b> invoices in 6 months
+                <b>{loading ? '—' : seriesTotals.count}</b> {t('dashboard.foot.invoices6')}
               </span>
               <span className="db-fig">
-                <b>{loading ? '—' : lastMonth.count}</b> this month
+                <b>{loading ? '—' : lastMonth.count}</b> {t('dashboard.foot.thisMonth')}
               </span>
             </div>
           </section>
 
-          <section className="card db-chart-card" aria-label="Invoiced vs paid">
+          <section className="card db-chart-card" aria-label={t('dashboard.chart.invoicedVsPaid')}>
             <div className="db-chart-card__head">
-              <h2>Invoiced vs paid</h2>
-              <p className="db-chart-card__sub">Monthly comparison over the last 6 months</p>
+              <h2>{t('dashboard.chart.invoicedVsPaid')}</h2>
+              <p className="db-chart-card__sub">{t('dashboard.chart.invoicedVsPaidSub')}</p>
             </div>
             <div className="db-chart-card__body">
               {loading ? (
                 <div className="loading-row">
                   <span className="spinner" aria-hidden="true" />
-                  Loading chart…
+                  {t('dashboard.loading.chart')}
                 </div>
               ) : (
                 <LineChart labels={seriesLabels} invoiced={seriesRevenue} paid={seriesPaid} />
@@ -766,50 +791,50 @@ export default function Dashboard() {
             <div className="db-chart-card__foot">
               <span className="db-fig">
                 <span className="db-fig__dot" aria-hidden="true" />
-                <b>{loading ? '—' : formatCurrency(seriesTotals.revenue)}</b> invoiced
+                <b>{loading ? '—' : formatCurrency(seriesTotals.revenue)}</b> {t('dashboard.foot.invoiced')}
               </span>
               <span className="db-fig">
                 <span className="db-fig__dot db-fig__dot--amber" aria-hidden="true" />
-                <b>{loading ? '—' : formatCurrency(seriesTotals.paid)}</b> paid
+                <b>{loading ? '—' : formatCurrency(seriesTotals.paid)}</b> {t('dashboard.foot.paid')}
               </span>
               <span className="db-fig">
                 <b>{loading ? '—' : formatCurrency(round2(seriesTotals.revenue - seriesTotals.paid))}</b>{' '}
-                outstanding
+                {t('dashboard.foot.outstanding')}
               </span>
             </div>
           </section>
         </div>
 
         <div className="db-charts">
-          <section className="card db-chart-card" aria-label="Clients and invoices">
+          <section className="card db-chart-card" aria-label={t('dashboard.a11y.clientsInvoices')}>
             <div className="db-chart-card__head">
-              <h2>Clients &amp; invoices</h2>
-              <p className="db-chart-card__sub">Registered clients with or without an invoice</p>
+              <h2>{t('dashboard.chart.clientsInvoices')}</h2>
+              <p className="db-chart-card__sub">{t('dashboard.chart.clientsInvoicesSub')}</p>
             </div>
             <div className="db-chart-card__body">
               <div className="db-donut-wrap">
                 <div
                   className="db-donut"
                   role="img"
-                  aria-label={`${coverage.withInvoice} of ${coverage.total} clients have an invoice`}
+                  aria-label={t('dashboard.a11y.donut', { with: coverage.withInvoice, total: coverage.total })}
                   style={{
                     background: `conic-gradient(#22c55e 0 ${donutPct}%, #e5e7eb ${donutPct}% 100%)`,
                   }}
                 >
                   <div className="db-donut__center">
                     <b>{loading ? '—' : coverage.total}</b>
-                    <span>clients</span>
+                    <span>{t('dashboard.foot.clients')}</span>
                   </div>
                 </div>
                 <div className="db-donut__legend">
                   <span className="db-fig">
                     <span className="db-fig__dot" aria-hidden="true" />
-                    <b>{loading ? '—' : coverage.withInvoice}</b> with invoice
+                    <b>{loading ? '—' : coverage.withInvoice}</b> {t('dashboard.foot.withInvoice')}
                     <em>{donutPctInt}%</em>
                   </span>
                   <span className="db-fig">
                     <span className="db-fig__dot db-fig__dot--muted" aria-hidden="true" />
-                    <b>{loading ? '—' : coverage.without}</b> without invoice
+                    <b>{loading ? '—' : coverage.without}</b> {t('dashboard.foot.withoutInvoice')}
                     <em>{100 - donutPctInt}%</em>
                   </span>
                 </div>
@@ -817,27 +842,27 @@ export default function Dashboard() {
             </div>
             <div className="db-chart-card__foot">
               <span className="db-fig">
-                <b>{loading ? '—' : coverage.withInvoice}</b> have invoices
+                <b>{loading ? '—' : coverage.withInvoice}</b> {t('dashboard.foot.haveInvoices')}
               </span>
               <span className="db-fig">
-                <b>{loading ? '—' : coverage.without}</b> never invoiced
+                <b>{loading ? '—' : coverage.without}</b> {t('dashboard.foot.neverInvoiced')}
               </span>
             </div>
           </section>
 
-          <section className="card db-chart-card" aria-label="Agents this month">
+          <section className="card db-chart-card" aria-label={t('dashboard.chart.agentsThisMonth')}>
             <div className="db-chart-card__head">
-              <h2>Agents this month</h2>
-              <p className="db-chart-card__sub">Clients added per referral agent in {lastMonth.label.split(' ')[0]} {new Date().getFullYear()}</p>
+              <h2>{t('dashboard.chart.agentsThisMonth')}</h2>
+              <p className="db-chart-card__sub">{t('dashboard.chart.agentsThisMonthSub', { month: lastMonth.label.split(' ')[0], year: new Date().getFullYear() })}</p>
             </div>
             <div className="db-chart-card__body">
               {loading ? (
                 <div className="loading-row">
                   <span className="spinner" aria-hidden="true" />
-                  Loading agents…
+                  {t('dashboard.loading.agents')}
                 </div>
               ) : agentStats.length === 0 ? (
-                <p className="db-empty">No clients yet. Add a client to see agent performance.</p>
+                <p className="db-empty">{t('dashboard.empty.agentsChart')}</p>
               ) : (
                 <div className="db-hbars">
                   {agentStats.slice(0, 7).map((r) => {
@@ -863,42 +888,42 @@ export default function Dashboard() {
             </div>
             <div className="db-chart-card__foot">
               <span className="db-fig">
-                <b>{loading ? '—' : agentTotals.thisMonth}</b> clients this month
+                <b>{loading ? '—' : agentTotals.thisMonth}</b> {t('dashboard.foot.clientsThisMonth')}
               </span>
               <span className="db-fig">
-                <b>{loading ? '—' : agentStats.length}</b> active agents
+                <b>{loading ? '—' : agentStats.length}</b> {t('dashboard.foot.activeAgents')}
               </span>
             </div>
           </section>
         </div>
 
-        <section className="card db-panel" aria-label="Agent performance">
+        <section className="card db-panel" aria-label={t('dashboard.panel.agentPerformance')}>
           <div className="db-panel__head">
             <h2>
               <Icon name="users" aria-hidden="true" />
-              Agent performance
+              {t('dashboard.panel.agentPerformance')}
             </h2>
-            <span className="db-panel__hint">All-time totals with this month</span>
+            <span className="db-panel__hint">{t('dashboard.panel.agentPerformanceHint')}</span>
           </div>
           {loading ? (
             <div className="loading-row">
               <span className="spinner" aria-hidden="true" />
-              Loading agents…
+              {t('dashboard.loading.agents')}
             </div>
           ) : agentStats.length === 0 ? (
-            <p className="db-empty">No clients yet. Agent totals appear as soon as you add clients.</p>
+            <p className="db-empty">{t('dashboard.empty.agentTable')}</p>
           ) : (
             <div className="db-table-wrap">
               <table className="db-inv">
                 <thead>
                   <tr>
-                    <th>Agent</th>
-                    <th className="db-inv__count">Clients</th>
-                    <th className="db-inv__count">This month</th>
-                    <th className="db-inv__count">With invoice</th>
-                    <th className="db-inv__count">Invoices</th>
-                    <th className="db-inv__amount">Invoiced</th>
-                    <th className="db-inv__amount">Paid</th>
+                    <th>{t('dashboard.th.agent')}</th>
+                    <th className="db-inv__count">{t('dashboard.th.clients')}</th>
+                    <th className="db-inv__count">{t('dashboard.th.thisMonth')}</th>
+                    <th className="db-inv__count">{t('dashboard.th.withInvoice')}</th>
+                    <th className="db-inv__count">{t('dashboard.th.invoices')}</th>
+                    <th className="db-inv__amount">{t('dashboard.th.invoiced')}</th>
+                    <th className="db-inv__amount">{t('dashboard.th.paid')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -916,7 +941,7 @@ export default function Dashboard() {
                 </tbody>
                 <tfoot>
                   <tr>
-                    <td>Total · {agentStats.length} agents</td>
+                    <td>{t('dashboard.tfoot.totalAgents', { v: agentStats.length })}</td>
                     <td className="db-inv__count">{agentTotals.clients}</td>
                     <td className="db-inv__count">{agentTotals.thisMonth}</td>
                     <td className="db-inv__count">{agentTotals.withInvoice}</td>
@@ -930,31 +955,31 @@ export default function Dashboard() {
           )}
         </section>
 
-        <section className="card db-panel" aria-label="Top customers">
+        <section className="card db-panel" aria-label={t('dashboard.panel.topCustomers')}>
           <div className="db-panel__head">
             <h2>
               <Icon name="chartBar" aria-hidden="true" />
-              Top customers
+              {t('dashboard.panel.topCustomers')}
             </h2>
-            <span className="db-panel__hint">Ranked by invoiced total</span>
+            <span className="db-panel__hint">{t('dashboard.panel.topCustomersHint')}</span>
           </div>
           {loading ? (
             <div className="loading-row">
               <span className="spinner" aria-hidden="true" />
-              Loading customers…
+              {t('dashboard.loading.customers')}
             </div>
           ) : topCustomers.length === 0 ? (
-            <p className="db-empty">No invoices yet. Customer totals appear once you issue invoices.</p>
+            <p className="db-empty">{t('dashboard.empty.customers')}</p>
           ) : (
             <div className="db-table-wrap">
               <table className="db-inv">
                 <thead>
                   <tr>
-                    <th>Customer</th>
-                    <th className="db-inv__count">Invoices</th>
-                    <th className="db-inv__amount">Invoiced</th>
-                    <th className="db-inv__amount">Paid</th>
-                    <th className="db-inv__amount">Remaining</th>
+                    <th>{t('dashboard.th.customer')}</th>
+                    <th className="db-inv__count">{t('dashboard.th.invoices')}</th>
+                    <th className="db-inv__amount">{t('dashboard.th.invoiced')}</th>
+                    <th className="db-inv__amount">{t('dashboard.th.paid')}</th>
+                    <th className="db-inv__amount">{t('dashboard.th.remaining')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -970,7 +995,7 @@ export default function Dashboard() {
                 </tbody>
                 <tfoot>
                   <tr>
-                    <td>Top {topCustomers.length}</td>
+                    <td>{t('dashboard.tfoot.top', { v: topCustomers.length })}</td>
                     <td className="db-inv__count">{customerTotals.invoices}</td>
                     <td className="db-inv__amount">{formatCurrency(customerTotals.invoiced)}</td>
                     <td className="db-inv__amount">{formatCurrency(customerTotals.paid)}</td>
@@ -982,35 +1007,35 @@ export default function Dashboard() {
           )}
         </section>
 
-        <section className="card db-panel" aria-label="Recent invoices">
+        <section className="card db-panel" aria-label={t('dashboard.panel.recentInvoices')}>
           <div className="db-panel__head">
             <h2>
               <Icon name="receipt" aria-hidden="true" />
-              Recent invoices
+              {t('dashboard.panel.recentInvoices')}
             </h2>
             <Can perm="page:invoice.history">
               <Link to="/history" className="db-section__hint">
-                View all →
+                {t('dashboard.link.viewAll')}
               </Link>
             </Can>
           </div>
           {loading ? (
             <div className="loading-row">
               <span className="spinner" aria-hidden="true" />
-              Loading invoices…
+              {t('dashboard.loading.invoices')}
             </div>
           ) : recentInvoices.length === 0 ? (
-            <p className="db-empty">No invoices yet. Create your first invoice to see it here.</p>
+            <p className="db-empty">{t('dashboard.empty.invoices')}</p>
           ) : (
             <div className="db-table-wrap">
               <table className="db-inv">
                 <thead>
                   <tr>
-                    <th>Invoice</th>
-                    <th>Customer</th>
-                    <th>Date</th>
-                    <th>Status</th>
-                    <th className="db-inv__amount">Amount</th>
+                    <th>{t('dashboard.th.invoice')}</th>
+                    <th>{t('dashboard.th.customer')}</th>
+                    <th>{t('dashboard.th.date')}</th>
+                    <th>{t('common.status')}</th>
+                    <th className="db-inv__amount">{t('dashboard.th.amount')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1026,7 +1051,7 @@ export default function Dashboard() {
                             : '—'}
                         </td>
                         <td>
-                          <span className={badge.cls}>{badge.text}</span>
+                          <span className={badge.cls}>{t(badge.text)}</span>
                         </td>
                         <td className="db-inv__amount">{formatCurrency(calc.total)}</td>
                       </tr>
@@ -1039,28 +1064,27 @@ export default function Dashboard() {
         </section>
 
         {isAdmin && (
-          <section className="card db-panel" aria-label="Access logs">
+          <section className="card db-panel" aria-label={t('dashboard.panel.accessLogs')}>
             <div className="db-panel__head">
               <h2>
                 <Icon name="key" aria-hidden="true" />
-                Access logs
+                {t('dashboard.panel.accessLogs')}
               </h2>
-              <span className="db-panel__hint">Sign-ins for all accounts on this device</span>
+              <span className="db-panel__hint">{t('dashboard.panel.accessLogsHint')}</span>
             </div>
             {accessLogs.length === 0 ? (
               <p className="db-empty">
-                No access events yet. Sign-ins, sign-outs and failed attempts appear here
-                automatically.
+                {t('dashboard.empty.accessLogs')}
               </p>
             ) : (
               <div className="db-table-wrap">
                 <table className="db-inv">
                   <thead>
                     <tr>
-                      <th>Time</th>
-                      <th>Account</th>
-                      <th>Action</th>
-                      <th>Details</th>
+                      <th>{t('dashboard.th.time')}</th>
+                      <th>{t('dashboard.th.account')}</th>
+                      <th>{t('dashboard.th.action')}</th>
+                      <th>{t('dashboard.th.details')}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1071,7 +1095,7 @@ export default function Dashboard() {
                           <td className="db-inv__date">{logTime(row.ts)}</td>
                           <td className="db-inv__num">{row.account}</td>
                           <td>
-                            <span className={badge.cls}>{badge.text}</span>
+                            <span className={badge.cls}>{t(badge.text)}</span>
                           </td>
                           <td className="db-inv__customer">{row.details || '—'}</td>
                         </tr>
@@ -1086,30 +1110,30 @@ export default function Dashboard() {
       </section>
 
       <div className="db-grid">
-        <section className="card db-panel" aria-label="Recent activity">
+        <section className="card db-panel" aria-label={t('dashboard.panel.recentActivity')}>
           <div className="db-panel__head">
             <h2>
               <Icon name="activity" aria-hidden="true" />
-              Recent activity
+              {t('dashboard.panel.recentActivity')}
             </h2>
-            <span className="db-panel__hint">Applications, invoices and payments</span>
+            <span className="db-panel__hint">{t('dashboard.panel.recentActivityHint')}</span>
           </div>
           {loading ? (
             <div className="loading-row">
               <span className="spinner" aria-hidden="true" />
-              Loading activity…
+              {t('dashboard.loading.activity')}
             </div>
           ) : activity.length === 0 ? (
-            <p className="db-empty">No activity yet. Create a client or an invoice to begin.</p>
+            <p className="db-empty">{t('dashboard.empty.activity')}</p>
           ) : (
             <div className="db-act-wrap">
               <table className="db-act">
                 <thead>
                   <tr>
-                    <th>Date</th>
-                    <th>Type</th>
-                    <th>Activity</th>
-                    <th>Amount</th>
+                    <th>{t('dashboard.th.date')}</th>
+                    <th>{t('dashboard.th.type')}</th>
+                    <th>{t('dashboard.th.activity')}</th>
+                    <th>{t('dashboard.th.amount')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1119,7 +1143,7 @@ export default function Dashboard() {
                         {formatDateShort(new Date(row.date)) || row.date}
                       </td>
                       <td>
-                        <span className="db-act__type">{row.type}</span>
+                        <span className="db-act__type">{t(ACT_TYPE_I18N[row.type] || row.type)}</span>
                       </td>
                       <td className="db-act__label">{row.label}</td>
                       <td className="db-act__detail">{row.detail}</td>
@@ -1131,13 +1155,13 @@ export default function Dashboard() {
           )}
         </section>
 
-        <section className="card db-panel" aria-label="Application status">
+        <section className="card db-panel" aria-label={t('dashboard.panel.applicationStatus')}>
           <div className="db-panel__head">
             <h2>
               <Icon name="userCheck" aria-hidden="true" />
-              Application status
+              {t('dashboard.panel.applicationStatus')}
             </h2>
-            <span className="db-panel__hint">{loading ? '…' : `${clientStats.total} total`}</span>
+            <span className="db-panel__hint">{loading ? '…' : t('dashboard.panel.applicationStatusHint', { v: clientStats.total })}</span>
           </div>
           <div className="db-status">
             {CLIENT_STATUSES.map((s) => {
@@ -1145,7 +1169,7 @@ export default function Dashboard() {
               const pct = Math.round((count / maxStatusCount) * 100);
               return (
                 <div className="db-status__row" key={s}>
-                  <span className="db-status__name">{s}</span>
+                  <span className="db-status__name">{statusLabel(s, t)}</span>
                   <span className="db-status__bar">
                     <span
                       className="db-status__fill"
@@ -1163,11 +1187,11 @@ export default function Dashboard() {
       {(hasPerm('action:invoice.export') || hasPerm('action:invoice.import')) && (
         <div className="db-utility">
           <span className="db-utility__note">
-            Invoices are stored in the cloud — use Export Data for a JSON backup.
+            {t('dashboard.utility.note')}
           </span>
           <Can perm="action:invoice.export">
             <button type="button" className="btn btn--neutral btn--sm" onClick={handleExport}>
-              Export Data
+              {t('dashboard.utility.export')}
             </button>
           </Can>
           <Can perm="action:invoice.import">
@@ -1176,7 +1200,7 @@ export default function Dashboard() {
               className="btn btn--neutral btn--sm"
               onClick={() => fileInputRef.current?.click()}
             >
-              Import Data
+              {t('dashboard.utility.import')}
             </button>
           </Can>
           <input
@@ -1194,7 +1218,7 @@ export default function Dashboard() {
       )}
 
       {hasPerm('page:invoice.create') && (
-        <Link to="/create" className="fab" title="New invoice" aria-label="New invoice">
+        <Link to="/create" className="fab" title={t('dashboard.fab.newInvoice')} aria-label={t('dashboard.fab.newInvoice')}>
           <Icon name="pencil" />
         </Link>
       )}

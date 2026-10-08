@@ -1,0 +1,151 @@
+﻿/**
+ * Public marketing website (/website) — English copy.
+ * Every key is prefixed `website.` and mirrored in ../ar/website.js.
+ */
+
+export default {
+  'website.brand': 'AL BALQAN',
+
+  /* Navbar */
+  'website.nav.home': 'Home',
+  'website.nav.about': 'About',
+  'website.nav.services': 'Services',
+  'website.nav.countries': 'Countries',
+  'website.nav.contact': 'Contact',
+  'website.nav.menuToggle': 'Toggle menu',
+
+  /* Hero */
+  'website.hero.subtitle': 'YOUR GATEWAY TO',
+  'website.hero.title': 'BALKANS',
+  'website.hero.desc': 'Government-approved European residency, business establishment, work contracts, and bespoke travel advisory for distinguished individuals and corporations from the UAE.',
+  'website.hero.ctaConsult': 'Request a Consultation',
+  'website.hero.ctaCountries': 'Explore our Countries',
+
+  /* Shared */
+  'website.explore': 'Explore',
+
+  /* Services */
+  'website.services.title': 'OUR SERVICES',
+  'website.services.s1.title': 'Tourist Visa',
+  'website.services.s1.desc': 'Professional assistance with tourist visa applications, document preparation, and application processing for selected Balkan destinations.',
+  'website.services.s2.title': 'Investor Residency',
+  'website.services.s2.desc': 'Explore residency opportunities through business formation and investment solutions in selected Balkan countries.',
+  'website.services.s3.title': 'Work Contracts & Residency',
+  'website.services.s3.desc': 'Assistances with work contract and residency procedures for individuals seeking professional opportunities in the Balkans.',
+
+  /* Destinations */
+  'website.destinations.title': 'DESTINATIONS',
+  'website.destinations.subtitle': 'Explore the Balkans',
+  'website.destinations.d1.name': 'Albania',
+  'website.destinations.d1.desc': 'Coastal gateway to Balkan investment opportunities',
+  'website.destinations.d2.name': 'Kosovo',
+  'website.destinations.d2.desc': 'Emerging market with fast-growing business potential',
+  'website.destinations.d3.name': 'Montenegro',
+  'website.destinations.d3.desc': 'Adriatic hub for residency and tourism',
+  'website.destinations.d4.name': 'North Macedonia',
+  'website.destinations.d4.desc': 'Strategic crossroads for regional trade access',
+  'website.destinations.d5.name': 'Serbia',
+  'website.destinations.d5.desc': 'Powerhouse for business and investment',
+
+  /* Why Al Balqan */
+  'website.why.title': 'INSTITUTIONAL FOUNDATION',
+  'website.why.subtitle': 'Why Al Balqan',
+  'website.why.f1.title': '20+ Years Team Experience',
+  'website.why.f1.desc': 'Consular officers, licensed attorneys, and corporate relocation directors bringing two decades of grounded execution.',
+  'website.why.f2.title': 'Integrated Services',
+  'website.why.f2.desc': 'All-in-one solutions encompassing visas, bank account introduction, notary legalizations, tax ID issuance, and real estate review.',
+  'website.why.f3.title': 'Balkan-Focused Expertise',
+  'website.why.f3.desc': 'Hyper-specialized focus exclusively on the 5 Balkan states rather than diluted, generic worldwide offerings.',
+  'website.why.f4.title': 'Family Solutions',
+  'website.why.f4.desc': 'Turnkey dependent synchronization ensuring schooling approvals, European health coverage, and unified residency renewal cycles.',
+  'website.why.f5.title': 'Personalized Guidance',
+  'website.why.f5.desc': 'Dedicated senior case managers based in Dubai and Abu Dhabi providing direct, single-point-of-contact accountability.',
+  'website.why.f6.title': 'Absolute Confidentiality',
+  'website.why.f6.desc': 'Institutional-grade non-disclosure, encrypted client data infrastructure, and non-negotiable discretion for private clients.',
+
+  /* How it works */
+  'website.how.title': 'HOW IT WORKS',
+  'website.how.subtitle': 'A Clear Path From Consultation to Completion',
+  'website.how.step1': 'Consultation',
+  'website.how.step2': 'Document Preparation',
+  'website.how.step3': 'Application & Processing',
+  'website.how.step4': 'Visa / Residency Completion',
+
+  /* Partners */
+  'website.partners.title': 'OUR PARTNERS',
+  'website.partners.subtitle': 'Entities & Organizations We Work With',
+  'website.partners.logoAlt': 'Partner {n}',
+
+  /* Consultation */
+  'website.consult.alert': 'Thank you! We will contact you within 24 business hours.',
+  'website.consult.sidebarTitle': 'Start Your Sovereign Mobility Assessment',
+  'website.consult.sidebarDesc': 'Submit your profile for review. Our executive advisors verify Balkan eligibility parameters prior to formal consultation scheduling.',
+  'website.consult.f1.title': 'Evaluation Window',
+  'website.consult.f1.desc': 'Initial eligibility review within 24 business hours.',
+  'website.consult.f2.title': 'Strictly Confidential',
+  'website.consult.f2.desc': 'Zero third-party broker dissemination. Fully UAE-regulated data storage.',
+  'website.consult.f3.title': 'Direct Consular Support',
+  'website.consult.f3.desc': 'advisory@albalqan.ae',
+  'website.consult.f3.phone': '+971 4 000 2026',
+  'website.consult.licenseTitle': 'COMPANY LICENSE',
+  'website.consult.licenseReg': 'UAE Commercial Reg: 135961',
+  'website.consult.formTitle': 'REQUEST A CONSULTATION',
+  'website.consult.formDesc': 'Please fill out all mandatory criteria below. Nationality is required to assess sovereign bilateral visa protocols.',
+  'website.consult.label.name': 'Full Name *',
+  'website.consult.label.email': 'Email Address *',
+  'website.consult.label.phone': 'Phone Number (With Country Code) *',
+  'website.consult.label.nationality': 'Nationality (Mandatory for Eligibility) *',
+  'website.consult.label.residence': 'Country of Residence *',
+  'website.consult.label.country': 'Preferred Country *',
+  'website.consult.label.service': 'Service Type *',
+  'website.consult.label.details': 'Case Details or Specific Objectives *',
+  'website.consult.ph.name': 'e.g Tariq Al Mansoor',
+  'website.consult.ph.email': 'e.g t.almansoor@domin.ae',
+  'website.consult.ph.phone': '+971 50 000 0000',
+  'website.consult.ph.nationality': 'e.g Emirati, Saudi, British, Egyptian',
+  'website.consult.ph.residence': 'e.g United Arab Emirates',
+  'website.consult.ph.details': 'Briefly detail your timeline, family members involved, and any specific objectives.',
+  'website.consult.selectDestination': 'Select Destination',
+  'website.consult.selectPathway': 'Select Pathway',
+  'website.consult.opt.workContract': 'Work Contract & Residency',
+  'website.consult.consent': 'hereby consent to AL BALQAN Tourism & Visa Services Company LLC processing my biographical data for sovereign eligibility verification under UAE Federal Data Protection standards.',
+  'website.consult.submit': 'Submit Consultation Request',
+
+  /* FAQ */
+  'website.faq.title': 'REGULATORY CLARITY',
+  'website.faq.subtitle': 'Frequently Asked Questions',
+  'website.faq.q1': 'What are the general visa requirements for UAE residents entering the Western Balkans?',
+  'website.faq.a1': 'Requirements vary by country but generally include a valid passport, proof of accommodation, travel insurance, and financial means. Contact us for specific requirements for your nationality.',
+  'website.faq.q2': 'How are employment contracts and work permits vetted and legally authenticated?',
+  'website.faq.a2': 'We work directly with government agencies and licensed employers to ensure all contracts are legally authenticated and meet local labor law requirements.',
+  'website.faq.q3': 'What minimum investment is necessary to qualify for European Balkan Investor Residency?',
+  'website.faq.a3': 'Investment thresholds vary by country. Albania and Kosovo offer some of the most competitive programs in Europe. Contact us for current requirements.',
+  'website.faq.q4': 'What are typical processing timelines from file lodgment to permit issuance?',
+  'website.faq.a4': 'Processing times range from 2-8 weeks depending on the country and service type. We provide regular updates throughout the process.',
+
+  /* Footer */
+  'website.footer.about': 'Premier cross-border sovereign mobility, golden residency, and executive consular services connecting the United Arab Emirates with Balkan corridor opportunities.',
+  'website.footer.license': 'UAE Commercial License No. 1359681',
+  'website.footer.colPortfolios': 'CORRIDOR PORTFOLIOS',
+  'website.footer.p1': 'Albania Residency',
+  'website.footer.p2': 'Kosovo Investment',
+  'website.footer.p3': 'Serbia Golden Visa',
+  'website.footer.p4': 'Montenegro Corporate',
+  'website.footer.p5': 'North Macedonia Pathway',
+  'website.footer.colServices': 'EXECUTIVE SERVICES',
+  'website.footer.s1': 'Investor & Golden Visas',
+  'website.footer.s2': 'Corporate Relocation & Branching',
+  'website.footer.s3': 'Executive Fast-Track Processing',
+  'website.footer.s4': 'Cross-Border Property Acquisition',
+  'website.footer.s5': 'Consular Legalization & MOFA Attestation',
+  'website.footer.colOffice': 'UAE HEAD OFFICE',
+  'website.footer.addr1': 'Al Maryah Island / Sheikh Zayed Road',
+  'website.footer.addr2': 'Executive Tower, Dubai & Abu Dhabi,',
+  'website.footer.addr3': 'United Arab Emirates',
+  'website.footer.phone': '(+971) 4 000 2026 / (+971) 2 000 2026',
+  'website.footer.email': 'advisory@albalqan.ae',
+  'website.footer.copyright': '2026 AL BALQAN Tourism & Visa Services Company LLC. All rights reserved.',
+  'website.footer.privacy': 'Privacy Policy',
+  'website.footer.terms': 'Terms of Service',
+  'website.footer.disclosures': 'Regulatory Disclosures',
+};

@@ -27,6 +27,44 @@
     width: 210mm !important;
   }
 
+  /* Print output is always paper-white. In dark theme the global
+     ink tokens would flip to light values (light text on white
+     paper), so re-pin them to the light palette for the printed
+     run only. print.css loads after global.css, equal specificity
+     wins the tie; .invoice-sheet re-pins the same values anyway. */
+  html[data-theme='dark'] {
+    color-scheme: light;
+    --brand-strong: #16a34a;
+    --brand-tint: #e4f8ec;
+    --brand-soft: #dcfce7;
+    --brand-ring: rgba(34, 197, 94, 0.14);
+    --primary: #141414;
+    --primary-dark: #000000;
+    --primary-darker: #000000;
+    --ground: #f9fafb;
+    --background: #ffffff;
+    --surface: #ffffff;
+    --text: #16211b;
+    --muted: #5b6b62;
+    --faint: #8a918c;
+    --border: #e4e7e6;
+    --line: #e4e7e6;
+    --line-soft: #eef1ef;
+    --ink: #141414;
+    --mist: #f5f7f6;
+    --pill: #f1f3f2;
+    --hover: #fafbfa;
+    --success: #15803d;
+    --warning: #c2410c;
+    --danger: #dc2626;
+    --purple: #7e22ce;
+    --card-border: 1px solid rgba(4, 32, 69, 0.1);
+    --shadow-card: 0 1px 2px rgba(15, 23, 42, 0.04), 0 12px 24px -16px rgba(15, 23, 42, 0.12);
+    --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.04);
+    --shadow-md: 0 6px 18px rgba(16, 24, 40, 0.08);
+    --shadow-lg: 0 16px 40px rgba(16, 24, 40, 0.16);
+  }
+
   .no-print,
   .app-header,
   .sidebar,
@@ -40,7 +78,7 @@
   }
 
   .app-shell__main {
-    margin-left: 0 !important;
+    margin-inline-start: 0 !important;
   }
 
   /* ---------- Create mode ---------- */

@@ -1,57 +1,59 @@
+import { useLang } from '../../../context/LangContext.jsx';
+
 export default function Footer() {
+  const { t } = useLang();
+
   return (
     <footer className="ws-footer">
       <div className="ws-footer__inner">
         <div className="ws-footer__brand">
-          <img src="/logo.png" alt="AL BALQAN" className="ws-footer__logo" />
+          <img src="/logo.png" alt={t('website.brand')} className="ws-footer__logo" />
           <p>
-            Premier cross-border sovereign mobility, golden residency,
-            and executive consular services connecting the United Arab Emirates
-            with Balkan corridor opportunities.
+            {t('website.footer.about')}
           </p>
           <p style={{ marginTop: '16px' }}>
-            UAE Commercial License No. 1359681
+            {t('website.footer.license')}
           </p>
         </div>
 
         <div className="ws-footer__col">
-          <h4>CORRIDOR PORTFOLIOS</h4>
+          <h4>{t('website.footer.colPortfolios')}</h4>
           <ul>
-            <li>Albania Residency</li>
-            <li>Kosovo Investment</li>
-            <li>Serbia Golden Visa</li>
-            <li>Montenegro Corporate</li>
-            <li>North Macedonia Pathway</li>
+            <li>{t('website.footer.p1')}</li>
+            <li>{t('website.footer.p2')}</li>
+            <li>{t('website.footer.p3')}</li>
+            <li>{t('website.footer.p4')}</li>
+            <li>{t('website.footer.p5')}</li>
           </ul>
         </div>
 
         <div className="ws-footer__col">
-          <h4>EXECUTIVE SERVICES</h4>
+          <h4>{t('website.footer.colServices')}</h4>
           <ul>
-            <li>Investor &amp; Golden Visas</li>
-            <li>Corporate Relocation &amp; Branching</li>
-            <li>Executive Fast-Track Processing</li>
-            <li>Cross-Border Property Acquisition</li>
-            <li>Consular Legalization &amp; MOFA Attestation</li>
+            <li>{t('website.footer.s1')}</li>
+            <li>{t('website.footer.s2')}</li>
+            <li>{t('website.footer.s3')}</li>
+            <li>{t('website.footer.s4')}</li>
+            <li>{t('website.footer.s5')}</li>
           </ul>
         </div>
 
         <div className="ws-footer__col">
-          <h4>UAE HEAD OFFICE</h4>
-          <p>Al Maryah Island / Sheikh Zayed Road</p>
-          <p>Executive Tower, Dubai &amp; Abu Dhabi,</p>
-          <p>United Arab Emirates</p>
-          <p>(+971) 4 000 2026 / (+971) 2 000 2026</p>
-          <p>advisory@albalqan.ae</p>
+          <h4>{t('website.footer.colOffice')}</h4>
+          <p>{t('website.footer.addr1')}</p>
+          <p>{t('website.footer.addr2')}</p>
+          <p>{t('website.footer.addr3')}</p>
+          <p>{t('website.footer.phone')}</p>
+          <p>{t('website.footer.email')}</p>
         </div>
       </div>
 
       <div className="ws-footer__bottom">
-        <p>2026 AL BALQAN Tourism &amp; Visa Services Company LLC. All rights reserved.</p>
+        <p>{t('website.footer.copyright')}</p>
         <div className="ws-footer__links">
-          <a href="#">Privacy Policy</a>
-          <a href="#">Terms of Service</a>
-          <a href="#">Regulatory Disclosures</a>
+          <a href="#">{t('website.footer.privacy')}</a>
+          <a href="#">{t('website.footer.terms')}</a>
+          <a href="#">{t('website.footer.disclosures')}</a>
         </div>
       </div>
     </footer>

@@ -1,6 +1,6 @@
-"""Patch preview harnesses: swap the old topbar for the new Nexus navbar.
+﻿"""Patch preview harnesses: swap the old topbar for the new Nexus navbar.
 
-Dev-only helper — regenerates the static <header class="app-header"> block in
+Dev-only helper â€” regenerates the static <header class="app-header"> block in
 every .dev/preview-*.html so the harnesses mirror Header.jsx markup, and
 ensures the shell harness has the expanded-rail state + a demo toggle.
 """
@@ -20,6 +20,7 @@ def icon(inner, width="1.6"):
 MENU = icon('<path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/>')
 SEARCH = icon('<circle cx="11" cy="11" r="7.5"/><path d="M20.5 20.5l-4.4-4.4"/>')
 PLUS = icon('<path d="M12 5v14"/><path d="M5 12h14"/>', "1.7")
+MOON = icon('<path d="M20.2 14.8A8.6 8.6 0 0 1 9.2 3.8a8.7 8.7 0 1 0 11 11z"/>')
 MAXIMIZE = icon(
     '<path d="M8.5 3.5H5.5a2 2 0 0 0-2 2v3"/>'
     '<path d="M15.5 3.5h3a2 2 0 0 1 2 2v3"/>'
@@ -60,6 +61,12 @@ HEADER = f'''<header class="app-header no-print">
               New
             </button>
           </div>
+
+          <button type="button" class="app-header__tool app-header__tool--lang" title="Switch to Arabic" aria-label="Switch to Arabic">&#1593;</button>
+
+          <button type="button" class="app-header__tool app-header__tool--theme" title="Switch to dark theme" aria-label="Switch to dark theme">
+            {MOON}
+          </button>
 
           <button type="button" class="app-header__tool app-header__tool--wide" title="Toggle fullscreen" aria-label="Toggle fullscreen">
             {MAXIMIZE}

@@ -6,6 +6,8 @@ import Icon from './components/Icons/Icon.jsx';
 import { ToastProvider } from './components/Toast/ToastProvider.jsx';
 import { AuthProvider, useAuth } from './context/AuthContext.jsx';
 import { PendingApprovalsProvider } from './context/PendingApprovalsContext.jsx';
+import { ThemeProvider } from './context/ThemeContext.jsx';
+import { LangProvider, useLang } from './context/LangContext.jsx';
 import Dashboard from './pages/Dashboard/Dashboard.jsx';
 import CreateInvoice from './pages/CreateInvoice/CreateInvoice.jsx';
 import InvoiceHistory from './pages/InvoiceHistory/InvoiceHistory.jsx';
@@ -33,17 +35,15 @@ const ROUTES = [
 ];
 
 function NoAccess({ onSignOut }) {
+  const { t } = useLang();
   return (
     <div className="login-page">
       <div className="card login-card">
         <span className="card__icon" aria-hidden="true"><Icon name="lock" /></span>
-        <h1>No access yet</h1>
-        <p className="login-card__note">
-          Your account hasn’t been granted any pages yet. Ask the administrator
-          to activate your permissions.
-        </p>
+        <h1>{t('shell.noAccessTitle')}</h1>
+        <p className="login-card__note">{t('shell.noAccessBody')}</p>
         <button type="button" className="btn btn--primary" onClick={onSignOut}>
-          Sign Out
+          {t('shell.signOut')}
         </button>
       </div>
     </div>
@@ -52,6 +52,7 @@ function NoAccess({ onSignOut }) {
 
 function Shell() {
   const { session, loading, hasPerm, signOut } = useAuth();
+  const { t } = useLang();
   const [navOpen, setNavOpen] = useState(() => {
     try {
       if (window.innerWidth >= 1024) {
@@ -83,14 +84,19 @@ function Shell() {
       <div className="login-page">
         <div className="card login-card login-card--loading">
           <span className="spinner" aria-hidden="true" />
-          <p>Loading…</p>
+          <p>{t('shell.loading')}</p>
         </div>
       </div>
     );
   }
 
   if (!session) {
-    return <Login />;
+    /* The login gate is intentionally isolated: always English, always LTR. */
+    return (
+      <div dir="ltr" lang="en">
+        <Login />
+      </div>
+    );
   }
 
   const allowed = ROUTES.filter((route) => hasPerm(route.perm));
@@ -123,15 +129,19 @@ function Shell() {
 
 export default function App() {
   return (
-    <ToastProvider>
-      <AuthProvider>
-        <HashRouter>
-          <Routes>
-            <Route path="/website" element={<Website />} />
-            <Route path="/*" element={<Shell />} />
-          </Routes>
-        </HashRouter>
-      </AuthProvider>
-    </ToastProvider>
+    <ThemeProvider>
+      <LangProvider>
+        <ToastProvider>
+          <AuthProvider>
+            <HashRouter>
+              <Routes>
+                <Route path="/website" element={<Website />} />
+                <Route path="/*" element={<Shell />} />
+              </Routes>
+            </HashRouter>
+          </AuthProvider>
+        </ToastProvider>
+      </LangProvider>
+    </ThemeProvider>
   );
 }

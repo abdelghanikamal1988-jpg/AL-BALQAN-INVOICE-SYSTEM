@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useState } from 'react';
 import Icon from '../Icons/Icon.jsx';
+import { useLang } from '../../context/LangContext.jsx';
 
 const ToastContext = createContext(null);
 
@@ -7,9 +8,10 @@ let toastId = 0;
 
 export function ToastProvider({ children }) {
   const [toasts, setToasts] = useState([]);
+  const { t } = useLang();
 
   const dismiss = useCallback((id) => {
-    setToasts((prev) => prev.filter((t) => t.id !== id));
+    setToasts((prev) => prev.filter((toast) => toast.id !== id));
   }, []);
 
   const push = useCallback(
@@ -32,14 +34,14 @@ export function ToastProvider({ children }) {
     <ToastContext.Provider value={{ success, error, info }}>
       {children}
       <div className="toast-container no-print" aria-live="polite">
-        {toasts.map((t) => (
-          <div key={t.id} className={`toast toast--${t.type}`} role="status">
-            <span className="toast__msg">{t.message}</span>
+        {toasts.map((toast) => (
+          <div key={toast.id} className={`toast toast--${toast.type}`} role="status">
+            <span className="toast__msg">{toast.message}</span>
             <button
               type="button"
               className="toast__close"
-              aria-label="Dismiss notification"
-              onClick={() => dismiss(t.id)}
+              aria-label={t('shell.dismissNotification')}
+              onClick={() => dismiss(toast.id)}
             >
               <Icon name="x" />
             </button>
