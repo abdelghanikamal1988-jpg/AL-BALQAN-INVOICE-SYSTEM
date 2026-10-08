@@ -7,6 +7,7 @@ import Modal from '../../components/Modal/Modal.jsx';
 import ConfirmAuthModal from '../../components/ConfirmAuth/ConfirmAuthModal.jsx';
 import Can from '../../components/Can/Can.jsx';
 import PendingReviewModal from '../../components/PendingReview/PendingReviewModal.jsx';
+import SkeletonRows from '../../components/Skeleton/SkeletonRows.jsx';
 import { useToast } from '../../components/Toast/ToastProvider.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { useLang } from '../../context/LangContext.jsx';
@@ -74,6 +75,8 @@ export default function InvoiceHistory() {
   const [service, setService] = useState(ANY);
   const [status, setStatus] = useState(ANY);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [shown, setShown] = useState(30);
   const [loading, setLoading] = useState(true);
   const [invoices, setInvoices] = useState([]);
   const [pendingList, setPendingList] = useState([]);
@@ -358,7 +361,22 @@ export default function InvoiceHistory() {
         onClear={query ? () => setQuery('') : null}
       />
 
-      <div className="history-filters" aria-label={t('invoice.filtersAria')}>
+      <button
+        type="button"
+        className="btn btn--neutral filters-toggle"
+        aria-expanded={filtersOpen}
+        aria-controls="history-filters"
+        onClick={() => setFiltersOpen((v) => !v)}
+      >
+        {t('common.filters')}
+        <Icon name="chevronDown" aria-hidden="true" />
+      </button>
+
+      <div
+        id="history-filters"
+        className={`history-filters${filtersOpen ? '' : ' is-collapsed'}`}
+        aria-label={t('invoice.filtersAria')}
+      >
         <div className="field history-filters__field">
           <label htmlFor="inv-period">{t('invoice.date')}</label>
           <select id="inv-period" value={period} onChange={(e) => setPeriod(e.target.value)}>
@@ -485,6 +503,7 @@ export default function InvoiceHistory() {
             <span className="spinner" aria-hidden="true" />
             {t('invoice.loadingInvoices')}
           </div>
+          <SkeletonRows rows={4} />
         </div>
       ) : visible.length === 0 ? (
         <div className="card">
@@ -532,27 +551,27 @@ export default function InvoiceHistory() {
                 </tr>
               </thead>
               <tbody>
-                {visible.map((inv) => {
+                {visible.slice(0, shown).map((inv) => {
                   const payment = invoicePaymentBreakdown(inv.payment);
                   const calc = calculatePayment(payment.grandTotal, payment.paid);
                   const pendingFor = pendingByInvoice.get(inv.id);
                   return (
-                    <tr key={inv.id}>
-                      <td className="mono">{inv.invoiceNumber}</td>
-                      <td>{inv.issueDate || '—'}</td>
-                      <td>{inv.customer?.name || '—'}</td>
-                      <td>{inv.customer?.passport || '—'}</td>
-                      <td>{inv.travel?.destination ? t('data.destination.' + inv.travel.destination) : '—'}</td>
-                      <td>{inv.travel?.service ? t('data.service.' + inv.travel.service) : '—'}</td>
-                      <td>{formatCurrency(calc.total)}</td>
-                      <td>{formatCurrency(calc.paid)}</td>
-                      <td>{formatCurrency(calc.remaining)}</td>
-                      <td>
-                        <span className={`badge ${statusClass(calc.status)}`}>
-                          {t('invoice.status.' + calc.status)}
-                        </span>
-                      </td>
-                      <td>
+            <tr key={inv.id}>
+              <td className="mono" data-label={t('invoice.colInvoiceNo')}>{inv.invoiceNumber}</td>
+              <td data-label={t('invoice.date')}>{inv.issueDate || '—'}</td>
+              <td data-label={t('invoice.colCustomer')}>{inv.customer?.name || '—'}</td>
+              <td data-label={t('invoice.colPassport')}>{inv.customer?.passport || '—'}</td>
+              <td data-label={t('invoice.destination')}>{inv.travel?.destination ? t('data.destination.' + inv.travel.destination) : '—'}</td>
+              <td data-label={t('invoice.service')}>{inv.travel?.service ? t('data.service.' + inv.travel.service) : '—'}</td>
+              <td data-label={t('common.total')}>{formatCurrency(calc.total)}</td>
+              <td data-label={t('invoice.colPaid')}>{formatCurrency(calc.paid)}</td>
+              <td data-label={t('invoice.colRemaining')}>{formatCurrency(calc.remaining)}</td>
+              <td data-label={t('common.status')}>
+                <span className={`badge ${statusClass(calc.status)}`}>
+                  {t('invoice.status.' + calc.status)}
+                </span>
+              </td>
+              <td data-label={t('invoice.colUser')}>
                         <div className="user-cell">
                           <span>{nameOf(inv.createdBy)}</span>
                           {inv.editedBy && inv.editedBy !== inv.createdBy && (
@@ -585,7 +604,7 @@ export default function InvoiceHistory() {
                           )}
                         </div>
                       </td>
-                      <td className="actions-cell">
+                      <td className="actions-cell" data-label={t('common.actions')}>
                         <button
                           type="button"
                           className="btn btn--neutral btn--sm"
@@ -635,6 +654,13 @@ export default function InvoiceHistory() {
               </tbody>
             </table>
           </div>
+          {visible.length > shown && (
+            <div className="load-more">
+              <button type="button" className="btn btn--neutral" onClick={() => setShown((n) => n + 50)}>
+                {t('common.loadMore')} ({visible.length - shown})
+              </button>
+            </div>
+          )}
         </div>
       )}
 

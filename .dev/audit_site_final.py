@@ -7,7 +7,7 @@ import websocket
 
 sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 
-TARGET = 'http://localhost:5173/#/website'
+TARGET = 'https://abdelghanikamal1988-jpg.github.io/AL-BALQAN-INVOICE-SYSTEM/#/website'
 
 JS = r"""
 (() => {

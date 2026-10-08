@@ -27,6 +27,9 @@ export default function Modal({ title, onClose, children, actions, danger = fals
       <div className={className ? `modal ${className}` : 'modal'}>
         <div className="modal__header">
           <h3>{t(title)}</h3>
+          <button type="button" className="modal__close" onClick={onClose} aria-label={t('common.close')}>
+            &times;
+          </button>
         </div>
         <div className="modal__body">{children}</div>
         {actions && <div className="modal__actions">{actions}</div>}

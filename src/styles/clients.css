@@ -63,6 +63,13 @@ html[data-theme='dark'] .clients-page {
   align-items: center;
 }
 
+/* Filter group around the selects: `display: contents` keeps the
+   desktop toolbar layout identical while phones can collapse it
+   behind the "Filters" toggle (.filters-toggle in responsive.css). */
+.clients-page .cl-toolbar__group {
+  display: contents;
+}
+
 .clients-page .cl-toolbar .field label {
   position: absolute;
   width: 1px;

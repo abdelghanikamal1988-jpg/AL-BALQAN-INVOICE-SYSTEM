@@ -34,7 +34,7 @@ export default function Services() {
         {services.map((s) => (
           <div key={s.id} className="ws-service-card">
             <div className="ws-service-card__img">
-              <img src={s.image} alt={t(s.title)} />
+              <img src={s.image} alt={t(s.title)} loading="lazy" decoding="async" />
             </div>
             <div className={`ws-service-card__body ws-service-card__body--${s.variant}`}>
               <h3 className="ws-service-card__title">{t(s.title)}</h3>

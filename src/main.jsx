@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.jsx';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary.jsx';
+import './styles/theme.css';
 import './styles/global.css';
 import './styles/dashboard.css';
 import './styles/invoice.css';

@@ -22,7 +22,7 @@ export default function Partners() {
         <div className="ws-partners__scroll">
           {[...partners, ...partners].map((p, i) => (
             <div key={i} className="ws-partner-logo">
-              <img src={p.image} alt={t('website.partners.logoAlt', { n: p.id })} />
+              <img src={p.image} alt={t('website.partners.logoAlt', { n: p.id })} loading="lazy" decoding="async" />
             </div>
           ))}
         </div>

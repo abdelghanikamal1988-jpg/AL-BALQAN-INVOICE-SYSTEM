@@ -29,6 +29,8 @@ export default {
   'common.required': 'مطلوب',
   'common.unknown': 'غير معروف',
   'common.of': 'من',
+  'common.filters': 'الفلاتر',
+  'common.loadMore': 'عرض المزيد',
 
   'status.NEW': 'جديد',
   'status.DOCUMENTS': 'تم رفع المستندات',

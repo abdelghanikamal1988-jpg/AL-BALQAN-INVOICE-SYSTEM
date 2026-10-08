@@ -5,6 +5,7 @@ import Modal from '../../components/Modal/Modal.jsx';
 import ConfirmAuthModal from '../../components/ConfirmAuth/ConfirmAuthModal.jsx';
 import Can from '../../components/Can/Can.jsx';
 import PendingReviewModal from '../../components/PendingReview/PendingReviewModal.jsx';
+import SkeletonRows from '../../components/Skeleton/SkeletonRows.jsx';
 import { useToast } from '../../components/Toast/ToastProvider.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { usePendingApprovals } from '../../context/PendingApprovalsContext.jsx';
@@ -70,6 +71,7 @@ export default function Clients() {
   const [invoiceFilter, setInvoiceFilter] = useState(ANY);
   const [loading, setLoading] = useState(true);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const [invoiceOwner, setInvoiceOwner] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [authPrompt, setAuthPrompt] = useState(false);
@@ -352,7 +354,18 @@ export default function Clients() {
         </div>
       )}
 
-      <div className="cl-toolbar">
+      <button
+        type="button"
+        className="btn btn--neutral filters-toggle"
+        aria-expanded={filtersOpen}
+        aria-controls="cl-filters"
+        onClick={() => setFiltersOpen((v) => !v)}
+      >
+        {t('common.filters')}
+        <Icon name="chevronDown" aria-hidden="true" />
+      </button>
+
+      <div id="cl-filters" className="cl-toolbar">
         <div className="field cl-toolbar__search">
           <label htmlFor="client-search">{t('common.search')}</label>
           <input
@@ -363,7 +376,8 @@ export default function Clients() {
             placeholder={t('clients.searchPlaceholder')}
           />
         </div>
-        <div className="field cl-toolbar__agent">
+        <div className={`cl-toolbar__group${filtersOpen ? '' : ' is-collapsed'}`}>
+          <div className="field cl-toolbar__agent">
           <label htmlFor="client-agent">{t('clients.referralAgentField')}</label>
           <select id="client-agent" value={agent} onChange={(e) => setAgent(e.target.value)}>
             <option value={ANY}>{t('clients.allAgents')}</option>
@@ -422,6 +436,7 @@ export default function Clients() {
             {t('clients.clearFilters')}
           </button>
         )}
+        </div>
       </div>
 
       <p className="cl-summary">
@@ -436,6 +451,7 @@ export default function Clients() {
             <span className="spinner" aria-hidden="true" />
             {t('clients.loadingClients')}
           </div>
+          <SkeletonRows rows={4} />
         </div>
       ) : visible.length === 0 ? (
         <div className="card">
@@ -477,29 +493,29 @@ export default function Clients() {
                   const rows = invoicesOf(client);
                   const pendingFor = pendingByClient.get(client.id);
                   return (
-                    <tr key={client.id}>
-                      <td>
-                        <div className="cl-identity">
-                          <span className="cl-avatar" aria-hidden="true">
-                            {initialsOf(client)}
-                          </span>
-                          <span>
-                            <span className="cl-name">{clientFullName(client) || '—'}</span>
-                            <span className="cl-sub">{client.sex || ''}</span>
-                          </span>
-                        </div>
-                      </td>
-                      <td>
-                        <span className="cl-passport">{client.passport || '—'}</span>
-                      </td>
-                      <td>{client.country || '—'}</td>
-                      <td>{client.referralAgent || '—'}</td>
-                      <td>
-                        <span className={`cbadge ${statusClass(client.status)}`}>
-                          {statusText(client.status)}
-                        </span>
-                      </td>
-                      <td>
+            <tr key={client.id}>
+              <td data-label={t('clients.client')}>
+                <div className="cl-identity">
+                  <span className="cl-avatar" aria-hidden="true">
+                    {initialsOf(client)}
+                  </span>
+                  <span>
+                    <span className="cl-name">{clientFullName(client) || '—'}</span>
+                    <span className="cl-sub">{client.sex || ''}</span>
+                  </span>
+                </div>
+              </td>
+              <td data-label={t('clients.passportLabel')}>
+                <span className="cl-passport">{client.passport || '—'}</span>
+              </td>
+              <td data-label={t('clients.colCountry')}>{client.country || '—'}</td>
+              <td data-label={t('clients.referralAgent')}>{client.referralAgent || '—'}</td>
+              <td data-label={t('common.status')}>
+                <span className={`cbadge ${statusClass(client.status)}`}>
+                  {statusText(client.status)}
+                </span>
+              </td>
+              <td data-label={t('clients.invoices')}>
                         <button
                           type="button"
                           className="btn btn--neutral btn--sm"
@@ -512,7 +528,7 @@ export default function Clients() {
                               : t('clients.invoiceOne', { n: rows.length })}
                         </button>
                       </td>
-                      <td>
+                      <td data-label={t('clients.colUser')}>
                         <div className="user-cell">
                           <span>{nameOf(client.createdBy)}</span>
                           {client.editedBy && client.editedBy !== client.createdBy && (
@@ -545,7 +561,7 @@ export default function Clients() {
                           )}
                         </div>
                       </td>
-                      <td className="actions-cell">
+                      <td className="actions-cell" data-label={t('common.actions')}>
                         <div className="cl-actions">
                           <button
                             type="button"
@@ -632,11 +648,11 @@ export default function Clients() {
               <tbody>
                 {ownerRows.map((row) => (
                   <tr key={row.invoice.id}>
-                    <td className="mono">{row.invoice.invoiceNumber}</td>
-                    <td>{row.invoice.issueDate || '—'}</td>
-                    <td>{formatCurrency(row.payment.grandTotal)}</td>
-                    <td>{formatCurrency(row.calc.paid)}</td>
-                    <td>{formatCurrency(row.calc.remaining)}</td>
+                    <td className="mono" data-label={t('clients.invoiceNo')}>{row.invoice.invoiceNumber}</td>
+                    <td data-label={t('clients.date')}>{row.invoice.issueDate || '—'}</td>
+                    <td data-label={t('common.total')}>{formatCurrency(row.payment.grandTotal)}</td>
+                    <td data-label={t('clients.paid')}>{formatCurrency(row.calc.paid)}</td>
+                    <td data-label={t('clients.remaining')}>{formatCurrency(row.calc.remaining)}</td>
                   </tr>
                 ))}
               </tbody>

@@ -12,8 +12,36 @@
 
 /* ---------- elements that never leave the small screen ---------- */
 
+@keyframes modal-sheet {
+  from {
+    transform: translateY(18px);
+    opacity: 0.6;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
 .sidebar-backdrop {
   display: none;
+}
+
+/* Filter bottom-sheet toggles only exist on phones (see PHONE block). */
+.filters-toggle {
+  display: none;
+}
+
+/* Modal close button only exists on phones (bottom sheet, spec §4). */
+.modal__close {
+  display: none;
+}
+
+/* "Load more" pagination wrapper (InvoiceHistory). */
+.load-more {
+  display: flex;
+  justify-content: center;
+  padding: 4px 0 6px;
 }
 
 .db-act-wrap {
@@ -59,6 +87,173 @@
   .prv-diff th,
   .prv-diff td {
     padding: 8px 10px;
+  }
+
+  /* ---------- touch + typography across phones AND tablets (spec §4)
+     These live in the <=1023 block so the phone block below only has
+     to add what is phone-specific (drawer, sheets, stacking). ---------- */
+
+  .btn {
+    min-height: var(--tap-min) !important;
+  }
+
+  .btn--sm {
+    min-height: var(--tap-min) !important;
+    padding: 10px 13px;
+    font-size: 13px;
+  }
+
+  .icon-btn {
+    width: var(--tap-min);
+    height: var(--tap-min);
+    border-radius: 10px;
+    font-size: 17px;
+  }
+
+  .searchbar {
+    min-height: var(--tap-min);
+  }
+
+  /* 16px stops iOS Safari from zooming into fields on focus. Page
+     rules with higher specificity (.login-card .field input,
+     .cl-toolbar .field input …) are beaten with !important — a
+     deliberate, media-scoped override. */
+  input:not([type='checkbox']):not([type='radio']),
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+
+  .field input:not([type='checkbox']):not([type='radio']),
+  .field select,
+  .searchbar input,
+  .history-filters__field input,
+  .history-filters__field select,
+  .clients-page .cl-toolbar .field input,
+  .clients-page .cl-toolbar .field select {
+    min-height: 46px !important;
+  }
+
+  textarea {
+    min-height: 88px !important;
+  }
+
+  .crumbs a,
+  .crumbs .crumbs__cur {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-min);
+    padding: 10px;
+    margin: -6px 0;
+  }
+
+  .sidebar__label {
+    opacity: 1;
+  }
+
+  .sidebar__link {
+    padding: 13px 14px;
+    font-size: 15px;
+  }
+
+  .pending-chip {
+    min-height: var(--tap-min);
+    padding: 10px 14px;
+  }
+
+  .db-section__hint {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-min);
+    padding: 0 8px;
+    margin: 0;
+  }
+
+  .app-header__menu,
+  .app-header__tool,
+  .app-header__bell {
+    width: var(--tap-min);
+    height: var(--tap-min);
+    flex: 0 0 var(--tap-min);
+    border-radius: 10px;
+  }
+
+  .app-header__cta {
+    min-height: var(--tap-min);
+    padding: 10px 14px;
+  }
+
+  .app-header__brand {
+    padding: 7px;
+    margin: -7px;
+  }
+
+  /* Long money/status strings must wrap inside narrow KPI tiles
+     at every small width (spec §2). */
+  .statc__value {
+    font-size: clamp(15px, 2.6vw, 20px);
+    overflow-wrap: anywhere;
+  }
+
+  .statc__label {
+    overflow-wrap: anywhere;
+    letter-spacing: 0;
+  }
+
+  /* A visible close button for every dialog up to desktop (spec §4). */
+  .modal__close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 var(--tap-min);
+    width: var(--tap-min);
+    height: var(--tap-min);
+    margin-block: -10px;
+    margin-inline-end: -10px;
+    border: none;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--muted);
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .modal__close:hover,
+  .modal__close:active {
+    background: var(--hover);
+    color: var(--text);
+  }
+
+  /* ---------- scrolling tables: sticky first column + edge hint ---------- */
+
+  .history-table-wrap,
+  .cl-table-wrap,
+  .db-table-wrap,
+  .db-act-wrap {
+    position: relative;
+    box-shadow: inset -13px 0 11px -13px rgba(16, 24, 40, 0.45);
+  }
+
+  html[dir='rtl'] .history-table-wrap,
+  html[dir='rtl'] .cl-table-wrap,
+  html[dir='rtl'] .db-table-wrap,
+  html[dir='rtl'] .db-act-wrap {
+    box-shadow: inset 13px 0 11px -13px rgba(16, 24, 40, 0.45);
+  }
+
+  .history-table th:first-child,
+  .history-table td:first-child,
+  .cl-table th:first-child,
+  .cl-table td:first-child,
+  .db-inv th:first-child,
+  .db-inv td:first-child,
+  .db-act th:first-child,
+  .db-act td:first-child {
+    position: sticky;
+    inset-inline-start: 0;
+    z-index: 1;
+    background: var(--surface);
   }
 
   /* ---------- off-canvas navigation drawer (below lg, Nexus-style) ---------- */
@@ -109,22 +304,27 @@
 @media (max-width: 767px) {
   /* ---------- top bar ---------- */
 
+  .app-header {
+    height: calc(var(--header-h) + env(safe-area-inset-top, 0px));
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+
   .app-header__inner {
-    padding: 0 12px;
-    gap: 10px;
+    padding: 0 10px;
+    gap: 6px;
   }
 
   .app-header__menu {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    flex: 0 0 40px;
-    width: 40px;
-    height: 40px;
-    margin-inline-start: -4px;
+    flex: 0 0 var(--tap-min);
+    width: var(--tap-min);
+    height: var(--tap-min);
+    margin-inline-start: -6px;
     padding: 0;
     border: none;
-    border-radius: 9.6px;
+    border-radius: 10px;
     background: transparent;
     color: var(--text);
     cursor: pointer;
@@ -145,6 +345,25 @@
   .app-header__tool--lang,
   .app-header__tool--theme {
     display: inline-flex;
+  }
+
+  .app-header__tool--lang,
+  .app-header__tool--theme,
+  .app-header__bell {
+    width: var(--tap-min);
+    height: var(--tap-min);
+    flex: 0 0 var(--tap-min);
+    border-radius: 10px;
+  }
+
+  .app-header__right {
+    gap: 2px;
+  }
+
+  .app-header__user {
+    height: var(--tap-min);
+    padding: 5px 6px;
+    border-radius: 10px;
   }
 
   .app-header__vr {
@@ -184,39 +403,59 @@
   }
 
   .page-header h1 {
-    font-size: 21px;
+    font-size: var(--fs-title);
   }
 
   .page-header .subtitle {
-    font-size: 13px;
+    font-size: var(--fs-sub);
     letter-spacing: normal;
+    overflow-wrap: anywhere;
   }
 
-  /* ---------- touch-friendly controls ---------- */
+  /* ---------- touch-friendly controls (spec §4: ≥44×44) ---------- */
 
   .btn {
-    min-height: 44px;
+    min-height: var(--tap-min) !important;
     padding: 12px 20px;
   }
 
   .btn--sm {
-    min-height: 38px;
-    padding: 9px 14px;
+    min-height: var(--tap-min) !important;
+    padding: 10px 13px;
+    font-size: 13px;
   }
 
-  /* 16px stops iOS Safari from zooming into fields on focus. */
+  .icon-btn {
+    width: var(--tap-min);
+    height: var(--tap-min);
+    border-radius: 10px;
+    font-size: 17px;
+  }
+
+  /* 16px stops iOS Safari from zooming into fields on focus.
+     The page-level rules that size form controls
+     (.login-card .field input, .cl-toolbar .field input,
+     .history-filters__field select …) carry higher specificity
+     than a bare `input`, so the phone layer wins with !important —
+     this is a deliberate, media-scoped override (spec §4). */
   input:not([type='checkbox']):not([type='radio']),
   select,
   textarea {
-    font-size: 16px;
+    font-size: 16px !important;
   }
 
-  .field input,
+  .field input:not([type='checkbox']):not([type='radio']),
   .field select,
   .searchbar input,
   .history-filters__field input,
-  .history-filters__field select {
-    font-size: 16px;
+  .history-filters__field select,
+  .clients-page .cl-toolbar .field input,
+  .clients-page .cl-toolbar .field select {
+    min-height: 46px !important;
+  }
+
+  textarea {
+    min-height: 88px !important;
   }
 
   .field input,
@@ -294,36 +533,252 @@
     flex: 1 1 100%;
   }
 
-  /* ---------- tables ---------- */
+  /* Filter toggle button → collapses filters into a bottom-sheet
+     style disclosure on phones (spec §3: زر فلترة يفتح الفلاتر). */
+  .filters-toggle {
+    display: inline-flex;
+    width: 100%;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .cl-toolbar__group.is-collapsed,
+  .history-filters.is-collapsed {
+    display: none;
+  }
+
+  /* Toolbar fields go full width on phones. */
+  .clients-page .cl-toolbar .field {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  .clients-page .cl-toolbar__reset {
+    flex: 1 1 100%;
+  }
+
+  .load-more .btn {
+    flex: 1 1 100%;
+    max-width: 340px;
+  }
+
+  /* ---------- small tap targets that stayed behind ---------- */
+
+  .crumbs a,
+  .crumbs .crumbs__cur {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-min);
+    padding: 10px;
+    margin: -6px 0;
+  }
+
+  .db-section__hint {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-min);
+    padding: 0 8px;
+    margin: 0;
+  }
+
+  .pending-chip {
+    min-height: var(--tap-min);
+    padding: 10px 14px;
+  }
+
+  /* ---------- tables → stacked cards below 768px (spec §3 أ) ---------- */
+
+  .history-table-wrap,
+  .cl-table-wrap,
+  .db-table-wrap {
+    overflow-x: visible;
+    box-shadow: none;
+  }
 
   .history-table,
-  .cl-table {
-    font-size: 13px;
+  .cl-table,
+  .db-inv,
+  .au-table {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    font-size: 13.5px;
   }
 
-  .history-table th,
-  .history-table td {
-    padding: 10px 12px;
+  .history-table thead,
+  .cl-table thead,
+  .db-inv thead,
+  .au-table thead {
+    display: none;
   }
 
-  .cl-table th,
-  .cl-table td {
-    padding: 10px 11px;
+  .history-table tfoot,
+  .cl-table tfoot,
+  .db-inv tfoot,
+  .au-table tfoot {
+    display: block;
   }
 
-  /* ---------- modals ---------- */
+  .history-table tbody,
+  .cl-table tbody,
+  .db-inv tbody,
+  .au-table tbody {
+    display: block;
+  }
+
+  .history-table tfoot tr,
+  .cl-table tfoot tr,
+  .db-inv tfoot tr,
+  .au-table tfoot tr {
+    display: block;
+    margin: 0;
+    padding: 0;
+    background: var(--hover);
+  }
+
+  .history-table tbody tr,
+  .cl-table tbody tr,
+  .db-inv tbody tr,
+  .au-table tbody tr,
+  .history-table tfoot tr,
+  .cl-table tfoot tr,
+  .db-inv tfoot tr,
+  .au-table tfoot tr {
+    display: block;
+    margin: 0 0 10px;
+    padding: 2px 0;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface);
+    overflow: hidden;
+  }
+
+  .history-table td,
+  .cl-table td,
+  .db-inv td,
+  .au-table td,
+  .history-table tfoot td,
+  .cl-table tfoot td,
+  .db-inv tfoot td,
+  .au-table tfoot td {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 8px 13px;
+    border: none;
+    border-bottom: 1px solid var(--line-soft);
+    white-space: normal;
+    text-align: start;
+  }
+
+  .history-table td[data-label],
+  .cl-table td[data-label],
+  .db-inv td[data-label],
+  .au-table td[data-label] {
+    align-items: center;
+  }
+
+  .history-table tbody tr td:last-child,
+  .cl-table tbody tr td:last-child,
+  .db-inv tbody tr td:last-child,
+  .au-table tbody tr td:last-child,
+  .history-table tfoot tr td:last-child,
+  .cl-table tfoot tr td:last-child,
+  .db-inv tfoot tr td:last-child,
+  .au-table tfoot tr td:last-child {
+    border-bottom: none;
+  }
+
+  .history-table td[data-label]::before,
+  .cl-table td[data-label]::before,
+  .db-inv td[data-label]::before,
+  .au-table td[data-label]::before,
+  .history-table tfoot td[data-label]::before,
+  .cl-table tfoot td[data-label]::before,
+  .db-inv tfoot td[data-label]::before,
+  .au-table tfoot td[data-label]::before {
+    content: attr(data-label);
+    flex: 0 0 auto;
+    max-width: 45%;
+    font-size: 10.5px;
+    font-weight: 700;
+    line-height: 1.5;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .au-card {
+    padding: 10px;
+    overflow: hidden;
+  }
+
+  .au-actions {
+    text-align: start;
+    flex-wrap: wrap;
+    gap: 8px;
+    display: flex;
+    align-items: center;
+  }
+
+  /* ---------- modals → bottom sheets (spec §4) ---------- */
 
   .modal-overlay {
-    padding: 10px;
+    padding: 0;
+    align-items: flex-end;
   }
 
   .modal {
-    max-height: calc(100vh - 20px);
-    max-height: calc(100dvh - 20px);
+    max-width: 100%;
+    max-height: 92dvh;
+    border-radius: 18px 18px 0 0;
+    animation: modal-sheet 0.22s ease;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .modal.au-modal {
+    max-width: 100%;
+    max-height: 92dvh;
   }
 
   .modal__header {
-    padding: 15px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 16px;
+  }
+
+  .modal__header h3 {
+    min-width: 0;
+    font-size: 16px;
+    overflow-wrap: anywhere;
+  }
+
+  .modal__close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 var(--tap-min);
+    width: var(--tap-min);
+    height: var(--tap-min);
+    margin-block: -10px;
+    margin-inline-end: -10px;
+    border: none;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--muted);
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .modal__close:hover,
+  .modal__close:active {
+    background: var(--hover);
+    color: var(--text);
   }
 
   .modal__body {
@@ -347,11 +802,17 @@
     gap: 10px;
   }
 
+  /* Long titles clamp to 2 lines instead of hiding behind a
+     single-line ellipsis (spec §2: لا نص يخرج أو يُقتطع). */
   .appr-row__title,
   .appr-row__meta {
+    white-space: normal;
     overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow-wrap: anywhere;
   }
 
   .prv-diff {
@@ -371,7 +832,7 @@
   }
 
   .statc {
-    gap: 10px;
+    gap: 8px;
     padding: 12px;
   }
 
@@ -380,6 +841,18 @@
     width: 32px;
     height: 32px;
     font-size: 15px;
+  }
+
+  /* Money strings ("AED 96,400.00") must fit the narrow tile:
+     shrink the value and allow hard breaks (spec §2). */
+  .statc__value {
+    font-size: clamp(15px, 4.3vw, 20px);
+    overflow-wrap: anywhere;
+  }
+
+  .statc__label {
+    overflow-wrap: anywhere;
+    letter-spacing: 0;
   }
 
   .cd-grid {
@@ -391,11 +864,28 @@
     padding: 30px 16px;
   }
 
-  /* ---------- create-invoice editor ---------- */
+  /* ---------- create-invoice / client-form editor ---------- */
 
+  /* The page actions live in the header, so on phones they become a
+     fixed bottom action tray (spec §4: الأزرار الرئيسية ثابتة أسفل
+     الشاشة في النماذج الطويلة). The tray scrolls horizontally when
+     there are many buttons (CreateInvoice has six). */
   .editor-actions {
-    width: 100%;
+    position: fixed;
+    inset-inline: 0;
+    bottom: 0;
+    z-index: 30;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
     gap: 8px;
+    width: auto;
+    margin: 0;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    box-shadow: 0 -6px 18px rgba(16, 24, 40, 0.07);
+    padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
+    -webkit-overflow-scrolling: touch;
   }
 
   .editor-actions .spacer {
@@ -403,8 +893,15 @@
   }
 
   .editor-actions .btn {
-    flex: 1 1 140px;
+    flex: 0 0 auto;
     justify-content: center;
+    white-space: nowrap;
+    padding: 11px 16px;
+  }
+
+  /* Room for the fixed action tray + still breathe at the end. */
+  .page {
+    padding-bottom: calc(76px + env(safe-area-inset-bottom));
   }
 
   .preview-toolbar {
@@ -446,5 +943,44 @@
 
   .ws-hero__title {
     font-size: 36px;
+  }
+}
+
+/* ====================== PHONE (very narrow) ======================== */
+
+@media (max-width: 480px) {
+  /* The header has to fit 320–480px: drop the brand wordmark and
+     keep the 30px logo (the sidebar/drawer still carries the full
+     brand). This is what stops the 402px content overflow. */
+  .app-header__brand-word {
+    display: none;
+  }
+}
+
+@media (max-width: 400px) {
+  .app-header__inner {
+    padding: 0 8px;
+    gap: 4px;
+  }
+
+  .app-header__right {
+    gap: 0;
+  }
+
+  /* Give the KPI value the chevron's space back on tiny screens. */
+  .statc__chev {
+    display: none;
+  }
+
+  .statc {
+    gap: 6px;
+    padding: 11px 10px;
+  }
+
+  .statc__tile {
+    flex: 0 0 28px;
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
   }
 }

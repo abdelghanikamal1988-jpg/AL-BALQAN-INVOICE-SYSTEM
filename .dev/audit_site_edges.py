@@ -8,8 +8,8 @@ import websocket
 sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 
 URLS = [
-    ('login', "http://localhost:5173/"),
-    ('website', "http://localhost:5173/#/website"),
+    ('login', "https://abdelghanikamal1988-jpg.github.io/AL-BALQAN-INVOICE-SYSTEM/"),
+    ('website', "https://abdelghanikamal1988-jpg.github.io/AL-BALQAN-INVOICE-SYSTEM/#/website"),
 ]
 
 JS = r"""

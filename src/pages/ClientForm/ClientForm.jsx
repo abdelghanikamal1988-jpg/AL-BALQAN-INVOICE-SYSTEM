@@ -533,7 +533,7 @@ export default function ClientForm() {
                         meta && meta.type === 'application/pdf' ? (
                           <div className="cf-doc__thumb">{t('clients.pdfDocument')}</div>
                         ) : (
-                          <img className="cf-doc__thumb" src={preview} alt={defLabel} />
+                          <img className="cf-doc__thumb" src={preview} alt={defLabel} loading="lazy" decoding="async" />
                         )
                       ) : (
                         <div className="cf-doc__thumb">{t('clients.noFile')}</div>

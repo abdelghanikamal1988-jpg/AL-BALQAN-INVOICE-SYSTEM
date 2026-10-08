@@ -272,7 +272,7 @@ export default function ClientDetail() {
         </div>
         <div className="cd-profile__photo">
           {photoUrl ? (
-            <img className="cd-photo" src={photoUrl} alt={t('clients.client')} />
+            <img className="cd-photo" src={photoUrl} alt={t('clients.client')} loading="lazy" decoding="async" />
           ) : (
             <div className="cd-photo cd-photo--empty">{t('clients.noPhoto')}</div>
           )}
@@ -317,7 +317,7 @@ export default function ClientDetail() {
                         {t('clients.pdfDocument')}
                       </div>
                     ) : (
-                      <img className="cd-doc__media" src={url} alt={defLabel} />
+                      <img className="cd-doc__media" src={url} alt={defLabel} loading="lazy" decoding="async" />
                     )
                   ) : (
                     <div className="cd-doc__media cd-doc__media--missing">
@@ -385,14 +385,14 @@ export default function ClientDetail() {
                   </thead>
                   <tbody>
                     {invoices.map((row) => (
-                      <tr key={row.invoice.id}>
-                        <td className="mono">{row.invoice.invoiceNumber}</td>
-                        <td>{row.invoice.issueDate || '—'}</td>
-                        <td>{serviceLabel(row.invoice.travel?.service) || '—'}</td>
-                        <td>{formatCurrency(row.payment.grandTotal)}</td>
-                        <td>{formatCurrency(row.calc.paid)}</td>
-                        <td>{formatCurrency(row.calc.remaining)}</td>
-                      </tr>
+                  <tr key={row.invoice.id}>
+                    <td className="mono" data-label={t('clients.invoiceNo')}>{row.invoice.invoiceNumber}</td>
+                    <td data-label={t('clients.date')}>{row.invoice.issueDate || '—'}</td>
+                    <td data-label={t('clients.service')}>{serviceLabel(row.invoice.travel?.service) || '—'}</td>
+                    <td data-label={t('common.total')}>{formatCurrency(row.payment.grandTotal)}</td>
+                    <td data-label={t('clients.paid')}>{formatCurrency(row.calc.paid)}</td>
+                    <td data-label={t('clients.remaining')}>{formatCurrency(row.calc.remaining)}</td>
+                  </tr>
                     ))}
                   </tbody>
                 </table>

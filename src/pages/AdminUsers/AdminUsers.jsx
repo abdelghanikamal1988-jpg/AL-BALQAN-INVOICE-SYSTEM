@@ -328,23 +328,23 @@ export default function AdminUsers() {
                 const isSelf = row.id === user?.id;
                 return (
                   <tr key={row.id} className={row.is_active === false ? 'au-row--off' : ''}>
-                    <td>
-                      <span className="au-name">{row.full_name || '—'}</span>
-                      <span className="au-email">{row.email}</span>
-                    </td>
-                    <td>
-                      <span className={`au-chip au-chip--${row.role}`}>
-                        {t(`admin.role.${row.role}`)}
-                      </span>
-                    </td>
-                    <td>
-                      <span className={`au-status${row.is_active === false ? ' au-status--off' : ''}`}>
-                        {row.is_active === false ? t('admin.status.disabled') : t('admin.status.active')}
-                      </span>
-                    </td>
-                    <td>{permissionCount(row, t)}</td>
-                    <td className="au-date">{row.created_at ? formatDateShort(row.created_at) : '—'}</td>
-                    <td className="au-actions">
+                  <td data-label={t('admin.col.user')}>
+                    <span className="au-name">{row.full_name || '—'}</span>
+                    <span className="au-email">{row.email}</span>
+                  </td>
+                  <td data-label={t('admin.col.role')}>
+                    <span className={`au-chip au-chip--${row.role}`}>
+                      {t(`admin.role.${row.role}`)}
+                    </span>
+                  </td>
+                  <td data-label={t('common.status')}>
+                    <span className={`au-status${row.is_active === false ? ' au-status--off' : ''}`}>
+                      {row.is_active === false ? t('admin.status.disabled') : t('admin.status.active')}
+                    </span>
+                  </td>
+                  <td data-label={t('admin.col.permissions')}>{permissionCount(row, t)}</td>
+                  <td className="au-date" data-label={t('admin.col.created')}>{row.created_at ? formatDateShort(row.created_at) : '—'}</td>
+                  <td className="au-actions" data-label={t('common.actions')}>
                       {!isSelf && (
                         <button
                           type="button"

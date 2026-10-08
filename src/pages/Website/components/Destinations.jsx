@@ -44,7 +44,7 @@ export default function Destinations() {
         {countries.map((c) => (
           <div key={c.id} className="ws-country-card">
             <div className="ws-country-card__img">
-              <img src={c.image} alt={t(c.name)} />
+              <img src={c.image} alt={t(c.name)} loading="lazy" decoding="async" />
             </div>
             <div className="ws-country-card__overlay" />
             <div className="ws-country-card__content">

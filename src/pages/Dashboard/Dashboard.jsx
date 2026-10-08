@@ -929,25 +929,25 @@ export default function Dashboard() {
                 <tbody>
                   {agentStats.map((r) => (
                     <tr key={r.agent}>
-                      <td className="db-inv__num">{r.agent}</td>
-                      <td className="db-inv__count">{r.clients}</td>
-                      <td className="db-inv__count">{r.thisMonth}</td>
-                      <td className="db-inv__count">{r.withInvoice}</td>
-                      <td className="db-inv__count">{r.invoices}</td>
-                      <td className="db-inv__amount">{formatCurrency(r.invoiced)}</td>
-                      <td className="db-inv__amount">{formatCurrency(r.paid)}</td>
+                      <td className="db-inv__num" data-label={t('dashboard.th.agent')}>{r.agent}</td>
+                      <td className="db-inv__count" data-label={t('dashboard.th.clients')}>{r.clients}</td>
+                      <td className="db-inv__count" data-label={t('dashboard.th.thisMonth')}>{r.thisMonth}</td>
+                      <td className="db-inv__count" data-label={t('dashboard.th.withInvoice')}>{r.withInvoice}</td>
+                      <td className="db-inv__count" data-label={t('dashboard.th.invoices')}>{r.invoices}</td>
+                      <td className="db-inv__amount" data-label={t('dashboard.th.invoiced')}>{formatCurrency(r.invoiced)}</td>
+                      <td className="db-inv__amount" data-label={t('dashboard.th.paid')}>{formatCurrency(r.paid)}</td>
                     </tr>
                   ))}
                 </tbody>
                 <tfoot>
                   <tr>
-                    <td>{t('dashboard.tfoot.totalAgents', { v: agentStats.length })}</td>
-                    <td className="db-inv__count">{agentTotals.clients}</td>
-                    <td className="db-inv__count">{agentTotals.thisMonth}</td>
-                    <td className="db-inv__count">{agentTotals.withInvoice}</td>
-                    <td className="db-inv__count">{agentTotals.invoices}</td>
-                    <td className="db-inv__amount">{formatCurrency(agentTotals.invoiced)}</td>
-                    <td className="db-inv__amount">{formatCurrency(agentTotals.paid)}</td>
+                    <td data-label={t('dashboard.th.agent')}>{t('dashboard.tfoot.totalAgents', { v: agentStats.length })}</td>
+                    <td className="db-inv__count" data-label={t('dashboard.th.clients')}>{agentTotals.clients}</td>
+                    <td className="db-inv__count" data-label={t('dashboard.th.thisMonth')}>{agentTotals.thisMonth}</td>
+                    <td className="db-inv__count" data-label={t('dashboard.th.withInvoice')}>{agentTotals.withInvoice}</td>
+                    <td className="db-inv__count" data-label={t('dashboard.th.invoices')}>{agentTotals.invoices}</td>
+                    <td className="db-inv__amount" data-label={t('dashboard.th.invoiced')}>{formatCurrency(agentTotals.invoiced)}</td>
+                    <td className="db-inv__amount" data-label={t('dashboard.th.paid')}>{formatCurrency(agentTotals.paid)}</td>
                   </tr>
                 </tfoot>
               </table>
@@ -985,21 +985,21 @@ export default function Dashboard() {
                 <tbody>
                   {topCustomers.map((r) => (
                     <tr key={r.name}>
-                      <td className="db-inv__customer">{r.name}</td>
-                      <td className="db-inv__count">{r.invoices}</td>
-                      <td className="db-inv__amount">{formatCurrency(r.invoiced)}</td>
-                      <td className="db-inv__amount">{formatCurrency(r.paid)}</td>
-                      <td className="db-inv__amount">{formatCurrency(r.remaining)}</td>
+                      <td className="db-inv__customer" data-label={t('dashboard.th.customer')}>{r.name}</td>
+                      <td className="db-inv__count" data-label={t('dashboard.th.invoices')}>{r.invoices}</td>
+                      <td className="db-inv__amount" data-label={t('dashboard.th.invoiced')}>{formatCurrency(r.invoiced)}</td>
+                      <td className="db-inv__amount" data-label={t('dashboard.th.paid')}>{formatCurrency(r.paid)}</td>
+                      <td className="db-inv__amount" data-label={t('dashboard.th.remaining')}>{formatCurrency(r.remaining)}</td>
                     </tr>
                   ))}
                 </tbody>
                 <tfoot>
                   <tr>
-                    <td>{t('dashboard.tfoot.top', { v: topCustomers.length })}</td>
-                    <td className="db-inv__count">{customerTotals.invoices}</td>
-                    <td className="db-inv__amount">{formatCurrency(customerTotals.invoiced)}</td>
-                    <td className="db-inv__amount">{formatCurrency(customerTotals.paid)}</td>
-                    <td className="db-inv__amount">{formatCurrency(customerTotals.remaining)}</td>
+                    <td data-label={t('dashboard.th.customer')}>{t('dashboard.tfoot.top', { v: topCustomers.length })}</td>
+                    <td className="db-inv__count" data-label={t('dashboard.th.invoices')}>{customerTotals.invoices}</td>
+                    <td className="db-inv__amount" data-label={t('dashboard.th.invoiced')}>{formatCurrency(customerTotals.invoiced)}</td>
+                    <td className="db-inv__amount" data-label={t('dashboard.th.paid')}>{formatCurrency(customerTotals.paid)}</td>
+                    <td className="db-inv__amount" data-label={t('dashboard.th.remaining')}>{formatCurrency(customerTotals.remaining)}</td>
                   </tr>
                 </tfoot>
               </table>
@@ -1043,17 +1043,17 @@ export default function Dashboard() {
                     const badge = invoiceBadge(calc.status);
                     return (
                       <tr key={inv.id || `${inv.invoiceNumber || 'inv'}-${i}`}>
-                        <td className="db-inv__num">{inv.invoiceNumber || '—'}</td>
-                        <td className="db-inv__customer">{inv.customer?.name || '—'}</td>
-                        <td className="db-inv__date">
+                        <td className="db-inv__num" data-label={t('dashboard.th.invoice')}>{inv.invoiceNumber || '—'}</td>
+                        <td className="db-inv__customer" data-label={t('dashboard.th.customer')}>{inv.customer?.name || '—'}</td>
+                        <td className="db-inv__date" data-label={t('dashboard.th.date')}>
                           {inv.issueDate
                             ? formatDateShort(new Date(inv.issueDate)) || inv.issueDate
                             : '—'}
                         </td>
-                        <td>
+                        <td data-label={t('common.status')}>
                           <span className={badge.cls}>{t(badge.text)}</span>
                         </td>
-                        <td className="db-inv__amount">{formatCurrency(calc.total)}</td>
+                        <td className="db-inv__amount" data-label={t('dashboard.th.amount')}>{formatCurrency(calc.total)}</td>
                       </tr>
                     );
                   })}
@@ -1092,12 +1092,12 @@ export default function Dashboard() {
                       const badge = logBadge(row.action);
                       return (
                         <tr key={row.id}>
-                          <td className="db-inv__date">{logTime(row.ts)}</td>
-                          <td className="db-inv__num">{row.account}</td>
-                          <td>
+                          <td className="db-inv__date" data-label={t('dashboard.th.time')}>{logTime(row.ts)}</td>
+                          <td className="db-inv__num" data-label={t('dashboard.th.account')}>{row.account}</td>
+                          <td data-label={t('dashboard.th.action')}>
                             <span className={badge.cls}>{t(badge.text)}</span>
                           </td>
-                          <td className="db-inv__customer">{row.details || '—'}</td>
+                          <td className="db-inv__customer" data-label={t('dashboard.th.details')}>{row.details || '—'}</td>
                         </tr>
                       );
                     })}

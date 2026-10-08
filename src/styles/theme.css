@@ -1,0 +1,118 @@
+/* ============================================================
+   AL BALQAN — theme.css
+   Central design tokens + base safety rules.
+   Imported FIRST in main.jsx so every other stylesheet can use
+   these variables and override them when needed.
+   Scope: tokens, global safety nets, RTL/Arabic reading
+   comfort, motion preferences. No brand/color changes — the
+   existing palette in global.css stays the single source of
+   truth for colors.
+   ============================================================ */
+
+:root {
+  /* 4-point spacing scale (spec §7) */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+
+  /* Minimum comfortable touch target (WCAG 2.5.5) */
+  --tap-min: 44px;
+
+  /* Responsive type scale (spec §7) */
+  --fs-title: clamp(20px, 4.4vw, 24px);
+  --fs-sub: clamp(13px, 3vw, 15px);
+
+  /* Safe-area helpers */
+  --sat: env(safe-area-inset-top, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+}
+
+/* Universal border-box so paddings/borders never blow up widths. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Never allow sideways page scrolling anywhere in the app or on
+   the marketing site. `clip` (not `hidden`) keeps position:sticky
+   working for the header. */
+html,
+body {
+  overflow-x: clip;
+  max-width: 100%;
+}
+
+/* Images never overflow their container. */
+img {
+  max-width: 100%;
+}
+
+/* Mixed-direction content (currency amounts, dates, passport
+   numbers, e-mails) stays readable in RTL without reordering the
+   neighbouring glyphs (spec §6 — unicode-bidi isolate). */
+[dir='rtl'] .mono,
+[dir='rtl'] .statc__value,
+[dir='rtl'] .statc__label,
+[dir='rtl'] .au-date,
+[dir='rtl'] .au-email,
+[dir='rtl'] .cl-passport,
+[dir='rtl'] .db-inv td {
+  unicode-bidi: isolate;
+}
+
+/* Arabic reading comfort: line-height 1.6–1.8 in RTL (spec §6).
+   Latin keeps the tighter default set by global.css. */
+html[lang='ar'] body {
+  line-height: 1.7;
+}
+
+/* Skeleton shimmer placeholders for table/list loading states
+   (spec §3: حالة تحميل واضحة). */
+.skeleton-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 4px 0 12px;
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--faint) 25%,
+    var(--surface) 50%,
+    var(--faint) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.2s ease-in-out infinite;
+  border-radius: 8px;
+}
+
+.skeleton--row {
+  height: 40px;
+  width: 100%;
+}
+
+@keyframes skeleton-shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+/* Honour the OS "reduce motion" setting (spec §8). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

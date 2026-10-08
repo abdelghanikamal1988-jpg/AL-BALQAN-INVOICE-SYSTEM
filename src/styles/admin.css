@@ -296,12 +296,6 @@
     display: none;
   }
 
-  .au-table tr {
-    display: block;
-    border-bottom: 1px solid var(--border);
-    padding: 10px 0;
-  }
-
   .au-table td {
     display: flex;
     justify-content: space-between;

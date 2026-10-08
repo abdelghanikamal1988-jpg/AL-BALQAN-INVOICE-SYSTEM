@@ -30,6 +30,8 @@ export default {
   'common.required': 'Required',
   'common.unknown': 'Unknown',
   'common.of': 'of',
+  'common.filters': 'Filters',
+  'common.loadMore': 'Load more',
 
   'status.NEW': 'NEW',
   'status.DOCUMENTS': 'DOCUMENTS SUBMITTED',
