@@ -1,5 +1,6 @@
-import { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react';
 import { supabase, isSupabaseConfigured } from '../lib/supabase.js';
+import { recordAccess } from '../utils/accessLog.js';
 
 const AuthContext = createContext(null);
 
@@ -33,6 +34,12 @@ export function AuthProvider({ children }) {
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
   const [configured] = useState(isSupabaseConfigured);
+
+  /* Latest session for event handlers that live outside React render. */
+  const sessionRef = useRef(null);
+  useEffect(() => {
+    sessionRef.current = session;
+  }, [session]);
 
   /**
    * The user's row in public.profiles (role + permissions).
@@ -101,6 +108,11 @@ export function AuthProvider({ children }) {
         setProfileState('ready');
         if (data && data.is_active === false) {
           // account was deactivated → force logout
+          recordAccess({
+            action: 'ACCOUNT DISABLED',
+            account: sessionRef.current?.user?.email || '',
+            details: 'Account deactivated — forced sign-out',
+          });
           setSession(null);
           supabase.auth.signOut().catch(() => {});
         }
@@ -204,6 +216,11 @@ export function AuthProvider({ children }) {
           /* the local session is cleared regardless */
         }
         dropLocalTokens();
+        recordAccess({
+          action: 'IDLE LOGOUT',
+          account: sessionRef.current?.user?.email || '',
+          details: 'Auto sign-out after 30 minutes of inactivity',
+        });
         const hash = window.location.hash;
         if (hash && hash !== '#/' && hash !== '#/website') {
           // Our own navigation must not count as user activity.
@@ -264,11 +281,25 @@ export function AuthProvider({ children }) {
 
   const signIn = useCallback(async (email, password) => {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) {
+      recordAccess({
+        action: 'FAILED LOGIN',
+        account: email,
+        details: 'Sign-in failed — wrong email or password',
+      });
+    } else {
+      recordAccess({ action: 'LOGIN', account: email, details: 'Password sign-in' });
+    }
     return { error };
   }, []);
 
   const signOut = useCallback(async () => {
-    await supabase.auth.signOut();
+    const account = sessionRef.current?.user?.email || '';
+    try {
+      await supabase.auth.signOut();
+    } finally {
+      recordAccess({ action: 'LOGOUT', account, details: 'Signed out' });
+    }
   }, []);
 
   /**

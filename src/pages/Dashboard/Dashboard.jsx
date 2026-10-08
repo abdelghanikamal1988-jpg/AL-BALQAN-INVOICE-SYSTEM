@@ -9,7 +9,8 @@ import { invoicePaymentBreakdown } from '../../utils/vat.js';
 import { formatDateShort } from '../../utils/formatDate.js';
 import { formatCurrency } from '../../utils/formatCurrency.js';
 import { dbFetchClients } from '../../lib/clientRepo.js';
-import { clientFullName } from '../../utils/clients.js';
+import { clientFullName, normalizePassport } from '../../utils/clients.js';
+import { getAccessLogs } from '../../utils/accessLog.js';
 import { CLIENT_STATUSES } from '../../data/clientStatuses.js';
 import { useToast } from '../../components/Toast/ToastProvider.jsx';
 import { usePendingApprovals } from '../../context/PendingApprovalsContext.jsx';
@@ -26,26 +27,102 @@ function greetingFor(user) {
 
 /* ---------- Nexus-style charts (no chart library) ---------- */
 
+const TICKS = [4, 3, 2, 1, 0]; // grid lines / axis labels, top → bottom
+
+/** Round the (value / 4) step up to a readable 1-2-5-ish tick step. */
+function axisStep(raw, kind) {
+  const quarter = Math.max(raw, 1) / 4;
+  const mag = Math.pow(10, Math.floor(Math.log10(quarter)));
+  const norm = quarter / mag;
+  const ladder = kind === 'money' ? [1, 1.5, 2, 3, 4, 5, 6, 8, 10] : [1, 2, 3, 4, 5, 6, 8, 10];
+  const s = ladder.find((x) => x >= norm - 1e-9) || 10;
+  const step = s * mag;
+  return kind === 'count' ? Math.max(1, Math.round(step)) : step;
+}
+
+function fmtTick(v, kind) {
+  if (kind === 'money') {
+    if (v >= 1000) {
+      const k = v / 1000;
+      return `${Number.isInteger(k) ? k : Math.round(k * 10) / 10}k`;
+    }
+    return String(Math.round(v));
+  }
+  return String(v);
+}
+
+/** Catmull-Rom → cubic bezier: a smooth, flowing line through every point. */
+function smoothPath(pts) {
+  if (pts.length < 2) return '';
+  let d = `M${pts[0][0].toFixed(2)},${pts[0][1].toFixed(2)}`;
+  for (let i = 0; i < pts.length - 1; i += 1) {
+    const p0 = pts[i - 1] || pts[i];
+    const p1 = pts[i];
+    const p2 = pts[i + 1];
+    const p3 = pts[i + 2] || p2;
+    const s = 0.18;
+    const c1x = p1[0] + (p2[0] - p0[0]) * s;
+    const c1y = p1[1] + (p2[1] - p0[1]) * s;
+    const c2x = p2[0] - (p3[0] - p1[0]) * s;
+    const c2y = p2[1] - (p3[1] - p1[1]) * s;
+    d += ` C${c1x.toFixed(2)},${c1y.toFixed(2)} ${c2x.toFixed(2)},${c2y.toFixed(2)} ${p2[0].toFixed(2)},${p2[1].toFixed(2)}`;
+  }
+  return d;
+}
+
 function BarsChart({ labels, values }) {
-  const max = Math.max(1, ...values);
+  const [pin, setPin] = useState(null);
+  const step = axisStep(Math.max(0, ...values), 'count');
+  const max = step * 4 || 1;
   return (
     <div className="db-bars">
-      <div className="db-bars__grid" aria-hidden="true">
-        <span />
-        <span />
-        <span />
-        <span />
-      </div>
-      <div className="db-bars__cols">
-        {values.map((v, i) => (
-          <div className="db-bars__col" key={`${labels[i]}-${i}`}>
-            <div
-              className={`db-bars__bar${v > 0 ? '' : ' db-bars__bar--muted'}`}
-              style={{ height: `${v > 0 ? Math.max((v / max) * 100, 4) : 1.5}%` }}
-              title={`${labels[i]}: ${v}`}
-            />
-          </div>
+      <div className="db-bars__yaxis" aria-hidden="true">
+        {TICKS.map((k) => (
+          <span key={k} style={{ bottom: `${(k / 4) * 100}%` }}>
+            {fmtTick(step * k, 'count')}
+          </span>
         ))}
+      </div>
+      <div className="db-bars__plot">
+        <div className="db-bars__grid" aria-hidden="true">
+          {TICKS.map((k) => (
+            <span key={k} />
+          ))}
+        </div>
+        <div className="db-bars__cols">
+          {values.map((v, i) => {
+            const pct = v > 0 ? Math.max((v / max) * 100, 3) : 1.4;
+            const toggle = () => setPin((p) => (p === i ? null : i));
+            return (
+              <div
+                className={`db-bars__col${pin === i ? ' is-active' : ''}`}
+                key={`${labels[i]}-${i}`}
+                role="button"
+                tabIndex={0}
+                aria-label={`${labels[i]}: ${v} invoices`}
+                onClick={toggle}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    toggle();
+                  }
+                }}
+              >
+                <div
+                  className={`db-bars__bar${v > 0 ? '' : ' db-bars__bar--muted'}`}
+                  style={{ height: `${pct}%` }}
+                />
+                <div className="db-tip" style={{ '--tipb': `${pct}%` }}>
+                  <b>{labels[i]}</b>
+                  <span className="db-tip__row">
+                    <i className="db-fig__dot" aria-hidden="true" />
+                    {v} invoice{v === 1 ? '' : 's'}
+                  </span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
       <div className="db-bars__labels">
         {labels.map((l) => (
@@ -56,29 +133,38 @@ function BarsChart({ labels, values }) {
   );
 }
 
-function LineChart({ labels, values }) {
-  const max = Math.max(1, ...values);
-  const n = values.length;
-  const pts = values.map((v, i) => [
-    n === 1 ? 50 : (i / (n - 1)) * 100,
-    96 - (v / max) * 88,
-  ]);
-  const line = pts.map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(2)},${y.toFixed(2)}`).join(' ');
-  const area = `${line} L100,100 L0,100 Z`;
+function LineChart({ labels, invoiced, paid }) {
+  const [pin, setPin] = useState(null);
+  const step = axisStep(Math.max(0, ...invoiced, ...paid), 'money');
+  const max = step * 4 || 1;
+  const n = labels.length;
+  const xOf = (i) => (n === 1 ? 50 : (i / (n - 1)) * 100);
+  const yOf = (v) => 96 - (Math.min(v, max) / max) * 88;
+  const ptsA = invoiced.map((v, i) => [xOf(i), yOf(v)]);
+  const ptsB = paid.map((v, i) => [xOf(i), yOf(v)]);
+  const pathA = smoothPath(ptsA);
+  const pathB = smoothPath(ptsB);
+  const areaA = `${pathA} L100,100 L0,100 Z`;
   return (
     <div className="db-line">
+      <div className="db-line__yaxis" aria-hidden="true">
+        {TICKS.map((k) => (
+          <span key={k} style={{ bottom: `${(k / 4) * 100}%` }}>
+            {fmtTick(step * k, 'money')}
+          </span>
+        ))}
+      </div>
       <div className="db-line__plot">
         <div className="db-line__grid" aria-hidden="true">
-          <span />
-          <span />
-          <span />
-          <span />
+          {TICKS.map((k) => (
+            <span key={k} />
+          ))}
         </div>
         <svg
           viewBox="0 0 100 100"
           preserveAspectRatio="none"
           role="img"
-          aria-label="Revenue per month, last 6 months"
+          aria-label="Invoiced versus paid per month, last 6 months"
         >
           <defs>
             <linearGradient id="dbLineFill" x1="0" y1="0" x2="0" y2="1">
@@ -86,17 +172,64 @@ function LineChart({ labels, values }) {
               <stop offset="100%" stopColor="#22c55e" stopOpacity="0" />
             </linearGradient>
           </defs>
-          <path d={area} fill="url(#dbLineFill)" />
+          <path d={areaA} fill="url(#dbLineFill)" />
           <path
-            d={line}
+            d={pathA}
             fill="none"
             stroke="#22c55e"
-            strokeWidth="2"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            vectorEffect="non-scaling-stroke"
+          />
+          <path
+            d={pathB}
+            fill="none"
+            stroke="#f59e0b"
+            strokeWidth="2.5"
             strokeLinecap="round"
             strokeLinejoin="round"
             vectorEffect="non-scaling-stroke"
           />
         </svg>
+        <div className="db-lhits">
+          {labels.map((l, i) => {
+            const yTop = Math.min(ptsA[i][1], ptsB[i][1]);
+            const remaining = round2(invoiced[i] - paid[i]);
+            const toggle = () => setPin((p) => (p === i ? null : i));
+            return (
+              <div
+                className={`db-lhit${pin === i ? ' is-active' : ''}`}
+                key={l}
+                role="button"
+                tabIndex={0}
+                aria-label={`${l}: invoiced ${formatCurrency(invoiced[i])}, paid ${formatCurrency(paid[i])}`}
+                onClick={toggle}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    toggle();
+                  }
+                }}
+              >
+                <div className="db-tip" style={{ '--tipb': `${100 - yTop}%` }}>
+                  <b>{l}</b>
+                  <span className="db-tip__row">
+                    <i className="db-fig__dot" aria-hidden="true" />
+                    Invoiced {formatCurrency(invoiced[i])}
+                  </span>
+                  <span className="db-tip__row">
+                    <i className="db-fig__dot db-fig__dot--amber" aria-hidden="true" />
+                    Paid {formatCurrency(paid[i])}
+                  </span>
+                  <span className="db-tip__row db-tip__row--muted">
+                    Remaining {formatCurrency(remaining)}
+                  </span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
       <div className="db-line__labels">
         {labels.map((l) => (
@@ -111,6 +244,27 @@ function invoiceBadge(status) {
   if (status === 'PAID') return { cls: 'db-badge db-badge--paid', text: 'Paid' };
   if (status === 'PARTIALLY_PAID') return { cls: 'db-badge db-badge--partial', text: 'Partial' };
   return { cls: 'db-badge db-badge--unpaid', text: 'Unpaid' };
+}
+
+const LOG_BADGE = {
+  LOGIN: { cls: 'db-badge db-badge--login', text: 'LOGIN' },
+  'FAILED LOGIN': { cls: 'db-badge db-badge--fail', text: 'FAILED LOGIN' },
+  LOGOUT: { cls: 'db-badge db-badge--logout', text: 'LOGOUT' },
+  'IDLE LOGOUT': { cls: 'db-badge db-badge--idle', text: 'IDLE LOGOUT' },
+  'RE-AUTH': { cls: 'db-badge db-badge--reauth', text: 'RE-AUTH' },
+  'FAILED RE-AUTH': { cls: 'db-badge db-badge--fail', text: 'FAILED RE-AUTH' },
+  'ACCOUNT DISABLED': { cls: 'db-badge db-badge--fail', text: 'ACCOUNT DISABLED' },
+};
+
+function logBadge(action) {
+  return LOG_BADGE[action] || { cls: 'db-badge db-badge--logout', text: String(action || '—').toUpperCase() };
+}
+
+function logTime(ts) {
+  const d = new Date(ts);
+  if (Number.isNaN(d.getTime())) return '—';
+  const time = d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+  return `${formatDateShort(d) || ''}, ${time}`.replace(/^,\s*/, '');
 }
 
 export default function Dashboard() {
@@ -263,6 +417,89 @@ export default function Dashboard() {
       .slice(0, 8);
   }, [invoices]);
 
+  /* Registered clients that have at least one invoice vs. none. */
+  const coverage = useMemo(() => {
+    const passports = new Set(invoices.map((inv) => normalizePassport(inv.customer?.passport)));
+    let withInvoice = 0;
+    clients.forEach((c) => {
+      if (passports.has(normalizePassport(c.passport))) withInvoice += 1;
+    });
+    return { total: clients.length, withInvoice, without: clients.length - withInvoice };
+  }, [clients, invoices]);
+
+  /* Per referral-agent breakdown: clients, this month, linked invoices, money. */
+  const agentStats = useMemo(() => {
+    const now = new Date();
+    const monthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+
+    const byPassport = new Map();
+    invoices.forEach((inv) => {
+      const key = normalizePassport(inv.customer?.passport);
+      const breakdown = invoicePaymentBreakdown(inv.payment);
+      const calc = calculatePayment(breakdown.grandTotal, breakdown.paid);
+      const list = byPassport.get(key) || [];
+      list.push(calc);
+      byPassport.set(key, list);
+    });
+
+    const map = new Map();
+    clients.forEach((c) => {
+      const name = String(c.referralAgent || '').trim() || 'Unassigned';
+      const row = map.get(name) || {
+        agent: name,
+        clients: 0,
+        thisMonth: 0,
+        withInvoice: 0,
+        invoices: 0,
+        invoiced: 0,
+        paid: 0,
+      };
+      row.clients += 1;
+      if (String(c.createdAt || '').slice(0, 7) === monthKey) row.thisMonth += 1;
+      const list = byPassport.get(normalizePassport(c.passport)) || [];
+      if (list.length > 0) row.withInvoice += 1;
+      row.invoices += list.length;
+      list.forEach((calc) => {
+        row.invoiced += Number(calc.total) || 0;
+        row.paid += Number(calc.paid) || 0;
+      });
+      map.set(name, row);
+    });
+
+    return [...map.values()]
+      .map((r) => ({ ...r, invoiced: round2(r.invoiced), paid: round2(r.paid) }))
+      .sort((a, b) => b.thisMonth - a.thisMonth || b.clients - a.clients || a.agent.localeCompare(b.agent));
+  }, [clients, invoices]);
+
+  /* Customers ranked by invoiced total. */
+  const topCustomers = useMemo(() => {
+    const map = new Map();
+    invoices.forEach((inv) => {
+      const name = inv.customer?.name || 'Unknown customer';
+      const key = `${name}|${normalizePassport(inv.customer?.passport)}`;
+      const breakdown = invoicePaymentBreakdown(inv.payment);
+      const calc = calculatePayment(breakdown.grandTotal, breakdown.paid);
+      const row = map.get(key) || { name, invoices: 0, invoiced: 0, paid: 0, remaining: 0 };
+      row.invoices += 1;
+      row.invoiced += Number(calc.total) || 0;
+      row.paid += Number(calc.paid) || 0;
+      row.remaining += Number(calc.remaining) || 0;
+      map.set(key, row);
+    });
+    return [...map.values()]
+      .map((r) => ({
+        ...r,
+        invoiced: round2(r.invoiced),
+        paid: round2(r.paid),
+        remaining: round2(r.remaining),
+      }))
+      .sort((a, b) => b.invoiced - a.invoiced)
+      .slice(0, 8);
+  }, [invoices]);
+
+  /* Sign-in / sign-out events for every account on this device. */
+  const accessLogs = useMemo(() => getAccessLogs(), [refreshKey]);
+
   const handleExport = async () => {
     let list;
     try {
@@ -343,6 +580,32 @@ export default function Dashboard() {
     { count: 0, revenue: 0, paid: 0 },
   );
   const lastMonth = monthSeries[monthSeries.length - 1];
+  const seriesPaid = monthSeries.map((b) => b.paid);
+
+  const donutPct = coverage.total > 0 ? (coverage.withInvoice / coverage.total) * 100 : 0;
+  const donutPctInt = Math.round(donutPct);
+
+  const agentTotals = agentStats.reduce(
+    (acc, r) => ({
+      clients: acc.clients + r.clients,
+      thisMonth: acc.thisMonth + r.thisMonth,
+      withInvoice: acc.withInvoice + r.withInvoice,
+      invoices: acc.invoices + r.invoices,
+      invoiced: round2(acc.invoiced + r.invoiced),
+      paid: round2(acc.paid + r.paid),
+    }),
+    { clients: 0, thisMonth: 0, withInvoice: 0, invoices: 0, invoiced: 0, paid: 0 },
+  );
+
+  const customerTotals = topCustomers.reduce(
+    (acc, r) => ({
+      invoices: acc.invoices + r.invoices,
+      invoiced: round2(acc.invoiced + r.invoiced),
+      paid: round2(acc.paid + r.paid),
+      remaining: round2(acc.remaining + r.remaining),
+    }),
+    { invoices: 0, invoiced: 0, paid: 0, remaining: 0 },
+  );
 
   return (
     <div className="page">
@@ -485,10 +748,10 @@ export default function Dashboard() {
             </div>
           </section>
 
-          <section className="card db-chart-card" aria-label="Revenue per month">
+          <section className="card db-chart-card" aria-label="Invoiced vs paid">
             <div className="db-chart-card__head">
-              <h2>Revenue per month</h2>
-              <p className="db-chart-card__sub">Invoiced totals over the last 6 months</p>
+              <h2>Invoiced vs paid</h2>
+              <p className="db-chart-card__sub">Monthly comparison over the last 6 months</p>
             </div>
             <div className="db-chart-card__body">
               {loading ? (
@@ -497,7 +760,7 @@ export default function Dashboard() {
                   Loading chart…
                 </div>
               ) : (
-                <LineChart labels={seriesLabels} values={seriesRevenue} />
+                <LineChart labels={seriesLabels} invoiced={seriesRevenue} paid={seriesPaid} />
               )}
             </div>
             <div className="db-chart-card__foot">
@@ -506,11 +769,218 @@ export default function Dashboard() {
                 <b>{loading ? '—' : formatCurrency(seriesTotals.revenue)}</b> invoiced
               </span>
               <span className="db-fig">
+                <span className="db-fig__dot db-fig__dot--amber" aria-hidden="true" />
                 <b>{loading ? '—' : formatCurrency(seriesTotals.paid)}</b> paid
+              </span>
+              <span className="db-fig">
+                <b>{loading ? '—' : formatCurrency(round2(seriesTotals.revenue - seriesTotals.paid))}</b>{' '}
+                outstanding
               </span>
             </div>
           </section>
         </div>
+
+        <div className="db-charts">
+          <section className="card db-chart-card" aria-label="Clients and invoices">
+            <div className="db-chart-card__head">
+              <h2>Clients &amp; invoices</h2>
+              <p className="db-chart-card__sub">Registered clients with or without an invoice</p>
+            </div>
+            <div className="db-chart-card__body">
+              <div className="db-donut-wrap">
+                <div
+                  className="db-donut"
+                  role="img"
+                  aria-label={`${coverage.withInvoice} of ${coverage.total} clients have an invoice`}
+                  style={{
+                    background: `conic-gradient(#22c55e 0 ${donutPct}%, #e5e7eb ${donutPct}% 100%)`,
+                  }}
+                >
+                  <div className="db-donut__center">
+                    <b>{loading ? '—' : coverage.total}</b>
+                    <span>clients</span>
+                  </div>
+                </div>
+                <div className="db-donut__legend">
+                  <span className="db-fig">
+                    <span className="db-fig__dot" aria-hidden="true" />
+                    <b>{loading ? '—' : coverage.withInvoice}</b> with invoice
+                    <em>{donutPctInt}%</em>
+                  </span>
+                  <span className="db-fig">
+                    <span className="db-fig__dot db-fig__dot--muted" aria-hidden="true" />
+                    <b>{loading ? '—' : coverage.without}</b> without invoice
+                    <em>{100 - donutPctInt}%</em>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="db-chart-card__foot">
+              <span className="db-fig">
+                <b>{loading ? '—' : coverage.withInvoice}</b> have invoices
+              </span>
+              <span className="db-fig">
+                <b>{loading ? '—' : coverage.without}</b> never invoiced
+              </span>
+            </div>
+          </section>
+
+          <section className="card db-chart-card" aria-label="Agents this month">
+            <div className="db-chart-card__head">
+              <h2>Agents this month</h2>
+              <p className="db-chart-card__sub">Clients added per referral agent in {lastMonth.label.split(' ')[0]} {new Date().getFullYear()}</p>
+            </div>
+            <div className="db-chart-card__body">
+              {loading ? (
+                <div className="loading-row">
+                  <span className="spinner" aria-hidden="true" />
+                  Loading agents…
+                </div>
+              ) : agentStats.length === 0 ? (
+                <p className="db-empty">No clients yet. Add a client to see agent performance.</p>
+              ) : (
+                <div className="db-hbars">
+                  {agentStats.slice(0, 7).map((r) => {
+                    const maxMonth = Math.max(1, ...agentStats.map((x) => x.thisMonth));
+                    const width = r.thisMonth > 0 ? Math.max((r.thisMonth / maxMonth) * 100, 4) : 0;
+                    return (
+                      <div className="db-hbar" key={r.agent}>
+                        <span className="db-hbar__name" title={r.agent}>
+                          {r.agent}
+                        </span>
+                        <span className="db-hbar__track">
+                          <span
+                            className={`db-hbar__fill${r.thisMonth > 0 ? '' : ' db-hbar__fill--zero'}`}
+                            style={{ width: `${width}%` }}
+                          />
+                        </span>
+                        <span className="db-hbar__val">{r.thisMonth}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+            <div className="db-chart-card__foot">
+              <span className="db-fig">
+                <b>{loading ? '—' : agentTotals.thisMonth}</b> clients this month
+              </span>
+              <span className="db-fig">
+                <b>{loading ? '—' : agentStats.length}</b> active agents
+              </span>
+            </div>
+          </section>
+        </div>
+
+        <section className="card db-panel" aria-label="Agent performance">
+          <div className="db-panel__head">
+            <h2>
+              <Icon name="users" aria-hidden="true" />
+              Agent performance
+            </h2>
+            <span className="db-panel__hint">All-time totals with this month</span>
+          </div>
+          {loading ? (
+            <div className="loading-row">
+              <span className="spinner" aria-hidden="true" />
+              Loading agents…
+            </div>
+          ) : agentStats.length === 0 ? (
+            <p className="db-empty">No clients yet. Agent totals appear as soon as you add clients.</p>
+          ) : (
+            <div className="db-table-wrap">
+              <table className="db-inv">
+                <thead>
+                  <tr>
+                    <th>Agent</th>
+                    <th className="db-inv__count">Clients</th>
+                    <th className="db-inv__count">This month</th>
+                    <th className="db-inv__count">With invoice</th>
+                    <th className="db-inv__count">Invoices</th>
+                    <th className="db-inv__amount">Invoiced</th>
+                    <th className="db-inv__amount">Paid</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {agentStats.map((r) => (
+                    <tr key={r.agent}>
+                      <td className="db-inv__num">{r.agent}</td>
+                      <td className="db-inv__count">{r.clients}</td>
+                      <td className="db-inv__count">{r.thisMonth}</td>
+                      <td className="db-inv__count">{r.withInvoice}</td>
+                      <td className="db-inv__count">{r.invoices}</td>
+                      <td className="db-inv__amount">{formatCurrency(r.invoiced)}</td>
+                      <td className="db-inv__amount">{formatCurrency(r.paid)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td>Total · {agentStats.length} agents</td>
+                    <td className="db-inv__count">{agentTotals.clients}</td>
+                    <td className="db-inv__count">{agentTotals.thisMonth}</td>
+                    <td className="db-inv__count">{agentTotals.withInvoice}</td>
+                    <td className="db-inv__count">{agentTotals.invoices}</td>
+                    <td className="db-inv__amount">{formatCurrency(agentTotals.invoiced)}</td>
+                    <td className="db-inv__amount">{formatCurrency(agentTotals.paid)}</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          )}
+        </section>
+
+        <section className="card db-panel" aria-label="Top customers">
+          <div className="db-panel__head">
+            <h2>
+              <Icon name="chartBar" aria-hidden="true" />
+              Top customers
+            </h2>
+            <span className="db-panel__hint">Ranked by invoiced total</span>
+          </div>
+          {loading ? (
+            <div className="loading-row">
+              <span className="spinner" aria-hidden="true" />
+              Loading customers…
+            </div>
+          ) : topCustomers.length === 0 ? (
+            <p className="db-empty">No invoices yet. Customer totals appear once you issue invoices.</p>
+          ) : (
+            <div className="db-table-wrap">
+              <table className="db-inv">
+                <thead>
+                  <tr>
+                    <th>Customer</th>
+                    <th className="db-inv__count">Invoices</th>
+                    <th className="db-inv__amount">Invoiced</th>
+                    <th className="db-inv__amount">Paid</th>
+                    <th className="db-inv__amount">Remaining</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {topCustomers.map((r) => (
+                    <tr key={r.name}>
+                      <td className="db-inv__customer">{r.name}</td>
+                      <td className="db-inv__count">{r.invoices}</td>
+                      <td className="db-inv__amount">{formatCurrency(r.invoiced)}</td>
+                      <td className="db-inv__amount">{formatCurrency(r.paid)}</td>
+                      <td className="db-inv__amount">{formatCurrency(r.remaining)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td>Top {topCustomers.length}</td>
+                    <td className="db-inv__count">{customerTotals.invoices}</td>
+                    <td className="db-inv__amount">{formatCurrency(customerTotals.invoiced)}</td>
+                    <td className="db-inv__amount">{formatCurrency(customerTotals.paid)}</td>
+                    <td className="db-inv__amount">{formatCurrency(customerTotals.remaining)}</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          )}
+        </section>
 
         <section className="card db-panel" aria-label="Recent invoices">
           <div className="db-panel__head">
@@ -567,6 +1037,52 @@ export default function Dashboard() {
             </div>
           )}
         </section>
+
+        {isAdmin && (
+          <section className="card db-panel" aria-label="Access logs">
+            <div className="db-panel__head">
+              <h2>
+                <Icon name="key" aria-hidden="true" />
+                Access logs
+              </h2>
+              <span className="db-panel__hint">Sign-ins for all accounts on this device</span>
+            </div>
+            {accessLogs.length === 0 ? (
+              <p className="db-empty">
+                No access events yet. Sign-ins, sign-outs and failed attempts appear here
+                automatically.
+              </p>
+            ) : (
+              <div className="db-table-wrap">
+                <table className="db-inv">
+                  <thead>
+                    <tr>
+                      <th>Time</th>
+                      <th>Account</th>
+                      <th>Action</th>
+                      <th>Details</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {accessLogs.slice(0, 10).map((row) => {
+                      const badge = logBadge(row.action);
+                      return (
+                        <tr key={row.id}>
+                          <td className="db-inv__date">{logTime(row.ts)}</td>
+                          <td className="db-inv__num">{row.account}</td>
+                          <td>
+                            <span className={badge.cls}>{badge.text}</span>
+                          </td>
+                          <td className="db-inv__customer">{row.details || '—'}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </section>
+        )}
       </section>
 
       <div className="db-grid">

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Modal from '../Modal/Modal.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { supabase } from '../../lib/supabase.js';
+import { recordAccess } from '../../utils/accessLog.js';
 
 /**
  * Password re-confirmation gate shown before destructive actions
@@ -48,9 +49,19 @@ export default function ConfirmAuthModal({
         password,
       });
       if (signInError) {
+        recordAccess({
+          action: 'FAILED RE-AUTH',
+          account: mail,
+          details: 'Wrong password at confirmation prompt',
+        });
         setError('Incorrect email or password.');
         return;
       }
+      recordAccess({
+        action: 'RE-AUTH',
+        account: mail,
+        details: 'Identity confirmed for a sensitive action',
+      });
       await onConfirm();
       onSuccess();
     } catch (err) {

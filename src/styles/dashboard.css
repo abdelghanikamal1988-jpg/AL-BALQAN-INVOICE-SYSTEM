@@ -389,124 +389,58 @@
   background: #9CA3AF;
 }
 
-/* --- Bar chart (HTML/CSS, Chart.js-like) --- */
-
-.db-bars {
-  position: relative;
-  height: 240px;
-  display: flex;
-  flex-direction: column;
+.db-fig__dot--amber {
+  background: #f59e0b;
 }
 
-.db-bars__grid {
-  position: absolute;
-  inset: 0 0 26px 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  pointer-events: none;
-}
+/* --- Charts: shared grid (Y axis | plot / labels) --- */
 
-.db-bars__grid span {
-  display: block;
-  height: 1px;
-  background: var(--line-soft);
-}
-
-.db-bars__cols {
-  position: relative;
-  flex: 1;
-  display: flex;
-  align-items: flex-end;
-  gap: 10px;
-  padding-bottom: 8px;
-}
-
-.db-bars__col {
-  flex: 1;
-  min-width: 0;
-  height: 100%;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-}
-
-.db-bars__bar {
-  width: min(34px, 70%);
-  min-height: 3px;
-  background: var(--brand);
-  border-radius: 4px 4px 0 0;
-  transition: height 0.5s var(--ease);
-}
-
-.db-bars__bar--muted {
-  background: #D1D5DB;
-}
-
-.db-bars__labels {
-  display: flex;
-  gap: 10px;
-  height: 26px;
-  align-items: center;
-}
-
-.db-bars__labels span {
-  flex: 1;
-  min-width: 0;
-  text-align: center;
-  font-size: 11px;
-  color: var(--muted);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* --- Line chart (SVG, Chart.js-like) --- */
-
+.db-bars,
 .db-line {
-  position: relative;
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr) 26px;
   height: 240px;
-  display: flex;
-  flex-direction: column;
 }
 
+.db-bars__yaxis,
+.db-line__yaxis {
+  position: relative;
+  grid-row: 1;
+  grid-column: 1;
+}
+
+.db-bars__yaxis span,
+.db-line__yaxis span {
+  position: absolute;
+  right: 8px;
+  transform: translateY(50%);
+  font-size: 11px;
+  line-height: 1;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.db-bars__plot,
 .db-line__plot {
   position: relative;
-  flex: 1;
-  min-height: 0;
+  grid-row: 1;
+  grid-column: 2;
+  min-width: 0;
 }
 
-.db-line__grid {
-  position: absolute;
-  inset: 0 0 8px 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  pointer-events: none;
-}
-
-.db-line__grid span {
-  display: block;
-  height: 1px;
-  background: var(--line-soft);
-}
-
-.db-line svg {
-  position: absolute;
-  inset: 0 0 8px 0;
-  width: 100%;
-  height: calc(100% - 8px);
-  display: block;
-  overflow: visible;
-}
-
+.db-bars__labels,
 .db-line__labels {
+  grid-row: 2;
+  grid-column: 2;
   display: flex;
   gap: 10px;
   height: 26px;
   align-items: center;
 }
 
+.db-bars__labels span,
 .db-line__labels span {
   flex: 1;
   min-width: 0;
@@ -516,6 +450,341 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.db-bars__grid,
+.db-line__grid {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.db-bars__grid span,
+.db-line__grid span {
+  display: block;
+  height: 1px;
+  background: var(--line-soft);
+}
+
+/* --- Bar chart columns --- */
+
+.db-bars__cols {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  overflow-x: clip;
+  overflow-y: visible;
+}
+
+.db-bars__col {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.db-bars__bar {
+  width: min(34px, 70%);
+  min-height: 3px;
+  background: var(--brand);
+  border-radius: 4px 4px 0 0;
+  transition: height 0.5s var(--ease), filter 0.15s ease;
+}
+
+.db-bars__bar--muted {
+  background: #d1d5db;
+}
+
+.db-bars__col:hover .db-bars__bar,
+.db-bars__col.is-active .db-bars__bar {
+  filter: brightness(0.9);
+}
+
+/* --- Chart tooltip (hover on desktop, tap pins on touch) --- */
+
+.db-tip {
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--tipb, 50%) + 14px);
+  transform: translate(-50%, 6px);
+  min-width: 136px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--text);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s;
+  z-index: 5;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.db-tip::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -5px;
+  transform: translateX(-50%) rotate(45deg);
+  width: 8px;
+  height: 8px;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.db-bars__col:hover .db-tip,
+.db-bars__col.is-active .db-tip,
+.db-lhit:hover .db-tip,
+.db-lhit.is-active .db-tip {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+}
+
+/* Edge columns: anchor the bubble inside the plot so it never
+   spills past the chart / viewport (horizontal page scroll). */
+
+.db-bars__col:first-child .db-tip,
+.db-lhit:first-child .db-tip {
+  left: 0;
+  transform: translate(0, 6px);
+}
+
+.db-bars__col:last-child .db-tip,
+.db-lhit:last-child .db-tip {
+  left: auto;
+  right: 0;
+  transform: translate(0, 6px);
+}
+
+.db-bars__col:first-child:hover .db-tip,
+.db-bars__col:first-child.is-active .db-tip,
+.db-lhit:first-child:hover .db-tip,
+.db-lhit:first-child.is-active .db-tip,
+.db-bars__col:last-child:hover .db-tip,
+.db-bars__col:last-child.is-active .db-tip,
+.db-lhit:last-child:hover .db-tip,
+.db-lhit:last-child.is-active .db-tip {
+  transform: translate(0, 0);
+}
+
+.db-bars__col:first-child .db-tip::after,
+.db-lhit:first-child .db-tip::after {
+  left: 16px;
+}
+
+.db-bars__col:last-child .db-tip::after,
+.db-lhit:last-child .db-tip::after {
+  left: auto;
+  right: 16px;
+}
+
+.db-tip b {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 3px;
+  color: var(--text);
+}
+
+.db-tip__row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.db-tip__row--muted {
+  margin-top: 3px;
+  padding-top: 4px;
+  border-top: 1px solid var(--line-soft);
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* --- Line chart (SVG, Chart.js-like) --- */
+
+.db-line svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+.db-lhits {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  overflow-x: clip;
+  overflow-y: visible;
+}
+
+.db-lhit {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.db-lhit::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--border);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.db-lhit:hover::before,
+.db-lhit.is-active::before {
+  opacity: 1;
+}
+
+/* ---------- Donut: clients with / without invoice ---------- */
+
+.db-donut-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  padding: 8px 0;
+  min-height: 240px;
+  flex-wrap: wrap;
+}
+
+.db-donut {
+  position: relative;
+  width: 168px;
+  height: 168px;
+  border-radius: 50%;
+  flex: 0 0 auto;
+}
+
+.db-donut::after {
+  content: '';
+  position: absolute;
+  inset: 24px;
+  border-radius: 50%;
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--line-soft);
+}
+
+.db-donut__center {
+  position: absolute;
+  inset: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  text-align: center;
+}
+
+.db-donut__center b {
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.db-donut__center span {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.db-donut__legend {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 170px;
+}
+
+.db-donut__legend .db-fig {
+  width: 100%;
+}
+
+.db-donut__legend .db-fig em {
+  margin-left: auto;
+  font-style: normal;
+  font-weight: 600;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Horizontal bars: agents this month ---------- */
+
+.db-hbars {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 6px 0;
+  min-height: 240px;
+  justify-content: center;
+}
+
+.db-hbar {
+  display: grid;
+  grid-template-columns: minmax(80px, 132px) minmax(0, 1fr) 34px;
+  gap: 12px;
+  align-items: center;
+}
+
+.db-hbar__name {
+  font-size: 13px;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.db-hbar__track {
+  display: block;
+  height: 16px;
+  border-radius: 4px;
+  background: var(--line-soft);
+  overflow: hidden;
+}
+
+.db-hbar__fill {
+  display: block;
+  height: 100%;
+  background: var(--brand);
+  border-radius: 4px;
+  transition: width 0.5s var(--ease);
+}
+
+.db-hbar__fill--zero {
+  background: transparent;
+}
+
+.db-hbar__val {
+  font-size: 13px;
+  font-weight: 600;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
 }
 
 /* ---------- Recent invoices table (Nexus table inside a card) ---------- */
@@ -614,6 +883,45 @@
 .db-badge--unpaid {
   background: #FEE2E2;
   color: #DC2626;
+}
+
+.db-badge--login {
+  background: #DCFCE7;
+  color: #15803D;
+}
+
+.db-badge--fail {
+  background: #FEE2E2;
+  color: #DC2626;
+}
+
+.db-badge--logout {
+  background: #F3F4F6;
+  color: #4B5563;
+}
+
+.db-badge--idle {
+  background: #FFEDD5;
+  color: #C2410C;
+}
+
+.db-badge--reauth {
+  background: #F5F3FF;
+  color: #6D28D9;
+}
+
+.db-inv__count {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.db-inv tfoot td {
+  background: var(--ground);
+  border-top: 1px solid var(--border);
+  border-bottom: none;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
 }
 
 /* ---------- Responsive ---------- */
