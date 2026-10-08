@@ -30,7 +30,9 @@ BELL = icon(
     '<path d="M18 8.6a6 6 0 1 0-12 0c0 5.4-2.2 7-2.2 7h16.4s-2.2-1.6-2.2-7"/>'
     '<path d="M13.8 19a2 2 0 0 1-3.6 0"/>'
 )
-CHEVRON = icon('<path d="M5.5 9.5L12 16l6.5-6.5"/>')
+CHEVRON = icon('<path d="M5.5 9.5L12 16l6.5-6.5"/>').replace(
+    'class="icon"', 'class="icon app-header__ucharv"'
+)
 
 HEADER = f'''<header class="app-header no-print">
       <div class="app-header__inner">
@@ -68,13 +70,15 @@ HEADER = f'''<header class="app-header no-print">
             <span class="app-header__bell-count" aria-hidden="true">3</span>
           </button>
 
+          <span class="app-header__vr" aria-hidden="true"></span>
+
           <div class="app-header__dd">
-            <button type="button" class="app-header__user">
+            <button type="button" class="app-header__user" aria-haspopup="menu" aria-expanded="false">
+              <span class="app-header__avatar" title="admin@albalqan.com">MA</span>
               <span class="app-header__user-meta">
                 <span class="app-header__uname">Maha Al Balqan</span>
                 <span class="app-header__urole">Administrator</span>
               </span>
-              <span class="app-header__avatar" title="admin@albalqan.com">MA</span>
               {CHEVRON}
             </button>
           </div>

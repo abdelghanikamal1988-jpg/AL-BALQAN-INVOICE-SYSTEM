@@ -21,7 +21,7 @@
   --secondary-dark: #b8952a;
 
   /* Surfaces (Nexus) */
-  --ground: #F5F7F6;
+  --ground: #F9FAFB;
   --background: #ffffff;
   --surface: #ffffff;
   --text: #16211B;
@@ -40,14 +40,16 @@
   --danger: #DC2626;
   --purple: #7E22CE;
 
-  /* Radii: controls 8 · cards 10 (Nexus) */
+  /* Radii: controls 8 · cards 12 (Nexus) */
   --radius-sm: 8px;
   --radius-md: 10px;
-  --radius-lg: 10px;
+  --radius-lg: 12px;
 
-  --header-h: 52px;
+  --header-h: 62px;
   --sidebar-w: 256px;
 
+  --card-border: 1px solid rgba(4, 32, 69, 0.1);
+  --shadow-card: 0 1px 2px rgba(15, 23, 42, 0.04), 0 12px 24px -16px rgba(15, 23, 42, 0.12);
   --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.04);
   --shadow-md: 0 6px 18px rgba(16, 24, 40, 0.08);
   --shadow-lg: 0 16px 40px rgba(16, 24, 40, 0.16);
@@ -346,22 +348,22 @@ button {
 
 .card {
   background: var(--surface);
-  border: 1px solid var(--border);
+  border: var(--card-border);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-card);
 }
 
 .card__header {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 14px 18px;
+  padding: 16px 20px;
   border-bottom: 1px solid var(--border);
 }
 
 .card__header h2 {
-  font-size: 15.5px;
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: 500;
   margin: 0;
   flex: 1;
 }
@@ -399,26 +401,26 @@ button {
 .statc {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 14px 16px;
+  gap: 14px;
+  padding: 16px 18px;
   background: var(--surface);
-  border: 1px solid var(--border);
+  border: var(--card-border);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-card);
   min-width: 0;
 }
 
 .statc__tile {
-  flex: 0 0 36px;
-  width: 36px;
-  height: 36px;
+  flex: 0 0 48px;
+  width: 48px;
+  height: 48px;
   border-radius: var(--radius-sm);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   background: var(--pill);
   color: var(--muted);
-  font-size: 17px;
+  font-size: 21px;
 }
 
 .statc__tile--green {
@@ -462,8 +464,9 @@ button {
 }
 
 .statc__value {
-  font-size: 17px;
+  font-size: 20px;
   font-weight: 700;
+  line-height: 1.25;
   color: var(--text);
   letter-spacing: -0.01em;
   font-variant-numeric: tabular-nums;
@@ -954,23 +957,41 @@ button {
   margin-left: auto;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
 }
 
 .app-header__bell {
   position: relative;
-  padding: 7px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  padding: 0;
   border: none;
-  border-radius: var(--radius-sm);
+  border-radius: 9.6px;
   background: none;
-  font-size: 19px;
+  color: var(--muted);
+  font-size: 18.4px;
   line-height: 1;
   cursor: pointer;
-  color: var(--text);
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
 .app-header__bell:hover {
-  background: var(--pill);
+  background: var(--brand-tint);
+  color: var(--brand-strong);
+}
+
+/* Vertical rule before the user chip (Nexus .vr) */
+.app-header__vr {
+  flex: 0 0 1px;
+  width: 1px;
+  height: 42px;
+  margin: 0 8px;
+  background: var(--faint);
+  opacity: 0.35;
 }
 
 .app-header__bell-count {
@@ -1017,7 +1038,7 @@ button {
 
 .db-approval__text b {
   color: var(--text);
-  font-size: 14.5px;
+  font-size: 14px;
 }
 
 .db-approval__text span {
@@ -1180,28 +1201,29 @@ button {
   padding: 0 16px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
 }
 
 .app-header__menu {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  flex: 0 0 36px;
-  width: 36px;
-  height: 36px;
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
   padding: 0;
   border: none;
-  border-radius: var(--radius-sm);
+  border-radius: 9.6px;
   background: transparent;
   color: var(--text);
-  font-size: 18px;
+  font-size: 18.4px;
   cursor: pointer;
-  transition: background 0.15s ease;
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
 .app-header__menu:hover {
-  background: var(--pill);
+  background: var(--brand-tint);
+  color: var(--brand-strong);
 }
 
 /* Brand only rides the topbar below lg (the sidebar carries it ≥1024). */
@@ -1259,27 +1281,28 @@ button {
 .app-header__cta {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 7px 13px;
+  justify-content: center;
+  gap: 4px;
+  height: 28px;
+  padding: 0 10px;
   border: none;
-  border-radius: var(--radius-sm);
+  border-radius: 4px;
   background: var(--brand);
   color: #fff;
-  font-size: 13px;
-  font-weight: 600;
-  line-height: 1.2;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
   text-decoration: none;
-  transition: background 0.15s ease, box-shadow 0.15s ease;
+  transition: background 0.15s ease;
 }
 
 .app-header__cta:hover {
   background: var(--brand-strong);
-  box-shadow: 0 6px 16px rgba(34, 197, 94, 0.28);
   text-decoration: none;
 }
 
 .app-header__cta .icon {
-  font-size: 14px;
+  font-size: 13px;
 }
 
 /* ---------- Topbar dropdown containers ---------- */
@@ -1346,38 +1369,40 @@ button {
   }
 }
 
-/* ---------- Topbar icon tool (fullscreen etc.) ---------- */
+/* ---------- Topbar icon tool (fullscreen etc.) — Nexus nx-tool ---------- */
 
 .app-header__tool {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  flex: 0 0 36px;
-  width: 36px;
-  height: 36px;
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
   padding: 0;
   border: none;
-  border-radius: var(--radius-sm);
+  border-radius: 9.6px;
   background: transparent;
-  color: var(--text);
-  font-size: 17px;
+  color: var(--muted);
+  font-size: 18.4px;
   cursor: pointer;
-  transition: background 0.15s ease;
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
 .app-header__tool:hover {
-  background: var(--pill);
+  background: var(--brand-tint);
+  color: var(--brand-strong);
 }
 
-/* ---------- User chip (Nexus nx-user-chip) ---------- */
+/* ---------- User chip (Nexus nx-user-chip: avatar · meta · chevron) ---------- */
 
 .app-header__user {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 4px 8px;
+  gap: 9.6px;
+  height: 42px;
+  padding: 5px 10px;
   border: none;
-  border-radius: var(--radius-sm);
+  border-radius: 9.6px;
   background: transparent;
   font-family: inherit;
   cursor: pointer;
@@ -1391,9 +1416,10 @@ button {
 .app-header__user-meta {
   display: none;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: flex-start;
   min-width: 0;
-  line-height: 1.2;
+  line-height: 1.15;
+  text-align: left;
 }
 
 @media (min-width: 1024px) {
@@ -1403,7 +1429,7 @@ button {
 }
 
 .app-header__uname {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--text);
   max-width: 160px;
@@ -1413,8 +1439,8 @@ button {
 }
 
 .app-header__urole {
-  font-size: 11px;
-  font-weight: 500;
+  font-size: 12px;
+  font-weight: 400;
   color: var(--muted);
   max-width: 160px;
   overflow: hidden;
@@ -1424,13 +1450,14 @@ button {
 
 .app-header__ucharv {
   font-size: 14px;
-  color: var(--faint);
+  color: var(--muted);
 }
 
 .app-header__avatar {
   flex: 0 0 auto;
-  width: 30px;
-  height: 30px;
+  order: -1;
+  width: 32px;
+  height: 32px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1438,7 +1465,7 @@ button {
   color: #fff;
   border: none;
   border-radius: 50%;
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.02em;
   user-select: none;
@@ -1520,17 +1547,17 @@ button {
 .topsearch__input {
   width: 18rem;
   max-width: 100%;
-  height: 36px;
+  height: 40px;
   padding: 0 46px 0 40px;
   border: 1px solid var(--border);
   border-radius: 999px;
-  background: var(--surface);
+  background: var(--ground);
   color: var(--text);
   font-family: inherit;
   font-size: 14px;
   line-height: 20px;
   outline: none;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
   -webkit-appearance: none;
   appearance: none;
 }
@@ -1545,6 +1572,7 @@ button {
 
 .topsearch__input:focus {
   border-color: var(--brand);
+  background: var(--surface);
   box-shadow: 0 0 0 3px var(--brand-ring);
 }
 

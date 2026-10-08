@@ -24,6 +24,95 @@ function greetingFor(user) {
   return label ? `${part}, ${label}` : part;
 }
 
+/* ---------- Nexus-style charts (no chart library) ---------- */
+
+function BarsChart({ labels, values }) {
+  const max = Math.max(1, ...values);
+  return (
+    <div className="db-bars">
+      <div className="db-bars__grid" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+        <span />
+      </div>
+      <div className="db-bars__cols">
+        {values.map((v, i) => (
+          <div className="db-bars__col" key={`${labels[i]}-${i}`}>
+            <div
+              className={`db-bars__bar${v > 0 ? '' : ' db-bars__bar--muted'}`}
+              style={{ height: `${v > 0 ? Math.max((v / max) * 100, 4) : 1.5}%` }}
+              title={`${labels[i]}: ${v}`}
+            />
+          </div>
+        ))}
+      </div>
+      <div className="db-bars__labels">
+        {labels.map((l) => (
+          <span key={l}>{l}</span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function LineChart({ labels, values }) {
+  const max = Math.max(1, ...values);
+  const n = values.length;
+  const pts = values.map((v, i) => [
+    n === 1 ? 50 : (i / (n - 1)) * 100,
+    96 - (v / max) * 88,
+  ]);
+  const line = pts.map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(2)},${y.toFixed(2)}`).join(' ');
+  const area = `${line} L100,100 L0,100 Z`;
+  return (
+    <div className="db-line">
+      <div className="db-line__plot">
+        <div className="db-line__grid" aria-hidden="true">
+          <span />
+          <span />
+          <span />
+          <span />
+        </div>
+        <svg
+          viewBox="0 0 100 100"
+          preserveAspectRatio="none"
+          role="img"
+          aria-label="Revenue per month, last 6 months"
+        >
+          <defs>
+            <linearGradient id="dbLineFill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#22c55e" stopOpacity="0.18" />
+              <stop offset="100%" stopColor="#22c55e" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+          <path d={area} fill="url(#dbLineFill)" />
+          <path
+            d={line}
+            fill="none"
+            stroke="#22c55e"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            vectorEffect="non-scaling-stroke"
+          />
+        </svg>
+      </div>
+      <div className="db-line__labels">
+        {labels.map((l) => (
+          <span key={l}>{l}</span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function invoiceBadge(status) {
+  if (status === 'PAID') return { cls: 'db-badge db-badge--paid', text: 'Paid' };
+  if (status === 'PARTIALLY_PAID') return { cls: 'db-badge db-badge--partial', text: 'Partial' };
+  return { cls: 'db-badge db-badge--unpaid', text: 'Unpaid' };
+}
+
 export default function Dashboard() {
   const toast = useToast();
   const { user, hasPerm, isAdmin } = useAuth();
@@ -134,6 +223,46 @@ export default function Dashboard() {
     return rows.slice(0, 7);
   }, [clients, invoices]);
 
+  const monthSeries = useMemo(() => {
+    const now = new Date();
+    const buckets = [];
+    for (let i = 5; i >= 0; i -= 1) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+      const label = `${d.toLocaleString('en-US', { month: 'short' })} ${String(d.getFullYear()).slice(2)}`;
+      buckets.push({ key, label, count: 0, revenue: 0, paid: 0 });
+    }
+    const idx = {};
+    buckets.forEach((b, i) => {
+      idx[b.key] = i;
+    });
+    invoices.forEach((inv) => {
+      const dt = inv.issueDate ? String(inv.issueDate).slice(0, 10) : '';
+      if (!/^\d{4}-\d{2}/.test(dt)) return;
+      const k = dt.slice(0, 7);
+      if (!(k in idx)) return;
+      const breakdown = invoicePaymentBreakdown(inv.payment);
+      const calc = calculatePayment(breakdown.grandTotal, breakdown.paid);
+      buckets[idx[k]].count += 1;
+      buckets[idx[k]].revenue += Number(calc.total) || 0;
+      buckets[idx[k]].paid += Number(calc.paid) || 0;
+    });
+    return buckets.map((b) => ({ ...b, revenue: round2(b.revenue), paid: round2(b.paid) }));
+  }, [invoices]);
+
+  const recentInvoices = useMemo(() => {
+    return invoices
+      .map((inv) => {
+        const breakdown = invoicePaymentBreakdown(inv.payment);
+        const calc = calculatePayment(breakdown.grandTotal, breakdown.paid);
+        return { inv, calc };
+      })
+      .sort((a, b) =>
+        String(b.inv.issueDate || '').localeCompare(String(a.inv.issueDate || '')),
+      )
+      .slice(0, 8);
+  }, [invoices]);
+
   const handleExport = async () => {
     let list;
     try {
@@ -202,6 +331,19 @@ export default function Dashboard() {
 
   const maxStatusCount = Math.max(1, ...CLIENT_STATUSES.map((s) => clientStats.counts[s] || 0));
 
+  const seriesLabels = monthSeries.map((b) => b.label);
+  const seriesCounts = monthSeries.map((b) => b.count);
+  const seriesRevenue = monthSeries.map((b) => b.revenue);
+  const seriesTotals = monthSeries.reduce(
+    (acc, b) => ({
+      count: acc.count + b.count,
+      revenue: round2(acc.revenue + b.revenue),
+      paid: round2(acc.paid + b.paid),
+    }),
+    { count: 0, revenue: 0, paid: 0 },
+  );
+  const lastMonth = monthSeries[monthSeries.length - 1];
+
   return (
     <div className="page">
       <section className="db-hero">
@@ -246,7 +388,10 @@ export default function Dashboard() {
 
       <section className="db-section" aria-label="Client overview">
         <div className="db-section__head">
-          <h2>Client overview</h2>
+          <h2>
+            <Icon name="users" aria-hidden="true" />
+            Client overview
+          </h2>
           <Can perm="page:clients">
             <Link to="/clients" className="db-section__hint">
               View clients →
@@ -273,7 +418,10 @@ export default function Dashboard() {
 
       <section className="db-section" aria-label="Financial overview">
         <div className="db-section__head">
-          <h2>Financial overview</h2>
+          <h2>
+            <Icon name="receipt" aria-hidden="true" />
+            Financial overview
+          </h2>
           <Can perm="page:invoice.history">
             <Link to="/history" className="db-section__hint">
               Invoice history →
@@ -298,10 +446,136 @@ export default function Dashboard() {
         </div>
       </section>
 
+      <section className="db-section" aria-label="Reports">
+        <div className="db-section__head">
+          <h2>
+            <Icon name="chartBar" aria-hidden="true" />
+            Reports
+          </h2>
+          <Can perm="page:invoice.history">
+            <Link to="/history" className="db-section__hint">
+              View all →
+            </Link>
+          </Can>
+        </div>
+
+        <div className="db-charts">
+          <section className="card db-chart-card" aria-label="Invoices per month">
+            <div className="db-chart-card__head">
+              <h2>Invoices per month</h2>
+              <p className="db-chart-card__sub">Issued invoices over the last 6 months</p>
+            </div>
+            <div className="db-chart-card__body">
+              {loading ? (
+                <div className="loading-row">
+                  <span className="spinner" aria-hidden="true" />
+                  Loading chart…
+                </div>
+              ) : (
+                <BarsChart labels={seriesLabels} values={seriesCounts} />
+              )}
+            </div>
+            <div className="db-chart-card__foot">
+              <span className="db-fig">
+                <b>{loading ? '—' : seriesTotals.count}</b> invoices in 6 months
+              </span>
+              <span className="db-fig">
+                <b>{loading ? '—' : lastMonth.count}</b> this month
+              </span>
+            </div>
+          </section>
+
+          <section className="card db-chart-card" aria-label="Revenue per month">
+            <div className="db-chart-card__head">
+              <h2>Revenue per month</h2>
+              <p className="db-chart-card__sub">Invoiced totals over the last 6 months</p>
+            </div>
+            <div className="db-chart-card__body">
+              {loading ? (
+                <div className="loading-row">
+                  <span className="spinner" aria-hidden="true" />
+                  Loading chart…
+                </div>
+              ) : (
+                <LineChart labels={seriesLabels} values={seriesRevenue} />
+              )}
+            </div>
+            <div className="db-chart-card__foot">
+              <span className="db-fig">
+                <span className="db-fig__dot" aria-hidden="true" />
+                <b>{loading ? '—' : formatCurrency(seriesTotals.revenue)}</b> invoiced
+              </span>
+              <span className="db-fig">
+                <b>{loading ? '—' : formatCurrency(seriesTotals.paid)}</b> paid
+              </span>
+            </div>
+          </section>
+        </div>
+
+        <section className="card db-panel" aria-label="Recent invoices">
+          <div className="db-panel__head">
+            <h2>
+              <Icon name="receipt" aria-hidden="true" />
+              Recent invoices
+            </h2>
+            <Can perm="page:invoice.history">
+              <Link to="/history" className="db-section__hint">
+                View all →
+              </Link>
+            </Can>
+          </div>
+          {loading ? (
+            <div className="loading-row">
+              <span className="spinner" aria-hidden="true" />
+              Loading invoices…
+            </div>
+          ) : recentInvoices.length === 0 ? (
+            <p className="db-empty">No invoices yet. Create your first invoice to see it here.</p>
+          ) : (
+            <div className="db-table-wrap">
+              <table className="db-inv">
+                <thead>
+                  <tr>
+                    <th>Invoice</th>
+                    <th>Customer</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th className="db-inv__amount">Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {recentInvoices.map(({ inv, calc }, i) => {
+                    const badge = invoiceBadge(calc.status);
+                    return (
+                      <tr key={inv.id || `${inv.invoiceNumber || 'inv'}-${i}`}>
+                        <td className="db-inv__num">{inv.invoiceNumber || '—'}</td>
+                        <td className="db-inv__customer">{inv.customer?.name || '—'}</td>
+                        <td className="db-inv__date">
+                          {inv.issueDate
+                            ? formatDateShort(new Date(inv.issueDate)) || inv.issueDate
+                            : '—'}
+                        </td>
+                        <td>
+                          <span className={badge.cls}>{badge.text}</span>
+                        </td>
+                        <td className="db-inv__amount">{formatCurrency(calc.total)}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </section>
+      </section>
+
       <div className="db-grid">
         <section className="card db-panel" aria-label="Recent activity">
           <div className="db-panel__head">
-            <h2>Recent activity</h2>
+            <h2>
+              <Icon name="activity" aria-hidden="true" />
+              Recent activity
+            </h2>
             <span className="db-panel__hint">Applications, invoices and payments</span>
           </div>
           {loading ? (
@@ -343,7 +617,10 @@ export default function Dashboard() {
 
         <section className="card db-panel" aria-label="Application status">
           <div className="db-panel__head">
-            <h2>Application status</h2>
+            <h2>
+              <Icon name="userCheck" aria-hidden="true" />
+              Application status
+            </h2>
             <span className="db-panel__hint">{loading ? '…' : `${clientStats.total} total`}</span>
           </div>
           <div className="db-status">

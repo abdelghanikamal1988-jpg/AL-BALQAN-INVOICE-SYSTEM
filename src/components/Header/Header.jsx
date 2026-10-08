@@ -353,6 +353,8 @@ export default function Header({ menuOpen = false, onMenuToggle }) {
             </button>
           )}
 
+          <span className="app-header__vr" aria-hidden="true" />
+
           <div className="app-header__dd">
             <button
               type="button"
@@ -364,12 +366,12 @@ export default function Header({ menuOpen = false, onMenuToggle }) {
                 setNewOpen(false);
               }}
             >
+              <span className="app-header__avatar" aria-hidden="true">
+                {userInitials(user)}
+              </span>
               <span className="app-header__user-meta">
                 <span className="app-header__uname">{displayName}</span>
                 {roleLabel && <span className="app-header__urole">{roleLabel}</span>}
-              </span>
-              <span className="app-header__avatar" aria-hidden="true">
-                {userInitials(user)}
               </span>
               <Icon name="chevronDown" className="app-header__ucharv" aria-hidden="true" />
             </button>

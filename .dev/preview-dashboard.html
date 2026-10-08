@@ -1,7 +1,7 @@
 ﻿<!doctype html>
 <html lang="en">
   <head>
-  <link rel="stylesheet" href="../dist/assets/index-DiGaFdjm.css" />
+  <link rel="stylesheet" href="../dist/assets/index-D2nze9ib.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta charset="utf-8" />
     <title>Preview — Dashboard</title>
@@ -109,14 +109,16 @@
             <span class="app-header__bell-count" aria-hidden="true">3</span>
           </button>
 
+          <span class="app-header__vr" aria-hidden="true"></span>
+
           <div class="app-header__dd">
-            <button type="button" class="app-header__user">
+            <button type="button" class="app-header__user" aria-haspopup="menu" aria-expanded="false">
+              <span class="app-header__avatar" title="admin@albalqan.com">MA</span>
               <span class="app-header__user-meta">
                 <span class="app-header__uname">Maha Al Balqan</span>
                 <span class="app-header__urole">Administrator</span>
               </span>
-              <span class="app-header__avatar" title="admin@albalqan.com">MA</span>
-              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 9.5L12 16l6.5-6.5"/></svg>
+              <svg class="icon app-header__ucharv" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 9.5L12 16l6.5-6.5"/></svg>
             </button>
           </div>
         </div>
@@ -147,7 +149,10 @@
 
             <section class="db-section" aria-label="Client overview">
               <div class="db-section__head">
-                <h2>Client overview</h2>
+                <h2>
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.4" /><path d="M3.5 19.5v-1.4a4 4 0 0 1 4-4h3a4 4 0 0 1 4 4v1.4" /><path d="M17.5 8.5v5M15 11h5" /></svg>
+                  Client overview
+                </h2>
                 <a href="#" class="db-section__hint">View clients →</a>
               </div>
               <div class="db-metrics">
@@ -181,7 +186,10 @@
 
             <section class="db-section" aria-label="Financial overview">
               <div class="db-section__head">
-                <h2>Financial overview</h2>
+                <h2>
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3.5h12v17l-3-1.6-3 1.6-3-1.6-3 1.6z" /><path d="M9 8h6M9 12h6" /></svg>
+                  Financial overview
+                </h2>
                 <a href="#" class="db-section__hint">Invoice history →</a>
               </div>
               <div class="db-metrics db-metrics--money">
@@ -208,10 +216,164 @@
               </div>
             </section>
 
+            <section class="db-section" aria-label="Reports">
+              <div class="db-section__head">
+                <h2>
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 20.5h18" /><path d="M6 20.5v-6.2" /><path d="M11 20.5V7.5" /><path d="M16 20.5v-9.4" /><path d="M20.5 20.5V11" /></svg>
+                  Reports
+                </h2>
+                <a href="#" class="db-section__hint">View all →</a>
+              </div>
+
+              <div class="db-charts">
+                <section class="card db-chart-card" aria-label="Invoices per month">
+                  <div class="db-chart-card__head">
+                    <h2>Invoices per month</h2>
+                    <p class="db-chart-card__sub">Issued invoices over the last 6 months</p>
+                  </div>
+                  <div class="db-chart-card__body">
+                    <div class="db-bars">
+                      <div class="db-bars__grid" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+                      <div class="db-bars__cols">
+                        <div class="db-bars__col"><div class="db-bars__bar" style="height: 50%" title="May 26: 4"></div></div>
+                        <div class="db-bars__col"><div class="db-bars__bar" style="height: 75%" title="Jun 26: 6"></div></div>
+                        <div class="db-bars__col"><div class="db-bars__bar" style="height: 37.5%" title="Jul 26: 3"></div></div>
+                        <div class="db-bars__col"><div class="db-bars__bar" style="height: 87.5%" title="Aug 26: 7"></div></div>
+                        <div class="db-bars__col"><div class="db-bars__bar" style="height: 62.5%" title="Sep 26: 5"></div></div>
+                        <div class="db-bars__col"><div class="db-bars__bar" style="height: 100%" title="Oct 26: 8"></div></div>
+                      </div>
+                      <div class="db-bars__labels">
+                        <span>May 26</span><span>Jun 26</span><span>Jul 26</span><span>Aug 26</span><span>Sep 26</span><span>Oct 26</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="db-chart-card__foot">
+                    <span class="db-fig"><b>33</b> invoices in 6 months</span>
+                    <span class="db-fig"><b>8</b> this month</span>
+                  </div>
+                </section>
+
+                <section class="card db-chart-card" aria-label="Revenue per month">
+                  <div class="db-chart-card__head">
+                    <h2>Revenue per month</h2>
+                    <p class="db-chart-card__sub">Invoiced totals over the last 6 months</p>
+                  </div>
+                  <div class="db-chart-card__body">
+                    <div class="db-line">
+                      <div class="db-line__plot">
+                        <div class="db-line__grid" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+                        <svg viewBox="0 0 100 100" preserveAspectRatio="none" role="img" aria-label="Revenue per month, last 6 months">
+                          <defs>
+                            <linearGradient id="dbLineFill" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="0%" stop-color="#22c55e" stop-opacity="0.18" />
+                              <stop offset="100%" stop-color="#22c55e" stop-opacity="0" />
+                            </linearGradient>
+                          </defs>
+                          <path d="M0,54.75 L20,32.33 L40,65.06 L60,20.14 L80,42.92 L100,8 L100,100 L0,100 Z" fill="url(#dbLineFill)" />
+                          <path d="M0,54.75 L20,32.33 L40,65.06 L60,20.14 L80,42.92 L100,8" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke" />
+                        </svg>
+                      </div>
+                      <div class="db-line__labels">
+                        <span>May 26</span><span>Jun 26</span><span>Jul 26</span><span>Aug 26</span><span>Sep 26</span><span>Oct 26</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="db-chart-card__foot">
+                    <span class="db-fig"><span class="db-fig__dot" aria-hidden="true"></span><b>AED 102,500.00</b> invoiced</span>
+                    <span class="db-fig"><b>AED 71,340.00</b> paid</span>
+                  </div>
+                </section>
+              </div>
+
+              <section class="card db-panel" aria-label="Recent invoices">
+                <div class="db-panel__head">
+                  <h2>
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3.5h12v17l-3-1.6-3 1.6-3-1.6-3 1.6z" /><path d="M9 8h6M9 12h6" /></svg>
+                    Recent invoices
+                  </h2>
+                  <a href="#" class="db-section__hint">View all →</a>
+                </div>
+                <div class="db-table-wrap">
+                  <table class="db-inv">
+                    <thead>
+                      <tr>
+                        <th>Invoice</th>
+                        <th>Customer</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th class="db-inv__amount">Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="db-inv__num">AB-INV-1045</td>
+                        <td class="db-inv__customer">Mariam Haddad</td>
+                        <td class="db-inv__date">04 Oct 2026</td>
+                        <td><span class="db-badge db-badge--paid">Paid</span></td>
+                        <td class="db-inv__amount">AED 9,200.00</td>
+                      </tr>
+                      <tr>
+                        <td class="db-inv__num">AB-INV-1044</td>
+                        <td class="db-inv__customer">Ahmed Khaled Saleh</td>
+                        <td class="db-inv__date">03 Oct 2026</td>
+                        <td><span class="db-badge db-badge--partial">Partial</span></td>
+                        <td class="db-inv__amount">AED 14,750.00</td>
+                      </tr>
+                      <tr>
+                        <td class="db-inv__num">AB-INV-1043</td>
+                        <td class="db-inv__customer">Rami Yousef</td>
+                        <td class="db-inv__date">02 Oct 2026</td>
+                        <td><span class="db-badge db-badge--unpaid">Unpaid</span></td>
+                        <td class="db-inv__amount">AED 6,400.00</td>
+                      </tr>
+                      <tr>
+                        <td class="db-inv__num">AB-INV-1042</td>
+                        <td class="db-inv__customer">Sara Mahmoud</td>
+                        <td class="db-inv__date">01 Oct 2026</td>
+                        <td><span class="db-badge db-badge--paid">Paid</span></td>
+                        <td class="db-inv__amount">AED 4,500.00</td>
+                      </tr>
+                      <tr>
+                        <td class="db-inv__num">AB-INV-1041</td>
+                        <td class="db-inv__customer">Omar Farouk</td>
+                        <td class="db-inv__date">30 Sep 2026</td>
+                        <td><span class="db-badge db-badge--partial">Partial</span></td>
+                        <td class="db-inv__amount">AED 12,750.00</td>
+                      </tr>
+                      <tr>
+                        <td class="db-inv__num">AB-INV-1040</td>
+                        <td class="db-inv__customer">Yousef Nasser</td>
+                        <td class="db-inv__date">28 Sep 2026</td>
+                        <td><span class="db-badge db-badge--unpaid">Unpaid</span></td>
+                        <td class="db-inv__amount">AED 8,100.00</td>
+                      </tr>
+                      <tr>
+                        <td class="db-inv__num">AB-INV-1039</td>
+                        <td class="db-inv__customer">Layla Ibrahim</td>
+                        <td class="db-inv__date">26 Sep 2026</td>
+                        <td><span class="db-badge db-badge--paid">Paid</span></td>
+                        <td class="db-inv__amount">AED 21,300.00</td>
+                      </tr>
+                      <tr>
+                        <td class="db-inv__num">AB-INV-1038</td>
+                        <td class="db-inv__customer">Hassan Tariq</td>
+                        <td class="db-inv__date">24 Sep 2026</td>
+                        <td><span class="db-badge db-badge--unpaid">Unpaid</span></td>
+                        <td class="db-inv__amount">AED 3,750.00</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+            </section>
+
             <div class="db-grid">
               <section class="card db-panel" aria-label="Recent activity">
                 <div class="db-panel__head">
-                  <h2>Recent activity</h2>
+                  <h2>
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l2.6-6.5 4 13 2.6-6.5H21" /></svg>
+                    Recent activity
+                  </h2>
                   <span class="db-panel__hint">Applications, invoices and payments</span>
                 </div>
                 <div class="db-act-wrap"><table class="db-act">
@@ -272,7 +434,10 @@
 
               <section class="card db-panel" aria-label="Application status">
                 <div class="db-panel__head">
-                  <h2>Application status</h2>
+                  <h2>
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.4" /><path d="M3.5 19.5v-1.4a4 4 0 0 1 4-4h3a4 4 0 0 1 4 4v1.4" /><path d="m15.5 11.5 2 2 3.5-3.5" /></svg>
+                    Application status
+                  </h2>
                   <span class="db-panel__hint">24 total</span>
                 </div>
                 <div class="db-status">

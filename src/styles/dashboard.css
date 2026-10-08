@@ -69,28 +69,42 @@
   justify-content: flex-start;
   text-align: left;
   gap: 14px;
-  margin-bottom: 12px;
-}
-
-.db-section__head::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: var(--line);
+  margin-bottom: 14px;
 }
 
 .db-section__head h2 {
-  font-size: 11px;
+  order: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
   color: var(--muted);
   margin: 0;
 }
 
+.db-section__head h2 .icon {
+  color: var(--brand);
+  font-size: 16px;
+}
+
+.db-section__head::after {
+  content: '';
+  order: 2;
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+.db-section__head .db-section__hint {
+  order: 3;
+}
+
 .db-section__hint {
-  font-size: 12.5px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 500;
   letter-spacing: normal;
   text-transform: none;
   color: var(--brand-strong);
@@ -121,7 +135,7 @@
 .db-metrics > .statc:nth-child(6) { animation: rise-in 0.42s ease backwards; animation-delay: 0.3s; }
 
 .db-metric__value--money {
-  font-size: 16px;
+  font-size: 17px;
 }
 
 /* ---------- Recent activity + status panels ---------- */
@@ -145,12 +159,20 @@
 }
 
 .db-panel__head h2 {
-  font-size: 15.5px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: normal;
   text-transform: none;
   color: var(--text);
   margin: 0;
+}
+
+.db-panel__head h2 .icon {
+  color: var(--muted);
+  font-size: 17px;
 }
 
 .db-panel__hint {
@@ -168,23 +190,24 @@
 .db-act {
   width: 100%;
   border-collapse: collapse;
-  font-size: 13.5px;
+  font-size: 14px;
 }
 
 .db-act th {
   text-align: left;
   font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  font-weight: 500;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--muted);
-  background: transparent;
-  padding: 9px 18px;
+  background: var(--ground);
+  padding: 8px 18px;
   border-bottom: 1px solid var(--border);
+  white-space: nowrap;
 }
 
 .db-act td {
-  padding: 11px 18px;
+  padding: 12px 18px;
   border-bottom: 1px solid var(--line-soft);
   vertical-align: middle;
 }
@@ -293,10 +316,314 @@
   color: var(--muted);
 }
 
+/* ---------- Reports: chart cards (Nexus nx-chart-card) ---------- */
+
+.db-charts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.db-chart-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.db-chart-card__head {
+  padding: 16px 20px 4px;
+}
+
+.db-chart-card__head h2 {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text);
+  margin: 0;
+}
+
+.db-chart-card__sub {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.db-chart-card__body {
+  flex: 1;
+  padding: 8px 20px;
+  min-width: 0;
+}
+
+.db-chart-card__foot {
+  border-top: 1px solid var(--line-soft);
+  padding: 12px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 24px;
+}
+
+.db-fig {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.db-fig b {
+  font-weight: 600;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.db-fig__dot {
+  flex: 0 0 auto;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--brand);
+  align-self: center;
+}
+
+.db-fig__dot--muted {
+  background: #9CA3AF;
+}
+
+/* --- Bar chart (HTML/CSS, Chart.js-like) --- */
+
+.db-bars {
+  position: relative;
+  height: 240px;
+  display: flex;
+  flex-direction: column;
+}
+
+.db-bars__grid {
+  position: absolute;
+  inset: 0 0 26px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.db-bars__grid span {
+  display: block;
+  height: 1px;
+  background: var(--line-soft);
+}
+
+.db-bars__cols {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  padding-bottom: 8px;
+}
+
+.db-bars__col {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.db-bars__bar {
+  width: min(34px, 70%);
+  min-height: 3px;
+  background: var(--brand);
+  border-radius: 4px 4px 0 0;
+  transition: height 0.5s var(--ease);
+}
+
+.db-bars__bar--muted {
+  background: #D1D5DB;
+}
+
+.db-bars__labels {
+  display: flex;
+  gap: 10px;
+  height: 26px;
+  align-items: center;
+}
+
+.db-bars__labels span {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+  font-size: 11px;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* --- Line chart (SVG, Chart.js-like) --- */
+
+.db-line {
+  position: relative;
+  height: 240px;
+  display: flex;
+  flex-direction: column;
+}
+
+.db-line__plot {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+
+.db-line__grid {
+  position: absolute;
+  inset: 0 0 8px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.db-line__grid span {
+  display: block;
+  height: 1px;
+  background: var(--line-soft);
+}
+
+.db-line svg {
+  position: absolute;
+  inset: 0 0 8px 0;
+  width: 100%;
+  height: calc(100% - 8px);
+  display: block;
+  overflow: visible;
+}
+
+.db-line__labels {
+  display: flex;
+  gap: 10px;
+  height: 26px;
+  align-items: center;
+}
+
+.db-line__labels span {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+  font-size: 11px;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---------- Recent invoices table (Nexus table inside a card) ---------- */
+
+.db-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.db-inv {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  min-width: 560px;
+}
+
+.db-inv th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: var(--ground);
+  padding: 8px 18px;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.db-inv td {
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--line-soft);
+  vertical-align: middle;
+}
+
+.db-inv tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.db-inv tbody tr:hover td {
+  background: var(--hover);
+}
+
+.db-inv__num {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.db-inv__customer {
+  max-width: 240px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.db-inv__date {
+  color: var(--muted);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.db-inv__amount {
+  text-align: right;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.db-inv th.db-inv__amount {
+  font-weight: 500;
+  text-align: right;
+}
+
+.db-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.db-badge--paid {
+  background: #DCFCE7;
+  color: #15803D;
+}
+
+.db-badge--partial {
+  background: #FFEDD5;
+  color: #C2410C;
+}
+
+.db-badge--unpaid {
+  background: #FEE2E2;
+  color: #DC2626;
+}
+
 /* ---------- Responsive ---------- */
 
 @media (max-width: 900px) {
   .db-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .db-charts {
     grid-template-columns: minmax(0, 1fr);
   }
 }
@@ -317,6 +644,11 @@
 
   .db-act th,
   .db-act td {
+    padding: 10px 12px;
+  }
+
+  .db-inv th,
+  .db-inv td {
     padding: 10px 12px;
   }
 
