@@ -1014,19 +1014,26 @@ html {
    RESPONSIVE
    =========================== */
 @media (max-width: 1200px) {
-  .ws-services__grid { grid-template-columns: repeat(2, 338px); }
-  .ws-destinations__grid { grid-template-columns: repeat(3, 239px); }
-  .ws-why__grid { grid-template-columns: repeat(2, 350px); }
+  .ws-services__grid { grid-template-columns: repeat(2, minmax(0, 338px)); }
+  .ws-destinations__grid { grid-template-columns: repeat(3, minmax(0, 239px)); }
+  .ws-why__grid { grid-template-columns: repeat(2, minmax(0, 350px)); }
 }
 
 @media (max-width: 1024px) {
   .ws-hero__title { font-size: 64px; }
-  .ws-consultation__inner { grid-template-columns: 1fr; }
+  .ws-consultation__inner { grid-template-columns: minmax(0, 1fr); }
   .ws-footer__inner { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 768px) {
-  .ws-navbar__toggle { display: block; }
+  .ws-navbar__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 10px;
+  }
   .ws-navbar__links {
     display: none;
     position: absolute;
@@ -1054,12 +1061,53 @@ html {
   .ws-faq,
   .ws-partners { padding: 40px 20px; }
 
-  .ws-services__grid { grid-template-columns: 1fr; }
-  .ws-destinations__grid { grid-template-columns: repeat(2, 239px); }
-  .ws-why__grid { grid-template-columns: 1fr; }
-  .ws-form-row { grid-template-columns: 1fr; }
+  .ws-services__grid { grid-template-columns: minmax(0, 1fr); }
+  .ws-destinations__grid { grid-template-columns: repeat(2, minmax(0, 239px)); }
+  .ws-why__grid { grid-template-columns: minmax(0, 1fr); }
   .ws-footer__inner { grid-template-columns: 1fr; }
   .ws-footer__bottom { flex-direction: column; gap: 12px; text-align: center; }
+  .ws-footer__links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px 16px;
+  }
+  .ws-footer__bottom a { display: inline-block; padding: 10px 6px; }
+
+  /* How-it-works timeline: let the four fixed 225px steps shrink to the
+     phone width instead of overflowing by 5–25px. */
+  .ws-how__grid { gap: 0; }
+  .ws-step {
+    width: auto;
+    flex: 1 1 0;
+    min-width: 0;
+  }
+  .ws-step__title { font-size: 13px; overflow-wrap: break-word; }
+
+  /* Consultation card: the long <option> text was forcing a 341px
+     min-content and clipping 21px off the right edge on phones. */
+  .ws-consultation__inner > * { min-width: 0; }
+  .ws-consultation__sidebar { padding: 28px 20px; }
+  .ws-consultation__form { padding: 28px 20px; min-width: 0; }
+  .ws-form-row { grid-template-columns: minmax(0, 1fr); }
+  .ws-form-group { min-width: 0; }
+  .ws-form-group select,
+  .ws-form-group input,
+  .ws-form-group textarea {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  /* Comfortable tap targets (Apple/Google minimum ~40–44px). */
+  .ws-explore-link {
+    padding: 10px 16px;
+    min-height: 40px;
+  }
+  .ws-checkbox {
+    padding: 8px 0;
+    margin-bottom: 16px;
+  }
+  .ws-checkbox input { width: 20px; height: 20px; }
 }
 
 /* ============================================================
