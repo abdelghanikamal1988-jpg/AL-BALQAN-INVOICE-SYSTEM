@@ -188,7 +188,7 @@ html[dir='rtl'] .clients-page #client-search {
 }
 
 .cl-table tbody tr:last-child td {
-  border-bottom: none;
+  border-bottom-color: transparent;
 }
 
 .cl-table tbody tr:nth-child(even) {

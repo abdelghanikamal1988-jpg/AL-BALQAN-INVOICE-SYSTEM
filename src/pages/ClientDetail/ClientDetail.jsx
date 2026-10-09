@@ -386,12 +386,12 @@ export default function ClientDetail() {
                   <tbody>
                     {invoices.map((row) => (
                   <tr key={row.invoice.id}>
-                    <td className="mono" data-label={t('clients.invoiceNo')}>{row.invoice.invoiceNumber}</td>
-                    <td data-label={t('clients.date')}>{row.invoice.issueDate || '—'}</td>
-                    <td data-label={t('clients.service')}>{serviceLabel(row.invoice.travel?.service) || '—'}</td>
-                    <td data-label={t('common.total')}>{formatCurrency(row.payment.grandTotal)}</td>
-                    <td data-label={t('clients.paid')}>{formatCurrency(row.calc.paid)}</td>
-                    <td data-label={t('clients.remaining')}>{formatCurrency(row.calc.remaining)}</td>
+                    <td className="mono" data-label={t('clients.invoiceNo')}><span className="cell-v">{row.invoice.invoiceNumber}</span></td>
+                    <td data-label={t('clients.date')}><span className="cell-v">{row.invoice.issueDate || '—'}</span></td>
+                    <td data-label={t('clients.service')}><span className="cell-v">{serviceLabel(row.invoice.travel?.service) || '—'}</span></td>
+                    <td data-label={t('common.total')}><span className="cell-v">{formatCurrency(row.payment.grandTotal)}</span></td>
+                    <td data-label={t('clients.paid')}><span className="cell-v">{formatCurrency(row.calc.paid)}</span></td>
+                    <td data-label={t('clients.remaining')}><span className="cell-v">{formatCurrency(row.calc.remaining)}</span></td>
                   </tr>
                     ))}
                   </tbody>

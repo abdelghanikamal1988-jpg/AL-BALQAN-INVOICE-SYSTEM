@@ -557,15 +557,15 @@ export default function InvoiceHistory() {
                   const pendingFor = pendingByInvoice.get(inv.id);
                   return (
             <tr key={inv.id}>
-              <td className="mono" data-label={t('invoice.colInvoiceNo')}>{inv.invoiceNumber}</td>
-              <td data-label={t('invoice.date')}>{inv.issueDate || '—'}</td>
-              <td data-label={t('invoice.colCustomer')}>{inv.customer?.name || '—'}</td>
-              <td data-label={t('invoice.colPassport')}>{inv.customer?.passport || '—'}</td>
-              <td data-label={t('invoice.destination')}>{inv.travel?.destination ? t('data.destination.' + inv.travel.destination) : '—'}</td>
-              <td data-label={t('invoice.service')}>{inv.travel?.service ? t('data.service.' + inv.travel.service) : '—'}</td>
-              <td data-label={t('common.total')}>{formatCurrency(calc.total)}</td>
-              <td data-label={t('invoice.colPaid')}>{formatCurrency(calc.paid)}</td>
-              <td data-label={t('invoice.colRemaining')}>{formatCurrency(calc.remaining)}</td>
+              <td className="mono" data-label={t('invoice.colInvoiceNo')}><span className="cell-v">{inv.invoiceNumber}</span></td>
+              <td data-label={t('invoice.date')}><span className="cell-v">{inv.issueDate || '—'}</span></td>
+              <td data-label={t('invoice.colCustomer')}><span className="cell-v">{inv.customer?.name || '—'}</span></td>
+              <td data-label={t('invoice.colPassport')}><span className="cell-v">{inv.customer?.passport || '—'}</span></td>
+              <td data-label={t('invoice.destination')}><span className="cell-v">{inv.travel?.destination ? t('data.destination.' + inv.travel.destination) : '—'}</span></td>
+              <td data-label={t('invoice.service')}><span className="cell-v">{inv.travel?.service ? t('data.service.' + inv.travel.service) : '—'}</span></td>
+              <td data-label={t('common.total')}><span className="cell-v">{formatCurrency(calc.total)}</span></td>
+              <td data-label={t('invoice.colPaid')}><span className="cell-v">{formatCurrency(calc.paid)}</span></td>
+              <td data-label={t('invoice.colRemaining')}><span className="cell-v">{formatCurrency(calc.remaining)}</span></td>
               <td data-label={t('common.status')}>
                 <span className={`badge ${statusClass(calc.status)}`}>
                   {t('invoice.status.' + calc.status)}

@@ -772,6 +772,135 @@
     color: var(--muted);
   }
 
+  .history-table td,
+  .cl-table td,
+  .history-table tfoot td,
+  .cl-table tfoot td {
+    min-height: 54px;
+    flex-wrap: nowrap;
+    align-items: center;
+    white-space: nowrap;
+  }
+
+  .history-table td > *,
+  .cl-table td > * {
+    min-width: 0;
+  }
+
+  .history-table td.actions-cell > *,
+  .cl-table td.actions-cell > *,
+  .history-table td .btn,
+  .cl-table td .btn,
+  .cl-table td .icon-btn {
+    flex: 0 0 auto;
+  }
+
+  .history-table td > .badge,
+  .cl-table td > .cbadge,
+  .cl-table td > .cl-passport {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .history-table td.actions-cell,
+  .cl-table td.actions-cell {
+    flex-wrap: wrap;
+  }
+
+  .history-table td[data-label]::before,
+  .cl-table td[data-label]::before,
+  .history-table tfoot td[data-label]::before,
+  .cl-table tfoot td[data-label]::before {
+    flex: 0 1 auto;
+    max-width: 45%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .cell-v {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    min-height: calc(2 * 1.45em);
+    line-height: 1.45;
+    overflow: hidden;
+    overflow-wrap: break-word;
+    text-align: end;
+    white-space: normal;
+  }
+
+  .cl-table td.cl-status {
+    grid-column: 1 / -1;
+  }
+
+  .cl-table tbody td:first-child:not(.mono) {
+    min-height: 77px;
+  }
+
+  .cl-identity {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .cl-identity > span:last-child {
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: calc(2 * 1.45em + 22px);
+  }
+
+  .cl-identity .cl-name {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    white-space: normal;
+    line-height: 1.45;
+    min-height: calc(2 * 1.45em);
+  }
+
+  .cl-identity .cl-sub {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .history-table .user-cell,
+  .cl-table .user-cell {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 2px 6px;
+    min-height: calc(2 * 1.45em);
+  }
+
+  .history-table .user-cell > span:first-child,
+  .cl-table .user-cell > span:first-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .history-table .user-cell__sub,
+  .cl-table .user-cell__sub {
+    grid-column: 1 / -1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .history-table .pending-chip,
+  .cl-table .pending-chip {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+    white-space: nowrap;
+  }
+
   .au-card {
     padding: 10px;
     overflow: hidden;

@@ -508,9 +508,9 @@ export default function Clients() {
               <td data-label={t('clients.passportLabel')}>
                 <span className="cl-passport">{client.passport || '—'}</span>
               </td>
-              <td data-label={t('clients.colCountry')}>{client.country || '—'}</td>
-              <td data-label={t('clients.referralAgent')}>{client.referralAgent || '—'}</td>
-              <td data-label={t('common.status')}>
+              <td data-label={t('clients.colCountry')}><span className="cell-v">{client.country || '—'}</span></td>
+              <td data-label={t('clients.referralAgent')}><span className="cell-v">{client.referralAgent || '—'}</span></td>
+              <td className="cl-status" data-label={t('common.status')}>
                 <span className={`cbadge ${statusClass(client.status)}`}>
                   {statusText(client.status)}
                 </span>
