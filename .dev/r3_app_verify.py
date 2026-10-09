@@ -2,6 +2,7 @@
 over CDP — spacing between Reports panels + one-card-per-row with arrows."""
 
 import json
+import sys
 import time
 import urllib.parse
 import urllib.request
@@ -9,7 +10,7 @@ import urllib.request
 import websocket
 
 PORT = 9333
-URL = 'http://127.0.0.1:8099/dist/#/'
+URL = sys.argv[1] if len(sys.argv) > 1 else 'http://127.0.0.1:8099/dist/#/'
 fails = []
 
 

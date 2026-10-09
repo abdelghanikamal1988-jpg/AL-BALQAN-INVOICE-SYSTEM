@@ -1004,7 +1004,7 @@ export default function Dashboard() {
           )}
           <CardNav
             car={agentCar}
-            count={agentStats.length}
+            count={loading ? 0 : agentStats.length}
             label={t('dashboard.panel.agentPerformance')}
             t={t}
           />
@@ -1062,7 +1062,7 @@ export default function Dashboard() {
           )}
           <CardNav
             car={customerCar}
-            count={topCustomers.length}
+            count={loading ? 0 : topCustomers.length}
             label={t('dashboard.panel.topCustomers')}
             t={t}
           />
@@ -1124,7 +1124,7 @@ export default function Dashboard() {
           )}
           <CardNav
             car={invoiceCar}
-            count={recentInvoices.length}
+            count={loading ? 0 : recentInvoices.length}
             label={t('dashboard.panel.recentInvoices')}
             t={t}
           />
