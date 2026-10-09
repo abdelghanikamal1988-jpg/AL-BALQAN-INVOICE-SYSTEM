@@ -668,6 +668,37 @@
     display: flex;
   }
 
+  .db-panel .db-inv td {
+    min-height: 44px;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    align-items: center;
+  }
+
+  .db-panel .db-inv td::before {
+    flex: 0 1 auto;
+    max-width: 45%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .db-panel .db-inv .db-cell__v {
+    flex: 1 1 auto;
+    min-width: 0;
+    text-align: end;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .db-panel .db-inv .db-inv__customer .db-cell__v {
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    min-height: calc(2 * 1.5em);
+  }
+
   .history-table td,
   .cl-table td,
   .db-inv td,

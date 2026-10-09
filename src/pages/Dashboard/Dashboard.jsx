@@ -978,25 +978,25 @@ export default function Dashboard() {
                 <tbody>
                   {agentStats.map((r, i) => (
                     <tr key={r.agent} className={agentCar.rowCls(i)}>
-                      <td className="db-inv__num" data-label={t('dashboard.th.agent')}>{r.agent}</td>
-                      <td className="db-inv__count" data-label={t('dashboard.th.clients')}>{r.clients}</td>
-                      <td className="db-inv__count" data-label={t('dashboard.th.thisMonth')}>{r.thisMonth}</td>
-                      <td className="db-inv__count" data-label={t('dashboard.th.withInvoice')}>{r.withInvoice}</td>
-                      <td className="db-inv__count" data-label={t('dashboard.th.invoices')}>{r.invoices}</td>
-                      <td className="db-inv__amount" data-label={t('dashboard.th.invoiced')}>{formatCurrency(r.invoiced)}</td>
-                      <td className="db-inv__amount" data-label={t('dashboard.th.paid')}>{formatCurrency(r.paid)}</td>
+                      <td className="db-inv__num" data-label={t('dashboard.th.agent')}><span className="db-cell__v">{r.agent}</span></td>
+                      <td className="db-inv__count" data-label={t('dashboard.th.clients')}><span className="db-cell__v">{r.clients}</span></td>
+                      <td className="db-inv__count" data-label={t('dashboard.th.thisMonth')}><span className="db-cell__v">{r.thisMonth}</span></td>
+                      <td className="db-inv__count" data-label={t('dashboard.th.withInvoice')}><span className="db-cell__v">{r.withInvoice}</span></td>
+                      <td className="db-inv__count" data-label={t('dashboard.th.invoices')}><span className="db-cell__v">{r.invoices}</span></td>
+                      <td className="db-inv__amount" data-label={t('dashboard.th.invoiced')}><span className="db-cell__v">{formatCurrency(r.invoiced)}</span></td>
+                      <td className="db-inv__amount" data-label={t('dashboard.th.paid')}><span className="db-cell__v">{formatCurrency(r.paid)}</span></td>
                     </tr>
                   ))}
                 </tbody>
                 <tfoot>
                   <tr>
-                    <td data-label={t('dashboard.th.agent')}>{t('dashboard.tfoot.totalAgents', { v: agentStats.length })}</td>
-                    <td className="db-inv__count" data-label={t('dashboard.th.clients')}>{agentTotals.clients}</td>
-                    <td className="db-inv__count" data-label={t('dashboard.th.thisMonth')}>{agentTotals.thisMonth}</td>
-                    <td className="db-inv__count" data-label={t('dashboard.th.withInvoice')}>{agentTotals.withInvoice}</td>
-                    <td className="db-inv__count" data-label={t('dashboard.th.invoices')}>{agentTotals.invoices}</td>
-                    <td className="db-inv__amount" data-label={t('dashboard.th.invoiced')}>{formatCurrency(agentTotals.invoiced)}</td>
-                    <td className="db-inv__amount" data-label={t('dashboard.th.paid')}>{formatCurrency(agentTotals.paid)}</td>
+                    <td data-label={t('dashboard.th.agent')}><span className="db-cell__v">{t('dashboard.tfoot.totalAgents', { v: agentStats.length })}</span></td>
+                    <td className="db-inv__count" data-label={t('dashboard.th.clients')}><span className="db-cell__v">{agentTotals.clients}</span></td>
+                    <td className="db-inv__count" data-label={t('dashboard.th.thisMonth')}><span className="db-cell__v">{agentTotals.thisMonth}</span></td>
+                    <td className="db-inv__count" data-label={t('dashboard.th.withInvoice')}><span className="db-cell__v">{agentTotals.withInvoice}</span></td>
+                    <td className="db-inv__count" data-label={t('dashboard.th.invoices')}><span className="db-cell__v">{agentTotals.invoices}</span></td>
+                    <td className="db-inv__amount" data-label={t('dashboard.th.invoiced')}><span className="db-cell__v">{formatCurrency(agentTotals.invoiced)}</span></td>
+                    <td className="db-inv__amount" data-label={t('dashboard.th.paid')}><span className="db-cell__v">{formatCurrency(agentTotals.paid)}</span></td>
                   </tr>
                 </tfoot>
               </table>
@@ -1040,21 +1040,21 @@ export default function Dashboard() {
                 <tbody>
                   {topCustomers.map((r, i) => (
                     <tr key={r.name} className={customerCar.rowCls(i)}>
-                      <td className="db-inv__customer" data-label={t('dashboard.th.customer')}>{r.name}</td>
-                      <td className="db-inv__count" data-label={t('dashboard.th.invoices')}>{r.invoices}</td>
-                      <td className="db-inv__amount" data-label={t('dashboard.th.invoiced')}>{formatCurrency(r.invoiced)}</td>
-                      <td className="db-inv__amount" data-label={t('dashboard.th.paid')}>{formatCurrency(r.paid)}</td>
-                      <td className="db-inv__amount" data-label={t('dashboard.th.remaining')}>{formatCurrency(r.remaining)}</td>
+                      <td className="db-inv__customer" data-label={t('dashboard.th.customer')}><span className="db-cell__v">{r.name}</span></td>
+                      <td className="db-inv__count" data-label={t('dashboard.th.invoices')}><span className="db-cell__v">{r.invoices}</span></td>
+                      <td className="db-inv__amount" data-label={t('dashboard.th.invoiced')}><span className="db-cell__v">{formatCurrency(r.invoiced)}</span></td>
+                      <td className="db-inv__amount" data-label={t('dashboard.th.paid')}><span className="db-cell__v">{formatCurrency(r.paid)}</span></td>
+                      <td className="db-inv__amount" data-label={t('dashboard.th.remaining')}><span className="db-cell__v">{formatCurrency(r.remaining)}</span></td>
                     </tr>
                   ))}
                 </tbody>
                 <tfoot>
                   <tr>
-                    <td data-label={t('dashboard.th.customer')}>{t('dashboard.tfoot.top', { v: topCustomers.length })}</td>
-                    <td className="db-inv__count" data-label={t('dashboard.th.invoices')}>{customerTotals.invoices}</td>
-                    <td className="db-inv__amount" data-label={t('dashboard.th.invoiced')}>{formatCurrency(customerTotals.invoiced)}</td>
-                    <td className="db-inv__amount" data-label={t('dashboard.th.paid')}>{formatCurrency(customerTotals.paid)}</td>
-                    <td className="db-inv__amount" data-label={t('dashboard.th.remaining')}>{formatCurrency(customerTotals.remaining)}</td>
+                    <td data-label={t('dashboard.th.customer')}><span className="db-cell__v">{t('dashboard.tfoot.top', { v: topCustomers.length })}</span></td>
+                    <td className="db-inv__count" data-label={t('dashboard.th.invoices')}><span className="db-cell__v">{customerTotals.invoices}</span></td>
+                    <td className="db-inv__amount" data-label={t('dashboard.th.invoiced')}><span className="db-cell__v">{formatCurrency(customerTotals.invoiced)}</span></td>
+                    <td className="db-inv__amount" data-label={t('dashboard.th.paid')}><span className="db-cell__v">{formatCurrency(customerTotals.paid)}</span></td>
+                    <td className="db-inv__amount" data-label={t('dashboard.th.remaining')}><span className="db-cell__v">{formatCurrency(customerTotals.remaining)}</span></td>
                   </tr>
                 </tfoot>
               </table>
@@ -1104,17 +1104,19 @@ export default function Dashboard() {
                     const badge = invoiceBadge(calc.status);
                     return (
                       <tr key={inv.id || `${inv.invoiceNumber || 'inv'}-${i}`} className={invoiceCar.rowCls(i)}>
-                        <td className="db-inv__num" data-label={t('dashboard.th.invoice')}>{inv.invoiceNumber || '—'}</td>
-                        <td className="db-inv__customer" data-label={t('dashboard.th.customer')}>{inv.customer?.name || '—'}</td>
+                        <td className="db-inv__num" data-label={t('dashboard.th.invoice')}><span className="db-cell__v">{inv.invoiceNumber || '—'}</span></td>
+                        <td className="db-inv__customer" data-label={t('dashboard.th.customer')}><span className="db-cell__v">{inv.customer?.name || '—'}</span></td>
                         <td className="db-inv__date" data-label={t('dashboard.th.date')}>
-                          {inv.issueDate
-                            ? formatDateShort(new Date(inv.issueDate)) || inv.issueDate
-                            : '—'}
+                          <span className="db-cell__v">
+                            {inv.issueDate
+                              ? formatDateShort(new Date(inv.issueDate)) || inv.issueDate
+                              : '—'}
+                          </span>
                         </td>
                         <td data-label={t('common.status')}>
-                          <span className={badge.cls}>{t(badge.text)}</span>
+                          <span className="db-cell__v"><span className={badge.cls}>{t(badge.text)}</span></span>
                         </td>
-                        <td className="db-inv__amount" data-label={t('dashboard.th.amount')}>{formatCurrency(calc.total)}</td>
+                        <td className="db-inv__amount" data-label={t('dashboard.th.amount')}><span className="db-cell__v">{formatCurrency(calc.total)}</span></td>
                       </tr>
                     );
                   })}
@@ -1159,12 +1161,12 @@ export default function Dashboard() {
                       const badge = logBadge(row.action);
                       return (
                         <tr key={row.id} className={logCar.rowCls(i)}>
-                          <td className="db-inv__date" data-label={t('dashboard.th.time')}>{logTime(row.ts)}</td>
-                          <td className="db-inv__num" data-label={t('dashboard.th.account')}>{row.account}</td>
+                          <td className="db-inv__date" data-label={t('dashboard.th.time')}><span className="db-cell__v">{logTime(row.ts)}</span></td>
+                          <td className="db-inv__num" data-label={t('dashboard.th.account')}><span className="db-cell__v">{row.account}</span></td>
                           <td data-label={t('dashboard.th.action')}>
-                            <span className={badge.cls}>{t(badge.text)}</span>
+                            <span className="db-cell__v"><span className={badge.cls}>{t(badge.text)}</span></span>
                           </td>
-                          <td className="db-inv__customer" data-label={t('dashboard.th.details')}>{row.details || '—'}</td>
+                          <td className="db-inv__customer" data-label={t('dashboard.th.details')}><span className="db-cell__v">{row.details || '—'}</span></td>
                         </tr>
                       );
                     })}

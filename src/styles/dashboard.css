@@ -881,7 +881,7 @@ html[dir='rtl'] .db-cardnav__btn--next .icon {
 }
 
 .db-inv tbody tr:last-child td {
-  border-bottom: none;
+  border-bottom-color: transparent;
 }
 
 .db-inv tbody tr:hover td {
