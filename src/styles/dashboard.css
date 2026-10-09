@@ -148,6 +148,10 @@
   margin-bottom: 32px;
 }
 
+.db-panel--full {
+  grid-column: 1 / -1;
+}
+
 .db-section > .db-panel {
   margin-bottom: 16px;
 }
@@ -257,55 +261,6 @@
   white-space: nowrap;
 }
 
-/* ---------- Application status ---------- */
-
-.db-status {
-  padding: 12px 18px 18px;
-}
-
-.db-status__row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 9px 0;
-}
-
-.db-status__name {
-  flex: 0 0 auto;
-  width: 160px;
-  font-size: 12.5px;
-  font-weight: 500;
-  text-transform: none;
-  letter-spacing: 0;
-  color: var(--text);
-}
-
-.db-status__bar {
-  flex: 1;
-  height: 8px;
-  background: rgba(22, 33, 27, 0.07);
-  border-radius: 999px;
-  overflow: hidden;
-}
-
-.db-status__fill {
-  display: block;
-  height: 100%;
-  background: var(--text);
-  border-radius: 999px;
-  transition: width 0.6s var(--ease);
-}
-
-.db-status__count {
-  flex: 0 0 auto;
-  width: 20px;
-  text-align: end;
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--text);
-  font-variant-numeric: tabular-nums;
-}
-
 /* ---------- Utility row (backup / import) ---------- */
 
 .db-utility {
@@ -337,6 +292,10 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
+}
+
+.db-chart-card--wide {
+  grid-column: 1 / -1;
 }
 
 .db-chart-card__head {
@@ -783,6 +742,132 @@
   transition: width 0.5s var(--ease);
 }
 
+.db-funnel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 6px 0;
+  min-height: 240px;
+  justify-content: center;
+}
+
+.db-funnel__stage {
+  display: grid;
+  grid-template-columns: 24px minmax(72px, 148px) minmax(0, 1fr) 96px;
+  gap: 12px;
+  align-items: center;
+}
+
+.db-funnel__step {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--pill);
+  color: var(--muted);
+}
+
+.db-funnel__name {
+  font-size: 13px;
+  line-height: 1.3;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+.db-funnel__track {
+  display: block;
+  height: 18px;
+  border-radius: 999px;
+  background: var(--line-soft);
+  overflow: hidden;
+}
+
+.db-funnel__fill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.6s var(--ease);
+}
+
+.db-funnel__val {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 6px;
+  font-variant-numeric: tabular-nums;
+}
+
+.db-funnel__val b {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.db-funnel__val em {
+  font-style: normal;
+  font-size: 11px;
+  color: var(--muted);
+  min-width: 34px;
+  text-align: end;
+}
+
+.db-funnel__fill--new {
+  background: #9ca3af;
+}
+
+.db-funnel__step--new {
+  background: rgba(156, 163, 175, 0.18);
+  color: #6b7280;
+}
+
+.db-funnel__fill--docs {
+  background: #f59e0b;
+}
+
+.db-funnel__step--docs {
+  background: rgba(245, 158, 11, 0.18);
+  color: #b45309;
+}
+
+.db-funnel__fill--sent {
+  background: #ea580c;
+}
+
+.db-funnel__step--sent {
+  background: rgba(234, 88, 12, 0.18);
+  color: #c2410c;
+}
+
+.db-funnel__fill--review {
+  background: #7e22ce;
+}
+
+.db-funnel__step--review {
+  background: rgba(126, 34, 206, 0.16);
+  color: #7e22ce;
+}
+
+.db-funnel__fill--approved {
+  background: #22c55e;
+}
+
+.db-funnel__step--approved {
+  background: rgba(34, 197, 94, 0.18);
+  color: #15803d;
+}
+
+.db-funnel__fill--rejected {
+  background: #ef4444;
+}
+
+.db-funnel__step--rejected {
+  background: rgba(239, 68, 68, 0.18);
+  color: #b91c1c;
+}
+
 .db-hbar__fill--zero {
   background: transparent;
 }
@@ -1014,13 +1099,28 @@ html[dir='rtl'] .db-cardnav__btn--next .icon {
     display: none;
   }
 
-  .db-status {
-    padding: 12px 16px 16px;
+  .db-funnel {
+    gap: 11px;
+    min-height: 210px;
   }
 
-  .db-status__name {
-    width: 110px;
-    font-size: 11px;
+  .db-funnel__stage {
+    grid-template-columns: 22px minmax(44px, 88px) minmax(0, 1fr) 76px;
+    gap: 7px;
+  }
+
+  .db-funnel__step {
+    width: 22px;
+    height: 22px;
+    font-size: 10px;
+  }
+
+  .db-funnel__name {
+    font-size: 12px;
+  }
+
+  .db-funnel__val b {
+    font-size: 13px;
   }
 
   .db-utility {
@@ -1040,10 +1140,6 @@ html[dir='rtl'] .db-cardnav__btn--next .icon {
    Anything already using design tokens auto-flips via
    global.css's dark block and is intentionally not repeated.
    ============================================================ */
-
-html[data-theme='dark'] .db-status__bar {
-  background: rgba(233, 236, 234, 0.1);
-}
 
 html[data-theme='dark'] .db-fig__dot--muted {
   background: var(--muted);
@@ -1079,4 +1175,32 @@ html[data-theme='dark'] .db-badge--logout {
 html[data-theme='dark'] .db-badge--reauth {
   background: rgba(192, 132, 252, 0.16);
   color: #d8b4fe;
+}
+
+html[data-theme='dark'] .db-funnel__fill--review {
+  background: #a855f7;
+}
+
+html[data-theme='dark'] .db-funnel__step--new {
+  color: #cbd5e1;
+}
+
+html[data-theme='dark'] .db-funnel__step--docs {
+  color: #fbbf24;
+}
+
+html[data-theme='dark'] .db-funnel__step--sent {
+  color: #fb923c;
+}
+
+html[data-theme='dark'] .db-funnel__step--review {
+  color: #c084fc;
+}
+
+html[data-theme='dark'] .db-funnel__step--approved {
+  color: #4ade80;
+}
+
+html[data-theme='dark'] .db-funnel__step--rejected {
+  color: #f87171;
 }

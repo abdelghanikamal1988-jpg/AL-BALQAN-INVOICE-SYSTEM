@@ -38,6 +38,8 @@
   'dashboard.chart.clientsInvoicesSub': 'Registered clients with or without an invoice',
   'dashboard.chart.agentsThisMonth': 'Agents this month',
   'dashboard.chart.agentsThisMonthSub': 'Clients added per referral agent in {month} {year}',
+  'dashboard.chart.pipeline': 'Application pipeline',
+  'dashboard.chart.pipelineSub': 'Where every client application stands right now',
 
   'dashboard.loading.chart': 'Loading chart…',
   'dashboard.loading.agents': 'Loading agents…',
@@ -57,6 +59,9 @@
   'dashboard.foot.neverInvoiced': 'never invoiced',
   'dashboard.foot.clientsThisMonth': 'clients this month',
   'dashboard.foot.activeAgents': 'active agents',
+  'dashboard.foot.pipelineTotal': 'applications',
+  'dashboard.foot.pipelineOpen': 'in progress',
+  'dashboard.foot.pipelineApproved': 'approved',
 
   'dashboard.tip.invoice': '{v} invoice',
   'dashboard.tip.invoices': '{v} invoices',
@@ -82,6 +87,7 @@
   'dashboard.panel.applicationStatusHint': '{v} total',
 
   'dashboard.empty.agentsChart': 'No clients yet. Add a client to see agent performance.',
+  'dashboard.empty.pipeline': 'No applications yet. Add a client to see the pipeline.',
   'dashboard.empty.agentTable': 'No clients yet. Agent totals appear as soon as you add clients.',
   'dashboard.empty.customers': 'No invoices yet. Customer totals appear once you issue invoices.',
   'dashboard.empty.invoices': 'No invoices yet. Create your first invoice to see it here.',

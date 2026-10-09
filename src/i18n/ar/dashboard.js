@@ -38,6 +38,8 @@
   'dashboard.chart.clientsInvoicesSub': 'العملاء المسجلون مع فاتورة أو بدونها',
   'dashboard.chart.agentsThisMonth': 'الوكلاء هذا الشهر',
   'dashboard.chart.agentsThisMonthSub': 'العملاء المضافون لكل وكيل إحاله في {month} {year}',
+  'dashboard.chart.pipeline': 'مسار الطلبات',
+  'dashboard.chart.pipelineSub': 'موقع كل طلب عميل الآن',
 
   'dashboard.loading.chart': 'جارٍ تحميل الرسم البياني…',
   'dashboard.loading.agents': 'جارٍ تحميل الوكلاء…',
@@ -57,6 +59,9 @@
   'dashboard.foot.neverInvoiced': 'لم تُصدر لهم فواتير',
   'dashboard.foot.clientsThisMonth': 'عملاء هذا الشهر',
   'dashboard.foot.activeAgents': 'وكلاء نشطون',
+  'dashboard.foot.pipelineTotal': 'طلب',
+  'dashboard.foot.pipelineOpen': 'قيد المعالجة',
+  'dashboard.foot.pipelineApproved': 'معتمد',
 
   'dashboard.tip.invoice': '{v} فاتورة',
   'dashboard.tip.invoices': '{v} فواتير',
@@ -82,6 +87,7 @@
   'dashboard.panel.applicationStatusHint': '{v} إجمالي',
 
   'dashboard.empty.agentsChart': 'لا يوجد عملاء بعد. أضف عميلًا لعرض أداء الوكلاء.',
+  'dashboard.empty.pipeline': 'لا توجد طلبات بعد. أضف عميلًا لعرض المسار.',
   'dashboard.empty.agentTable': 'لا يوجد عملاء بعد. تظهر إجماليات الوكلاء بمجرد إضافة العملاء.',
   'dashboard.empty.customers': 'لا توجد فواتير بعد. تظهر إجماليات العملاء عند إصدار الفواتير.',
   'dashboard.empty.invoices': 'لا توجد فواتير بعد. أنشئ فاتورتك الأولى لتظهر هنا.',

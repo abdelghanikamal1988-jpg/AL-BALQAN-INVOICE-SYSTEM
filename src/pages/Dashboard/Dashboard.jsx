@@ -256,6 +256,48 @@ function LineChart({ labels, invoiced, paid }) {
   );
 }
 
+const STAGE_MOD = {
+  NEW: 'new',
+  'DOCUMENTS SUBMITTED': 'docs',
+  SUBMITTED: 'sent',
+  'UNDER REVIEW': 'review',
+  APPROVED: 'approved',
+  REJECTED: 'rejected',
+};
+
+function PipelineChart({ counts, total, loading }) {
+  const { t } = useLang();
+  const max = Math.max(1, ...CLIENT_STATUSES.map((s) => counts[s] || 0));
+  return (
+    <div className="db-funnel">
+      {CLIENT_STATUSES.map((s, i) => {
+        const v = loading ? 0 : counts[s] || 0;
+        const pct = total > 0 ? Math.round((v / total) * 100) : 0;
+        const width = v > 0 ? Math.max((v / max) * 100, 4) : 0;
+        const mod = STAGE_MOD[s] || 'new';
+        return (
+          <div className="db-funnel__stage" key={s}>
+            <span className={`db-funnel__step db-funnel__step--${mod}`} aria-hidden="true">
+              {i + 1}
+            </span>
+            <span className="db-funnel__name">{statusLabel(s, t)}</span>
+            <span className="db-funnel__track" aria-hidden="true">
+              <span
+                className={`db-funnel__fill db-funnel__fill--${mod}`}
+                style={{ width: `${width}%` }}
+              />
+            </span>
+            <span className="db-funnel__val">
+              <b>{loading ? '—' : v}</b>
+              <em>{loading ? '—' : `${pct}%`}</em>
+            </span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 function invoiceBadge(status) {
   if (status === 'PAID') return { cls: 'db-badge db-badge--paid', text: 'dashboard.badge.paid' };
   if (status === 'PARTIALLY_PAID') return { cls: 'db-badge db-badge--partial', text: 'dashboard.badge.partial' };
@@ -639,8 +681,6 @@ export default function Dashboard() {
     ['dashboard.metric.partiallyPaid', dash(financials.partiallyPaid === 1 ? t('dashboard.tip.invoice', { v: financials.partiallyPaid }) : t('dashboard.tip.invoices', { v: financials.partiallyPaid })), 'clock', 'purple', false],
   ];
 
-  const maxStatusCount = Math.max(1, ...CLIENT_STATUSES.map((s) => clientStats.counts[s] || 0));
-
   const seriesLabels = monthSeries.map((b) => b.label);
   const seriesCounts = monthSeries.map((b) => b.count);
   const seriesRevenue = monthSeries.map((b) => b.revenue);
@@ -797,6 +837,37 @@ export default function Dashboard() {
         </div>
 
         <div className="db-charts">
+          <section className="card db-chart-card db-chart-card--wide" aria-label={t('dashboard.chart.pipeline')}>
+            <div className="db-chart-card__head">
+              <h2>{t('dashboard.chart.pipeline')}</h2>
+              <p className="db-chart-card__sub">{t('dashboard.chart.pipelineSub')}</p>
+            </div>
+            <div className="db-chart-card__body">
+              {loading ? (
+                <div className="loading-row">
+                  <span className="spinner" aria-hidden="true" />
+                  {t('dashboard.loading.chart')}
+                </div>
+              ) : clientStats.total === 0 ? (
+                <p className="db-empty">{t('dashboard.empty.pipeline')}</p>
+              ) : (
+                <PipelineChart counts={clientStats.counts} total={clientStats.total} loading={loading} />
+              )}
+            </div>
+            <div className="db-chart-card__foot">
+              <span className="db-fig">
+                <b>{loading ? '—' : clientStats.total}</b> {t('dashboard.foot.pipelineTotal')}
+              </span>
+              <span className="db-fig">
+                <b>{loading ? '—' : clientStats.total - clientStats.approved - clientStats.rejected}</b>{' '}
+                {t('dashboard.foot.pipelineOpen')}
+              </span>
+              <span className="db-fig">
+                <b>{loading ? '—' : clientStats.approved}</b> {t('dashboard.foot.pipelineApproved')}
+              </span>
+            </div>
+          </section>
+
           <section className="card db-chart-card" aria-label={t('dashboard.chart.invoicesPerMonth')}>
             <div className="db-chart-card__head">
               <h2>{t('dashboard.chart.invoicesPerMonth')}</h2>
@@ -1185,7 +1256,7 @@ export default function Dashboard() {
       </section>
 
       <div className="db-grid">
-        <section className="card db-panel" aria-label={t('dashboard.panel.recentActivity')}>
+        <section className="card db-panel db-panel--full" aria-label={t('dashboard.panel.recentActivity')}>
           <div className="db-panel__head">
             <h2>
               <Icon name="activity" aria-hidden="true" />
@@ -1230,33 +1301,6 @@ export default function Dashboard() {
           )}
         </section>
 
-        <section className="card db-panel" aria-label={t('dashboard.panel.applicationStatus')}>
-          <div className="db-panel__head">
-            <h2>
-              <Icon name="userCheck" aria-hidden="true" />
-              {t('dashboard.panel.applicationStatus')}
-            </h2>
-            <span className="db-panel__hint">{loading ? '…' : t('dashboard.panel.applicationStatusHint', { v: clientStats.total })}</span>
-          </div>
-          <div className="db-status">
-            {CLIENT_STATUSES.map((s) => {
-              const count = clientStats.counts[s] || 0;
-              const pct = Math.round((count / maxStatusCount) * 100);
-              return (
-                <div className="db-status__row" key={s}>
-                  <span className="db-status__name">{statusLabel(s, t)}</span>
-                  <span className="db-status__bar">
-                    <span
-                      className="db-status__fill"
-                      style={{ width: loading ? '0%' : `${count > 0 ? Math.max(pct, 4) : 0}%` }}
-                    />
-                  </span>
-                  <span className="db-status__count">{loading ? '—' : count}</span>
-                </div>
-              );
-            })}
-          </div>
-        </section>
       </div>
 
       {(hasPerm('action:invoice.export') || hasPerm('action:invoice.import')) && (

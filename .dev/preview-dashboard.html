@@ -1,7 +1,7 @@
 ﻿<!doctype html>
 <html lang="en">
   <head>
-  <link rel="stylesheet" href="../dist/assets/index-CjZ5UdAI.css" />
+  <link rel="stylesheet" href="../dist/assets/index-8RJRhJ3I.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta charset="utf-8" />
     <title>Preview — Dashboard</title>
@@ -232,6 +232,58 @@
               </div>
 
               <div class="db-charts">
+                <section class="card db-chart-card db-chart-card--wide" aria-label="Application pipeline">
+                  <div class="db-chart-card__head">
+                    <h2>Application pipeline</h2>
+                    <p class="db-chart-card__sub">Where every client application stands right now</p>
+                  </div>
+                  <div class="db-chart-card__body">
+                    <div class="db-funnel">
+                      <div class="db-funnel__stage">
+                        <span class="db-funnel__step db-funnel__step--new" aria-hidden="true">1</span>
+                        <span class="db-funnel__name">NEW</span>
+                        <span class="db-funnel__track" aria-hidden="true"><span class="db-funnel__fill db-funnel__fill--new" style="width: 100%"></span></span>
+                        <span class="db-funnel__val"><b>9</b><em>32%</em></span>
+                      </div>
+                      <div class="db-funnel__stage">
+                        <span class="db-funnel__step db-funnel__step--docs" aria-hidden="true">2</span>
+                        <span class="db-funnel__name">DOCUMENTS SUBMITTED</span>
+                        <span class="db-funnel__track" aria-hidden="true"><span class="db-funnel__fill db-funnel__fill--docs" style="width: 44%"></span></span>
+                        <span class="db-funnel__val"><b>4</b><em>14%</em></span>
+                      </div>
+                      <div class="db-funnel__stage">
+                        <span class="db-funnel__step db-funnel__step--sent" aria-hidden="true">3</span>
+                        <span class="db-funnel__name">SUBMITTED</span>
+                        <span class="db-funnel__track" aria-hidden="true"><span class="db-funnel__fill db-funnel__fill--sent" style="width: 22%"></span></span>
+                        <span class="db-funnel__val"><b>2</b><em>7%</em></span>
+                      </div>
+                      <div class="db-funnel__stage">
+                        <span class="db-funnel__step db-funnel__step--review" aria-hidden="true">4</span>
+                        <span class="db-funnel__name">UNDER REVIEW</span>
+                        <span class="db-funnel__track" aria-hidden="true"><span class="db-funnel__fill db-funnel__fill--review" style="width: 56%"></span></span>
+                        <span class="db-funnel__val"><b>5</b><em>18%</em></span>
+                      </div>
+                      <div class="db-funnel__stage">
+                        <span class="db-funnel__step db-funnel__step--approved" aria-hidden="true">5</span>
+                        <span class="db-funnel__name">APPROVED</span>
+                        <span class="db-funnel__track" aria-hidden="true"><span class="db-funnel__fill db-funnel__fill--approved" style="width: 78%"></span></span>
+                        <span class="db-funnel__val"><b>7</b><em>25%</em></span>
+                      </div>
+                      <div class="db-funnel__stage">
+                        <span class="db-funnel__step db-funnel__step--rejected" aria-hidden="true">6</span>
+                        <span class="db-funnel__name">REJECTED</span>
+                        <span class="db-funnel__track" aria-hidden="true"><span class="db-funnel__fill db-funnel__fill--rejected" style="width: 11%"></span></span>
+                        <span class="db-funnel__val"><b>1</b><em>4%</em></span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="db-chart-card__foot">
+                    <span class="db-fig"><b>28</b> applications</span>
+                    <span class="db-fig"><b>20</b> in progress</span>
+                    <span class="db-fig"><b>7</b> approved</span>
+                  </div>
+                </section>
+
                 <section class="card db-chart-card" aria-label="Invoices per month">
                   <div class="db-chart-card__head">
                     <h2>Invoices per month</h2>
@@ -684,7 +736,7 @@
             </section>
 
             <div class="db-grid">
-              <section class="card db-panel" aria-label="Recent activity">
+              <section class="card db-panel db-panel--full" aria-label="Recent activity">
                 <div class="db-panel__head">
                   <h2>
                     <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l2.6-6.5 4 13 2.6-6.5H21" /></svg>
@@ -746,48 +798,6 @@
                     </tr>
                   </tbody>
                 </table></div>
-              </section>
-
-              <section class="card db-panel" aria-label="Application status">
-                <div class="db-panel__head">
-                  <h2>
-                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.4" /><path d="M3.5 19.5v-1.4a4 4 0 0 1 4-4h3a4 4 0 0 1 4 4v1.4" /><path d="m15.5 11.5 2 2 3.5-3.5" /></svg>
-                    Application status
-                  </h2>
-                  <span class="db-panel__hint">24 total</span>
-                </div>
-                <div class="db-status">
-                  <div class="db-status__row">
-                    <span class="db-status__name">NEW</span>
-                    <span class="db-status__bar"><span class="db-status__fill" style="width: 100%"></span></span>
-                    <span class="db-status__count">9</span>
-                  </div>
-                  <div class="db-status__row">
-                    <span class="db-status__name">DOCUMENTS SUBMITTED</span>
-                    <span class="db-status__bar"><span class="db-status__fill" style="width: 44%"></span></span>
-                    <span class="db-status__count">4</span>
-                  </div>
-                  <div class="db-status__row">
-                    <span class="db-status__name">SUBMITTED</span>
-                    <span class="db-status__bar"><span class="db-status__fill" style="width: 22%"></span></span>
-                    <span class="db-status__count">2</span>
-                  </div>
-                  <div class="db-status__row">
-                    <span class="db-status__name">UNDER REVIEW</span>
-                    <span class="db-status__bar"><span class="db-status__fill" style="width: 56%"></span></span>
-                    <span class="db-status__count">5</span>
-                  </div>
-                  <div class="db-status__row">
-                    <span class="db-status__name">APPROVED</span>
-                    <span class="db-status__bar"><span class="db-status__fill" style="width: 78%"></span></span>
-                    <span class="db-status__count">7</span>
-                  </div>
-                  <div class="db-status__row">
-                    <span class="db-status__name">REJECTED</span>
-                    <span class="db-status__bar"><span class="db-status__fill" style="width: 11%"></span></span>
-                    <span class="db-status__count">1</span>
-                  </div>
-                </div>
               </section>
             </div>
 
