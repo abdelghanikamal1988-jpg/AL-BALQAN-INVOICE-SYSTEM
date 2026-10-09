@@ -656,6 +656,18 @@
     overflow: hidden;
   }
 
+  .db-panel .db-inv tbody tr {
+    display: none;
+  }
+
+  .db-panel .db-inv tbody tr.is-active {
+    display: grid;
+  }
+
+  .db-cardnav {
+    display: flex;
+  }
+
   .history-table td,
   .cl-table td,
   .db-inv td,

@@ -168,7 +168,8 @@ EVAL_JS = r"""
     const scrollable = hasAncestor(t, scrollsX);
     const tds = Array.from(t.querySelectorAll('tbody td'));
     const labelled = tds.filter((td) => td.hasAttribute('data-label')).length;
-    const firstTr = t.querySelector('tbody tr');
+    const firstTr = Array.from(t.querySelectorAll('tbody tr'))
+      .find((tr) => getComputedStyle(tr).display !== 'none');
     const stacked = firstTr ? ['block', 'grid'].includes(getComputedStyle(firstTr).display) : false;
     const missing = tds.length - labelled;
     const wrapCls = t.parentElement && typeof t.parentElement.className === 'string'

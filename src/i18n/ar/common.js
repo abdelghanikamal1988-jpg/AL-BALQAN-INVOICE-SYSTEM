@@ -11,6 +11,7 @@ export default {
   'common.edit': 'تعديل',
   'common.search': 'بحث',
   'common.back': 'رجوع',
+  'common.prev': 'السابق',
   'common.next': 'التالي',
   'common.confirm': 'تأكيد',
   'common.loading': 'جارٍ التحميل…',

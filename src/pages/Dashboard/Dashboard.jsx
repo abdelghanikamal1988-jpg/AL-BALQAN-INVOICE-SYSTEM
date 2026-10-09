@@ -290,6 +290,50 @@ function logTime(ts) {
   return `${formatDateShort(d) || ''}, ${time}`.replace(/^,\s*/, '');
 }
 
+function useCarousel(count) {
+  const [i, setI] = useState(0);
+
+  useEffect(() => {
+    setI((v) => (v > count - 1 ? 0 : v));
+  }, [count]);
+
+  const go = (step) => setI((v) => (count > 0 ? (v + step + count) % count : 0));
+
+  return {
+    i,
+    prev: () => go(-1),
+    next: () => go(1),
+    rowCls: (idx) => (idx === i ? 'is-active' : undefined),
+  };
+}
+
+function CardNav({ car, count, label, t }) {
+  if (count < 2) return null;
+  return (
+    <div className="db-cardnav" role="group" aria-label={label}>
+      <button
+        type="button"
+        className="db-cardnav__btn db-cardnav__btn--prev"
+        onClick={car.prev}
+        aria-label={t('common.prev')}
+      >
+        <Icon name="chevronRight" aria-hidden="true" />
+      </button>
+      <span className="db-cardnav__idx" aria-live="polite">
+        {car.i + 1} / {count}
+      </span>
+      <button
+        type="button"
+        className="db-cardnav__btn db-cardnav__btn--next"
+        onClick={car.next}
+        aria-label={t('common.next')}
+      >
+        <Icon name="chevronRight" aria-hidden="true" />
+      </button>
+    </div>
+  );
+}
+
 export default function Dashboard() {
   const toast = useToast();
   const { t } = useLang();
@@ -523,6 +567,11 @@ export default function Dashboard() {
 
   /* Sign-in / sign-out events for every account on this device. */
   const accessLogs = useMemo(() => getAccessLogs(), [refreshKey]);
+
+  const agentCar = useCarousel(agentStats.length);
+  const customerCar = useCarousel(topCustomers.length);
+  const invoiceCar = useCarousel(recentInvoices.length);
+  const logCar = useCarousel(Math.min(accessLogs.length, 10));
 
   const handleExport = async () => {
     let list;
@@ -927,8 +976,8 @@ export default function Dashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {agentStats.map((r) => (
-                    <tr key={r.agent}>
+                  {agentStats.map((r, i) => (
+                    <tr key={r.agent} className={agentCar.rowCls(i)}>
                       <td className="db-inv__num" data-label={t('dashboard.th.agent')}>{r.agent}</td>
                       <td className="db-inv__count" data-label={t('dashboard.th.clients')}>{r.clients}</td>
                       <td className="db-inv__count" data-label={t('dashboard.th.thisMonth')}>{r.thisMonth}</td>
@@ -953,6 +1002,12 @@ export default function Dashboard() {
               </table>
             </div>
           )}
+          <CardNav
+            car={agentCar}
+            count={agentStats.length}
+            label={t('dashboard.panel.agentPerformance')}
+            t={t}
+          />
         </section>
 
         <section className="card db-panel" aria-label={t('dashboard.panel.topCustomers')}>
@@ -983,8 +1038,8 @@ export default function Dashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {topCustomers.map((r) => (
-                    <tr key={r.name}>
+                  {topCustomers.map((r, i) => (
+                    <tr key={r.name} className={customerCar.rowCls(i)}>
                       <td className="db-inv__customer" data-label={t('dashboard.th.customer')}>{r.name}</td>
                       <td className="db-inv__count" data-label={t('dashboard.th.invoices')}>{r.invoices}</td>
                       <td className="db-inv__amount" data-label={t('dashboard.th.invoiced')}>{formatCurrency(r.invoiced)}</td>
@@ -1005,6 +1060,12 @@ export default function Dashboard() {
               </table>
             </div>
           )}
+          <CardNav
+            car={customerCar}
+            count={topCustomers.length}
+            label={t('dashboard.panel.topCustomers')}
+            t={t}
+          />
         </section>
 
         <section className="card db-panel" aria-label={t('dashboard.panel.recentInvoices')}>
@@ -1042,7 +1103,7 @@ export default function Dashboard() {
                   {recentInvoices.map(({ inv, calc }, i) => {
                     const badge = invoiceBadge(calc.status);
                     return (
-                      <tr key={inv.id || `${inv.invoiceNumber || 'inv'}-${i}`}>
+                      <tr key={inv.id || `${inv.invoiceNumber || 'inv'}-${i}`} className={invoiceCar.rowCls(i)}>
                         <td className="db-inv__num" data-label={t('dashboard.th.invoice')}>{inv.invoiceNumber || '—'}</td>
                         <td className="db-inv__customer" data-label={t('dashboard.th.customer')}>{inv.customer?.name || '—'}</td>
                         <td className="db-inv__date" data-label={t('dashboard.th.date')}>
@@ -1061,6 +1122,12 @@ export default function Dashboard() {
               </table>
             </div>
           )}
+          <CardNav
+            car={invoiceCar}
+            count={recentInvoices.length}
+            label={t('dashboard.panel.recentInvoices')}
+            t={t}
+          />
         </section>
 
         {isAdmin && (
@@ -1088,10 +1155,10 @@ export default function Dashboard() {
                     </tr>
                   </thead>
                   <tbody>
-                    {accessLogs.slice(0, 10).map((row) => {
+                    {accessLogs.slice(0, 10).map((row, i) => {
                       const badge = logBadge(row.action);
                       return (
-                        <tr key={row.id}>
+                        <tr key={row.id} className={logCar.rowCls(i)}>
                           <td className="db-inv__date" data-label={t('dashboard.th.time')}>{logTime(row.ts)}</td>
                           <td className="db-inv__num" data-label={t('dashboard.th.account')}>{row.account}</td>
                           <td data-label={t('dashboard.th.action')}>
@@ -1105,6 +1172,12 @@ export default function Dashboard() {
                 </table>
               </div>
             )}
+            <CardNav
+              car={logCar}
+              count={Math.min(accessLogs.length, 10)}
+              label={t('dashboard.panel.accessLogs')}
+              t={t}
+            />
           </section>
         )}
       </section>

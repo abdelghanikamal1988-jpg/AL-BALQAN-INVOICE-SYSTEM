@@ -12,6 +12,7 @@ export default {
   'common.edit': 'Edit',
   'common.search': 'Search',
   'common.back': 'Back',
+  'common.prev': 'Previous',
   'common.next': 'Next',
   'common.confirm': 'Confirm',
   'common.loading': 'Loading…',

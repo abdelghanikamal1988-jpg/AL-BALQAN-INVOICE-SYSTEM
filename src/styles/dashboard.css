@@ -148,6 +148,14 @@
   margin-bottom: 32px;
 }
 
+.db-section > .db-panel {
+  margin-bottom: 16px;
+}
+
+.db-section > .db-panel:last-child {
+  margin-bottom: 0;
+}
+
 .db-panel__head {
   display: flex;
   align-items: baseline;
@@ -792,6 +800,58 @@
 .db-table-wrap {
   width: 100%;
   overflow-x: auto;
+}
+
+.db-cardnav {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 4px 16px 16px;
+}
+
+.db-cardnav__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--tap-min);
+  height: var(--tap-min);
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.db-cardnav__btn:active {
+  background: var(--hover);
+}
+
+.db-cardnav__btn .icon {
+  width: 20px;
+  height: 20px;
+}
+
+.db-cardnav__btn--prev .icon {
+  transform: scaleX(-1);
+}
+
+html[dir='rtl'] .db-cardnav__btn--prev .icon {
+  transform: none;
+}
+
+html[dir='rtl'] .db-cardnav__btn--next .icon {
+  transform: scaleX(-1);
+}
+
+.db-cardnav__idx {
+  min-width: 62px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
 }
 
 .db-inv {
