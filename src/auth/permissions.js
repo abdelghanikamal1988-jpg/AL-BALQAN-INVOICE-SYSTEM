@@ -15,6 +15,7 @@ export const PAGE_PERMISSIONS = [
   { key: 'page:clients', label: 'Clients History' },
   { key: 'page:clients.new', label: 'New Client' },
   { key: 'page:admin', label: 'Users (admin panel)' },
+  { key: 'page:settings', label: 'Settings' },
 ];
 
 export const ACTION_PERMISSIONS = [

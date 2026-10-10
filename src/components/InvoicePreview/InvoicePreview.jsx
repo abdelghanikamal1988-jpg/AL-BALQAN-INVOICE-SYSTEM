@@ -1,12 +1,14 @@
-import company from '../../data/company.js';
+import { getCompany, getSettings } from '../../utils/settings.js';
 import { formatCurrency } from '../../utils/formatCurrency.js';
 import { formatDateShort } from '../../utils/formatDate.js';
 import { calculatePayment } from '../../utils/paymentCalculator.js';
-import { calculateVat, VAT_MODE, VAT_RATE_LABEL } from '../../utils/vat.js';
+import { calculateVat, VAT_MODE, vatRateLabel } from '../../utils/vat.js';
 import { useLang } from '../../context/LangContext.jsx';
 
 export default function InvoicePreview({ form, invoiceNumber }) {
   const { t } = useLang();
+  const company = getCompany();
+  const settings = getSettings();
   const vat = calculateVat(form.total, form.vatMode);
   const calc = calculatePayment(vat.grandTotal, form.paid);
   const isEmpty =
@@ -42,6 +44,7 @@ export default function InvoicePreview({ form, invoiceNumber }) {
                   {t('invoice.tel')} {company.phone} · {company.email}
                   <br />
                   {company.website} · {t('invoice.licenseNo')} {company.licenseNo}
+                  {company.trn ? <> · {t('invoice.trn')} {company.trn}</> : null}
                 </div>
               </div>
             </div>
@@ -124,7 +127,7 @@ export default function InvoicePreview({ form, invoiceNumber }) {
                       <span className="invoice__payment-value">{formatCurrency(vat.subtotal)}</span>
                     </div>
                     <div className="invoice__payment-row">
-                      <span className="invoice__payment-label">{t('invoice.vatRate', { rate: VAT_RATE_LABEL })}</span>
+                      <span className="invoice__payment-label">{t('invoice.vatRate', { rate: vatRateLabel(vat.rate) })}</span>
                       <span className="invoice__payment-value">{formatCurrency(vat.vat)}</span>
                     </div>
                   </>
@@ -152,6 +155,20 @@ export default function InvoicePreview({ form, invoiceNumber }) {
               <div className="invoice__section">
                 <div className="invoice__section-title">{t('invoice.notesSection')}</div>
                 <div className="invoice__notes">{form.notes}</div>
+              </div>
+            )}
+
+            {settings.terms && (
+              <div className="invoice__section">
+                <div className="invoice__section-title">{t('invoice.termsSection')}</div>
+                <div className="invoice__notes">{settings.terms}</div>
+              </div>
+            )}
+
+            {settings.bankDetails && (
+              <div className="invoice__section">
+                <div className="invoice__section-title">{t('invoice.bankSection')}</div>
+                <div className="invoice__notes">{settings.bankDetails}</div>
               </div>
             )}
           </div>

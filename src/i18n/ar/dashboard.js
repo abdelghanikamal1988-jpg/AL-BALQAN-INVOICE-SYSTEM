@@ -155,4 +155,18 @@
   'dashboard.utility.note': 'تُخزَّن الفواتير في السحابة — استخدم «تصدير البيانات» للحصول على نسخة JSON.',
   'dashboard.utility.export': 'تصدير البيانات',
   'dashboard.utility.import': 'استيراد البيانات',
+
+  'dashboard.onboard.title': 'البدء السريع',
+  'dashboard.onboard.sub': 'أربع خطوات قصيرة قبل إصدار أول فاتورة.',
+  'dashboard.onboard.progress': '{done} من {total} مكتملة',
+  'dashboard.onboard.step1': 'إعداد بيانات الشركة والضريبة',
+  'dashboard.onboard.step1Body': 'أضف الرقم الضريبي وبيانات التواصل وبادئة الفاتورة من صفحة الإعدادات.',
+  'dashboard.onboard.step2': 'أضف أول عميل',
+  'dashboard.onboard.step2Body': 'أنشئ بطاقة عميل ببيانات الجواز والتواصل.',
+  'dashboard.onboard.step3': 'أنشئ أول فاتورة',
+  'dashboard.onboard.step3Body': 'اختر العميل والوجهة والخدمة وطريقة الدفع.',
+  'dashboard.onboard.step4': 'صدّر ملف PDF',
+  'dashboard.onboard.step4Body': 'اطبع أو نزّل ملف PDF للمشاركة.',
+  'dashboard.onboard.done': 'تم',
+  'dashboard.onboard.dismiss': 'إخفاء هذا الدليل',
 };

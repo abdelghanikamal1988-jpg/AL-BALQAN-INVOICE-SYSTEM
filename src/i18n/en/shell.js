@@ -49,6 +49,7 @@ export default {
   'shell.nav.clientsHistory': 'Clients History',
   'shell.nav.admin': 'Admin',
   'shell.nav.users': 'Users',
+  'shell.nav.settings': 'Settings',
 
   'shell.confirmIdentity': 'Confirm your identity',
   'shell.confirmAndDelete': 'Confirm & Delete',

@@ -178,4 +178,11 @@
   'clients.toastSaved': 'Client saved successfully.',
   'clients.toastSaveError': 'Unable to save the client. Please try again.',
   'clients.toastFixFields': 'Please fix the highlighted fields.',
+
+  'clients.expiry.title': 'Passports expiring soon',
+  'clients.expiry.sub': 'Renew or follow up before the travel date.',
+  'clients.expiry.days': '{n} days left',
+  'clients.expiry.today': 'Expires today',
+  'clients.expiry.expired': 'Expired',
+  'clients.expiry.open': 'Open client',
 };

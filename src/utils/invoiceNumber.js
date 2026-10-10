@@ -4,11 +4,12 @@
  */
 
 import { getInvoices } from './storage.js';
+import { getSettings, sanitizeInvoicePrefix } from './settings.js';
 
 export async function nextInvoiceNumber() {
   const year = new Date().getFullYear();
   const invoices = await getInvoices();
-  const prefix = `INV-${year}-`;
+  const prefix = `${sanitizeInvoicePrefix(getSettings().invoicePrefix)}-${year}-`;
 
   let maxSeq = 0;
   invoices.forEach((inv) => {

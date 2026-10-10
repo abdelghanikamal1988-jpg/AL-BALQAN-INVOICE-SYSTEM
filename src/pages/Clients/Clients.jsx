@@ -248,6 +248,22 @@ export default function Clients() {
     return { total: clients.length, counts };
   }, [clients]);
 
+  const expiringSoon = useMemo(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return clients
+      .map((c) => {
+        if (!c.dateOfExpiry) return null;
+        const d = new Date(`${String(c.dateOfExpiry).slice(0, 10)}T00:00:00`);
+        if (Number.isNaN(d.getTime())) return null;
+        const days = Math.round((d.getTime() - today.getTime()) / 86400000);
+        if (days > 90) return null;
+        return { client: c, days };
+      })
+      .filter(Boolean)
+      .sort((a, b) => a.days - b.days);
+  }, [clients]);
+
   const initialsOf = (client) => {
     const parts = (clientFullName(client) || '')
       .trim()
@@ -301,6 +317,47 @@ export default function Clients() {
           </Can>
         </div>
       </div>
+
+      {!loading && expiringSoon.length > 0 && (
+        <section className="card cl-expiry" aria-label={t('clients.expiry.title')}>
+          <div className="cl-expiry__head">
+            <span className="cl-expiry__icon" aria-hidden="true">
+              <Icon name="clock" />
+            </span>
+            <div className="cl-expiry__head-text">
+              <h2>{t('clients.expiry.title')}</h2>
+              <p>{t('clients.expiry.sub')}</p>
+            </div>
+          </div>
+          <ul className="cl-expiry__list">
+            {expiringSoon.map(({ client, days }) => (
+              <li
+                key={client.id}
+                className={`cl-expiry__item${days <= 30 ? ' cl-expiry__item--urgent' : ''}`}
+              >
+                <Link
+                  to={`/clients/${client.id}`}
+                  className="cl-expiry__link"
+                  aria-label={t('clients.expiry.open')}
+                >
+                  <span className="cl-expiry__name">{clientFullName(client) || '—'}</span>
+                  <span className="cl-expiry__passport mono">{client.passport || '—'}</span>
+                  <span className="cl-expiry__date mono">{client.dateOfExpiry}</span>
+                  <span
+                    className={`cl-expiry__chip${days <= 30 ? ' cl-expiry__chip--urgent' : ''}`}
+                  >
+                    {days < 0
+                      ? t('clients.expiry.expired')
+                      : days === 0
+                        ? t('clients.expiry.today')
+                        : t('clients.expiry.days', { n: days })}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       {!loading && clients.length > 0 && (
         <div className="statc-row">

@@ -313,6 +313,18 @@ button {
   border-color: var(--danger);
 }
 
+.btn--whatsapp {
+  background: #128C7E;
+  color: #fff;
+  border-color: #0e6f64;
+}
+
+.btn--whatsapp:hover:not(:disabled) {
+  background: #0e6f64;
+  border-color: #0b5c53;
+  box-shadow: 0 4px 12px rgba(18, 140, 126, 0.3);
+}
+
 .btn--sm {
   min-height: 32px;
   padding: 7px 12px;
@@ -2130,6 +2142,18 @@ html[data-theme='dark'] .app-header__cta:hover {
 
 html[data-theme='dark'] .btn--danger:hover:not(:disabled) {
   color: #2b0d0d;
+}
+
+html[data-theme='dark'] .btn--whatsapp {
+  background: #14b8a6;
+  border-color: #0d9488;
+  color: #042f2e;
+}
+
+html[data-theme='dark'] .btn--whatsapp:hover:not(:disabled) {
+  background: #0d9488;
+  border-color: #0f766e;
+  color: #042f2e;
 }
 
 /* Pastel stat tiles → darkened backgrounds + lightened hues. */

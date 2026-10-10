@@ -49,6 +49,7 @@ export default {
   'shell.nav.clientsHistory': 'سجل العملاء',
   'shell.nav.admin': 'الإدارة',
   'shell.nav.users': 'المستخدمون',
+  'shell.nav.settings': 'الإعدادات',
 
   'shell.confirmIdentity': 'تأكيد هويتك',
   'shell.confirmAndDelete': 'تأكيد وحذف',

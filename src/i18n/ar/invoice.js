@@ -186,4 +186,12 @@
   'invoice.importFailedFile': 'فشل الاستيراد. الملف ليس نسخة احتياطية صالحة لـ AL BALQAN.',
   'invoice.importFailedRead': 'فشل الاستيراد. تعذّرت قراءة الملف.',
   'invoice.deleted': 'تم حذف الفاتورة.',
+
+  'invoice.trn': 'الرقم الضريبي',
+  'invoice.termsSection': 'الشروط والأحكام',
+  'invoice.bankSection': 'البيانات البنكية',
+  'invoice.whatsapp': 'واتساب',
+  'invoice.whatsappAria': 'مشاركة الفاتورة {number} عبر واتساب',
+  'invoice.whatsappMessage':
+    'مرحباً {name}، الفاتورة {number} من AL BALQAN: الإجمالي {total}، المدفوع {paid}، المتبقي {remaining} ({status}).',
 };

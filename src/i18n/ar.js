@@ -12,6 +12,7 @@ import invoice from './ar/invoice.js';
 import admin from './ar/admin.js';
 import website from './ar/website.js';
 import data from './ar/data.js';
+import settings from './ar/settings.js';
 
 export default {
   ...common,
@@ -22,4 +23,5 @@ export default {
   ...admin,
   ...website,
   ...data,
+  ...settings,
 };

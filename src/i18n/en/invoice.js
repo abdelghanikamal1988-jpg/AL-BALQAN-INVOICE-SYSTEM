@@ -186,4 +186,12 @@
   'invoice.importFailedFile': 'Import failed. The file is not a valid AL BALQAN backup.',
   'invoice.importFailedRead': 'Import failed. Could not read the file.',
   'invoice.deleted': 'Invoice deleted.',
+
+  'invoice.trn': 'TRN',
+  'invoice.termsSection': 'Terms & Conditions',
+  'invoice.bankSection': 'Bank Details',
+  'invoice.whatsapp': 'WhatsApp',
+  'invoice.whatsappAria': 'Share invoice {number} on WhatsApp',
+  'invoice.whatsappMessage':
+    'Hello {name}, invoice {number} from AL BALQAN: total {total}, paid {paid}, remaining {remaining} ({status}).',
 };

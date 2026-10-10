@@ -1,20 +1,7 @@
-/**
- * UAE VAT (5%) calculation.
- *
- * vatMode:
- *  - 'none'      : no VAT applied
- *  - 'included'  : the written total ALREADY includes VAT.
- *                  subtotal = total / 1.05, vat = total - subtotal, grandTotal = total
- *  - 'excluded'  : VAT is added ON TOP of the written total.
- *                  subtotal = total, vat = total * 0.05, grandTotal = subtotal + vat
- *
- * Money is handled in integer fils to avoid floating point errors.
- */
-
 import { toFils, fromFils } from './money.js';
+import { getSettings } from './settings.js';
 
 export const VAT_RATE = 0.05;
-export const VAT_RATE_LABEL = '5%';
 
 export const VAT_MODE = {
   NONE: 'none',
@@ -22,24 +9,51 @@ export const VAT_MODE = {
   EXCLUDED: 'excluded',
 };
 
-/**
- * @param {number|string} total  the amount the user typed
- * @param {string} vatMode       one of VAT_MODE
- * @returns {{ subtotal, vat, grandTotal }}
- */
-export function calculateVat(total, vatMode) {
+export function currentVatPercent() {
+  return normalizeVatPercent(getSettings().vatRate);
+}
+
+export function normalizeVatPercent(rate) {
+  if (rate === null || rate === undefined || rate === '') return currentVatPercentFallback();
+  const n = Number(rate);
+  if (!Number.isFinite(n) || n < 0) return 5;
+  if (n > 100) return 100;
+  return Math.round(n * 100) / 100;
+}
+
+function currentVatPercentFallback() {
+  return 5;
+}
+
+export function vatRateLabel(rate = null) {
+  const pct =
+    rate === null || rate === undefined || rate === ''
+      ? currentVatPercent()
+      : normalizeVatPercent(rate);
+  const rounded = Math.round(pct * 100) / 100;
+  return `${rounded}%`;
+}
+
+export function calculateVat(total, vatMode, rate = null) {
+  const pct = normalizeVatPercent(rate);
   const totalFils = toFils(total);
 
   let subtotalFils = totalFils;
   let vatFils = 0;
 
   if (vatMode === VAT_MODE.INCLUDED) {
-    // total already contains VAT → subtotal = total / 1.05
-    subtotalFils = Math.round((totalFils * 100) / 105);
+    if (pct === 5) {
+      subtotalFils = Math.round((totalFils * 100) / 105);
+    } else {
+      subtotalFils = Math.round(totalFils / (1 + pct / 100));
+    }
     vatFils = totalFils - subtotalFils;
   } else if (vatMode === VAT_MODE.EXCLUDED) {
-    // VAT on top → vat = total * 5%
-    vatFils = Math.round((totalFils * 5) / 100);
+    if (pct === 5) {
+      vatFils = Math.round((totalFils * 5) / 100);
+    } else {
+      vatFils = Math.round((totalFils * pct) / 100);
+    }
     subtotalFils = totalFils;
   }
 
@@ -47,14 +61,10 @@ export function calculateVat(total, vatMode) {
     subtotal: fromFils(subtotalFils),
     vat: fromFils(vatFils),
     grandTotal: fromFils(subtotalFils + vatFils),
+    rate: pct,
   };
 }
 
-/**
- * Effective payment figures for a saved invoice.
- * Handles old invoices that predate VAT (no vatMode -> no VAT).
- * @param {{total, paid, vatMode?, vat?, subtotal?, grandTotal?}} payment
- */
 export function invoicePaymentBreakdown(payment = {}) {
   const vatMode = payment.vatMode || VAT_MODE.NONE;
   if (vatMode === VAT_MODE.NONE) {
@@ -63,13 +73,34 @@ export function invoicePaymentBreakdown(payment = {}) {
       vat: 0,
       grandTotal: payment.total,
       paid: payment.paid,
+      rate: 0,
     };
   }
-  const vat = calculateVat(payment.total, vatMode);
+  if (
+    payment.grandTotal !== null &&
+    payment.grandTotal !== undefined &&
+    payment.subtotal !== null &&
+    payment.subtotal !== undefined &&
+    payment.vat !== null &&
+    payment.vat !== undefined
+  ) {
+    return {
+      subtotal: payment.subtotal,
+      vat: payment.vat,
+      grandTotal: payment.grandTotal,
+      paid: payment.paid,
+      rate:
+        payment.vatRate === null || payment.vatRate === undefined
+          ? null
+          : normalizeVatPercent(payment.vatRate),
+    };
+  }
+  const vat = calculateVat(payment.total, vatMode, payment.vatRate ?? null);
   return {
     subtotal: vat.subtotal,
     vat: vat.vat,
     grandTotal: vat.grandTotal,
     paid: payment.paid,
+    rate: vat.rate,
   };
 }

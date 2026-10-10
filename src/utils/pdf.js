@@ -8,12 +8,12 @@
  * jsPDF is loaded dynamically so it does not slow down the initial page load.
  */
 
-import company from '../data/company.js';
 import { sanitizeFilenamePart } from './validation.js';
 import { calculatePayment, statusLabel } from './paymentCalculator.js';
 import { formatCurrency } from './formatCurrency.js';
 import { serviceLabel, destinationLabel } from './labels.js';
-import { invoicePaymentBreakdown, VAT_MODE, VAT_RATE_LABEL } from './vat.js';
+import { invoicePaymentBreakdown, VAT_MODE, vatRateLabel } from './vat.js';
+import { getCompany, getSettings } from './settings.js';
 
 const INK = [20, 20, 20];
 const GOLD = [213, 175, 52];
@@ -39,7 +39,7 @@ function loadLogo() {
     const img = new Image();
     img.onload = () => resolve(img);
     img.onerror = () => resolve(null);
-    img.src = company.logo;
+    img.src = getCompany().logo;
   });
 }
 
@@ -68,9 +68,16 @@ export async function buildInvoicePdf(invoice) {
   const { jsPDF } = await import('jspdf');
   const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4', compress: true });
 
+  const org = getCompany();
+  const settings = getSettings();
   const payment = invoicePaymentBreakdown(invoice.payment);
   const calc = calculatePayment(payment.grandTotal, payment.paid);
   const hasVat = payment.vat > 0;
+  try {
+    localStorage.setItem('albalqan:onboard:pdf', '1');
+  } catch (err) {
+    /* ignore */
+  }
 
   /* ---------- helpers ---------- */
 
@@ -129,12 +136,15 @@ export async function buildInvoicePdf(invoice) {
   }
 
   // Company info
-  text(company.name, M + logoBox + 6, y + 4, { size: 12, style: 'bold', color: INK });
+  text(org.name, M + logoBox + 6, y + 4, { size: 12, style: 'bold', color: INK });
   text('TOURISM & VISA SERVICES', M + logoBox + 6, y + 8.5, { size: 7, style: 'bold', color: GRAY });
-  const addrLines = wrap(company.address, M + logoBox + 6, y + 13, 95, { size: 7.5, color: GRAY });
+  const addrLines = wrap(org.address, M + logoBox + 6, y + 13, 95, { size: 7.5, color: GRAY });
   let infoY = y + 13 + (addrLines - 1) * 3.4;
-  text(`Tel: ${company.phone}  ·  ${company.email}`, M + logoBox + 6, infoY + 4, { size: 7.5, color: GRAY });
-  text(`${company.website}  ·  Commercial License No. ${company.licenseNo}`, M + logoBox + 6, infoY + 8, { size: 7.5, color: GRAY });
+  text(`Tel: ${org.phone}  ·  ${org.email}`, M + logoBox + 6, infoY + 4, { size: 7.5, color: GRAY });
+  text(`${org.website}  ·  Commercial License No. ${org.licenseNo}`, M + logoBox + 6, infoY + 8, { size: 7.5, color: GRAY });
+  if (org.trn) {
+    text(`TRN: ${org.trn}`, M + logoBox + 6, infoY + 12, { size: 7.5, color: GRAY });
+  }
 
   // Invoice title + meta (right)
   text('INVOICE', A4_W - M, y + 4, { size: 20, style: 'bold', color: INK, align: 'right' });
@@ -210,7 +220,7 @@ export async function buildInvoicePdf(invoice) {
 
   if (hasVat) {
     y = payRow('SUBTOTAL', formatCurrency(payment.subtotal), y);
-    y = payRow(`VAT (${VAT_RATE_LABEL})`, formatCurrency(payment.vat), y);
+    y = payRow(`VAT (${vatRateLabel(payment.rate)})`, formatCurrency(payment.vat), y);
   }
   y = payRow('TOTAL', formatCurrency(payment.grandTotal), y, { fill: INK, valueColor: [255, 255, 255], labelColor: [255, 255, 255] });
   y = payRow('AMOUNT PAID', formatCurrency(calc.paid), y);
@@ -224,6 +234,20 @@ export async function buildInvoicePdf(invoice) {
     sectionTitle('Notes', y);
     y += 7.5;
     y += (wrap(invoice.notes, M, y, CW, { size: 8.5, color: GRAY }) - 1) * 3.8 + 4;
+  }
+
+  if (settings.terms) {
+    y += 3;
+    sectionTitle('Terms & Conditions', y);
+    y += 7.5;
+    y += (wrap(settings.terms, M, y, CW, { size: 8, color: GRAY }) - 1) * 3.6 + 4;
+  }
+
+  if (settings.bankDetails) {
+    y += 3;
+    sectionTitle('Bank Details', y);
+    y += 7.5;
+    y += (wrap(settings.bankDetails, M, y, CW, { size: 8, color: GRAY }) - 1) * 3.6 + 4;
   }
 
   /* ---------- signature & stamp ---------- */
@@ -243,11 +267,11 @@ export async function buildInvoicePdf(invoice) {
   /* ---------- disclaimer ---------- */
 
   const discY = A4_H - 24;
-  if (company.invoiceDisclaimer) {
+  if (org.invoiceDisclaimer) {
     pdf.setDrawColor(210, 214, 220);
     pdf.setLineWidth(0.2);
     pdf.line(M, discY - 4, A4_W - M, discY - 4);
-    const lines = wrap(company.invoiceDisclaimer, M, discY, CW, { size: 6.5, color: GRAY });
+    const lines = wrap(org.invoiceDisclaimer, M, discY, CW, { size: 6.5, color: GRAY });
     void lines;
   }
 
@@ -256,12 +280,12 @@ export async function buildInvoicePdf(invoice) {
   pdf.setFillColor(...INK);
   pdf.rect(0, A4_H - 14, A4_W, 14, 'F');
   text(
-    `${company.name} · ${company.city} · Commercial License No. ${company.licenseNo}`,
+    `${org.name} · ${org.city} · Commercial License No. ${org.licenseNo}`,
     M,
     A4_H - 6.5,
     { size: 7, style: 'normal', color: [255, 255, 255] }
   );
-  text(company.website, A4_W - M, A4_H - 6.5, { size: 7.5, style: 'bold', color: GOLD, align: 'right' });
+  text(org.website, A4_W - M, A4_H - 6.5, { size: 7.5, style: 'bold', color: GOLD, align: 'right' });
 
   return pdf;
 }

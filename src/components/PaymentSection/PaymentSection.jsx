@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import Icon from '../Icons/Icon.jsx';
 import { formatNumber } from '../../utils/formatCurrency.js';
 import { calculatePayment, statusClass } from '../../utils/paymentCalculator.js';
-import { calculateVat, VAT_MODE, VAT_RATE_LABEL } from '../../utils/vat.js';
+import { calculateVat, VAT_MODE, vatRateLabel } from '../../utils/vat.js';
 import { useLang } from '../../context/LangContext.jsx';
 
 export default function PaymentSection({ form, errors, onChange }) {
@@ -95,7 +95,7 @@ export default function PaymentSection({ form, errors, onChange }) {
         </div>
 
         <fieldset className="field vat-fieldset">
-          <legend className="field__legend">{t('invoice.vatLegend', { rate: VAT_RATE_LABEL })}</legend>
+          <legend className="field__legend">{t('invoice.vatLegend', { rate: vatRateLabel(vat.rate) })}</legend>
           <div className="vat-options">
             <label className="vat-option">
               <input
@@ -146,7 +146,7 @@ export default function PaymentSection({ form, errors, onChange }) {
                 <strong>AED {formatNumber(vat.subtotal)}</strong>
               </div>
               <div className="payment-summary__row">
-                <span>{t('invoice.vatRate', { rate: VAT_RATE_LABEL })}</span>
+                <span>{t('invoice.vatRate', { rate: vatRateLabel(vat.rate) })}</span>
                 <strong>AED {formatNumber(vat.vat)}</strong>
               </div>
             </>

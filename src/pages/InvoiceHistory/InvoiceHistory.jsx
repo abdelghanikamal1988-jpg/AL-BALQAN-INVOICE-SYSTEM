@@ -32,6 +32,7 @@ import services from '../../data/services.js';
 import destinations from '../../data/destinations.js';
 import { exportInvoicePdf, printInvoicePdf } from '../../utils/pdf.js';
 import { invoicePaymentBreakdown } from '../../utils/vat.js';
+import { whatsappShareUrl } from '../../utils/whatsapp.js';
 
 const ANY = '';
 
@@ -325,6 +326,20 @@ export default function InvoiceHistory() {
     printInvoicePdf(invoice)
       .then(() => {})
       .catch(() => toast.error(t('invoice.printDialogFailed')));
+  };
+
+  const handleWhatsApp = (invoice) => {
+    const payment = invoicePaymentBreakdown(invoice.payment);
+    const calc = calculatePayment(payment.grandTotal, payment.paid);
+    const text = t('invoice.whatsappMessage', {
+      name: invoice.customer?.name || '—',
+      number: invoice.invoiceNumber || '—',
+      total: formatCurrency(calc.total),
+      paid: formatCurrency(calc.paid),
+      remaining: formatCurrency(calc.remaining),
+      status: t('invoice.status.' + calc.status),
+    });
+    window.open(whatsappShareUrl(invoice.customer?.phone, text), '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -635,6 +650,14 @@ export default function InvoiceHistory() {
                             onClick={() => handlePdf(inv)}
                           >
                             {t('invoice.pdf')}
+                          </button>
+                          <button
+                            type="button"
+                            className="btn btn--whatsapp btn--sm"
+                            aria-label={t('invoice.whatsappAria', { number: inv.invoiceNumber })}
+                            onClick={() => handleWhatsApp(inv)}
+                          >
+                            {t('invoice.whatsapp')}
                           </button>
                         </Can>
                         <Can perm="action:invoice.delete">

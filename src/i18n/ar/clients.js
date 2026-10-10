@@ -175,4 +175,11 @@
   'clients.toastSaved': 'تم حفظ العميل بنجاح.',
   'clients.toastSaveError': 'تعذّر حفظ العميل. يرجى المحاولة مرة أخرى.',
   'clients.toastFixFields': 'يرجى تصحيح الحقول المظللة.',
+
+  'clients.expiry.title': 'جوازات سفر تنتهي قريباً',
+  'clients.expiry.sub': 'جدّد أو تابع قبل تاريخ السفر.',
+  'clients.expiry.days': 'متبقٍ {n} يوم',
+  'clients.expiry.today': 'ينتهي اليوم',
+  'clients.expiry.expired': 'منتهي الصلاحية',
+  'clients.expiry.open': 'فتح ملف العميل',
 };

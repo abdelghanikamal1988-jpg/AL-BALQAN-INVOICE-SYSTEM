@@ -155,4 +155,18 @@
   'dashboard.utility.note': 'Invoices are stored in the cloud — use Export Data for a JSON backup.',
   'dashboard.utility.export': 'Export Data',
   'dashboard.utility.import': 'Import Data',
+
+  'dashboard.onboard.title': 'Get started',
+  'dashboard.onboard.sub': 'Four quick steps before issuing your first invoice.',
+  'dashboard.onboard.progress': '{done} of {total} done',
+  'dashboard.onboard.step1': 'Set company info & VAT',
+  'dashboard.onboard.step1Body': 'Add your TRN, contact details and invoice prefix in Settings.',
+  'dashboard.onboard.step2': 'Add your first client',
+  'dashboard.onboard.step2Body': 'Create a client card with passport and contact details.',
+  'dashboard.onboard.step3': 'Create your first invoice',
+  'dashboard.onboard.step3Body': 'Pick the client, destination, service and payment.',
+  'dashboard.onboard.step4': 'Export a PDF',
+  'dashboard.onboard.step4Body': 'Print or download the invoice PDF to share it.',
+  'dashboard.onboard.done': 'Done',
+  'dashboard.onboard.dismiss': 'Hide this guide',
 };

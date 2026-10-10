@@ -170,6 +170,7 @@ export function createInvoiceObject(formData, number) {
       vat: vat.vat,
       subtotal: vat.subtotal,
       grandTotal: vat.grandTotal,
+      vatRate: vat.rate,
       paid: formData.paid,
     },
     notes: formData.notes,

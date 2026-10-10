@@ -12,6 +12,7 @@ import invoice from './en/invoice.js';
 import admin from './en/admin.js';
 import website from './en/website.js';
 import data from './en/data.js';
+import settings from './en/settings.js';
 
 export default {
   ...common,
@@ -22,4 +23,5 @@ export default {
   ...admin,
   ...website,
   ...data,
+  ...settings,
 };

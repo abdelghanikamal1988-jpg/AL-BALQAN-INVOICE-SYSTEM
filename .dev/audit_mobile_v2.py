@@ -33,7 +33,7 @@ PAGES = [
     'preview-detail.html', 'preview-form.html', 'preview-create.html',
     'preview-history.html', 'preview-admin.html', 'preview-inbox.html',
     'preview-pending.html', 'preview-gate.html', 'preview-header.html',
-    'preview-login.html', 'preview-hist-test.html',
+    'preview-login.html', 'preview-hist-test.html', 'preview-settings.html',
 ]
 WIDTHS = [360, 390, 414, 768, 1024]
 RTL_W = [390]

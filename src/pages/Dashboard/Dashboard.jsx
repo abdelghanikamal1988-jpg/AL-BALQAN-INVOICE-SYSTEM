@@ -11,6 +11,7 @@ import { formatCurrency } from '../../utils/formatCurrency.js';
 import { dbFetchClients } from '../../lib/clientRepo.js';
 import { clientFullName, normalizePassport } from '../../utils/clients.js';
 import { getAccessLogs } from '../../utils/accessLog.js';
+import { isConfigured } from '../../utils/settings.js';
 import { CLIENT_STATUSES } from '../../data/clientStatuses.js';
 import { useToast } from '../../components/Toast/ToastProvider.jsx';
 import { usePendingApprovals } from '../../context/PendingApprovalsContext.jsx';
@@ -376,6 +377,112 @@ function CardNav({ car, count, label, t }) {
   );
 }
 
+function readPdfDone() {
+  try {
+    return localStorage.getItem('albalqan:onboard:pdf') === '1';
+  } catch (err) {
+    return false;
+  }
+}
+
+function readDismissed() {
+  try {
+    return localStorage.getItem('albalqan:onboard:dismissed') === '1';
+  } catch (err) {
+    return false;
+  }
+}
+
+function OnboardingCard({ t, hasPerm, clientsCount, invoicesCount, onDismiss }) {
+  const [configured] = useState(() => isConfigured());
+  const steps = [
+    {
+      key: 1,
+      done: configured,
+      to: '/settings',
+      perm: 'page:settings',
+      label: 'dashboard.onboard.step1',
+      body: 'dashboard.onboard.step1Body',
+    },
+    {
+      key: 2,
+      done: clientsCount > 0,
+      to: '/clients/new',
+      perm: 'page:clients.new',
+      label: 'dashboard.onboard.step2',
+      body: 'dashboard.onboard.step2Body',
+    },
+    {
+      key: 3,
+      done: invoicesCount > 0,
+      to: '/create',
+      perm: 'page:invoice.create',
+      label: 'dashboard.onboard.step3',
+      body: 'dashboard.onboard.step3Body',
+    },
+    {
+      key: 4,
+      done: readPdfDone(),
+      to: '/history',
+      perm: 'page:invoice.history',
+      label: 'dashboard.onboard.step4',
+      body: 'dashboard.onboard.step4Body',
+    },
+  ].filter((s) => hasPerm(s.perm));
+  if (steps.length === 0) return null;
+  const done = steps.filter((s) => s.done).length;
+  const allDone = done === steps.length;
+  const pct = Math.round((done / steps.length) * 100);
+  return (
+    <section className="card db-onboard" aria-label={t('dashboard.onboard.title')}>
+      <div className="db-onboard__head">
+        <div className="db-onboard__head-text">
+          <h2>{t('dashboard.onboard.title')}</h2>
+          <p className="db-onboard__sub">{t('dashboard.onboard.sub')}</p>
+        </div>
+        <div className="db-onboard__head-side">
+          <span className="db-onboard__progress">
+            {t('dashboard.onboard.progress', { done, total: steps.length })}
+          </span>
+          <button
+            type="button"
+            className="icon-btn"
+            aria-label={t('dashboard.onboard.dismiss')}
+            onClick={onDismiss}
+          >
+            <Icon name="x" aria-hidden="true" />
+          </button>
+        </div>
+      </div>
+      <ol className="db-onboard__list">
+        {steps.map((s) => (
+          <li className={`db-onboard__step${s.done ? ' is-done' : ''}`} key={s.key}>
+            <span className="db-onboard__mark" aria-hidden="true">
+              {s.done ? <Icon name="check" /> : s.key}
+            </span>
+            <span className="db-onboard__text">
+              <b>{t(s.label)}</b>
+              <span>{t(s.body)}</span>
+            </span>
+            {s.done ? (
+              <span className="db-onboard__badge">{t('dashboard.onboard.done')}</span>
+            ) : allDone ? null : (
+              <Can perm={s.perm}>
+                <Link to={s.to} className="btn btn--secondary btn--sm db-onboard__cta">
+                  {t('common.next')}
+                </Link>
+              </Can>
+            )}
+          </li>
+        ))}
+      </ol>
+      <div className="db-onboard__bar" aria-hidden="true">
+        <span style={{ width: `${pct}%` }} />
+      </div>
+    </section>
+  );
+}
+
 export default function Dashboard() {
   const toast = useToast();
   const { t } = useLang();
@@ -386,6 +493,7 @@ export default function Dashboard() {
   const [invoices, setInvoices] = useState([]);
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [onboardDismissed, setOnboardDismissed] = useState(() => readDismissed());
 
   useEffect(() => {
     let active = true;
@@ -761,6 +869,23 @@ export default function Dashboard() {
             {t('dashboard.approval.review')}
           </button>
         </div>
+      )}
+
+      {!loading && !onboardDismissed && (
+        <OnboardingCard
+          t={t}
+          hasPerm={hasPerm}
+          clientsCount={clients.length}
+          invoicesCount={invoices.length}
+          onDismiss={() => {
+            try {
+              localStorage.setItem('albalqan:onboard:dismissed', '1');
+            } catch (err) {
+              /* ignore */
+            }
+            setOnboardDismissed(true);
+          }}
+        />
       )}
 
       <section className="db-section" aria-label={t('dashboard.section.clientOverview')}>
