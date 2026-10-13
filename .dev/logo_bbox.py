@@ -1,4 +1,4 @@
-"""Measure the tight bounding box of the mark group in the new logo SVG."""
+"""Measure the tight bounding boxes of every group in the source logo SVG."""
 import json
 import time
 import urllib.parse
@@ -32,9 +32,12 @@ cmd('Page.enable')
 cmd('Runtime.enable')
 time.sleep(1.2)
 r = cmd('Runtime.evaluate', {'expression': """(() => {
-  const g = document.querySelectorAll('svg > g')[0];
-  const b = g.getBBox();
-  return JSON.stringify({x: b.x, y: b.y, w: b.width, h: b.height});
+  const out = [...document.querySelectorAll('svg > g')].map((g) => {
+    const b = g.getBBox();
+    return {x: +b.x.toFixed(2), y: +b.y.toFixed(2), w: +b.width.toFixed(2), h: +b.height.toFixed(2)};
+  });
+  const s = document.querySelector('svg');
+  return JSON.stringify({svg: s.getAttribute('viewBox'), groups: out});
 })()""", 'returnByValue': True})
 print(r.get('result', {}).get('value'))
 ws.close()
