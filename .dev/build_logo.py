@@ -1,51 +1,33 @@
-"""Build the lockup with the WORDMARK scaled so its height equals the icon
-height (user request): scale group 2 by 134/55.02 anchored at its bottom-left
-(keeps the original gap and baseline), tighten the viewBox, and emit
-public/logo.svg + src/components/Logo/Logo.jsx (full) and LogoMark.jsx (icon
-only, for the phone header variant)."""
+"""Extract the FULL logo (mark + AL BALQAN wordmark, both groups) from the
+provided source SVG and write public/logo.svg plus the shared React Logo
+component, normalizing every path fill so the mark inherits currentColor
+(dark theme safe)."""
 import io
 import re
 
 SRC = r'C:\Users\hp\OneDrive\Desktop\Al Balqan Logo Black.svg'
 SVG_DST = r'public\logo.svg'
-JSX_FULL = r'src\components\Logo\Logo.jsx'
-JSX_MARK = r'src\components\Logo\LogoMark.jsx'
-
-ICON_VB = '5.2 8.3 107.44 134'
-ICON = (5.2, 8.3, 107.43, 134.0)
-WORD = (143.26, 87.19, 315.04, 55.02)
-
-s = ICON[3] / WORD[3]
-tx = WORD[0] * (1 - s)
-ty = (WORD[1] + WORD[3]) * (1 - s)
-word_right = WORD[0] + WORD[2] * s
-union_top = min(ICON[1], WORD[1] * s + ty)
-union_bottom = max(ICON[1] + ICON[3], (WORD[1] + WORD[3]) * s + ty)
-vb = '%s %.2f %.2f %.2f' % (
-    ICON[0], union_top, word_right - ICON[0], union_bottom - union_top
-)
+JSX_DST = r'src\components\Logo\Logo.jsx'
+VIEWBOX = '0 0 465.1 146.9'
 
 src = io.open(SRC, encoding='utf-8').read()
-g_parts = src.split('<g')
-assert len(g_parts) == 3, 'expected exactly two groups, got %d' % (len(g_parts) - 1)
-first_g = src[src.index('<g'):src.index('</g>') + len('</g>')]
-body = src[src.index('<g'):src.rindex('</g>') + len('</g>')]
+start = src.index('<g')
+end = src.rindex('</g>') + len('</g>')
+body = src[start:end]
 
-groups = body.split('<g')
-groups[2] = ' transform="translate(%.2f %.2f) scale(%s)"' % (
-    tx, ty, format(s, '.6f')
-) + groups[2]
-body_scaled = '<g'.join(groups)
+n_fill = len(re.findall(r'\sfill="[^"]*"', body))
+n_style = len(re.findall(r'\sstyle="[^"]*"', body))
+n_stroke = len(re.findall(r'\sstroke="[^"]*"', body))
+body = re.sub(r'\sfill="[^"]*"', '', body)
+body = re.sub(r'\sstroke="[^"]*"', '', body)
 
 svg_out = (
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="%s" fill="currentColor">\n%s\n</svg>\n'
-    % (vb, body_scaled)
+    % (VIEWBOX, body)
 )
 io.open(SVG_DST, 'w', encoding='utf-8', newline='\n').write(svg_out)
 
-
-def emit(path, name, viewbox, content):
-    jsx = """export default function %s({ className = '' }) {
+jsx_out = """export default function Logo({ className = '' }) {
   return (
     <svg
       className={className}
@@ -58,23 +40,10 @@ def emit(path, name, viewbox, content):
     </svg>
   );
 }
-""" % (name, viewbox, content.replace('\n\t\t', '\n      ').replace('\n\t', '\n      '))
-    io.open(path, 'w', encoding='utf-8', newline='\n').write(jsx)
-    print('written', path, len(jsx), 'chars')
+""" % (VIEWBOX, body.replace('\n\t\t', '\n      ').replace('\n\t', '\n      '))
+io.open(JSX_DST, 'w', encoding='utf-8', newline='\n').write(jsx_out)
 
-
-emit(JSX_FULL, 'Logo', vb, body_scaled)
-emit(JSX_MARK, 'LogoMark', ICON_VB, first_g)
-
-import xml.etree.ElementTree as ET
-
-root = ET.fromstring(svg_out)
-ns = '{http://www.w3.org/2000/svg}'
-groups_out = root.findall(ns + 'g')
-assert len(groups_out) == 2, 'expected 2 groups in output, got %d' % len(groups_out)
-assert groups_out[1].get('transform'), 'group 2 missing transform'
-
-print('scale:', round(s, 6), '| translate:', round(tx, 2), round(ty, 2))
-print('viewBox:', vb, '| aspect:', round((word_right - ICON[0]) / (union_bottom - union_top), 2))
-print('groups:', body_scaled.count('<g'), 'paths:', body_scaled.count('<path'))
+print('fill attrs stripped:', n_fill, '| style attrs:', n_style, '| stroke attrs:', n_stroke)
+print('groups:', body.count('<g'), 'paths:', body.count('<path'))
 print('written', SVG_DST, len(svg_out), 'chars')
+print('written', JSX_DST, len(jsx_out), 'chars')
