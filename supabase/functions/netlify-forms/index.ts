@@ -189,7 +189,7 @@ function buildRow(submission: Record<string, unknown>) {
 
 Deno.serve(async (req: Request): Promise<Response> => {
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { status: 204, headers: CORS });
+    return new Response(null, { status: 204, headers: CORS });
   }
 
   try {

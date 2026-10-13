@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Icon from '../../components/Icons/Icon.jsx';
 import Modal from '../../components/Modal/Modal.jsx';
@@ -100,6 +100,7 @@ export default function Consultations() {
   const [selected, setSelected] = useState(null);
   const [draft, setDraft] = useState({ status: 'new', notes: '' });
   const [saving, setSaving] = useState(false);
+  const syncInFlight = useRef(false);
 
   const load = async () => {
     setLoading(true);
@@ -117,7 +118,14 @@ export default function Consultations() {
   };
 
   useEffect(() => {
-    load();
+    let cancelled = false;
+    (async () => {
+      await load();
+      if (!cancelled) await runSync(true);
+    })();
+    return () => {
+      cancelled = true;
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -183,7 +191,9 @@ export default function Consultations() {
     return t('consultations.err.sync_failed');
   };
 
-  const handleSync = async () => {
+  const runSync = async (silent) => {
+    if (syncInFlight.current) return;
+    syncInFlight.current = true;
     setSyncing(true);
     try {
       const result = await syncNetlifyForms();
@@ -198,15 +208,20 @@ export default function Consultations() {
       } catch {
         /* storage unavailable */
       }
-      toast.success(t('consultations.toastSynced', { n: info.newCount, total: info.total }));
+      if (!silent || info.newCount > 0) {
+        toast.success(t('consultations.toastSynced', { n: info.newCount, total: info.total }));
+      }
       await load();
     } catch (err) {
       console.error(err);
-      toast.error(syncErrorMessage(err));
+      if (!silent) toast.error(syncErrorMessage(err));
     } finally {
+      syncInFlight.current = false;
       setSyncing(false);
     }
   };
+
+  const handleSync = () => runSync(false);
 
   const openDetail = (row) => {
     setSelected(row);
