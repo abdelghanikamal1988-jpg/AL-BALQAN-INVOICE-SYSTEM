@@ -6,8 +6,15 @@ import urllib.request
 BASE = 'https://abdelghanikamal1988-jpg.github.io/AL-BALQAN-INVOICE-SYSTEM/'
 
 html = urllib.request.urlopen(BASE, timeout=30).read().decode('utf-8', 'replace')
-print('js:', re.findall(r'assets/index-[\w-]+\.js', html))
-print('css:', re.findall(r'assets/index-[\w-]+\.css', html))
+js = re.findall(r'assets/index-[\w-]+\.js', html)
+css = re.findall(r'assets/index-[\w-]+\.css', html)
+print('js:', js)
+print('css:', css)
+
+bundle = urllib.request.urlopen(BASE + js[0], timeout=60).read().decode('utf-8', 'replace')
+print('bundle', js[0], len(bundle), 'chars,',
+      'has full lockup viewBox:', '465.1 146.9' in bundle,
+      '| old icon viewBox gone:', '107.44 134' not in bundle)
 
 logo = urllib.request.urlopen(BASE + 'logo.svg', timeout=30).read().decode('utf-8', 'replace')
 viewbox = re.search(r'viewBox="[^"]+"', logo)
