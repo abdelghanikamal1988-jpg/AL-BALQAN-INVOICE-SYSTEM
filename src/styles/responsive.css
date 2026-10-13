@@ -1139,25 +1139,10 @@
 
 /* ====================== PHONE (very narrow) ======================== */
 
-@media (max-width: 480px) {
-  /* The header must fit 320-480px with the full lockup: shrink the
-     logo instead of clipping it (the sidebar/drawer still carries
-     the full-size brand). */
-  .app-header__logo svg {
-    height: 20px;
-  }
-}
-
 @media (max-width: 400px) {
   .app-header__inner {
     padding: 0 8px;
     gap: 4px;
-  }
-
-  /* The pending header also carries a bell button: give it the last
-     pixels back by shrinking the full lockup further. */
-  .app-header__logo svg {
-    height: 16px;
   }
 
   .app-header__right {

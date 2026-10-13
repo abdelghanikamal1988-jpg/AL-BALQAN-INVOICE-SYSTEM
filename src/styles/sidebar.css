@@ -45,7 +45,7 @@
 
 .sidebar__brand-logo {
   width: auto;
-  height: 30px;
+  height: auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -56,7 +56,7 @@
 .sidebar__brand-logo svg {
   display: block;
   width: auto;
-  height: 28px;
+  height: 32px;
 }
 
 .sidebar__nav-group {
