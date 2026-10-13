@@ -195,6 +195,7 @@
                 <td class="actions-cell" data-label="Actions">
                   <div class="cl-actions">
                     <button type="button" class="btn btn--secondary btn--sm" data-detail>View</button>
+                    <button type="button" class="btn btn--danger btn--sm" data-del>Delete</button>
                     <a class="btn btn--whatsapp btn--sm" href="https://wa.me/971501112233?text=Hello" target="_blank" rel="noopener noreferrer">WhatsApp</a>
                     <a class="btn btn--neutral btn--sm" href="mailto:ahmed.s@example.com">Email</a>
                   </div>
@@ -224,6 +225,7 @@
                 <td class="actions-cell" data-label="Actions">
                   <div class="cl-actions">
                     <button type="button" class="btn btn--secondary btn--sm" data-detail>View</button>
+                    <button type="button" class="btn btn--danger btn--sm" data-del>Delete</button>
                     <a class="btn btn--whatsapp btn--sm" href="https://wa.me/971554445566?text=Hello" target="_blank" rel="noopener noreferrer">WhatsApp</a>
                     <a class="btn btn--neutral btn--sm" href="mailto:mariam.h@example.com">Email</a>
                   </div>
@@ -253,6 +255,7 @@
                 <td class="actions-cell" data-label="Actions">
                   <div class="cl-actions">
                     <button type="button" class="btn btn--secondary btn--sm" data-detail>View</button>
+                    <button type="button" class="btn btn--danger btn--sm" data-del>Delete</button>
                     <a class="btn btn--neutral btn--sm" href="mailto:yusuf.k@example.com">Email</a>
                   </div>
                 </td>
@@ -281,6 +284,7 @@
                 <td class="actions-cell" data-label="Actions">
                   <div class="cl-actions">
                     <button type="button" class="btn btn--secondary btn--sm" data-detail>View</button>
+                    <button type="button" class="btn btn--danger btn--sm" data-del>Delete</button>
                     <a class="btn btn--whatsapp btn--sm" href="https://wa.me/971527778899?text=Hello" target="_blank" rel="noopener noreferrer">WhatsApp</a>
                   </div>
                 </td>
@@ -309,6 +313,7 @@
                 <td class="actions-cell" data-label="Actions">
                   <div class="cl-actions">
                     <button type="button" class="btn btn--secondary btn--sm" data-detail>View</button>
+                    <button type="button" class="btn btn--danger btn--sm" data-del>Delete</button>
                     <a class="btn btn--whatsapp btn--sm" href="https://wa.me/971562223344?text=Hello" target="_blank" rel="noopener noreferrer">WhatsApp</a>
                     <a class="btn btn--neutral btn--sm" href="mailto:omar.n@example.com">Email</a>
                   </div>
@@ -338,6 +343,7 @@
                 <td class="actions-cell" data-label="Actions">
                   <div class="cl-actions">
                     <button type="button" class="btn btn--secondary btn--sm" data-detail>View</button>
+                    <button type="button" class="btn btn--danger btn--sm" data-del>Delete</button>
                     <a class="btn btn--whatsapp btn--sm" href="https://wa.me/966551234567?text=Hello" target="_blank" rel="noopener noreferrer">WhatsApp</a>
                     <a class="btn btn--neutral btn--sm" href="mailto:layla.i@example.com">Email</a>
                   </div>
@@ -412,7 +418,34 @@
               >WhatsApp</a
             >
             <a class="btn btn--neutral" href="mailto:ahmed.s@example.com">Email</a>
+            <button type="button" class="btn btn--danger">Delete</button>
             <button type="button" class="btn btn--primary">Save</button>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="modal-overlay no-print"
+        id="cs-confirm"
+        style="display: none"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Delete this request?"
+      >
+        <div class="modal" style="display: none">
+          <div class="modal__header">
+            <h3>Delete this request?</h3>
+            <button type="button" class="modal__close" aria-label="Close">&times;</button>
+          </div>
+          <div class="modal__body">
+            <p>
+              “Ahmed Saleh” will be removed from the system and from Netlify Forms. This cannot be
+              undone.
+            </p>
+          </div>
+          <div class="modal__actions">
+            <button type="button" class="btn btn--neutral" data-confirm-cancel>Cancel</button>
+            <button type="button" class="btn btn--danger" data-confirm-del>Delete</button>
           </div>
         </div>
       </div>
@@ -483,6 +516,33 @@
         overlay.querySelector('.modal__close').addEventListener('click', function () {
           overlay.style.display = 'none';
           sheet.style.display = 'none';
+        });
+
+        var confirm = document.getElementById('cs-confirm');
+        var confirmTargetRow = null;
+        Array.prototype.forEach.call(document.querySelectorAll('[data-del]'), function (btn) {
+          btn.addEventListener('click', function () {
+            confirmTargetRow = btn.closest('tr');
+            confirm.style.cssText = '';
+            confirm.querySelector('.modal').style.display = '';
+          });
+        });
+        function closeConfirm() {
+          confirm.style.display = 'none';
+          confirm.querySelector('.modal').style.display = 'none';
+        }
+        confirm.querySelector('[data-confirm-cancel]').addEventListener('click', closeConfirm);
+        confirm.querySelector('.modal__close').addEventListener('click', closeConfirm);
+        confirm.querySelector('[data-confirm-del]').addEventListener('click', function () {
+          if (confirmTargetRow) {
+            confirmTargetRow.style.display = 'none';
+            confirmTargetRow.setAttribute('data-deleted', '1');
+            rows = rows.filter(function (r) {
+              return r !== confirmTargetRow;
+            });
+            applyFilters();
+          }
+          closeConfirm();
         });
       })();
     </script>

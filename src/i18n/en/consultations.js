@@ -32,6 +32,11 @@ export default {
     'Make sure supabase/consultations.sql was run in the SQL editor, then retry.',
   'consultations.toastSynced': 'Sync complete: {n} new of {total} fetched',
   'consultations.toastSaved': 'Request updated',
+  'consultations.delete': 'Delete',
+  'consultations.deleteConfirmTitle': 'Delete this request?',
+  'consultations.deleteConfirmBody':
+    '“{name}” will be removed from the system and from Netlify Forms. This cannot be undone.',
+  'consultations.toastDeleted': 'The request was deleted from the system and Netlify Forms',
   'consultations.err.netlify_token_missing':
     'The Netlify token is missing on Supabase. Run: supabase secrets set NETLIFY_TOKEN=…',
   'consultations.err.form_not_found':
@@ -39,6 +44,12 @@ export default {
   'consultations.err.auth_required': 'Sign in again, then retry the sync.',
   'consultations.err.auth_invalid': 'Your session expired. Sign in again, then retry.',
   'consultations.err.sync_failed': 'Sync with Netlify Forms failed',
+  'consultations.err.delete_failed': 'Could not delete the request',
+  'consultations.err.netlify_delete_failed': 'Could not delete the submission on Netlify Forms',
+  'consultations.err.submission_id_required':
+    'This request has no Netlify ID, so it cannot be removed from Netlify Forms.',
+  'consultations.err.db_delete':
+    'Removed from Netlify Forms, but the row is still in the system — retry the delete.',
   'consultations.err.supabase_not_configured':
     'Supabase is not configured (VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY).',
   'consultations.detailTitle': 'Consultation request',

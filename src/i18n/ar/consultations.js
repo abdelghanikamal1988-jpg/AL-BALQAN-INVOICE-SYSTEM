@@ -32,6 +32,11 @@ export default {
     'تأكد إن supabase/consultations.sql اتنفذ في محرر SQL وبعدين أعد المحاولة.',
   'consultations.toastSynced': 'تمت المزامنة: {n} جديد من {total} تم جلبهم',
   'consultations.toastSaved': 'تم تحديث الطلب',
+  'consultations.delete': 'مسح',
+  'consultations.deleteConfirmTitle': 'تمسح الطلب ده؟',
+  'consultations.deleteConfirmBody':
+    '«{name}» هيتمسح من النظام ومن Netlify Forms. مفيش تراجع.',
+  'consultations.toastDeleted': 'اتمسح الطلب من النظام ومن Netlify Forms',
   'consultations.err.netlify_token_missing':
     'توكن Netlify مش متضبط في Supabase. نفذ: supabase secrets set NETLIFY_TOKEN=…',
   'consultations.err.form_not_found':
@@ -39,6 +44,12 @@ export default {
   'consultations.err.auth_required': 'سجّل الدخول تاني وبعدين أعد المزامنة.',
   'consultations.err.auth_invalid': 'جلستك منتهية. سجّل الدخول تاني وبعدين أعد المزامنة.',
   'consultations.err.sync_failed': 'فشلت المزامنة مع Netlify Forms',
+  'consultations.err.delete_failed': 'تعذر مسح الطلب',
+  'consultations.err.netlify_delete_failed': 'تعذر مسح الإرسال ده من Netlify Forms',
+  'consultations.err.submission_id_required':
+    'الطلب ده مفيهوش Netlify ID، فمقدرش يتمسح من Netlify Forms.',
+  'consultations.err.db_delete':
+    'اتمسح من Netlify Forms بس لسه موجود في النظام — أعد محاولة المسح.',
   'consultations.err.supabase_not_configured':
     'Supabase مش مهيّأ (VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY).',
   'consultations.detailTitle': 'طلب استشارة',

@@ -3,6 +3,8 @@
 //
 // POST /  { "action": "submissions" }  -> sync all submissions into public.consultation_requests
 // POST /  { "action": "forms" }        -> return the consultation form definition (fields)
+// POST /  { "action": "delete", "submission_id": "..." }
+//        -> delete the submission on Netlify Forms AND its row in the table
 // GET  /?action=submissions|forms      -> same actions via query string
 //
 // Deploy:
@@ -203,12 +205,13 @@ Deno.serve(async (req: Request): Promise<Response> => {
     if (userError || !userData?.user) return json({ error: 'auth_invalid' }, 401);
 
     let action = 'submissions';
+    let payload: { action?: unknown; submission_id?: unknown } | null = null;
     if (req.method === 'GET') {
       action = new URL(req.url).searchParams.get('action') ?? 'submissions';
     } else {
       try {
-        const body = (await req.json()) as { action?: unknown } | null;
-        if (body && typeof body.action === 'string') action = body.action;
+        payload = (await req.json()) as { action?: unknown; submission_id?: unknown } | null;
+        if (payload && typeof payload.action === 'string') action = payload.action;
       } catch {
         /* empty body -> default action */
       }
@@ -219,6 +222,37 @@ Deno.serve(async (req: Request): Promise<Response> => {
         { error: 'netlify_token_missing', hint: 'supabase secrets set NETLIFY_TOKEN=...' },
         500,
       );
+    }
+
+    if (action === 'delete') {
+      const submissionId = String(payload?.submission_id ?? '').trim();
+      if (!submissionId) {
+        return json({ error: 'submission_id_required' }, 400);
+      }
+      const delRes = await fetch(
+        `${NETLIFY_API}/sites/${NETLIFY_SITE_ID}/submissions/${encodeURIComponent(submissionId)}`,
+        { method: 'DELETE', headers: { Authorization: `Bearer ${NETLIFY_TOKEN}` } },
+      );
+      if (!delRes.ok && delRes.status !== 404 && delRes.status !== 410) {
+        let detail = '';
+        try {
+          detail = (await delRes.text()).slice(0, 300);
+        } catch {
+          /* body unavailable */
+        }
+        return json(
+          { error: 'netlify_delete_failed', detail: `netlify_${delRes.status} ${detail}`.trim() },
+          502,
+        );
+      }
+      const { error: deleteError } = await db
+        .from('consultation_requests')
+        .delete()
+        .eq('netlify_id', submissionId);
+      if (deleteError) {
+        return json({ error: 'db_delete', detail: deleteError.message }, 502);
+      }
+      return json({ deleted: submissionId, netlify_gone: delRes.status !== 404 && delRes.status !== 410 });
     }
 
     const formsRes = await netlifyGet(`${NETLIFY_API}/sites/${NETLIFY_SITE_ID}/forms`);

@@ -32,21 +32,17 @@ export async function dbUpdateConsultation(id, patch) {
   if (error) throw error;
 }
 
-/**
- * Calls our Edge Function, which talks to the Netlify API with the
- * secret token. Returns { synced_new, total_fetched, last_submission_at }.
- */
-export async function syncNetlifyForms() {
+async function invokeNetlifyForms(payload, fallbackCode) {
   const client = requireClient();
   const { data: sessionData } = await client.auth.getSession();
   const accessToken = sessionData?.session?.access_token;
   const { data, error } = await client.functions.invoke('netlify-forms', {
     method: 'POST',
-    body: { action: 'submissions' },
+    body: payload,
     ...(accessToken ? { headers: { Authorization: `Bearer ${accessToken}` } } : {}),
   });
   if (error) {
-    const failure = new Error(error.message || 'sync_failed');
+    const failure = new Error(error.message || fallbackCode);
     failure.name = error.name || 'FunctionsHttpError';
     if (error.context && typeof error.context.json === 'function') {
       try {
@@ -61,4 +57,17 @@ export async function syncNetlifyForms() {
     throw failure;
   }
   return data || {};
+}
+
+/**
+ * Calls our Edge Function, which talks to the Netlify API with the
+ * secret token. Returns { synced_new, total_fetched, last_submission_at }.
+ */
+export async function syncNetlifyForms() {
+  return invokeNetlifyForms({ action: 'submissions' }, 'sync_failed');
+}
+
+/** Removes the submission on Netlify Forms and its row in the table. */
+export async function deleteConsultation(netlifyId) {
+  return invokeNetlifyForms({ action: 'delete', submission_id: netlifyId }, 'delete_failed');
 }

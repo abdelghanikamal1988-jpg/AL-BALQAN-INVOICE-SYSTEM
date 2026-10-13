@@ -117,6 +117,8 @@ STATE_JS = """(() => {
     badges,
     wa: document.querySelectorAll('.cl-table a[href^="https://wa.me/"]').length,
     mail: document.querySelectorAll('.cl-table a[href^="mailto:"]').length,
+    delCount: document.querySelectorAll('.cl-table [data-del]').length,
+    delBoxes: [...document.querySelectorAll('.cl-table [data-del]')].map((b) => R(b)),
     modalShown: modal ? getComputedStyle(modal).display !== 'none' : null,
     page: over.page,
     clipped: over.clipped
@@ -188,6 +190,7 @@ MODAL_OPEN_JS = """new Promise((resolve) => {
       wa: !!modal.querySelector('a[href^="https://wa.me/"]'),
       mail: !!modal.querySelector('a[href^="mailto:"]'),
       saveBox: R(modal.querySelector('.modal__actions .btn--primary')),
+      delBox: R(modal.querySelector('.modal__actions .btn--danger')),
       page: over.page,
       clipped: over.clipped
     }));
@@ -201,6 +204,24 @@ CLOSE_JS = """(() => {
   return JSON.stringify({
     overlay: getComputedStyle(overlay).display,
     modal: getComputedStyle(modal).display});
+})()"""
+
+DELETE_FLOW_JS = """(() => {
+  const confirm = document.getElementById('cs-confirm');
+  document.querySelector('.cl-table [data-del]').click();
+  const opened = getComputedStyle(confirm).display !== 'none'
+    && getComputedStyle(confirm).position === 'fixed';
+  const name = (confirm.querySelector('.modal__body p') || {}).textContent || '';
+  const rowsBefore = [...document.querySelectorAll('.cl-table tbody tr')]
+    .filter((r) => getComputedStyle(r).display !== 'none').length;
+  const sumBefore = document.getElementById('cs-summary').textContent;
+  confirm.querySelector('[data-confirm-del]').click();
+  const rowsAfter = [...document.querySelectorAll('.cl-table tbody tr')]
+    .filter((r) => getComputedStyle(r).display !== 'none').length;
+  const sumAfter = document.getElementById('cs-summary').textContent;
+  const closed = getComputedStyle(confirm).display === 'none';
+  return JSON.stringify({opened, name: name.trim(), rowsBefore, sumBefore,
+                         rowsAfter, sumAfter, closed});
 })()"""
 
 cmd('Page.enable')
@@ -243,6 +264,9 @@ for rtl in (False, True):
               d['badges'])
         check('%s table: 5 wa.me + 5 mailto' % tag,
               d['wa'] == 5 and d['mail'] == 5, (d['wa'], d['mail']))
+        check('%s table: 6 delete buttons >=44' % tag,
+              d['delCount'] == 6 and all(b['h'] >= 44 for b in d['delBoxes']),
+              (d['delCount'], d['delBoxes'][:2]))
         check('%s table: search/export/summary' % tag,
               d['search'] and 'Export CSV' in d['exportBtn']
               and d['summary'].strip() == '6 of 6', d['summary'])
@@ -278,6 +302,8 @@ for rtl in (False, True):
         check('%s modal: notes usable + actions' % tag,
               m['notesBox'] and m['notesBox']['h'] >= 60 and m['saveBox']['h'] >= 40,
               (m['notesBox'], m['saveBox']))
+        check('%s modal: delete action >=44' % tag,
+              m['delBox'] and m['delBox']['h'] >= 40, m['delBox'])
         check('%s modal: whatsapp + mailto' % tag, m['wa'] and m['mail'], (m['wa'], m['mail']))
         check('%s modal: no clipped text' % tag, m['clipped'] == [], m['clipped'])
         check('%s modal: no overflow' % tag, m['page'] <= 1, m['page'])
@@ -285,6 +311,14 @@ for rtl in (False, True):
         c = json.loads(js(CLOSE_JS))
         check('%s modal: closes' % tag,
               c['overlay'] == 'none' and c['modal'] == 'none', c)
+
+        d2 = json.loads(js(DELETE_FLOW_JS))
+        check('%s delete: confirm opens on fixed overlay' % tag,
+              d2['opened'] and 'removed' in d2['name'], (d2['opened'], d2['name'][:40]))
+        check('%s delete: confirm removes row + summary' % tag,
+              d2['rowsBefore'] == 6 and d2['rowsAfter'] == 5
+              and d2['sumBefore'] == '6 of 6' and d2['sumAfter'] == '5 of 5'
+              and d2['closed'], d2)
 
 ws.close()
 print()

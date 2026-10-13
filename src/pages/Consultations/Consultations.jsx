@@ -7,6 +7,7 @@ import { useLang } from '../../context/LangContext.jsx';
 import {
   dbFetchConsultations,
   dbUpdateConsultation,
+  deleteConsultation,
   syncNetlifyForms,
 } from '../../lib/consultationRepo.js';
 import { formatDate, formatDateTimeDisplay } from '../../utils/formatDate.js';
@@ -100,6 +101,8 @@ export default function Consultations() {
   const [selected, setSelected] = useState(null);
   const [draft, setDraft] = useState({ status: 'new', notes: '' });
   const [saving, setSaving] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [deleting, setDeleting] = useState(false);
   const syncInFlight = useRef(false);
 
   const load = async () => {
@@ -222,6 +225,36 @@ export default function Consultations() {
   };
 
   const handleSync = () => runSync(false);
+
+  const deleteErrorMessage = (err) => {
+    const code = err?.code ? String(err.code) : '';
+    const key = code ? `consultations.err.${code}` : '';
+    const viaKey = key ? t(key) : '';
+    if (viaKey && viaKey !== key) {
+      if (err?.message && err.message !== viaKey) return `${viaKey} — ${err.message}`;
+      return viaKey;
+    }
+    if (err?.message) return `${t('consultations.err.delete_failed')} — ${err.message}`;
+    return t('consultations.err.delete_failed');
+  };
+
+  const performDelete = async () => {
+    const target = deleteTarget;
+    if (!target || deleting) return;
+    setDeleting(true);
+    try {
+      await deleteConsultation(target.netlify_id);
+      setRows((prev) => prev.filter((row) => row.id !== target.id));
+      setSelected((prev) => (prev && prev.id === target.id ? null : prev));
+      setDeleteTarget(null);
+      toast.info(t('consultations.toastDeleted'));
+    } catch (err) {
+      console.error(err);
+      toast.error(deleteErrorMessage(err));
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   const openDetail = (row) => {
     setSelected(row);
@@ -630,6 +663,13 @@ export default function Consultations() {
                             {t('consultations.email')}
                           </a>
                         )}
+                        <button
+                          type="button"
+                          className="btn btn--danger btn--sm"
+                          onClick={() => setDeleteTarget(row)}
+                        >
+                          {t('consultations.delete')}
+                        </button>
                       </div>
                     </td>
                   </tr>
@@ -662,6 +702,13 @@ export default function Consultations() {
                   {t('consultations.email')}
                 </a>
               )}
+              <button
+                type="button"
+                className="btn btn--danger"
+                onClick={() => setDeleteTarget(selected)}
+              >
+                {t('consultations.delete')}
+              </button>
               <button
                 type="button"
                 className="btn btn--primary"
@@ -728,6 +775,36 @@ export default function Consultations() {
               />
             </div>
           </div>
+        </Modal>
+      )}
+
+      {deleteTarget && (
+        <Modal
+          title="consultations.deleteConfirmTitle"
+          danger
+          onClose={() => setDeleteTarget(null)}
+          actions={
+            <>
+              <button
+                type="button"
+                className="btn btn--neutral"
+                onClick={() => setDeleteTarget(null)}
+                disabled={deleting}
+              >
+                {t('common.cancel')}
+              </button>
+              <button
+                type="button"
+                className="btn btn--danger"
+                onClick={performDelete}
+                disabled={deleting}
+              >
+                {t('consultations.delete')}
+              </button>
+            </>
+          }
+        >
+          <p>{t('consultations.deleteConfirmBody', { name: deleteTarget.full_name || '—' })}</p>
         </Modal>
       )}
     </div>
