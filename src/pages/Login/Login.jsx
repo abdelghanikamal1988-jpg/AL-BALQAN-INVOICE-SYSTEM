@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { useToast } from '../../components/Toast/ToastProvider.jsx';
-import company from '../../data/company.js';
+import LogoMark from '../../components/LogoMark/LogoMark.jsx';
 import Icon from '../../components/Icons/Icon.jsx';
 import { migrateLocalInvoices } from '../../utils/storage.js';
 
@@ -53,13 +53,8 @@ export default function Login() {
       <div className="login-frame">
         <div className="login-brand">
           <span className="login-brand__tile">
-            {company.logoUI ? (
-              <img src={company.logoUI} alt="" />
-            ) : (
-              <span>AB</span>
-            )}
+            <LogoMark />
           </span>
-          <span className="login-brand__name">{company.shortName || 'AL BALQAN'}</span>
         </div>
 
         <div className="card login-card">

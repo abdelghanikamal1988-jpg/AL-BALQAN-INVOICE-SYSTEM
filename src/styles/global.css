@@ -1248,14 +1248,6 @@ button {
   flex: 0 0 auto;
 }
 
-.app-header__brand-word {
-  font-size: 15px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  color: var(--text);
-  white-space: nowrap;
-}
-
 @media (max-width: 1023px) {
   .app-header__brand {
     display: inline-flex;
@@ -1272,23 +1264,14 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
+  color: var(--text);
   flex: 0 0 30px;
-  border-radius: 8px;
-  background: var(--brand);
 }
 
-.app-header__logo img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-  filter: brightness(0) invert(1);
-}
-
-.app-header__logo-fallback {
-  font-weight: 800;
-  color: #fff;
-  font-size: 14px;
+.app-header__logo svg {
+  display: block;
+  width: auto;
+  height: 26px;
 }
 
 .app-header__cta {
@@ -1734,29 +1717,13 @@ button {
   align-items: center;
   justify-content: center;
   flex: 0 0 30px;
-  overflow: hidden;
-  border-radius: 8px;
-  background: var(--brand);
-}
-
-.login-brand__tile img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-  filter: brightness(0) invert(1);
-}
-
-.login-brand__tile span {
-  font-size: 11px;
-  font-weight: 800;
   color: #fff;
 }
 
-.login-brand__name {
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  color: #fff;
+.login-brand__tile svg {
+  display: block;
+  width: auto;
+  height: 26px;
 }
 
 .login-card {

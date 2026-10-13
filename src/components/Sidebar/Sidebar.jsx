@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext.jsx';
 import { useLang } from '../../context/LangContext.jsx';
 import { userInitials } from '../../utils/userInitials.js';
 import company from '../../data/company.js';
+import LogoMark from '../LogoMark/LogoMark.jsx';
 import '../../styles/sidebar.css';
 
 const STROKE = {
@@ -189,13 +190,8 @@ export default function Sidebar({ open = false, onClose }) {
           aria-label={t('shell.brandHome', { brand: company.shortName || 'AL BALQAN' })}
         >
           <span className="sidebar__brand-logo">
-            {company.logoUI ? (
-              <img src={company.logoUI} alt="" />
-            ) : (
-              <span>AB</span>
-            )}
+            <LogoMark />
           </span>
-          <span className="sidebar__brand-name">{company.shortName || 'AL BALQAN'}</span>
         </NavLink>
 
         <nav className="sidebar__nav" aria-label={t('shell.nav.sections')}>

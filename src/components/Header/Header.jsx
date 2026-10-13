@@ -6,6 +6,7 @@ import { usePendingApprovals } from '../../context/PendingApprovalsContext.jsx';
 import { useLang } from '../../context/LangContext.jsx';
 import { useTheme } from '../../context/ThemeContext.jsx';
 import Icon from '../Icons/Icon.jsx';
+import LogoMark from '../LogoMark/LogoMark.jsx';
 import { userInitials } from '../../utils/userInitials.js';
 import { dbFetchClients } from '../../lib/clientRepo.js';
 import { dbFetchAll } from '../../lib/invoiceRepo.js';
@@ -183,13 +184,8 @@ export default function Header({ menuOpen = false, onMenuToggle }) {
           aria-label={t('shell.brandHome', { brand: company.shortName || 'AL BALQAN' })}
         >
           <span className="app-header__logo">
-            {company.logoUI ? (
-              <img src={company.logoUI} alt={t('shell.logoAlt')} />
-            ) : (
-              <span className="app-header__logo-fallback">AB</span>
-            )}
+            <LogoMark />
           </span>
-          <span className="app-header__brand-word">{company.shortName || 'AL BALQAN'}</span>
         </NavLink>
 
         <form

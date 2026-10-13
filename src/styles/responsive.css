@@ -1139,15 +1139,6 @@
 
 /* ====================== PHONE (very narrow) ======================== */
 
-@media (max-width: 480px) {
-  /* The header has to fit 320–480px: drop the brand wordmark and
-     keep the 30px logo (the sidebar/drawer still carries the full
-     brand). This is what stops the 402px content overflow. */
-  .app-header__brand-word {
-    display: none;
-  }
-}
-
 @media (max-width: 400px) {
   .app-header__inner {
     padding: 0 8px;

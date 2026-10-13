@@ -49,38 +49,20 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  border-radius: 8px;
-  background: var(--brand);
-  color: #fff;
+  color: var(--text);
   flex: 0 0 30px;
 }
 
-.sidebar__brand-logo img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-  filter: brightness(0) invert(1);
-}
-
-.sidebar__brand-logo span {
-  font-size: 11px;
-  font-weight: 800;
-  color: #fff;
+.sidebar__brand-logo svg {
+  display: block;
+  width: auto;
+  height: 26px;
 }
 
 .sidebar__nav-group {
   display: flex;
   flex-direction: column;
   gap: 2px;
-}
-
-.sidebar__brand-name {
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  color: var(--text);
-  white-space: nowrap;
 }
 
 .sidebar__nav {
