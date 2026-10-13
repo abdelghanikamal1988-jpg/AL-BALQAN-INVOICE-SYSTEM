@@ -48,6 +48,7 @@ export default {
   'shell.nav.newClient': 'عميل جديد',
   'shell.nav.clientsHistory': 'سجل العملاء',
   'shell.nav.admin': 'الإدارة',
+  'shell.nav.consultations': 'طلبات الاستشارة',
   'shell.nav.users': 'المستخدمون',
   'shell.nav.settings': 'الإعدادات',
 

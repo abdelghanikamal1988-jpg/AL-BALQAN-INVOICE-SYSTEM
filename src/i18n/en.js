@@ -13,6 +13,7 @@ import admin from './en/admin.js';
 import website from './en/website.js';
 import data from './en/data.js';
 import settings from './en/settings.js';
+import consultations from './en/consultations.js';
 
 export default {
   ...common,
@@ -24,4 +25,5 @@ export default {
   ...website,
   ...data,
   ...settings,
+  ...consultations,
 };

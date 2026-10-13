@@ -94,6 +94,15 @@ function IconGear() {
   );
 }
 
+function IconInbox() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" {...STROKE}>
+      <path d="M4 13.5 6.2 5.6A1.5 1.5 0 0 1 7.65 4.5h8.7a1.5 1.5 0 0 1 1.45 1.1L20 13.5" />
+      <path d="M4 13.5h4.2l1.2 2.4h5.2l1.2-2.4H20v4.4a1.6 1.6 0 0 1-1.6 1.6H5.6A1.6 1.6 0 0 1 4 17.9z" />
+    </svg>
+  );
+}
+
 const NAV_GROUPS = [
   {
     label: null,
@@ -117,6 +126,7 @@ const NAV_GROUPS = [
     label: 'shell.nav.admin',
     items: [
       { to: '/admin/users', label: 'shell.nav.users', Icon: IconUsers, end: true, perm: 'page:admin' },
+      { to: '/consultations', label: 'shell.nav.consultations', Icon: IconInbox, end: true, perm: 'page:consultations' },
       { to: '/settings', label: 'shell.nav.settings', Icon: IconGear, end: true, perm: 'page:settings' },
     ],
   },

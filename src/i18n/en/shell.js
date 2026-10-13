@@ -48,6 +48,7 @@ export default {
   'shell.nav.newClient': 'New Client',
   'shell.nav.clientsHistory': 'Clients History',
   'shell.nav.admin': 'Admin',
+  'shell.nav.consultations': 'Consultation Requests',
   'shell.nav.users': 'Users',
   'shell.nav.settings': 'Settings',
 
