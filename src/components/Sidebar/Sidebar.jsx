@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext.jsx';
 import { useLang } from '../../context/LangContext.jsx';
 import { userInitials } from '../../utils/userInitials.js';
 import company from '../../data/company.js';
-import LogoMark from '../LogoMark/LogoMark.jsx';
+import Logo from '../Logo/Logo.jsx';
 import '../../styles/sidebar.css';
 
 const STROKE = {
@@ -190,7 +190,7 @@ export default function Sidebar({ open = false, onClose }) {
           aria-label={t('shell.brandHome', { brand: company.shortName || 'AL BALQAN' })}
         >
           <span className="sidebar__brand-logo">
-            <LogoMark />
+            <Logo />
           </span>
         </NavLink>
 

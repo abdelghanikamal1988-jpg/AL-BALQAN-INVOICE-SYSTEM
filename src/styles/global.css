@@ -1259,13 +1259,13 @@ button {
 }
 
 .app-header__logo {
-  width: 30px;
+  width: auto;
   height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--text);
-  flex: 0 0 30px;
+  flex: 0 0 auto;
 }
 
 .app-header__logo svg {
@@ -1711,19 +1711,19 @@ button {
 }
 
 .login-brand__tile {
-  width: 30px;
-  height: 30px;
+  width: auto;
+  height: auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  flex: 0 0 30px;
+  flex: 0 0 auto;
   color: #fff;
 }
 
 .login-brand__tile svg {
   display: block;
   width: auto;
-  height: 26px;
+  height: 36px;
 }
 
 .login-card {

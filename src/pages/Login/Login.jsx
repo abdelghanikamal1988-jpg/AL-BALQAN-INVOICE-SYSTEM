@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { useToast } from '../../components/Toast/ToastProvider.jsx';
-import LogoMark from '../../components/LogoMark/LogoMark.jsx';
+import Logo from '../../components/Logo/Logo.jsx';
 import Icon from '../../components/Icons/Icon.jsx';
 import { migrateLocalInvoices } from '../../utils/storage.js';
 
@@ -53,7 +53,7 @@ export default function Login() {
       <div className="login-frame">
         <div className="login-brand">
           <span className="login-brand__tile">
-            <LogoMark />
+            <Logo />
           </span>
         </div>
 

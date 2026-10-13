@@ -44,19 +44,19 @@
 }
 
 .sidebar__brand-logo {
-  width: 30px;
+  width: auto;
   height: 30px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   color: var(--text);
-  flex: 0 0 30px;
+  flex: 0 0 auto;
 }
 
 .sidebar__brand-logo svg {
   display: block;
   width: auto;
-  height: 26px;
+  height: 28px;
 }
 
 .sidebar__nav-group {
