@@ -233,14 +233,14 @@
   .db-table-wrap,
   .db-act-wrap {
     position: relative;
-    box-shadow: inset -13px 0 11px -13px rgba(16, 24, 40, 0.45);
+    box-shadow: inset -13px 0 11px -13px rgba(0, 0, 0, 0.45);
   }
 
   html[dir='rtl'] .history-table-wrap,
   html[dir='rtl'] .cl-table-wrap,
   html[dir='rtl'] .db-table-wrap,
   html[dir='rtl'] .db-act-wrap {
-    box-shadow: inset 13px 0 11px -13px rgba(16, 24, 40, 0.45);
+    box-shadow: inset 13px 0 11px -13px rgba(0, 0, 0, 0.45);
   }
 
   .history-table th:first-child,
@@ -1074,7 +1074,7 @@
     margin: 0;
     background: var(--surface);
     border-top: 1px solid var(--border);
-    box-shadow: 0 -6px 18px rgba(16, 24, 40, 0.07);
+    box-shadow: 0 -6px 18px rgba(0, 0, 0, 0.07);
     padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
     -webkit-overflow-scrolling: touch;
   }

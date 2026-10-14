@@ -34,35 +34,37 @@
      wins the tie; .invoice-sheet re-pins the same values anyway. */
   html[data-theme='dark'] {
     color-scheme: light;
-    --brand-strong: #16a34a;
-    --brand-tint: #e4f8ec;
-    --brand-soft: #dcfce7;
-    --brand-ring: rgba(34, 197, 94, 0.14);
+    --brand: #141414;
+    --brand-strong: #000000;
+    --brand-tint: #eff4f7;
+    --brand-soft: #f4f9f9;
+    --brand-ring: rgba(20, 20, 20, 0.14);
+    --on-brand: #ffffff;
     --primary: #141414;
     --primary-dark: #000000;
     --primary-darker: #000000;
-    --ground: #f9fafb;
+    --ground: #f4f9f9;
     --background: #ffffff;
     --surface: #ffffff;
-    --text: #16211b;
-    --muted: #5b6b62;
-    --faint: #8a918c;
-    --border: #e4e7e6;
-    --line: #e4e7e6;
-    --line-soft: #eef1ef;
+    --text: #141414;
+    --muted: #555555;
+    --faint: #8c8c8c;
+    --border: #e6e6e6;
+    --line: #e6e6e6;
+    --line-soft: #f2f2f2;
     --ink: #141414;
-    --mist: #f5f7f6;
-    --pill: #f1f3f2;
-    --hover: #fafbfa;
+    --mist: #eff4f7;
+    --pill: #eff4f7;
+    --hover: #f5f5f5;
     --success: #15803d;
     --warning: #c2410c;
     --danger: #dc2626;
     --purple: #7e22ce;
-    --card-border: 1px solid rgba(4, 32, 69, 0.1);
-    --shadow-card: 0 1px 2px rgba(15, 23, 42, 0.04), 0 12px 24px -16px rgba(15, 23, 42, 0.12);
-    --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.04);
-    --shadow-md: 0 6px 18px rgba(16, 24, 40, 0.08);
-    --shadow-lg: 0 16px 40px rgba(16, 24, 40, 0.16);
+    --card-border: 1px solid rgba(0, 0, 0, 0.1);
+    --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04), 0 12px 24px -16px rgba(0, 0, 0, 0.12);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 6px 18px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.16);
   }
 
   .no-print,

@@ -668,24 +668,30 @@ html[data-theme='dark'] .invoice-sheet-wrap {
    back to the light palette, overriding html[data-theme='dark']
    by specificity (0,2,1) > (0,1,1). */
 html[data-theme='dark'] .invoice-sheet {
+  --brand: #141414;
+  --brand-strong: #000000;
+  --brand-tint: #eff4f7;
+  --brand-soft: #f4f9f9;
+  --brand-ring: rgba(20, 20, 20, 0.14);
+  --on-brand: #ffffff;
   --primary: #141414;
   --primary-dark: #000000;
   --primary-darker: #000000;
   --secondary: #d5af34;
   --secondary-dark: #b8952a;
-  --text: #16211b;
+  --text: #141414;
   --ink: #141414;
-  --muted: #5b6b62;
-  --faint: #8a918c;
-  --border: #e4e7e6;
-  --line: #e4e7e6;
-  --line-soft: #eef1ef;
-  --ground: #f9fafb;
+  --muted: #555555;
+  --faint: #8c8c8c;
+  --border: #e6e6e6;
+  --line: #e6e6e6;
+  --line-soft: #f2f2f2;
+  --ground: #f4f9f9;
   --background: #ffffff;
   --surface: #ffffff;
-  --hover: #fafbfa;
-  --mist: #f5f7f6;
-  --pill: #f1f3f2;
+  --hover: #f5f5f5;
+  --mist: #eff4f7;
+  --pill: #eff4f7;
   color: var(--text);
 }
 

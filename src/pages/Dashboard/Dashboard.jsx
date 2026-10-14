@@ -185,15 +185,15 @@ function LineChart({ labels, invoiced, paid }) {
         >
           <defs>
             <linearGradient id="dbLineFill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#22c55e" stopOpacity="0.18" />
-              <stop offset="100%" stopColor="#22c55e" stopOpacity="0" />
+              <stop offset="0%" stopColor="#141414" stopOpacity="0.18" />
+              <stop offset="100%" stopColor="#141414" stopOpacity="0" />
             </linearGradient>
           </defs>
           <path d={areaA} fill="url(#dbLineFill)" />
           <path
             d={pathA}
             fill="none"
-            stroke="#22c55e"
+            stroke="#141414"
             strokeWidth="2.5"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -202,7 +202,7 @@ function LineChart({ labels, invoiced, paid }) {
           <path
             d={pathB}
             fill="none"
-            stroke="#f59e0b"
+            stroke="#555555"
             strokeWidth="2.5"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -1063,7 +1063,7 @@ export default function Dashboard() {
                   role="img"
                   aria-label={t('dashboard.a11y.donut', { with: coverage.withInvoice, total: coverage.total })}
                   style={{
-                    background: `conic-gradient(#22c55e 0 ${donutPct}%, #e5e7eb ${donutPct}% 100%)`,
+                    background: `conic-gradient(#141414 0 ${donutPct}%, #e6e6e6 ${donutPct}% 100%)`,
                   }}
                 >
                   <div className="db-donut__center">

@@ -1,17 +1,19 @@
 /* ============================================================
-   AL BALQAN — Nexus design system (1:1 recreation)
-   Ground #F5F7F6 · white cards · ink text · Nexus green #16A34A.
+   AL BALQAN — monochrome palette (matched to albalqan-test site)
+   White #FFFFFF surfaces · ink #141414 · ash #555555 ·
+   mist #EFF4F7 · black accents (no hue).
    --primary (ink) and --secondary (gold) stay for the invoice
-   sheet and printed PDFs; the UI accent is --brand.
+   sheet and printed PDFs; the UI accent is --brand (ink).
    ============================================================ */
 
 :root {
-  /* UI accent (Nexus brand) */
-  --brand: #22c55e;
-  --brand-strong: #16a34a;
-  --brand-tint: #e4f8ec;
-  --brand-soft: #dcfce7;
-  --brand-ring: rgba(34, 197, 94, 0.14);
+  /* UI accent — ink (website monochrome) */
+  --brand: #141414;
+  --brand-strong: #000000;
+  --brand-tint: #EFF4F7;
+  --brand-soft: #F4F9F9;
+  --brand-ring: rgba(20, 20, 20, 0.14);
+  --on-brand: #ffffff;
 
   /* Ink + gold: invoice sheet & print identity (never used for UI chrome) */
   --primary: #141414;
@@ -21,19 +23,19 @@
   --secondary-dark: #b8952a;
 
   /* Surfaces (Nexus) */
-  --ground: #F9FAFB;
+  --ground: #F4F9F9;
   --background: #ffffff;
   --surface: #ffffff;
-  --text: #16211B;
-  --muted: #5B6B62;
-  --faint: #8A918C;
-  --border: #E4E7E6;
-  --line: #E4E7E6;
-  --line-soft: #EEF1EF;
+  --text: #141414;
+  --muted: #555555;
+  --faint: #8C8C8C;
+  --border: #E6E6E6;
+  --line: #E6E6E6;
+  --line-soft: #F2F2F2;
   --ink: #141414;
-  --mist: #F5F7F6;
-  --pill: #F1F3F2;
-  --hover: #FAFBFA;
+  --mist: #EFF4F7;
+  --pill: #EFF4F7;
+  --hover: #F5F5F5;
 
   --success: #15803D;
   --warning: #C2410C;
@@ -48,11 +50,11 @@
   --header-h: 62px;
   --sidebar-w: 256px;
 
-  --card-border: 1px solid rgba(4, 32, 69, 0.1);
-  --shadow-card: 0 1px 2px rgba(15, 23, 42, 0.04), 0 12px 24px -16px rgba(15, 23, 42, 0.12);
-  --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.04);
-  --shadow-md: 0 6px 18px rgba(16, 24, 40, 0.08);
-  --shadow-lg: 0 16px 40px rgba(16, 24, 40, 0.16);
+  --card-border: 1px solid rgba(0, 0, 0, 0.1);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04), 0 12px 24px -16px rgba(0, 0, 0, 0.12);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 6px 18px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.16);
 
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
 
@@ -122,7 +124,7 @@ button {
 
 ::selection {
   background: var(--brand);
-  color: #fff;
+  color: var(--on-brand);
 }
 
 /* ---------- Layout ---------- */
@@ -226,7 +228,7 @@ button {
 
 .crumbs a:hover {
   color: var(--brand-strong);
-  border-color: #CFE7D9;
+  border-color: #C9C9C9;
   text-decoration: none;
 }
 
@@ -270,12 +272,12 @@ button {
 
 .btn--primary {
   background: var(--brand);
-  color: #fff;
+  color: var(--on-brand);
 }
 
 .btn--primary:hover:not(:disabled) {
   background: var(--brand-strong);
-  box-shadow: 0 6px 16px rgba(34, 197, 94, 0.28);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
 }
 
 .btn--secondary {
@@ -285,7 +287,7 @@ button {
 }
 
 .btn--secondary:hover:not(:disabled) {
-  border-color: #C4CAC6;
+  border-color: #C9C9C9;
   background: var(--surface);
   box-shadow: var(--shadow-sm);
 }
@@ -298,7 +300,7 @@ button {
 
 .btn--neutral:hover:not(:disabled) {
   color: var(--text);
-  border-color: #C4CAC6;
+  border-color: #C9C9C9;
 }
 
 .btn--danger {
@@ -347,7 +349,7 @@ button {
 
 .btn--secondary .btn__spinner,
 .btn--neutral .btn__spinner {
-  border-color: rgba(34, 197, 94, 0.25);
+  border-color: rgba(20, 20, 20, 0.16);
   border-top-color: var(--brand);
 }
 
@@ -488,7 +490,7 @@ button {
 .statc__chev {
   flex: 0 0 auto;
   display: inline-flex;
-  color: #C3C9C5;
+  color: #C7C7C7;
   font-size: 16px;
 }
 
@@ -504,11 +506,11 @@ button {
   border: none;
   border-radius: 50%;
   background: var(--brand);
-  color: #fff;
+  color: var(--on-brand);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 10px 24px rgba(34, 197, 94, 0.35);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
   text-decoration: none;
   cursor: pointer;
   transition: background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
@@ -517,7 +519,7 @@ button {
 .fab:hover {
   background: var(--brand-strong);
   transform: translateY(-2px);
-  box-shadow: 0 14px 28px rgba(34, 197, 94, 0.4);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.32);
   text-decoration: none;
 }
 
@@ -783,7 +785,7 @@ button {
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(16, 24, 40, 0.45);
+  background: rgba(0, 0, 0, 0.45);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -885,13 +887,13 @@ button {
 
 .pending-chip--approved {
   border-color: #BBE3C6;
-  background: var(--brand-tint);
+  background: rgba(34, 197, 94, 0.16);
   color: var(--success);
   cursor: default;
 }
 
 .pending-chip--approved:hover {
-  background: var(--brand-tint);
+  background: rgba(34, 197, 94, 0.16);
 }
 
 .pending-chip--rejected {
@@ -1019,7 +1021,7 @@ button {
   justify-content: center;
   border-radius: 999px;
   background: var(--brand);
-  color: #fff;
+  color: var(--on-brand);
   font-size: 10.5px;
   font-weight: 700;
 }
@@ -1159,7 +1161,7 @@ button {
 .spinner {
   width: 20px;
   height: 20px;
-  border: 3px solid rgba(34, 197, 94, 0.18);
+  border: 3px solid rgba(20, 20, 20, 0.14);
   border-top-color: var(--brand);
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
@@ -1285,7 +1287,7 @@ button {
   border: none;
   border-radius: 8px;
   background: var(--brand);
-  color: #fff;
+  color: var(--on-brand);
   font-size: 13px;
   font-weight: 500;
   line-height: 1;
@@ -1459,7 +1461,7 @@ button {
   align-items: center;
   justify-content: center;
   background: var(--brand);
-  color: #fff;
+  color: var(--on-brand);
   border: none;
   border-radius: 50%;
   font-size: 12px;
@@ -1689,10 +1691,10 @@ button {
   justify-content: center;
   padding: 24px;
   color-scheme: dark;
-  background-color: #111827;
+  background-color: #000000;
   background-image:
-    radial-gradient(60rem 40rem at 12% -10%, rgba(34, 197, 94, 0.14), transparent 65%),
-    radial-gradient(50rem 36rem at 110% 115%, rgba(34, 197, 94, 0.12), transparent 65%),
+    radial-gradient(60rem 40rem at 12% -10%, rgba(255, 255, 255, 0.05), transparent 65%),
+    radial-gradient(50rem 36rem at 110% 115%, rgba(255, 255, 255, 0.04), transparent 65%),
     radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
   background-size: auto, auto, 22px 22px;
 }
@@ -1733,11 +1735,11 @@ button {
   padding: 28px 24px 24px;
   overflow: hidden;
   text-align: start;
-  background: #1f2937;
+  background: #141414;
   border: none;
   border-radius: 16px;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05), 0 24px 48px -20px rgba(15, 23, 42, 0.25);
-  color: #e5e7eb;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 24px 48px -20px rgba(0, 0, 0, 0.7);
+  color: #ffffff;
   color-scheme: dark;
 }
 
@@ -1753,7 +1755,7 @@ button {
   inset-inline-start: 0;
   inset-inline-end: 0;
   height: 4px;
-  background: linear-gradient(90deg, #22c55e, #86efac);
+  background: linear-gradient(90deg, #F4F9F9, #A9BDC2);
 }
 
 .login-card--loading {
@@ -1790,7 +1792,7 @@ button {
   line-height: 20px;
   text-align: center;
   margin: 0 0 16px;
-  color: #9ca3af;
+  color: #8C8C8C;
 }
 
 .login-form {
@@ -1807,7 +1809,7 @@ button {
 .login-card__note {
   font-size: 13px;
   line-height: 1.5;
-  color: #9ca3af;
+  color: #8C8C8C;
   margin: 16px 0 0;
   text-align: center;
 }
@@ -1816,7 +1818,7 @@ button {
 .login-card__hint {
   margin-top: 28px;
   padding-top: 20px;
-  border-top: 1px solid #374151;
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
 }
 
 .login-card__hint-title {
@@ -1825,21 +1827,21 @@ button {
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #9ca3af;
+  color: #8C8C8C;
 }
 
 .login-card__hint-text {
   margin: 0;
   font-size: 13px;
   line-height: 1.55;
-  color: #9ca3af;
+  color: #8C8C8C;
 }
 
 .login-card__hint-text code {
   font-family: var(--font-mono);
   font-size: 12px;
-  background: #111827;
-  border: 1px solid #374151;
+  background: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 4px;
   padding: 1px 5px;
 }
@@ -1849,15 +1851,15 @@ button {
 }
 
 .login-card .field label {
-  color: #e5e7eb;
+  color: #ffffff;
   font-size: 13px;
   font-weight: 500;
 }
 
 .login-card .field input:not([type='checkbox']):not([type='radio']) {
-  color: #e5e7eb;
-  background-color: #111827;
-  border: 1px solid #374151;
+  color: #ffffff;
+  background-color: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 8px;
   padding: 9px 16px;
   font-size: 14px;
@@ -1865,7 +1867,7 @@ button {
 }
 
 .login-card .field input::placeholder {
-  color: #6b7280;
+  color: #737373;
 }
 
 /* Autofill must stay dark like the rest of the panel. */
@@ -1873,23 +1875,23 @@ button {
 .login-card .field input:not([type='checkbox']):not([type='radio']):-webkit-autofill:hover,
 .login-card .field input:not([type='checkbox']):not([type='radio']):-webkit-autofill:focus,
 .login-card .field input:not([type='checkbox']):not([type='radio']):-webkit-autofill:focus-visible {
-  background-color: #111827;
-  -webkit-text-fill-color: #e5e7eb;
-  -webkit-box-shadow: 0 0 0 1000px #111827 inset;
-  caret-color: #e5e7eb;
+  background-color: #000000;
+  -webkit-text-fill-color: #ffffff;
+  -webkit-box-shadow: 0 0 0 1000px #000000 inset;
+  caret-color: #ffffff;
   transition: background-color 99999s ease-out 0s, box-shadow 99999s ease-out 0s;
 }
 
 .login-card .btn--primary {
-  background: var(--brand);
-  color: #fff;
+  background: #ffffff;
+  color: #141414;
   min-height: 36px;
   font-size: 14px;
 }
 
 .login-card .btn--primary:hover:not(:disabled) {
-  background: var(--brand-strong);
-  box-shadow: 0 6px 16px rgba(34, 197, 94, 0.28);
+  background: #f4f9f9;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
 }
 
 .login-card .spinner {
@@ -2019,11 +2021,12 @@ button {
 
 html[data-theme='dark'] {
   color-scheme: dark;
-  --brand: #22c55e;
-  --brand-strong: #4ade80;
-  --brand-tint: rgba(34, 197, 94, 0.14);
-  --brand-soft: #16351f;
-  --brand-ring: rgba(34, 197, 94, 0.24);
+  --brand: #F4F9F9;
+  --brand-strong: #FFFFFF;
+  --brand-tint: rgba(255, 255, 255, 0.1);
+  --brand-soft: rgba(255, 255, 255, 0.07);
+  --brand-ring: rgba(255, 255, 255, 0.24);
+  --on-brand: #141414;
   --primary: #e9ecea;
   --primary-dark: #ffffff;
   --primary-darker: #ffffff;
@@ -2032,9 +2035,9 @@ html[data-theme='dark'] {
   --ground: #0d1012;
   --background: #13171a;
   --surface: #171b1e;
-  --text: #e9ecea;
-  --muted: #a3aca8;
-  --faint: #7a827e;
+  --text: #FFFFFF;
+  --muted: #8C8C8C;
+  --faint: #737373;
   --border: #272d31;
   --line: #272d31;
   --line-soft: #20262a;
@@ -2088,7 +2091,7 @@ html[lang='ar'] {
 
 /* Hover borders tuned against a white page. */
 html[data-theme='dark'] .crumbs a:hover {
-  border-color: rgba(34, 197, 94, 0.45);
+  border-color: rgba(255, 255, 255, 0.4);
 }
 
 html[data-theme='dark'] .btn--secondary:hover:not(:disabled),
@@ -2100,12 +2103,12 @@ html[data-theme='dark'] .btn--danger {
   border-color: rgba(248, 113, 113, 0.38);
 }
 
-/* --brand-strong flips to a light green in dark, so filled states
+/* --brand flips to a light surface in dark, so filled states
    need dark ink instead of white to keep their contrast. */
 html[data-theme='dark'] .btn--primary:hover:not(:disabled),
 html[data-theme='dark'] .fab:hover,
 html[data-theme='dark'] .app-header__cta:hover {
-  color: #06210f;
+  color: var(--on-brand);
 }
 
 html[data-theme='dark'] .btn--danger:hover:not(:disabled) {
@@ -2141,7 +2144,7 @@ html[data-theme='dark'] .statc__tile--purple {
 }
 
 html[data-theme='dark'] .statc__chev {
-  color: #454e53;
+  color: #595959;
 }
 
 /* Status badges keep their hue, lose the paper background. */

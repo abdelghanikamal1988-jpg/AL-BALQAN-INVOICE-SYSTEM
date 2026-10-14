@@ -357,7 +357,7 @@
 }
 
 .db-fig__dot--amber {
-  background: #f59e0b;
+  background: #555555;
 }
 
 /* --- Charts: shared grid (Y axis | plot / labels) --- */
@@ -1157,7 +1157,7 @@ html[dir='rtl'] .db-cardnav__btn--next .icon {
 }
 
 .db-onboard__step.is-done .db-onboard__mark {
-  color: #fff;
+  color: var(--on-brand);
   background: var(--brand);
   border-color: var(--brand);
 }
