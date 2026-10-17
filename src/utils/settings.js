@@ -1,6 +1,9 @@
 import company from '../data/company.js';
-
-const SETTINGS_KEY = 'albalqan:settings';
+import {
+  readSettingsCache,
+  writeSettingsCache,
+  clearSettingsCache,
+} from '../lib/userData.js';
 
 const DEFAULTS = {
   companyName: company.name,
@@ -38,22 +41,11 @@ export function sanitizeInvoicePrefix(value) {
   return cleaned || 'INV';
 }
 
-function readStored() {
-  try {
-    const raw = localStorage.getItem(SETTINGS_KEY);
-    if (!raw) return null;
-    const parsed = JSON.parse(raw);
-    return parsed && typeof parsed === 'object' ? parsed : null;
-  } catch (err) {
-    return null;
-  }
-}
-
 export function getSettings() {
-  const stored = readStored();
+  const stored = readSettingsCache();
   const out = {};
   SETTINGS_FIELDS.forEach((key) => {
-    const value = stored ? stored[key] : undefined;
+    const value = stored[key];
     out[key] = value === undefined || value === null ? DEFAULTS[key] : value;
   });
   out.vatRate = normalizeVatRate(out.vatRate);
@@ -62,27 +54,19 @@ export function getSettings() {
 }
 
 export function hasStoredSettings() {
-  return readStored() !== null;
+  return Object.keys(readSettingsCache()).length > 0;
 }
 
 export function saveSettings(patch) {
   const next = { ...getSettings(), ...patch };
   next.vatRate = normalizeVatRate(next.vatRate);
   next.invoicePrefix = sanitizeInvoicePrefix(next.invoicePrefix);
-  try {
-    localStorage.setItem(SETTINGS_KEY, JSON.stringify(next));
-  } catch (err) {
-    /* ignore quota / private mode */
-  }
+  writeSettingsCache(next);
   return next;
 }
 
 export function resetSettings() {
-  try {
-    localStorage.removeItem(SETTINGS_KEY);
-  } catch (err) {
-    /* ignore */
-  }
+  clearSettingsCache();
   return { ...DEFAULTS };
 }
 

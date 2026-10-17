@@ -1,37 +1,53 @@
 /**
- * Local access log: every sign-in / sign-out attempt (successful or not)
- * is appended to a ring buffer in localStorage so the dashboard can show a
- * "Access logs" table for all accounts that used this browser.
+ * Access log — every sign-in / sign-out attempt (successful or not) is
+ * written to the `access_logs` table so the dashboard can show who used
+ * the system and when, from any device.
  *
- * Scope note: this is a browser-side log — entries exist on the device
- * where the events happened. A server-side audit would need a Supabase
- * table written from a privileged context.
+ * Writes go through the `log_access` SECURITY DEFINER function so a failed
+ * sign-in (no session yet) is still recorded. Logging must never break
+ * auth, so every call is fire-and-forget.
  */
 
-const KEY = 'albalqan:access-log';
-const MAX = 100;
+import { supabase, isSupabaseConfigured } from '../lib/supabase.js';
 
-export function getAccessLogs() {
+const MAX = 200;
+
+export async function getAccessLogs() {
+  if (!isSupabaseConfigured) return [];
   try {
-    const raw = window.localStorage.getItem(KEY);
-    const list = raw ? JSON.parse(raw) : [];
-    return Array.isArray(list) ? list : [];
+    const { data, error } = await supabase
+      .from('access_logs')
+      .select('id, action, account, details, created_at')
+      .order('created_at', { ascending: false })
+      .limit(MAX);
+    if (error) {
+      console.warn('[accessLog] load failed', error.message);
+      return [];
+    }
+    return (data || []).map((row) => ({
+      id: row.id,
+      ts: row.created_at,
+      action: row.action,
+      account: row.account,
+      details: row.details,
+    }));
   } catch (err) {
     return [];
   }
 }
 
 export function recordAccess({ action, account = '', details = '' }) {
+  if (!isSupabaseConfigured) return;
   try {
-    const list = getAccessLogs();
-    list.unshift({
-      id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-      ts: new Date().toISOString(),
-      action,
-      account: String(account || '').trim() || '—',
-      details,
-    });
-    window.localStorage.setItem(KEY, JSON.stringify(list.slice(0, MAX)));
+    supabase
+      .rpc('log_access', {
+        p_action: action,
+        p_account: String(account || '').trim() || '—',
+        p_details: details,
+      })
+      .then(({ error }) => {
+        if (error) console.warn('[accessLog] write failed', error.message);
+      });
   } catch (err) {
     /* storage unavailable — logging must never break auth */
   }

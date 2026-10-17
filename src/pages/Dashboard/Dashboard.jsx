@@ -11,6 +11,7 @@ import { formatCurrency } from '../../utils/formatCurrency.js';
 import { dbFetchClients } from '../../lib/clientRepo.js';
 import { clientFullName, normalizePassport } from '../../utils/clients.js';
 import { getAccessLogs } from '../../utils/accessLog.js';
+import { readPref, writePref } from '../../lib/userData.js';
 import { isConfigured } from '../../utils/settings.js';
 import { CLIENT_STATUSES } from '../../data/clientStatuses.js';
 import { useToast } from '../../components/Toast/ToastProvider.jsx';
@@ -378,19 +379,11 @@ function CardNav({ car, count, label, t }) {
 }
 
 function readPdfDone() {
-  try {
-    return localStorage.getItem('albalqan:onboard:pdf') === '1';
-  } catch (err) {
-    return false;
-  }
+  return readPref('onboardPdf') === true;
 }
 
 function readDismissed() {
-  try {
-    return localStorage.getItem('albalqan:onboard:dismissed') === '1';
-  } catch (err) {
-    return false;
-  }
+  return readPref('onboardDismissed') === true;
 }
 
 function OnboardingCard({ t, hasPerm, clientsCount, invoicesCount, onDismiss }) {
@@ -715,8 +708,22 @@ export default function Dashboard() {
       .slice(0, 8);
   }, [invoices, t]);
 
-  /* Sign-in / sign-out events for every account on this device. */
-  const accessLogs = useMemo(() => getAccessLogs(), [refreshKey]);
+  /* Sign-in / sign-out events for every account. */
+  const [accessLogs, setAccessLogs] = useState([]);
+
+  useEffect(() => {
+    let active = true;
+    getAccessLogs()
+      .then((rows) => {
+        if (active) setAccessLogs(rows);
+      })
+      .catch(() => {
+        if (active) setAccessLogs([]);
+      });
+    return () => {
+      active = false;
+    };
+  }, [refreshKey]);
 
   const agentCar = useCarousel(agentStats.length);
   const customerCar = useCarousel(topCustomers.length);
@@ -878,11 +885,7 @@ export default function Dashboard() {
           clientsCount={clients.length}
           invoicesCount={invoices.length}
           onDismiss={() => {
-            try {
-              localStorage.setItem('albalqan:onboard:dismissed', '1');
-            } catch (err) {
-              /* ignore */
-            }
+            writePref('onboardDismissed', true);
             setOnboardDismissed(true);
           }}
         />

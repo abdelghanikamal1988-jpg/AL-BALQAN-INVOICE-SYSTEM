@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Header from './components/Header/Header.jsx';
 import Sidebar from './components/Sidebar/Sidebar.jsx';
@@ -8,6 +8,7 @@ import { AuthProvider, useAuth } from './context/AuthContext.jsx';
 import { PendingApprovalsProvider } from './context/PendingApprovalsContext.jsx';
 import { ThemeProvider } from './context/ThemeContext.jsx';
 import { LangProvider, useLang } from './context/LangContext.jsx';
+import { readPref, writePref, subscribeUserData } from './lib/userData.js';
 import Dashboard from './pages/Dashboard/Dashboard.jsx';
 import CreateInvoice from './pages/CreateInvoice/CreateInvoice.jsx';
 import InvoiceHistory from './pages/InvoiceHistory/InvoiceHistory.jsx';
@@ -58,26 +59,29 @@ function Shell() {
   const { session, loading, hasPerm, signOut } = useAuth();
   const { t } = useLang();
   const [navOpen, setNavOpen] = useState(() => {
-    try {
-      if (window.innerWidth >= 1024) {
-        return localStorage.getItem('ab-sidebar') !== 'collapsed';
-      }
-    } catch {
-      /* storage unavailable */
+    if (window.innerWidth >= 1024) {
+      return !readPref('sidebarCollapsed');
     }
-    return window.innerWidth >= 1024;
+    return false;
   });
+
+  /* Re-read the stored preference once per-user data is hydrated, because
+     the initial state above is computed before the database load finishes. */
+  useEffect(
+    () =>
+      subscribeUserData(() => {
+        if (window.innerWidth >= 1024) {
+          setNavOpen(!readPref('sidebarCollapsed'));
+        }
+      }),
+    [],
+  );
 
   const toggleNav = () => {
     setNavOpen((o) => {
       const next = !o;
-      try {
-        if (window.innerWidth >= 1024) {
-          if (next) localStorage.removeItem('ab-sidebar');
-          else localStorage.setItem('ab-sidebar', 'collapsed');
-        }
-      } catch {
-        /* storage unavailable */
+      if (window.innerWidth >= 1024) {
+        writePref('sidebarCollapsed', !next);
       }
       return next;
     });

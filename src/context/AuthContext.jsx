@@ -1,11 +1,12 @@
 import { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react';
 import { supabase, isSupabaseConfigured } from '../lib/supabase.js';
 import { recordAccess } from '../utils/accessLog.js';
+import { hydrateUserData, resetUserDataCache } from '../lib/userData.js';
 
 const AuthContext = createContext(null);
 
-/** Where the last user interaction is remembered (survives reloads). */
-const IDLE_STORAGE_KEY = 'albalqan:last-activity';
+/** Last interaction for this tab — kept in memory only, never in storage. */
+let lastActivityAt = 0;
 
 const IDLE_EVENTS = [
   'pointerdown',
@@ -77,6 +78,26 @@ export function AuthProvider({ children }) {
     };
   }, [configured]);
 
+  /* ---------- per-user application state (settings / prefs / draft) ---------- */
+  const [dataLoading, setDataLoading] = useState(false);
+
+  useEffect(() => {
+    const userId = session?.user?.id;
+    if (!configured || !userId) {
+      resetUserDataCache();
+      setDataLoading(false);
+      return undefined;
+    }
+    let active = true;
+    setDataLoading(true);
+    hydrateUserData().finally(() => {
+      if (active) setDataLoading(false);
+    });
+    return () => {
+      active = false;
+    };
+  }, [configured, session?.user?.id]);
+
   /* ---------- profile (role + permissions) ---------- */
   useEffect(() => {
     const userId = session?.user?.id;
@@ -129,45 +150,18 @@ export function AuthProvider({ children }) {
    * scroll or navigation restarts the timer, so an active user stays signed
    * in indefinitely.
    *
-   * The timestamp is also written to localStorage so that a reload, a
-   * discarded background tab or a sleeping machine still counts as idle —
-   * coming back after 30 minutes logs out immediately instead of starting
-   * a fresh countdown. Other tabs share the same timestamp, so an active
-   * tab keeps the whole session alive.
+   * The timestamp lives in memory only — nothing about the session is kept
+   * in browser storage. A full reload therefore restarts the countdown;
+   * each tab tracks its own activity and an idle tab signs the whole
+   * session out when its timer fires.
    */
   useEffect(() => {
     if (!configured || loading) return undefined;
 
     let timer = null;
-    let lastActivity = 0;
-    let flushedAt = 0;
+    let lastActivity = lastActivityAt || Date.now();
     let loggingOut = false;
     let ignoreSelfNav = false;
-
-    const readActivity = () => {
-      try {
-        const value = Number(window.localStorage.getItem(IDLE_STORAGE_KEY));
-        return Number.isFinite(value) && value > 0 ? value : 0;
-      } catch (err) {
-        return 0;
-      }
-    };
-
-    const writeActivity = (value) => {
-      try {
-        window.localStorage.setItem(IDLE_STORAGE_KEY, String(value));
-      } catch (err) {
-        /* storage unavailable — the in-memory timestamp still works */
-      }
-    };
-
-    const clearActivity = () => {
-      try {
-        window.localStorage.removeItem(IDLE_STORAGE_KEY);
-      } catch (err) {
-        /* ignore */
-      }
-    };
 
     const dropLocalTokens = () => {
       try {
@@ -179,33 +173,14 @@ export function AuthProvider({ children }) {
       }
     };
 
-    const schedule = () => {
-      const remaining = IDLE_TIMEOUT_MS - (Date.now() - lastActivity);
-      if (timer) window.clearTimeout(timer);
-      timer = null;
-      if (remaining <= 0) {
-        void doLogout();
-        return;
-      }
-      timer = window.setTimeout(doLogout, remaining);
-    };
-
     async function doLogout() {
       if (loggingOut) return;
-
-      // Another tab may still be active — defer instead of logging out.
-      const shared = readActivity();
-      if (shared && Date.now() - shared < IDLE_TIMEOUT_MS) {
-        lastActivity = shared;
-        schedule();
-        return;
-      }
 
       loggingOut = true;
       try {
         if (timer) window.clearTimeout(timer);
         timer = null;
-        clearActivity();
+        lastActivityAt = 0;
         setSession(null);
         try {
           await Promise.race([
@@ -240,10 +215,7 @@ export function AuthProvider({ children }) {
         return;
       }
       lastActivity = Date.now();
-      if (lastActivity - flushedAt >= 1000) {
-        flushedAt = lastActivity;
-        writeActivity(lastActivity);
-      }
+      lastActivityAt = lastActivity;
       if (timer) window.clearTimeout(timer);
       timer = window.setTimeout(doLogout, IDLE_TIMEOUT_MS);
     };
@@ -252,22 +224,16 @@ export function AuthProvider({ children }) {
       if (Date.now() - lastActivity >= IDLE_TIMEOUT_MS) {
         void doLogout();
       } else {
-        schedule();
+        if (timer) window.clearTimeout(timer);
+        timer = window.setTimeout(doLogout, IDLE_TIMEOUT_MS - (Date.now() - lastActivity));
       }
     };
-
-    const stored = readActivity();
-    lastActivity = stored || Date.now();
-    if (!stored) {
-      flushedAt = lastActivity;
-      writeActivity(lastActivity);
-    }
 
     IDLE_EVENTS.forEach((evt) => window.addEventListener(evt, onActivity, { passive: true }));
     window.addEventListener('focus', onRevisit);
     window.addEventListener('pageshow', onRevisit);
     document.addEventListener('visibilitychange', onRevisit);
-    schedule();
+    timer = window.setTimeout(doLogout, IDLE_TIMEOUT_MS);
 
     return () => {
       if (timer) window.clearTimeout(timer);
@@ -342,7 +308,7 @@ export function AuthProvider({ children }) {
         hasPerm,
         isAdmin,
         needsEditApproval,
-        loading: loading || profileLoading,
+        loading: loading || profileLoading || dataLoading,
         configured,
         signIn,
         signOut,

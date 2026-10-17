@@ -38,11 +38,14 @@ path = sys.argv[1] if len(sys.argv) > 1 else 'supabase/consultations.sql'
 sql = io.open(path, encoding='utf-8').read()
 statements = []
 buf = []
+in_dollar = False
 for line in sql.splitlines():
-    if line.strip().startswith('--'):
+    if not in_dollar and line.strip().startswith('--'):
         continue
     buf.append(line)
-    if line.rstrip().endswith(';'):
+    if line.count('$$') % 2 == 1:
+        in_dollar = not in_dollar
+    if not in_dollar and line.rstrip().endswith(';'):
         statements.append('\n'.join(buf))
         buf = []
 if ''.join(buf).strip():

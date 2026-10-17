@@ -13,6 +13,7 @@ import { calculatePayment, statusLabel } from './paymentCalculator.js';
 import { formatCurrency } from './formatCurrency.js';
 import { serviceLabel, destinationLabel } from './labels.js';
 import { invoicePaymentBreakdown, VAT_MODE, vatRateLabel } from './vat.js';
+import { writePref } from '../lib/userData.js';
 import { getCompany, getSettings } from './settings.js';
 
 const INK = [20, 20, 20];
@@ -73,11 +74,7 @@ export async function buildInvoicePdf(invoice) {
   const payment = invoicePaymentBreakdown(invoice.payment);
   const calc = calculatePayment(payment.grandTotal, payment.paid);
   const hasVat = payment.vat > 0;
-  try {
-    localStorage.setItem('albalqan:onboard:pdf', '1');
-  } catch (err) {
-    /* ignore */
-  }
+  writePref('onboardPdf', true);
 
   /* ---------- helpers ---------- */
 

@@ -1,33 +1,41 @@
 import { createContext, useContext, useEffect, useState } from 'react';
+import { readPref, writePref, subscribeUserData } from '../lib/userData.js';
 
 const ThemeContext = createContext(null);
-const STORAGE_KEY = 'ab-theme';
+
+function normalize(value) {
+  return value === 'dark' || value === 'light' ? value : 'light';
+}
 
 function readInitial() {
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved === 'dark' || saved === 'light') return saved;
-  } catch {
-    /* storage unavailable */
-  }
-  return 'light';
+  return normalize(readPref('theme'));
 }
 
 export function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState(readInitial);
+  const [theme, setThemeState] = useState(readInitial);
 
   useEffect(() => {
     const root = document.documentElement;
     root.dataset.theme = theme;
     root.style.colorScheme = theme;
-    try {
-      localStorage.setItem(STORAGE_KEY, theme);
-    } catch {
-      /* storage unavailable */
-    }
   }, [theme]);
 
-  const toggleTheme = () => setTheme((t) => (t === 'dark' ? 'light' : 'dark'));
+  useEffect(
+    () =>
+      subscribeUserData(() => {
+        const stored = normalize(readPref('theme'));
+        setThemeState((current) => (current === stored ? current : stored));
+      }),
+    [],
+  );
+
+  const setTheme = (next) => {
+    const value = normalize(next);
+    setThemeState(value);
+    writePref('theme', value);
+  };
+
+  const toggleTheme = () => setTheme(theme === 'dark' ? 'light' : 'dark');
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme, toggleTheme }}>

@@ -1,34 +1,36 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import en from '../i18n/en.js';
 import ar from '../i18n/ar.js';
+import { readPref, writePref, subscribeUserData } from '../lib/userData.js';
 
 const DICTS = { en, ar };
 const LangContext = createContext(null);
-const STORAGE_KEY = 'ab-lang';
+
+function normalize(value) {
+  return value === 'ar' || value === 'en' ? value : 'en';
+}
 
 function readInitial() {
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved === 'ar' || saved === 'en') return saved;
-  } catch {
-    /* storage unavailable */
-  }
-  return 'en';
+  return normalize(readPref('lang'));
 }
 
 export function LangProvider({ children }) {
-  const [lang, setLang] = useState(readInitial);
+  const [lang, setLangState] = useState(readInitial);
 
   useEffect(() => {
     const root = document.documentElement;
     root.lang = lang;
     root.dir = lang === 'ar' ? 'rtl' : 'ltr';
-    try {
-      localStorage.setItem(STORAGE_KEY, lang);
-    } catch {
-      /* storage unavailable */
-    }
   }, [lang]);
+
+  useEffect(
+    () =>
+      subscribeUserData(() => {
+        const stored = normalize(readPref('lang'));
+        setLangState((current) => (current === stored ? current : stored));
+      }),
+    [],
+  );
 
   const t = useMemo(() => {
     const dict = DICTS[lang] || DICTS.en;
@@ -45,7 +47,13 @@ export function LangProvider({ children }) {
     };
   }, [lang]);
 
-  const toggleLang = () => setLang((l) => (l === 'ar' ? 'en' : 'ar'));
+  const setLang = (next) => {
+    const value = normalize(next);
+    setLangState(value);
+    writePref('lang', value);
+  };
+
+  const toggleLang = () => setLang(lang === 'ar' ? 'en' : 'ar');
 
   const value = useMemo(
     () => ({ lang, setLang, toggleLang, t, isRTL: lang === 'ar' }),

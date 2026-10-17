@@ -12,11 +12,11 @@ import {
 } from '../../lib/consultationRepo.js';
 import { formatDate, formatDateTimeDisplay } from '../../utils/formatDate.js';
 import { whatsappShareUrl } from '../../utils/whatsapp.js';
+import { readPref, writePref } from '../../lib/userData.js';
 import '../../styles/consultations.css';
 
 const ANY = '';
 const STATUSES = ['new', 'in_progress', 'done', 'archived'];
-const LAST_SYNC_KEY = 'albalqan:consult:lastSync';
 
 const STATUS_TILE = {
   new: { tile: 'slate', glyph: 'note' },
@@ -91,13 +91,7 @@ export default function Consultations() {
   const [service, setService] = useState(ANY);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [syncing, setSyncing] = useState(false);
-  const [syncInfo, setSyncInfo] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem(LAST_SYNC_KEY) || 'null');
-    } catch {
-      return null;
-    }
-  });
+  const [syncInfo, setSyncInfo] = useState(() => readPref('lastSync') || null);
   const [selected, setSelected] = useState(null);
   const [draft, setDraft] = useState({ status: 'new', notes: '' });
   const [saving, setSaving] = useState(false);
@@ -206,11 +200,7 @@ export default function Consultations() {
         total: Number(result?.total_fetched ?? 0),
       };
       setSyncInfo(info);
-      try {
-        localStorage.setItem(LAST_SYNC_KEY, JSON.stringify(info));
-      } catch {
-        /* storage unavailable */
-      }
+      writePref('lastSync', info);
       if (!silent || info.newCount > 0) {
         toast.success(t('consultations.toastSynced', { n: info.newCount, total: info.total }));
       }

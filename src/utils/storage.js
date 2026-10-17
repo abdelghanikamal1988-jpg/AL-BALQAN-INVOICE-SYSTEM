@@ -1,5 +1,6 @@
 /**
- * Storage service — invoices live in Supabase, drafts stay in localStorage.
+ * Storage service — invoices live in Supabase, the draft lives in the
+ * signed-in user's `user_data` row.
  *
  * This is the ONLY module the UI imports. Swap the implementation here
  * without touching any component.
@@ -15,8 +16,11 @@ import {
   dbDelete,
   dbInsertMany,
 } from '../lib/invoiceRepo.js';
-
-const DRAFT_KEY = 'albalqan_invoice_draft';
+import {
+  readDraft,
+  writeDraft,
+  clearDraftCache,
+} from '../lib/userData.js';
 
 /* ----------------------- Invoices (Supabase) ----------------------- */
 
@@ -111,32 +115,18 @@ export async function migrateLocalInvoices() {
   }
 }
 
-/* ----------------------- Draft (localStorage) ----------------------- */
+/* ----------------------- Draft (user_data row) ----------------------- */
 
 export function getDraft() {
-  try {
-    const raw = localStorage.getItem(DRAFT_KEY);
-    if (!raw) return null;
-    return JSON.parse(raw);
-  } catch (err) {
-    return null;
-  }
+  return readDraft();
 }
 
 export function saveDraft(draft) {
-  try {
-    localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
-  } catch (err) {
-    /* ignore */
-  }
+  writeDraft(draft);
 }
 
 export function clearDraft() {
-  try {
-    localStorage.removeItem(DRAFT_KEY);
-  } catch (err) {
-    /* ignore */
-  }
+  clearDraftCache();
 }
 
 /* ----------------------- In-memory helpers ----------------------- */
