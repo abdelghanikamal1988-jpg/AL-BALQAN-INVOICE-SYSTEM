@@ -24,7 +24,9 @@ import {
 import {
   DOCUMENT_TYPES,
   DOCUMENT_ACCEPT,
+  OTHER_DOCUMENT_ACCEPT,
   MAX_UPLOAD_BYTES,
+  normalizeDocuments,
   uploadClientDocument,
   removeClientDocument,
   documentUrl,
@@ -80,8 +82,11 @@ export default function ClientForm() {
   const navigate = useNavigate();
   const { t } = useLang();
   const toast = useToast();
-  const { hasPerm, needsEditApproval } = useAuth();
+  const { hasPerm, needsEditApproval, profile } = useAuth();
   const canSave = hasPerm('action:client.save');
+  /* An agent's own clients are never referred by someone else, so the
+     referral picker is hidden and left empty for that role. */
+  const isAgent = profile?.role === 'delegate';
   const nameRef = useRef(null);
 
   const [form, setForm] = useState(emptyClientForm());
@@ -124,7 +129,7 @@ export default function ClientForm() {
           }
           setExisting(client);
           setForm(clientToForm(client));
-          setDocs(client.documents || {});
+          setDocs(normalizeDocuments(client.documents || {}));
           setAgentChoice(client.referralAgent || CUSTOMER);
         } else {
           setAgentChoice(CUSTOMER);
@@ -151,12 +156,24 @@ export default function ClientForm() {
     const urls = {};
     (async () => {
       for (const def of DOCUMENT_TYPES) {
-        const meta = docs[def.id];
-        if (meta && meta.path) {
-          try {
-            urls[def.id] = await documentUrl(meta.path);
-          } catch (err) {
-            urls[def.id] = null;
+        if (def.multiple) {
+          const list = docs[def.id] || [];
+          const resolved = await Promise.all(
+            list.map((meta) =>
+              meta && meta.path
+                ? documentUrl(meta.path).catch(() => null)
+                : Promise.resolve(null)
+            )
+          );
+          urls[def.id] = resolved;
+        } else {
+          const meta = docs[def.id];
+          if (meta && meta.path) {
+            try {
+              urls[def.id] = await documentUrl(meta.path);
+            } catch (err) {
+              urls[def.id] = null;
+            }
           }
         }
       }
@@ -260,8 +277,52 @@ export default function ClientForm() {
     setDocs((prev) => ({ ...prev, [docId]: null }));
   };
 
-  const missingDocs = DOCUMENT_TYPES.filter((def) => !docs[def.id]);
-  const agentValue = addingAgent ? newAgentName.trim() : agentChoice;
+  /* The "other" slot accepts any number of PDFs; each keeps a stable key so
+     a later remove targets exactly one file. */
+  const handleOtherFiles = (fileList) => {
+    const files = Array.from(fileList || []);
+    if (!files.length) return;
+    const entries = [];
+    files.forEach((file) => {
+      if (file.size > MAX_UPLOAD_BYTES) {
+        toast.error(t('clients.toastFileTooBig'));
+        return;
+      }
+      const key = `k-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+      entries.push({ key, file, name: file.name, size: file.size, type: file.type });
+    });
+    if (!entries.length) return;
+    setPending((prev) => ({
+      ...prev,
+      other: [...(prev.other || []), ...entries.map(({ key, file }) => ({ key, file }))],
+    }));
+    setDocs((prev) => ({
+      ...prev,
+      other: [...(prev.other || []), ...entries.map(({ key, name, size, type }) => ({ key, name, size, type }))],
+    }));
+  };
+
+  const handleRemoveOther = (docId, index) => {
+    const list = docs[docId] || [];
+    const meta = list[index];
+    if (meta && meta.path) setStalePaths((prev) => [...prev, meta.path]);
+    setPending((prev) => {
+      const nextList = (prev.other || []).filter((entry) => entry.key !== meta?.key);
+      return { ...prev, other: nextList };
+    });
+    setDocs((prev) => ({
+      ...prev,
+      [docId]: (prev[docId] || []).filter((_, i) => i !== index),
+    }));
+  };
+
+  /* "other" is an add-on slot, so only the passport and the photo warn. */
+  const missingDocs = DOCUMENT_TYPES.filter((def) => !def.multiple && !docs[def.id]);
+  const agentValue = isAgent
+    ? CUSTOMER
+    : addingAgent
+      ? newAgentName.trim()
+      : agentChoice;
 
   /* ------------------------------- save ------------------------------- */
   const performSave = async () => {
@@ -278,11 +339,25 @@ export default function ClientForm() {
       const nextDocs = { ...docs };
 
       await Promise.all(
-        Object.entries(pending).map(async ([docId, file]) => {
-          const uploaded = await uploadClientDocument(userId, clientId, docId, file);
+        Object.entries(pending).map(async ([docId, value]) => {
+          if (docId === 'other') {
+            const list = nextDocs.other || [];
+            const uploaded = await Promise.all(
+              (value || []).map(async ({ key, file }) => {
+                const meta = await uploadClientDocument(userId, clientId, 'other', file, key);
+                return meta;
+              })
+            );
+            const byKey = new Map(uploaded.map((meta) => [meta.key, meta]));
+            nextDocs.other = list.map((meta) => byKey.get(meta.key) || meta);
+            return;
+          }
+          const uploaded = await uploadClientDocument(userId, clientId, docId, value);
           nextDocs[docId] = uploaded;
         })
       );
+
+      if (nextDocs.other && nextDocs.other.length === 0) delete nextDocs.other;
 
       if (!pendingApproval) {
         await Promise.all(stalePaths.map((path) => removeClientDocument(path).catch(() => {})));
@@ -396,7 +471,7 @@ export default function ClientForm() {
 
       <form id="client-form" className="editor-layout" onSubmit={handleSubmit}>
         <div className="editor-form">
-          {FIELD_GROUPS.map((group) => (
+          {FIELD_GROUPS.filter((group) => !(isAgent && group.id === 'referral')).map((group) => (
             <section className="card" aria-label={t(group.title)} key={group.id}>
               <div className="card__header">
                 <span className="card__icon" aria-hidden="true"><Icon name={group.icon} /></span>
@@ -522,7 +597,7 @@ export default function ClientForm() {
             </div>
             <div className="card__body">
               <div className="cf-docs">
-                {DOCUMENT_TYPES.map((def) => {
+                {DOCUMENT_TYPES.filter((def) => !def.multiple).map((def) => {
                   const meta = docs[def.id];
                   const preview = previews[def.id];
                   const defLabel = t(`clients.doc.${def.id}`);
@@ -565,6 +640,50 @@ export default function ClientForm() {
                               {t('clients.remove')}
                             </button>
                           )}
+                        </Can>
+                      </div>
+                    </div>
+                  );
+                })}
+
+                {DOCUMENT_TYPES.filter((def) => def.multiple).map((def) => {
+                  const list = docs[def.id] || [];
+                  const defLabel = t(`clients.doc.${def.id}`);
+                  return (
+                    <div className="cf-doc cf-doc--multi" key={def.id}>
+                      <div className="cf-doc__label">{defLabel}</div>
+                      {list.length === 0 && <div className="cf-doc__thumb">{t('clients.noFile')}</div>}
+                      <ul className="cf-doc__list">
+                        {list.map((meta, index) => (
+                          <li className="cf-doc__item" key={meta.key || `${meta.name}-${index}`}>
+                            <span className="cf-doc__file" title={meta.name}>{meta.name}</span>
+                            <Can perm="action:client.upload">
+                              <button
+                                type="button"
+                                className="btn btn--danger btn--sm"
+                                onClick={() => handleRemoveOther(def.id, index)}
+                              >
+                                {t('clients.remove')}
+                              </button>
+                            </Can>
+                          </li>
+                        ))}
+                      </ul>
+                      <div className="cf-doc__btns">
+                        <Can perm="action:client.upload">
+                          <label className="btn btn--secondary btn--sm" style={{ cursor: 'pointer' }}>
+                            {t('common.upload')}
+                            <input
+                              type="file"
+                              accept={def.accept || OTHER_DOCUMENT_ACCEPT}
+                              multiple
+                              style={{ display: 'none' }}
+                              onChange={(e) => {
+                                handleOtherFiles(e.target.files);
+                                e.target.value = '';
+                              }}
+                            />
+                          </label>
                         </Can>
                       </div>
                     </div>

@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { useLang } from '../../context/LangContext.jsx';
+import { useConsultationNotifier } from '../../context/ConsultationNotifier.jsx';
 import { userInitials } from '../../utils/userInitials.js';
 import company from '../../data/company.js';
 import Logo from '../Logo/Logo.jsx';
@@ -136,6 +137,7 @@ const NAV_GROUPS = [
 export default function Sidebar({ open = false, onClose }) {
   const { user, signOut, hasPerm } = useAuth();
   const { t } = useLang();
+  const { newCount } = useConsultationNotifier();
   const groups = NAV_GROUPS.map((group) => ({
     ...group,
     items: group.items.filter((item) => hasPerm(item.perm)),
@@ -211,6 +213,14 @@ export default function Sidebar({ open = false, onClose }) {
                     <Icon />
                   </span>
                   <span className="sidebar__label">{t(label)}</span>
+                  {to === '/consultations' && newCount > 0 && (
+                    <span
+                      className="sidebar__badge"
+                      aria-label={t('consultations.badgeAria', { n: newCount })}
+                    >
+                      {newCount > 99 ? '99+' : newCount}
+                    </span>
+                  )}
                 </NavLink>
               ))}
             </div>

@@ -147,6 +147,21 @@
   opacity: 1;
 }
 
+.sidebar__badge {
+  margin-inline-start: auto;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 10px;
+  background: var(--brand);
+  color: var(--on-brand, #fff);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 20px;
+  text-align: center;
+  flex: 0 0 auto;
+}
+
 .sidebar__foot {
   flex: 0 0 auto;
   padding: 8px 10px 12px;

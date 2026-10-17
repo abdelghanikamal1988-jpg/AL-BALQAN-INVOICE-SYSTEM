@@ -498,6 +498,39 @@ html[dir='rtl'] .clients-page #client-search {
   justify-content: center;
 }
 
+.cf-doc--multi {
+  grid-column: 1 / -1;
+}
+
+.cf-doc__list {
+  list-style: none;
+  margin: 0 0 10px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cf-doc__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+
+.cf-doc__item .cf-doc__file {
+  margin-bottom: 0;
+  flex: 1;
+  min-width: 0;
+}
+
+.cf-doc__item .btn--danger {
+  flex: 0 0 auto;
+}
+
 .clients-page .cf-doc__btns .btn--secondary {
   background: var(--surface);
   border-color: var(--border);
@@ -699,6 +732,39 @@ html[dir='rtl'] .clients-page #client-search {
 
 .cd-doc__body .cl-actions .btn {
   flex: 1;
+}
+
+.cd-doc--multi {
+  grid-column: 1 / -1;
+}
+
+.cd-doc__list {
+  list-style: none;
+  margin: 8px 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cd-doc__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+
+.cd-doc__item .cd-doc__name {
+  flex: 1;
+  min-width: 0;
+  word-break: break-all;
+}
+
+.cd-doc__item .btn {
+  flex: 0 0 auto;
 }
 
 /* ------------------------------ invoices ------------------------------ */

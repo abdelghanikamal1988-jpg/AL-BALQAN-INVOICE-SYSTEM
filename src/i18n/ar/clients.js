@@ -107,6 +107,8 @@
   'clients.doc.passport': 'جواز السفر',
   'clients.doc.id': 'بطاقة الهوية',
   'clients.doc.photo': 'الصورة الشخصية',
+  'clients.doc.other': 'مستند آخر',
+  'clients.otherCount': '{n} ملف(ات)',
 
   'clients.groupPersonal': 'البيانات الشخصية',
   'clients.groupPersonalNote': 'كما هي مكتوبة في جواز السفر.',

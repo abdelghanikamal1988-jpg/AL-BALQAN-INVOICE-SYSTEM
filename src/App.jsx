@@ -5,6 +5,7 @@ import Sidebar from './components/Sidebar/Sidebar.jsx';
 import Icon from './components/Icons/Icon.jsx';
 import { ToastProvider } from './components/Toast/ToastProvider.jsx';
 import { AuthProvider, useAuth } from './context/AuthContext.jsx';
+import { ConsultationNotifierProvider } from './context/ConsultationNotifier.jsx';
 import { PendingApprovalsProvider } from './context/PendingApprovalsContext.jsx';
 import { ThemeProvider } from './context/ThemeContext.jsx';
 import { LangProvider, useLang } from './context/LangContext.jsx';
@@ -141,12 +142,14 @@ export default function App() {
       <LangProvider>
         <ToastProvider>
           <AuthProvider>
-            <HashRouter>
-              <Routes>
-                <Route path="/website" element={<Website />} />
-                <Route path="/*" element={<Shell />} />
-              </Routes>
-            </HashRouter>
+            <ConsultationNotifierProvider>
+              <HashRouter>
+                <Routes>
+                  <Route path="/website" element={<Website />} />
+                  <Route path="/*" element={<Shell />} />
+                </Routes>
+              </HashRouter>
+            </ConsultationNotifierProvider>
           </AuthProvider>
         </ToastProvider>
       </LangProvider>

@@ -16,6 +16,7 @@ import {
   documentUrl,
   pdfUrl,
   removeClientFiles,
+  normalizeDocuments,
 } from '../../utils/uploads.js';
 import {
   buildClientPdf,
@@ -85,17 +86,26 @@ export default function ClientDetail() {
         navigate('/clients', { replace: true });
         return;
       }
-      setClient(record);
+      const normalized = normalizeDocuments(record.documents || {});
+      setClient({ ...record, documents: normalized });
       const rows = await getClientInvoices(record.passport);
-      setInvoices(rows);
       const urls = {};
       for (const def of DOCUMENT_TYPES) {
-        const meta = record.documents?.[def.id];
-        if (meta && meta.path) {
-          try {
-            urls[def.id] = await documentUrl(meta.path);
-          } catch (err) {
-            urls[def.id] = null;
+        if (def.multiple) {
+          const list = normalized[def.id] || [];
+          urls[def.id] = await Promise.all(
+            list.map((meta) =>
+              meta && meta.path ? documentUrl(meta.path).catch(() => null) : Promise.resolve(null)
+            )
+          );
+        } else {
+          const meta = normalized[def.id];
+          if (meta && meta.path) {
+            try {
+              urls[def.id] = await documentUrl(meta.path);
+            } catch (err) {
+              urls[def.id] = null;
+            }
           }
         }
       }
@@ -305,7 +315,7 @@ export default function ClientDetail() {
         </div>
         <div className="card__body">
           <div className="cd-docs">
-            {DOCUMENT_TYPES.map((def) => {
+            {DOCUMENT_TYPES.filter((def) => !def.multiple).map((def) => {
               const meta = client.documents?.[def.id];
               const url = docUrls[def.id];
               const defLabel = t(`clients.doc.${def.id}`);
@@ -347,6 +357,44 @@ export default function ClientDetail() {
                         </Link>
                       </Can>
                     </div>
+                  </div>
+                </div>
+              );
+            })}
+
+            {DOCUMENT_TYPES.filter((def) => def.multiple).map((def) => {
+              const list = client.documents?.other || [];
+              const urls = docUrls[def.id] || [];
+              const defLabel = t(`clients.doc.${def.id}`);
+              return (
+                <div className="cd-doc cd-doc--multi" key={def.id}>
+                  <div className="cd-doc__media cd-doc__media--missing">
+                    {list.length ? t('clients.otherCount', { n: list.length }) : t('clients.notUploaded')}
+                  </div>
+                  <div className="cd-doc__body">
+                    <strong>{defLabel}</strong>
+                    <ul className="cd-doc__list">
+                      {list.map((meta, index) => (
+                        <li className="cd-doc__item" key={meta.key || meta.path || `${meta.name}-${index}`}>
+                          <span className="cd-doc__name" title={meta.name}>{meta.name}</span>
+                          {urls[index] && (
+                            <a
+                              className="btn btn--secondary btn--sm"
+                              href={urls[index]}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              {t('clients.open')}
+                            </a>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                    <Can perm="action:client.upload">
+                      <Link className="btn btn--neutral btn--sm" to={`/clients/${client.id}/edit`}>
+                        {t('common.upload')}
+                      </Link>
+                    </Can>
                   </div>
                 </div>
               );

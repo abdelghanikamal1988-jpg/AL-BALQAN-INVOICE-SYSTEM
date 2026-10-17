@@ -13,12 +13,34 @@ export const PDFS_BUCKET = 'client-pdfs';
 
 export const DOCUMENT_TYPES = [
   { id: 'passport', label: 'Passport' },
-  { id: 'id', label: 'ID' },
   { id: 'photo', label: 'Personal Photo' },
+  { id: 'other', label: 'Other Document', multiple: true, accept: 'application/pdf' },
 ];
 
 export const DOCUMENT_ACCEPT = 'image/jpeg,image/png,application/pdf';
+export const OTHER_DOCUMENT_ACCEPT = 'application/pdf';
 export const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
+
+/**
+ * Old clients stored a single `id` file. Fold it into the `other` list so
+ * nothing uploaded before disappears, and always hand back an array.
+ */
+export function normalizeDocuments(documents) {
+  const docs = { ...(documents || {}) };
+  const legacyId = docs.id;
+  delete docs.id;
+  const list = Array.isArray(docs.other)
+    ? docs.other.filter(Boolean)
+    : docs.other
+      ? [docs.other]
+      : [];
+  const withLegacy = legacyId ? [...list, legacyId] : list;
+  docs.other = withLegacy.map((meta) => ({
+    ...meta,
+    key: meta.key || meta.path || `k-${Math.random().toString(36).slice(2, 10)}`,
+  }));
+  return docs;
+}
 
 const SIGN_TTL = 60 * 60;
 
@@ -35,8 +57,9 @@ function extensionOf(file) {
   return 'jpg';
 }
 
-function documentPath(userId, clientId, docId, file) {
-  return `clients/${userId}/${clientId}/${docId}.${extensionOf(file)}`;
+function documentPath(userId, clientId, docId, file, key) {
+  const suffix = key ? `-${key}` : '';
+  return `clients/${userId}/${clientId}/${docId}${suffix}.${extensionOf(file)}`;
 }
 
 export function describeFile(file) {
@@ -47,16 +70,16 @@ export function describeFile(file) {
   };
 }
 
-export async function uploadClientDocument(userId, clientId, docId, file) {
+export async function uploadClientDocument(userId, clientId, docId, file, key) {
   if (file.size > MAX_UPLOAD_BYTES) {
     throw new Error('File is larger than 10 MB.');
   }
-  const path = documentPath(userId, clientId, docId, file);
+  const path = documentPath(userId, clientId, docId, file, key);
   const { error } = await supabase.storage
     .from(DOCUMENTS_BUCKET)
     .upload(path, file, { upsert: true, contentType: file.type });
   if (error) throw error;
-  return { path, ...describeFile(file) };
+  return { path, key, ...describeFile(file) };
 }
 
 export async function removeClientDocument(path) {

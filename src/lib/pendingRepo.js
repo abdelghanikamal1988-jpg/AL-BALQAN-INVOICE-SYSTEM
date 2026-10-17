@@ -101,14 +101,13 @@ export async function dbApprovePending(pending) {
     // the new metadata is live (uploads happen at submit time, so only the
     // previous paths can be cleaned up here).
     try {
-      const nextPaths = new Set(
-        Object.values(payload.documents || {})
+      const collectPaths = (docs) =>
+        Object.values(docs || {})
+          .flatMap((doc) => (Array.isArray(doc) ? doc : [doc]))
           .filter((doc) => doc && doc.path)
-          .map((doc) => doc.path)
-      );
-      const stale = Object.values(current.documents || {})
-        .filter((doc) => doc && doc.path && !nextPaths.has(doc.path))
-        .map((doc) => doc.path);
+          .map((doc) => doc.path);
+      const nextPaths = new Set(collectPaths(payload.documents));
+      const stale = collectPaths(current.documents).filter((path) => !nextPaths.has(path));
       if (stale.length > 0) await supabase.storage.from('client-documents').remove(stale);
     } catch (err) {
       console.warn('[pending] old document cleanup failed:', err);

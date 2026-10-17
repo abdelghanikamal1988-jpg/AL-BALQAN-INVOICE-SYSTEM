@@ -22,6 +22,17 @@ export async function dbFetchConsultations() {
   return data || [];
 }
 
+/** How many requests are still waiting for a first response. */
+export async function dbCountNewConsultations() {
+  const client = requireClient();
+  const { count, error } = await client
+    .from(TABLE)
+    .select('id', { count: 'exact', head: true })
+    .eq('status', 'new');
+  if (error) throw error;
+  return count || 0;
+}
+
 /** Status / notes managed inside the system. */
 export async function dbUpdateConsultation(id, patch) {
   const client = requireClient();

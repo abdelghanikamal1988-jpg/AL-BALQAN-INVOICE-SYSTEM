@@ -109,6 +109,8 @@
   'clients.doc.passport': 'Passport',
   'clients.doc.id': 'ID',
   'clients.doc.photo': 'Personal Photo',
+  'clients.doc.other': 'Other Document',
+  'clients.otherCount': '{n} file(s)',
 
   'clients.groupPersonal': 'Personal Details',
   'clients.groupPersonalNote': 'Exactly as written in the passport.',

@@ -4,6 +4,7 @@ import Icon from '../../components/Icons/Icon.jsx';
 import Modal from '../../components/Modal/Modal.jsx';
 import { useToast } from '../../components/Toast/ToastProvider.jsx';
 import { useLang } from '../../context/LangContext.jsx';
+import { useConsultationNotifier } from '../../context/ConsultationNotifier.jsx';
 import {
   dbFetchConsultations,
   dbUpdateConsultation,
@@ -81,6 +82,8 @@ function humanSlug(value) {
 export default function Consultations() {
   const { t } = useLang();
   const toast = useToast();
+  const { permission: notifyPermission, enable: enableNotify, refresh: refreshNotify } =
+    useConsultationNotifier();
 
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -105,6 +108,7 @@ export default function Consultations() {
     try {
       const list = await dbFetchConsultations();
       setRows(list);
+      refreshNotify();
     } catch (err) {
       console.error(err);
       setRows([]);
@@ -215,6 +219,17 @@ export default function Consultations() {
   };
 
   const handleSync = () => runSync(false);
+
+  const handleEnableNotify = async () => {
+    const result = await enableNotify();
+    if (result === 'granted') {
+      toast.success(t('consultations.notifyGranted'));
+    } else if (result === 'denied') {
+      toast.error(t('consultations.notifyDenied'));
+    } else if (result === 'unsupported') {
+      toast.info(t('consultations.notifyUnsupported'));
+    }
+  };
 
   const deleteErrorMessage = (err) => {
     const code = err?.code ? String(err.code) : '';
@@ -382,6 +397,17 @@ export default function Consultations() {
             <Icon name="upload" aria-hidden="true" />
             {syncing ? t('consultations.syncing') : t('consultations.sync')}
           </button>
+          {notifyPermission !== 'granted' && notifyPermission !== 'unsupported' && (
+            <button
+              type="button"
+              className="btn btn--secondary cs-notify"
+              onClick={handleEnableNotify}
+              aria-label={t('consultations.notifyEnable')}
+            >
+              <Icon name="bell" aria-hidden="true" />
+              {t('consultations.notifyEnable')}
+            </button>
+          )}
         </div>
       </div>
 
