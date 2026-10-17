@@ -4,10 +4,11 @@ export default {
     'بيانات الشركة وضريبة القيمة المضافة والافتراضيات المستخدمة في الفواتير الجديدة وملفات PDF.',
   'settings.home': 'الرئيسية',
   'settings.note':
-    'تُحفظ الإعدادات في هذا المتصفح وتُطبّق على الفواتير الجديدة والمعاينة وتصدير PDF.',
+    'تُحفظ الإعدادات في حسابك وتُطبّق على الفواتير الجديدة والمعاينة وتصدير PDF.',
   'settings.section.company': 'بيانات الشركة',
   'settings.section.invoice': 'افتراضيات الفاتورة',
   'settings.section.payment': 'الدفع والشروط',
+  'settings.section.backup': 'النسخ الاحتياطي للبيانات',
   'settings.companyName': 'اسم الشركة',
   'settings.legalName': 'الاسم القانوني',
   'settings.licenseNo': 'رقم الترخيص التجاري',
@@ -34,4 +35,12 @@ export default {
   'settings.errVatRate': 'أدخل نسبة ضريبة بين 0 و100.',
   'settings.toastSaved': 'تم حفظ الإعدادات.',
   'settings.toastReset': 'تمت استعادة الإعدادات الافتراضية.',
+  'settings.backupNote':
+    'ينزّل كل الفواتير والعملاء ووكلاء الإحالة والاستشارات وسجلات الدخول التي تملك صلاحية قراءتها في ملف JSON واحد. المالك يستلم بيانات كل المستخدمين.',
+  'settings.backup': 'تنزيل نسخة احتياطية كاملة',
+  'settings.backupSummary':
+    'تم تنزيل النسخة الاحتياطية — {invoices} فاتورة، {clients} عميل، {consultations} استشارة.',
+  'settings.backupEmpty': 'لا توجد بيانات لنسخها بعد.',
+  'settings.backupPartial': 'تم التنزيل لكن أقسام باءت: {sections}.',
+  'settings.backupFailed': 'تعذّر إنشاء النسخة الاحتياطية.',
 };

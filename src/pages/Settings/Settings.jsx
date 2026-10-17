@@ -9,6 +9,7 @@ import {
   resetSettings,
   normalizeVatRate,
 } from '../../utils/settings.js';
+import { exportFullBackup } from '../../utils/backup.js';
 import '../../styles/settings.css';
 
 export default function Settings() {
@@ -16,6 +17,7 @@ export default function Settings() {
   const { t } = useLang();
   const [form, setForm] = useState(() => getSettings());
   const [vatError, setVatError] = useState('');
+  const [backingUp, setBackingUp] = useState(false);
 
   const setField = (key, value) => {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -39,6 +41,34 @@ export default function Settings() {
     setForm(cleared);
     setVatError('');
     toast.info(t('settings.toastReset'));
+  };
+
+  const handleBackup = async () => {
+    setBackingUp(true);
+    try {
+      const { ok, failed, counts } = await exportFullBackup();
+      const total = counts.invoices + counts.clients + counts.consultations;
+      if (total === 0) {
+        toast.info(t('settings.backupEmpty'));
+      } else if (ok) {
+        toast.success(
+          t('settings.backupSummary', {
+            invoices: counts.invoices,
+            clients: counts.clients,
+            consultations: counts.consultations,
+          })
+        );
+      } else {
+        toast.info(
+          t('settings.backupPartial', { sections: failed.join(', ') })
+        );
+      }
+    } catch (err) {
+      console.error('Backup failed:', err);
+      toast.error(t('settings.backupFailed'));
+    } finally {
+      setBackingUp(false);
+    }
   };
 
   return (
@@ -245,6 +275,27 @@ export default function Settings() {
                   <span className="field__hint">{t('settings.bankDetailsHint')}</span>
                 </div>
               </div>
+            </div>
+          </section>
+
+          <section className="card" aria-label={t('settings.section.backup')}>
+            <div className="card__header">
+              <span className="card__icon" aria-hidden="true">
+                <Icon name="download" />
+              </span>
+              <h2>{t('settings.section.backup')}</h2>
+            </div>
+            <div className="card__body">
+              <p className="settings-backup__note">{t('settings.backupNote')}</p>
+              <button
+                type="button"
+                className="btn btn--neutral"
+                onClick={handleBackup}
+                disabled={backingUp}
+              >
+                {backingUp ? <span className="spinner" aria-hidden="true" /> : null}
+                {t('settings.backup')}
+              </button>
             </div>
           </section>
         </div>

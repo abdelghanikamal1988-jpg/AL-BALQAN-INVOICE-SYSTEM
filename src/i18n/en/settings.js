@@ -4,10 +4,11 @@ export default {
     'Company profile, VAT and invoice defaults used for new invoices and PDFs.',
   'settings.home': 'Home',
   'settings.note':
-    'Settings are saved in this browser and applied to new invoices, the on-screen preview and PDF exports.',
+    'Settings are saved to your account and applied to new invoices, the on-screen preview and PDF exports.',
   'settings.section.company': 'Company profile',
   'settings.section.invoice': 'Invoice defaults',
   'settings.section.payment': 'Payment & terms',
+  'settings.section.backup': 'Data backup',
   'settings.companyName': 'Company name',
   'settings.legalName': 'Legal name',
   'settings.licenseNo': 'Commercial license no.',
@@ -34,4 +35,12 @@ export default {
   'settings.errVatRate': 'Enter a VAT rate between 0 and 100.',
   'settings.toastSaved': 'Settings saved.',
   'settings.toastReset': 'Settings reset to defaults.',
+  'settings.backupNote':
+    'Downloads every invoice, client, referral agent, consultation and access log you can read as one JSON file. Admins receive every user’s data.',
+  'settings.backup': 'Download full backup',
+  'settings.backupSummary':
+    'Backup downloaded — {invoices} invoices, {clients} clients, {consultations} consultations.',
+  'settings.backupEmpty': 'There is no data to back up yet.',
+  'settings.backupPartial': 'Backup downloaded, but some sections failed: {sections}.',
+  'settings.backupFailed': 'The backup could not be created.',
 };
