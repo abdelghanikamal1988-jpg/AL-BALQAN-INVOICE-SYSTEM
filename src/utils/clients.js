@@ -10,6 +10,7 @@ import { getInvoices } from './storage.js';
 import { invoicePaymentBreakdown } from './vat.js';
 import { calculatePayment } from './paymentCalculator.js';
 import { CLIENT_STATUSES, DEFAULT_CLIENT_STATUS } from '../data/clientStatuses.js';
+import { toUpperLatin, hasArabic } from './textCase.js';
 
 /** "ab-12 cd" -> "AB12CD" — used to match a client to its invoices. */
 export function normalizePassport(value) {
@@ -52,18 +53,18 @@ export function emptyClientForm() {
 export function formToClient(form, { id, documents, pdfPath }) {
   return {
     id,
-    firstName: String(form.firstName || '').replace(/\s+/g, ' ').trim(),
-    fatherName: String(form.fatherName || '').replace(/\s+/g, ' ').trim(),
-    surname: String(form.surname || '').replace(/\s+/g, ' ').trim(),
-    country: String(form.country || '').replace(/\s+/g, ' ').trim(),
-    passport: String(form.passport || '').replace(/\s+/g, ' ').trim(),
+    firstName: toUpperLatin(form.firstName),
+    fatherName: toUpperLatin(form.fatherName),
+    surname: toUpperLatin(form.surname),
+    country: toUpperLatin(form.country),
+    passport: toUpperLatin(form.passport),
     dateOfBirth: form.dateOfBirth || '',
     dateOfIssue: form.dateOfIssue || '',
     dateOfExpiry: form.dateOfExpiry || '',
-    issuingPlace: String(form.issuingPlace || '').replace(/\s+/g, ' ').trim(),
-    placeOfBirth: String(form.placeOfBirth || '').replace(/\s+/g, ' ').trim(),
+    issuingPlace: toUpperLatin(form.issuingPlace),
+    placeOfBirth: toUpperLatin(form.placeOfBirth),
     sex: form.sex || '',
-    referralAgent: form.referralAgent || '',
+    referralAgent: toUpperLatin(form.referralAgent),
     status: CLIENT_STATUSES.includes(form.status) ? form.status : DEFAULT_CLIENT_STATUS,
     documents: documents || {},
     pdfPath: pdfPath || null,
@@ -93,24 +94,32 @@ export function clientToForm(client) {
 }
 
 const REQUIRED_FIELDS = [
-  ['firstName', 'Name is required.'],
-  ['fatherName', 'Father name is required.'],
-  ['surname', 'Surname is required.'],
-  ['country', 'Country name is required.'],
-  ['passport', 'Passport number is required.'],
-  ['dateOfBirth', 'Date of birth is required.'],
-  ['dateOfIssue', 'Date of issue is required.'],
-  ['dateOfExpiry', 'Date of expiry is required.'],
-  ['issuingPlace', 'Issuing place is required.'],
-  ['placeOfBirth', 'Place of birth is required.'],
-  ['sex', 'Sex is required.'],
-  ['referralAgent', 'Referral agent is required.'],
+  'firstName',
+  'fatherName',
+  'surname',
+  'country',
+  'passport',
+  'dateOfBirth',
+  'dateOfIssue',
+  'dateOfExpiry',
+  'issuingPlace',
+  'placeOfBirth',
+  'sex',
+  'referralAgent',
 ];
 
+/**
+ * Returns a map of field key -> translation key. Every free-text field is
+ * double-checked for Arabic script on top of the required check.
+ */
 export function validateClientForm(form) {
   const errors = {};
-  REQUIRED_FIELDS.forEach(([field, message]) => {
-    if (!String(form[field] || '').trim()) errors[field] = message;
+  REQUIRED_FIELDS.forEach((field) => {
+    if (!String(form[field] || '').trim()) {
+      errors[field] = `clients.err.${field}`;
+      return;
+    }
+    if (hasArabic(form[field])) errors[field] = 'clients.err.arabicOnly';
   });
   return errors;
 }

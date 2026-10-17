@@ -135,6 +135,7 @@
   'clients.err.placeOfBirth': 'مكان الميلاد مطلوب.',
   'clients.err.sex': 'الجنس مطلوب.',
   'clients.err.referralAgent': 'الوكيل المُحيل مطلوب.',
+  'clients.err.arabicOnly': 'اكتب بالحروف الإنجليزية الكبيرة فقط. لا تُقبل الحروف العربية.',
 
   'clients.editClient': 'تعديل العميل',
   'clients.editSubtitle': 'حدّث سجل العميل. يمكن استبدال المستندات في أي وقت.',

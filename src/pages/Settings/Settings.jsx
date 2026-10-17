@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Icon from '../../components/Icons/Icon.jsx';
+import Modal from '../../components/Modal/Modal.jsx';
 import { useToast } from '../../components/Toast/ToastProvider.jsx';
 import { useLang } from '../../context/LangContext.jsx';
 import {
@@ -9,7 +10,7 @@ import {
   resetSettings,
   normalizeVatRate,
 } from '../../utils/settings.js';
-import { exportFullBackup } from '../../utils/backup.js';
+import { exportFullBackup, parseBackupText, restoreBackup } from '../../utils/backup.js';
 import '../../styles/settings.css';
 
 export default function Settings() {
@@ -18,6 +19,9 @@ export default function Settings() {
   const [form, setForm] = useState(() => getSettings());
   const [vatError, setVatError] = useState('');
   const [backingUp, setBackingUp] = useState(false);
+  const [restoring, setRestoring] = useState(false);
+  const [restorePreview, setRestorePreview] = useState(null);
+  const restoreInputRef = useRef(null);
 
   const setField = (key, value) => {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -68,6 +72,60 @@ export default function Settings() {
       toast.error(t('settings.backupFailed'));
     } finally {
       setBackingUp(false);
+    }
+  };
+
+  /* ---------- Restore ---------- */
+  const handleRestoreFile = async (e) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    try {
+      const text = await file.text();
+      const data = parseBackupText(text);
+      const n = (v) => (Array.isArray(v) ? v.length : 0);
+      setRestorePreview({
+        data,
+        counts: {
+          invoices: n(data.invoices),
+          clients: n(data.clients),
+          agents: n(data.agents),
+        },
+      });
+    } catch (err) {
+      const key =
+        err?.message === 'backup_invalid_json'
+          ? 'settings.restoreInvalidJson'
+          : err?.message === 'backup_wrong_format'
+            ? 'settings.restoreWrongFormat'
+            : err?.message === 'backup_unsupported_version'
+              ? 'settings.restoreVersion'
+              : 'settings.restoreReadFailed';
+      toast.error(t(key));
+    }
+  };
+
+  const confirmRestore = async () => {
+    if (!restorePreview) return;
+    setRestoring(true);
+    try {
+      const result = await restoreBackup(restorePreview.data);
+      setRestorePreview(null);
+      if (result.invoicesAdded + result.clientsAdded + result.agentsAdded === 0) {
+        toast.info(t('settings.restoreNothingNew'));
+      } else {
+        toast.success(
+          t('settings.restoreSummary', {
+            invoices: result.invoicesAdded,
+            clients: result.clientsAdded,
+            agents: result.agentsAdded,
+          })
+        );
+      }
+    } catch {
+      toast.error(t('settings.restoreFailed'));
+    } finally {
+      setRestoring(false);
     }
   };
 
@@ -287,15 +345,32 @@ export default function Settings() {
             </div>
             <div className="card__body">
               <p className="settings-backup__note">{t('settings.backupNote')}</p>
-              <button
-                type="button"
-                className="btn btn--neutral"
-                onClick={handleBackup}
-                disabled={backingUp}
-              >
-                {backingUp ? <span className="spinner" aria-hidden="true" /> : null}
-                {t('settings.backup')}
-              </button>
+              <div className="settings-backup__actions">
+                <button
+                  type="button"
+                  className="btn btn--neutral"
+                  onClick={handleBackup}
+                  disabled={backingUp}
+                >
+                  {backingUp ? <span className="spinner" aria-hidden="true" /> : null}
+                  {t('settings.backup')}
+                </button>
+                <button
+                  type="button"
+                  className="btn btn--neutral"
+                  onClick={() => restoreInputRef.current?.click()}
+                  disabled={restoring}
+                >
+                  {t('settings.restore')}
+                </button>
+                <input
+                  ref={restoreInputRef}
+                  type="file"
+                  accept="application/json,.json"
+                  hidden
+                  onChange={handleRestoreFile}
+                />
+              </div>
             </div>
           </section>
         </div>
@@ -309,6 +384,42 @@ export default function Settings() {
           {t('settings.reset')}
         </button>
       </div>
+
+      {restorePreview && (
+        <Modal
+          title="settings.restoreTitle"
+          onClose={() => setRestorePreview(null)}
+          actions={
+            <>
+              <button
+                type="button"
+                className="btn btn--neutral"
+                onClick={() => setRestorePreview(null)}
+                disabled={restoring}
+              >
+                {t('common.cancel')}
+              </button>
+              <button
+                type="button"
+                className="btn btn--primary"
+                onClick={confirmRestore}
+                disabled={restoring}
+              >
+                {restoring ? <span className="spinner" aria-hidden="true" /> : null}
+                {t('settings.restoreConfirm')}
+              </button>
+            </>
+          }
+        >
+          <p className="settings-backup__note">{t('settings.restorePreviewNote')}</p>
+          <ul className="settings-restore__list">
+            <li>{t('settings.restoreInvoices', { count: restorePreview.counts.invoices })}</li>
+            <li>{t('settings.restoreClients', { count: restorePreview.counts.clients })}</li>
+            <li>{t('settings.restoreAgents', { count: restorePreview.counts.agents })}</li>
+          </ul>
+          <p className="settings-backup__note">{t('settings.restoreSkipNote')}</p>
+        </Modal>
+      )}
     </div>
   );
 }

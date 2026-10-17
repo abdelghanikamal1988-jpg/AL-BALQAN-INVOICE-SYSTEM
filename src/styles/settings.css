@@ -29,6 +29,20 @@
   line-height: 1.6;
 }
 
+.settings-backup__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.settings-restore__list {
+  margin: 0 0 14px;
+  padding-inline-start: 18px;
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
 @media (max-width: 768px) {
   .settings-actions {
     position: static;
@@ -37,6 +51,11 @@
 
   .settings-actions .btn {
     flex: 1 1 calc(50% - 5px);
+    min-height: var(--tap-min);
+  }
+
+  .settings-backup__actions .btn {
+    flex: 1 1 100%;
     min-height: var(--tap-min);
   }
 }

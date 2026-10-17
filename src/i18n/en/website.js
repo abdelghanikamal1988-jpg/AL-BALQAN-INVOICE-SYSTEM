@@ -110,6 +110,16 @@ export default {
   'website.consult.opt.workContract': 'Work Contract & Residency',
   'website.consult.consent': 'hereby consent to AL BALQAN Tourism & Visa Services Company LLC processing my biographical data for sovereign eligibility verification under UAE Federal Data Protection standards.',
   'website.consult.submit': 'Submit Consultation Request',
+  'website.consult.submitting': 'Sending…',
+  'website.consult.errArabic': 'English letters only, in capital letters. Arabic characters are not accepted.',
+  'website.consult.errRequired': 'Please fill in every mandatory field.',
+  'website.consult.errConsent': 'Please tick the consent box before sending.',
+  'website.consult.errEmail': 'Please enter a valid email address.',
+  'website.consult.errPhone': 'Please enter a valid phone number (digits only).',
+  'website.consult.errTooLong': 'One of the answers is too long. Please shorten it.',
+  'website.consult.errDuplicate': 'A request from this phone number was already received in the last 24 hours.',
+  'website.consult.errOffline': 'We could not reach the server. Please check your connection and try again.',
+  'website.consult.errSubmit': 'We could not send the request. Please try again.',
 
   /* FAQ */
   'website.faq.title': 'REGULATORY CLARITY',

@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useLang } from '../../../context/LangContext.jsx';
+import { supabase } from '../../../lib/supabase.js';
+import { filterTextInput, hasArabic } from '../../../utils/textCase.js';
 
 const CheckIcon = () => (
   <svg viewBox="0 0 28 29" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -7,22 +9,91 @@ const CheckIcon = () => (
   </svg>
 );
 
+const EMPTY = {
+  name: '', phone: '', residence: '', email: '',
+  nationality: '', country: '', service: '', details: '', consent: false,
+};
+
+/* Free-text fields that travel onto the record — all stored in capitals. */
+const TEXT_FIELDS = ['name', 'email', 'phone', 'nationality', 'residence', 'details'];
+
+/* Server error message -> translation key. */
+const RPC_ERRORS = {
+  consent_required: 'website.consult.errConsent',
+  required_fields_missing: 'website.consult.errRequired',
+  arabic_not_allowed: 'website.consult.errArabic',
+  field_too_long: 'website.consult.errTooLong',
+  invalid_email: 'website.consult.errEmail',
+  invalid_phone: 'website.consult.errPhone',
+  duplicate_phone_24h: 'website.consult.errDuplicate',
+};
+
 export default function Consultation() {
   const { t } = useLang();
-  const [form, setForm] = useState({
-    name: '', phone: '', residence: '', email: '',
-    nationality: '', country: '', service: '', details: '', consent: false,
-  });
+  const [form, setForm] = useState(EMPTY);
+  const [errors, setErrors] = useState({});
+  const [state, setState] = useState('idle'); // idle | sending | sent | failed
+  const [failureKey, setFailureKey] = useState('website.consult.errSubmit');
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setForm((prev) => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
+    const next = type === 'checkbox' ? checked : TEXT_FIELDS.includes(name) ? filterTextInput(value) : value;
+    setForm((prev) => ({ ...prev, [name]: next }));
+    setErrors((prev) => {
+      if (!prev[name]) return prev;
+      const copy = { ...prev };
+      delete copy[name];
+      return copy;
+    });
+    if (state === 'sent' || state === 'failed') setState('idle');
   };
 
-  const handleSubmit = (e) => {
+  const validate = () => {
+    const next = {};
+    TEXT_FIELDS.forEach((field) => {
+      if (hasArabic(form[field])) next[field] = t('website.consult.errArabic');
+    });
+    return next;
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert(t('website.consult.alert'));
-    setForm({ name: '', phone: '', residence: '', email: '', nationality: '', country: '', service: '', details: '', consent: false });
+    const fieldErrors = validate();
+    if (Object.keys(fieldErrors).length) {
+      setErrors(fieldErrors);
+      return;
+    }
+    if (!supabase) {
+      setFailureKey('website.consult.errOffline');
+      setState('failed');
+      return;
+    }
+
+    setState('sending');
+    try {
+      const { error } = await supabase.rpc('submit_consultation', {
+        p_full_name: form.name,
+        p_email: form.email,
+        p_phone: form.phone,
+        p_nationality: form.nationality,
+        p_country: form.country,
+        p_residence: form.residence,
+        p_service: form.service,
+        p_details: form.details,
+        p_consent: form.consent,
+      });
+      if (error) {
+        setFailureKey(RPC_ERRORS[error.message] || 'website.consult.errSubmit');
+        setState('failed');
+        return;
+      }
+      setForm(EMPTY);
+      setErrors({});
+      setState('sent');
+    } catch {
+      setFailureKey('website.consult.errSubmit');
+      setState('failed');
+    }
   };
 
   return (
@@ -68,7 +139,7 @@ export default function Consultation() {
           </div>
         </div>
 
-        <form className="ws-consultation__form" onSubmit={handleSubmit}>
+        <form className="ws-consultation__form" onSubmit={handleSubmit} noValidate>
           <h3 className="ws-consultation__form-title">
             {t('website.consult.formTitle')}
           </h3>
@@ -76,56 +147,72 @@ export default function Consultation() {
             {t('website.consult.formDesc')}
           </p>
 
+          {state === 'sent' && (
+            <p className="ws-form-note ws-form-note--ok" role="status">
+              {t('website.consult.alert')}
+            </p>
+          )}
+          {state === 'failed' && (
+            <p className="ws-form-note ws-form-note--err" role="alert">
+              {t(failureKey)}
+            </p>
+          )}
+
           <div className="ws-form-row">
-            <div className="ws-form-group">
+            <div className={`ws-form-group${errors.name ? ' ws-form-group--error' : ''}`}>
               <label>{t('website.consult.label.name')}</label>
               <input type="text" name="name" placeholder={t('website.consult.ph.name')} value={form.name} onChange={handleChange} required />
+              {errors.name && <span className="ws-field-error">{errors.name}</span>}
             </div>
-            <div className="ws-form-group">
+            <div className={`ws-form-group${errors.email ? ' ws-form-group--error' : ''}`}>
               <label>{t('website.consult.label.email')}</label>
               <input type="email" name="email" placeholder={t('website.consult.ph.email')} value={form.email} onChange={handleChange} required />
+              {errors.email && <span className="ws-field-error">{errors.email}</span>}
             </div>
           </div>
 
           <div className="ws-form-row">
-            <div className="ws-form-group">
+            <div className={`ws-form-group${errors.phone ? ' ws-form-group--error' : ''}`}>
               <label>{t('website.consult.label.phone')}</label>
               <input type="tel" name="phone" placeholder={t('website.consult.ph.phone')} value={form.phone} onChange={handleChange} required />
+              {errors.phone && <span className="ws-field-error">{errors.phone}</span>}
             </div>
-            <div className="ws-form-group">
+            <div className={`ws-form-group${errors.nationality ? ' ws-form-group--error' : ''}`}>
               <label>{t('website.consult.label.nationality')}</label>
               <input type="text" name="nationality" placeholder={t('website.consult.ph.nationality')} value={form.nationality} onChange={handleChange} required />
+              {errors.nationality && <span className="ws-field-error">{errors.nationality}</span>}
             </div>
           </div>
 
           <div className="ws-form-row">
-            <div className="ws-form-group">
+            <div className={`ws-form-group${errors.residence ? ' ws-form-group--error' : ''}`}>
               <label>{t('website.consult.label.residence')}</label>
               <input type="text" name="residence" placeholder={t('website.consult.ph.residence')} value={form.residence} onChange={handleChange} required />
+              {errors.residence && <span className="ws-field-error">{errors.residence}</span>}
             </div>
             <div className="ws-form-group">
               <label>{t('website.consult.label.country')}</label>
               <select name="country" value={form.country} onChange={handleChange} required>
                 <option value="">{t('website.consult.selectDestination')}</option>
-                <option value="albania">{t('website.destinations.d1.name')}</option>
-                <option value="kosovo">{t('website.destinations.d2.name')}</option>
-                <option value="montenegro">{t('website.destinations.d3.name')}</option>
-                <option value="north-macedonia">{t('website.destinations.d4.name')}</option>
-                <option value="serbia">{t('website.destinations.d5.name')}</option>
+                <option value="ALBANIA">{t('website.destinations.d1.name')}</option>
+                <option value="KOSOVO">{t('website.destinations.d2.name')}</option>
+                <option value="MONTENEGRO">{t('website.destinations.d3.name')}</option>
+                <option value="NORTH MACEDONIA">{t('website.destinations.d4.name')}</option>
+                <option value="SERBIA">{t('website.destinations.d5.name')}</option>
               </select>
             </div>
             <div className="ws-form-group">
               <label>{t('website.consult.label.service')}</label>
               <select name="service" value={form.service} onChange={handleChange} required>
                 <option value="">{t('website.consult.selectPathway')}</option>
-                <option value="tourist-visa">{t('website.services.s1.title')}</option>
-                <option value="investor-residency">{t('website.services.s2.title')}</option>
-                <option value="work-contract">{t('website.consult.opt.workContract')}</option>
+                <option value="TOURIST VISA">{t('website.services.s1.title')}</option>
+                <option value="INVESTOR RESIDENCY">{t('website.services.s2.title')}</option>
+                <option value="WORK CONTRACT & RESIDENCY">{t('website.consult.opt.workContract')}</option>
               </select>
             </div>
           </div>
 
-          <div className="ws-form-group ws-form-group--full">
+          <div className={`ws-form-group ws-form-group--full${errors.details ? ' ws-form-group--error' : ''}`}>
             <label>{t('website.consult.label.details')}</label>
             <textarea
               name="details"
@@ -135,6 +222,7 @@ export default function Consultation() {
               rows={4}
               required
             />
+            {errors.details && <span className="ws-field-error">{errors.details}</span>}
           </div>
 
           <label className="ws-checkbox">
@@ -143,8 +231,15 @@ export default function Consultation() {
               {t('website.consult.consent')}
             </span>
           </label>
+          {errors.consent && <span className="ws-field-error">{errors.consent}</span>}
 
-          <button type="submit" className="ws-btn ws-btn--dark">{t('website.consult.submit')}</button>
+          <button
+            type="submit"
+            className="ws-btn ws-btn--dark"
+            disabled={state === 'sending'}
+          >
+            {state === 'sending' ? t('website.consult.submitting') : t('website.consult.submit')}
+          </button>
         </form>
       </div>
     </section>

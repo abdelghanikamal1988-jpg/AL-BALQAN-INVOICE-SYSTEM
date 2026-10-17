@@ -110,6 +110,16 @@ export default {
   'website.consult.opt.workContract': 'عقد عمل وإقامة',
   'website.consult.consent': 'أوافق بموجب هذا على أن تقوم شركة AL BALQAN للسياحة وخدمات التأشيرات ذ.م.م بمعالجة بياناتي الشخصية بهدف التحقق من أهليتي وفق معايير حماية البيانات الفيدرالية في دولة الإمارات.',
   'website.consult.submit': 'إرسال طلب الاستشارة',
+  'website.consult.submitting': 'جارٍ الإرسال…',
+  'website.consult.errArabic': 'اكتب بالحروف الإنجليزية الكبيرة فقط. لا تُقبل الحروف العربية.',
+  'website.consult.errRequired': 'يرجى تعبئة كل الحقول الإلزامية.',
+  'website.consult.errConsent': 'يرجى الموافقة على البند قبل الإرسال.',
+  'website.consult.errEmail': 'يرجى إدخال بريد إلكتروني صالح.',
+  'website.consult.errPhone': 'يرجى إدخال رقم هاتف صالح (أرقام فقط).',
+  'website.consult.errTooLong': 'إحدى الإجابات طويلة جدًا. يرجى تقصيرها.',
+  'website.consult.errDuplicate': 'تم استلام طلب بنفس رقم الهاتف خلال آخر ٢٤ ساعة.',
+  'website.consult.errOffline': 'تعذّر الوصول إلى الخادم. يرجى التحقق من الاتصال والمحاولة مرة أخرى.',
+  'website.consult.errSubmit': 'تعذّر إرسال الطلب. يرجى المحاولة مرة أخرى.',
 
   /* الأسئلة الشائعة */
   'website.faq.title': 'الوضوح التنظيمي',

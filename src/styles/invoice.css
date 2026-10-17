@@ -705,3 +705,111 @@ html[data-theme='dark'] .invoice-sheet {
 html[dir='rtl'] .invoice-sheet {
   direction: ltr;
 }
+
+/* ============================================================
+   PAYMENT LEDGER MODAL
+   ============================================================ */
+
+.pay-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.pay-modal__summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--mist);
+}
+
+.pay-modal__summary > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.pay-modal__label {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.pay-modal__summary strong {
+  font-size: 15px;
+  color: var(--text);
+  word-break: break-word;
+}
+
+.pay-modal__ok {
+  color: #0e6f64;
+}
+
+.pay-modal__form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 14px;
+  align-items: end;
+}
+
+.pay-modal__note {
+  grid-column: 1 / -1;
+}
+
+.pay-modal__submit {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.pay-modal__list h4 {
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.pay-modal__empty {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.pay-modal__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.pay-modal__table th,
+.pay-modal__table td {
+  text-align: start;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--line-soft);
+  white-space: nowrap;
+}
+
+.pay-modal__table th {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+html[data-theme='dark'] .pay-modal__summary {
+  background: var(--mist);
+  border-color: var(--line);
+}
+
+@media (max-width: 560px) {
+  .pay-modal__summary,
+  .pay-modal__form {
+    grid-template-columns: 1fr;
+  }
+
+  .pay-modal__table th:nth-child(4),
+  .pay-modal__table td:nth-child(4) {
+    display: none;
+  }
+}

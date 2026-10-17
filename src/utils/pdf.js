@@ -15,6 +15,7 @@ import { serviceLabel, destinationLabel } from './labels.js';
 import { invoicePaymentBreakdown, VAT_MODE, vatRateLabel } from './vat.js';
 import { writePref } from '../lib/userData.js';
 import { getCompany, getSettings } from './settings.js';
+import { pdfSafeText } from './arabicLatin.js';
 
 const INK = [20, 20, 20];
 const GOLD = [213, 175, 52];
@@ -78,18 +79,23 @@ export async function buildInvoicePdf(invoice) {
 
   /* ---------- helpers ---------- */
 
+  /* PDF-safe: Latin capitals only. Arabic is transliterated to Latin
+     (see arabicLatin.js) rather than erased, so a legacy record never
+     turns into a blank field. */
+  const safe = (value) => pdfSafeText(value);
+
   const text = (str, x, y, { size = 9, style = 'normal', color = DARK, align = 'left' } = {}) => {
     pdf.setFont('helvetica', style);
     pdf.setFontSize(size);
     pdf.setTextColor(color[0], color[1], color[2]);
-    pdf.text(str, x, y, { align });
+    pdf.text(safe(str), x, y, { align });
   };
 
   const wrap = (str, x, y, maxWidth, { size = 9, style = 'normal', color = DARK } = {}) => {
     pdf.setFont('helvetica', style);
     pdf.setFontSize(size);
     pdf.setTextColor(color[0], color[1], color[2]);
-    const lines = pdf.splitTextToSize(str || '', maxWidth);
+    const lines = pdf.splitTextToSize(safe(str) || '', maxWidth);
     pdf.text(lines, x, y);
     return lines.length;
   };
@@ -107,7 +113,7 @@ export async function buildInvoicePdf(invoice) {
     return y + 3.4 + Math.max(lines - 1, 0) * 4;
   };
 
-  const caps = (value) => (value ? String(value).toUpperCase() : value);
+  const caps = (value) => (value ? safe(value).toUpperCase() : value);
 
   /* ---------- header ---------- */
 

@@ -137,6 +137,8 @@
   'clients.err.placeOfBirth': 'Place of birth is required.',
   'clients.err.sex': 'Sex is required.',
   'clients.err.referralAgent': 'Referral agent is required.',
+  'clients.err.arabicOnly':
+    'English letters only, in capital letters. Arabic characters are not accepted.',
 
   'clients.editClient': 'Edit Client',
   'clients.editSubtitle': 'Update the client record. Documents can be replaced at any time.',

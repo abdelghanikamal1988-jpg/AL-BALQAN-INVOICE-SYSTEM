@@ -7,6 +7,7 @@ import Modal from '../../components/Modal/Modal.jsx';
 import ConfirmAuthModal from '../../components/ConfirmAuth/ConfirmAuthModal.jsx';
 import Can from '../../components/Can/Can.jsx';
 import PendingReviewModal from '../../components/PendingReview/PendingReviewModal.jsx';
+import PaymentModal from '../../components/PaymentModal/PaymentModal.jsx';
 import SkeletonRows from '../../components/Skeleton/SkeletonRows.jsx';
 import { useToast } from '../../components/Toast/ToastProvider.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
@@ -87,6 +88,7 @@ export default function InvoiceHistory() {
   const [viewInvoice, setViewInvoice] = useState(null);
   const [deletePrompt, setDeletePrompt] = useState(null);
   const [authPrompt, setAuthPrompt] = useState(false);
+  const [payFor, setPayFor] = useState(null);
   const fileInputRef = useRef(null);
 
   /* Deep link from the topbar search: /history?q=… */
@@ -635,6 +637,13 @@ export default function InvoiceHistory() {
                           >
                             {t('common.edit')}
                           </button>
+                          <button
+                            type="button"
+                            className="btn btn--secondary btn--sm"
+                            onClick={() => setPayFor(inv)}
+                          >
+                            {t('invoice.payments')}
+                          </button>
                         </Can>
                         <Can perm="action:invoice.export_pdf">
                           <button
@@ -739,6 +748,26 @@ export default function InvoiceHistory() {
             />
           </div>
         </Modal>
+      )}
+
+      {/* Payment ledger */}
+      {payFor && (
+        <PaymentModal
+          invoice={payFor}
+          onClose={() => setPayFor(null)}
+          onPaidChange={(newPaid) => {
+            setInvoices((prev) =>
+              prev.map((row) =>
+                row.id === payFor.id
+                  ? { ...row, payment: { ...row.payment, paid: newPaid } }
+                  : row
+              )
+            );
+            setPayFor((prev) =>
+              prev ? { ...prev, payment: { ...prev.payment, paid: newPaid } } : prev
+            );
+          }}
+        />
       )}
 
       {/* Delete confirmation */}

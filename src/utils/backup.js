@@ -7,8 +7,8 @@
  * the export can never leak more than the app already shows.
  */
 
-import { getInvoices } from './storage.js';
-import { dbFetchClients, dbFetchAgents } from '../lib/clientRepo.js';
+import { getInvoices, importInvoices } from './storage.js';
+import { dbFetchClients, dbFetchAgents, dbInsertClient, dbInsertAgent } from '../lib/clientRepo.js';
 import { dbFetchConsultations } from '../lib/consultationRepo.js';
 import { getAccessLogs } from './accessLog.js';
 import { getSettings } from './settings.js';
@@ -88,4 +88,64 @@ function countRows(data) {
     consultations: n(data.consultations),
     accessLogs: n(data.accessLogs),
   };
+}
+
+/**
+ * Reads a backup file the user picked and returns a preview of what would
+ * be imported, without writing anything. Throws on a malformed file.
+ */
+export function parseBackupText(text) {
+  let data;
+  try {
+    data = JSON.parse(text);
+  } catch {
+    throw new Error('backup_invalid_json');
+  }
+  if (!data || data.format !== 'albalqan-backup') {
+    throw new Error('backup_wrong_format');
+  }
+  if (!Number.isInteger(data.version) || data.version > 1) {
+    throw new Error('backup_unsupported_version');
+  }
+  return data;
+}
+
+/**
+ * Restores a parsed backup. Rows whose id already exists are skipped so the
+ * import can never duplicate or overwrite live data — it only fills gaps.
+ * Returns per-section counts of what was actually added.
+ */
+export async function restoreBackup(data) {
+  const invoicesAdded = await importInvoices(Array.isArray(data.invoices) ? data.invoices : []);
+
+  const existingClients = await dbFetchClients().catch(() => []);
+  const clientIds = new Set(existingClients.map((c) => c.id));
+  let clientsAdded = 0;
+  for (const client of Array.isArray(data.clients) ? data.clients : []) {
+    if (!client?.id || clientIds.has(client.id)) continue;
+    try {
+      await dbInsertClient(client);
+      clientIds.add(client.id);
+      clientsAdded += 1;
+    } catch {
+      /* one bad row must not abort the whole restore */
+    }
+  }
+
+  const existingAgents = await dbFetchAgents().catch(() => []);
+  const agentNames = new Set(existingAgents.map((a) => (a?.name || '').toUpperCase()));
+  let agentsAdded = 0;
+  for (const agent of Array.isArray(data.agents) ? data.agents : []) {
+    const name = typeof agent === 'string' ? agent : agent?.name;
+    if (!name || agentNames.has(name.toUpperCase())) continue;
+    try {
+      await dbInsertAgent(name);
+      agentNames.add(name.toUpperCase());
+      agentsAdded += 1;
+    } catch {
+      /* skip */
+    }
+  }
+
+  return { invoicesAdded, clientsAdded, agentsAdded };
 }

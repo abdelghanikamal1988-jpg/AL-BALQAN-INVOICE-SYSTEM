@@ -21,6 +21,7 @@ import {
   validateClientForm,
   newClientId,
 } from '../../utils/clients.js';
+import { filterTextInput } from '../../utils/textCase.js';
 import {
   DOCUMENT_TYPES,
   DOCUMENT_ACCEPT,
@@ -510,7 +511,7 @@ export default function ClientForm() {
                               type="text"
                               value={newAgentName}
                               placeholder={t('clients.agentNamePlaceholder')}
-                              onChange={(e) => setNewAgentName(e.target.value)}
+                              onChange={(e) => setNewAgentName(filterTextInput(e.target.value))}
                               autoFocus
                             />
                             <button
@@ -529,7 +530,7 @@ export default function ClientForm() {
                             </button>
                           </div>
                         )}
-                        {error && <span className="field__error">{t(`clients.err.${field.key}`)}</span>}
+                        {error && <span className="field__error">{t(error)}</span>}
                       </div>
                     );
                   }
@@ -557,7 +558,7 @@ export default function ClientForm() {
                             </option>
                           ))}
                         </select>
-                        {error && <span className="field__error">{t(`clients.err.${field.key}`)}</span>}
+                        {error && <span className="field__error">{t(error)}</span>}
                       </div>
                     );
                   }
@@ -572,7 +573,7 @@ export default function ClientForm() {
                         value={form[field.key]}
                         onChange={(e) => {
                           const value =
-                            field.type === 'text' ? e.target.value.toUpperCase() : e.target.value;
+                            field.type === 'text' ? filterTextInput(e.target.value) : e.target.value;
                           setForm((prev) => ({ ...prev, [field.key]: value }));
                           setErrors((prev) => {
                             const next = { ...prev };
@@ -581,7 +582,7 @@ export default function ClientForm() {
                           });
                         }}
                       />
-                      {error && <span className="field__error">{t(`clients.err.${field.key}`)}</span>}
+                      {error && <span className="field__error">{t(error)}</span>}
                     </div>
                   );
                   })}

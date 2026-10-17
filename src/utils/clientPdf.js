@@ -19,6 +19,7 @@ import letterheadAsset from '../assets/letterhead.data.js';
 import { statusClass } from '../data/clientStatuses.js';
 import { clientFullName, getClientInvoices } from './clients.js';
 import { documentBytes, uploadClientPdf, currentUserId } from './uploads.js';
+import { pdfSafeText } from './arabicLatin.js';
 
 const INK = rgb(0.078, 0.078, 0.078);
 const GOLD = rgb(0.835, 0.686, 0.204);
@@ -27,14 +28,14 @@ const DARK = rgb(0.078, 0.078, 0.078);
 const LINE = rgb(0.839, 0.839, 0.839);
 const WHITE = rgb(1, 1, 1);
 
-/** English-only safe text: guaranteed to exist in the Helvetica glyph set. */
+/**
+ * PDF-safe text: Latin capitals only. Arabic is transliterated to Latin
+ * (see arabicLatin.js) rather than erased, so an old record never turns
+ * into a blank field on the form. New input is already blocked at the
+ * form level, so this only ever runs on legacy rows.
+ */
 function safe(value) {
-  return String(value ?? '')
-    .normalize('NFKD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^\x20-\x7E]/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
+  return pdfSafeText(value);
 }
 
 function docDate(iso) {

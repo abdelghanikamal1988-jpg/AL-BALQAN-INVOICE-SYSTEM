@@ -24,6 +24,7 @@ import {
 import { exportInvoicePdf, printInvoicePdf } from '../../utils/pdf.js';
 import { normalizeName, isEmailValid, isPhoneValid, isEmptyField } from '../../utils/validation.js';
 import { calculateVat } from '../../utils/vat.js';
+import { filterTextInput, hasArabic } from '../../utils/textCase.js';
 
 /** Fields that are stored/displayed in capital letters (email is excluded). */
 const UPPERCASE_FIELDS = ['name', 'nationality', 'passport'];
@@ -76,7 +77,7 @@ export default function CreateInvoice() {
   const changeForm = useCallback(
     (field, value) => {
       const nextValue = UPPERCASE_FIELDS.includes(field)
-        ? String(value ?? '').toUpperCase()
+        ? filterTextInput(value)
         : value;
       setForm((prev) => ({ ...prev, [field]: nextValue }));
       setDirty(true);
@@ -211,6 +212,11 @@ export default function CreateInvoice() {
 
     if (!isEmailValid(form.email)) next.email = t('invoice.errEmailInvalid');
     if (!isPhoneValid(form.phone)) next.phone = t('invoice.errPhoneInvalid');
+
+    /* Records travel onto PDFs and passports — Latin capitals only. */
+    UPPERCASE_FIELDS.forEach((field) => {
+      if (!next[field] && hasArabic(form[field])) next[field] = t('invoice.errArabicOnly');
+    });
 
     return next;
   };
