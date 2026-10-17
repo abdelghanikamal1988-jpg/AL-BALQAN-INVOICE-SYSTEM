@@ -54,3 +54,21 @@ create policy "own update" on public.consultation_requests
 drop policy if exists "own delete" on public.consultation_requests;
 create policy "own delete" on public.consultation_requests
   for delete using (auth.uid() = user_id);
+
+-- ============================================================
+-- Tombstones: submissions the user deleted in the system.
+-- Sync skips (and best-effort re-deletes on Netlify) any
+-- submission whose id is listed here, so a deleted request can
+-- never reappear after a later sync.
+-- ============================================================
+
+create table if not exists public.consultation_deleted (
+  netlify_id text primary key,
+  deleted_at timestamptz not null default now()
+);
+
+alter table public.consultation_deleted enable row level security;
+
+drop policy if exists "consultation_deleted_auth" on public.consultation_deleted;
+create policy "consultation_deleted_auth" on public.consultation_deleted
+  for all to authenticated using (true) with check (true);

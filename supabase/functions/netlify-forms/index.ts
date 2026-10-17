@@ -2,9 +2,11 @@
 // The Netlify token lives ONLY here (secret NETLIFY_TOKEN).
 //
 // POST /  { "action": "submissions" }  -> sync all submissions into public.consultation_requests
+//        (skips tombstoned ids, dedupes content-identical double-fires,
+//         and auto-heals duplicates already in the table)
 // POST /  { "action": "forms" }        -> return the consultation form definition (fields)
 // POST /  { "action": "delete", "submission_id": "..." }
-//        -> delete the submission on Netlify Forms AND its row in the table
+//        -> tombstone the id, delete the submission on Netlify Forms AND its row
 // GET  /?action=submissions|forms      -> same actions via query string
 //
 // Deploy:
@@ -155,6 +157,51 @@ function timestampOf(value: unknown): string | undefined {
   return Number.isNaN(Date.parse(text)) ? undefined : new Date(text).toISOString();
 }
 
+// Two submissions with identical content within this window are the same
+// request (the website form can double-fire); anything further apart is a
+// genuine re-contact and stays.
+const DUPLICATE_WINDOW_MS = 72 * 60 * 60 * 1000;
+
+function fingerprint(fields: Record<string, unknown>): string {
+  return [
+    textOf(fields.full_name) ?? '',
+    textOf(fields.phone) ?? '',
+    textOf(fields.email) ?? '',
+    textOf(fields.service) ?? '',
+    textOf(fields.country) ?? '',
+    (textOf(fields.details) ?? '').slice(0, 300),
+  ]
+    .map((part) => part.toLowerCase().replace(/\s+/g, ' ').trim())
+    .join('|');
+}
+
+function timeOf(value: unknown): number {
+  const parsed = Date.parse(String(value ?? ''));
+  return Number.isNaN(parsed) ? 0 : parsed;
+}
+
+/** Best-effort removal on Netlify; true when the submission is gone. */
+async function deleteOnNetlify(submissionId: string): Promise<boolean> {
+  try {
+    const res = await fetch(
+      `${NETLIFY_API}/sites/${NETLIFY_SITE_ID}/submissions/${encodeURIComponent(submissionId)}`,
+      { method: 'DELETE', headers: { Authorization: `Bearer ${NETLIFY_TOKEN}` } },
+    );
+    return res.ok || res.status === 404 || res.status === 410;
+  } catch {
+    return false;
+  }
+}
+
+async function tombstone(db: ReturnType<typeof createClient>, ids: string[]) {
+  const unique = [...new Set(ids.filter(Boolean))];
+  if (!unique.length) return;
+  const { error } = await db
+    .from('consultation_deleted')
+    .upsert(unique.map((netlify_id) => ({ netlify_id })));
+  if (error) throw new Error(`db_tombstone: ${error.message}`);
+}
+
 function buildRow(submission: Record<string, unknown>) {
   const rawData =
     submission && typeof submission.data === 'object' && submission.data !== null
@@ -245,6 +292,9 @@ Deno.serve(async (req: Request): Promise<Response> => {
           502,
         );
       }
+      // Tombstone FIRST: even if the row delete below fails, the submission
+      // can never be re-imported by a later sync.
+      await tombstone(db, [submissionId]);
       const { error: deleteError } = await db
         .from('consultation_requests')
         .delete()
@@ -292,25 +342,106 @@ Deno.serve(async (req: Request): Promise<Response> => {
       pages += 1;
     }
 
+    // Tombstoned ids: deleted in the system -> never import again, and
+    // best-effort remove the leftover on Netlify (its delete can lag).
+    const { data: tombRows, error: tombError } = await db
+      .from('consultation_deleted')
+      .select('netlify_id');
+    if (tombError) throw new Error(`db_tombstones: ${tombError.message}`);
+    const deletedSet = new Set((tombRows ?? []).map((r) => String(r.netlify_id)));
+    let cleanedLeftovers = 0;
+    for (const submission of submissions) {
+      const id = String(submission.id ?? '');
+      if (id && deletedSet.has(id) && (await deleteOnNetlify(id))) cleanedLeftovers += 1;
+    }
+
     const { data: existingRows, error: selectError } = await db
       .from('consultation_requests')
-      .select('netlify_id');
+      .select(
+        'id, netlify_id, full_name, phone, email, service, country, details, submitted_at, created_at, status, notes',
+      );
     if (selectError) throw new Error(`db_select: ${selectError.message}`);
-    const existing = new Set((existingRows ?? []).map((r) => String(r.netlify_id)));
+    const existingRowList = existingRows ?? [];
+    const existing = new Set(existingRowList.map((r) => String(r.netlify_id)));
 
-    const rows = submissions
-      .map(buildRow)
-      .filter((row): row is Record<string, unknown> => row !== null && row.netlify_id !== '');
+    // Auto-heal duplicates already sitting in the table (created before this
+    // guard existed): keep the managed row (annotated, else earliest), drop
+    // the rest when they sit within the duplicate window.
+    const byFp = new Map<string, Array<Record<string, unknown>>>();
+    for (const row of existingRowList) {
+      const fp = fingerprint(row);
+      const bucket = byFp.get(fp);
+      if (bucket) bucket.push(row);
+      else byFp.set(fp, [row]);
+    }
+    const healDropIds: string[] = [];
+    for (const bucket of byFp.values()) {
+      if (bucket.length < 2) continue;
+      const sorted = [...bucket].sort((a, b) => {
+        const aManaged = a.status !== 'new' || (textOf(a.notes) ?? '') !== '' ? 1 : 0;
+        const bManaged = b.status !== 'new' || (textOf(b.notes) ?? '') !== '' ? 1 : 0;
+        if (aManaged !== bManaged) return bManaged - aManaged;
+        return timeOf(a.created_at) - timeOf(b.created_at);
+      });
+      const kept = sorted[0];
+      for (const drop of sorted.slice(1)) {
+        const gap = Math.abs(timeOf(drop.created_at) - timeOf(kept.created_at));
+        if (gap <= DUPLICATE_WINDOW_MS) healDropIds.push(String(drop.netlify_id));
+      }
+    }
+    if (healDropIds.length) {
+      await tombstone(db, healDropIds);
+      const { error: healError } = await db
+        .from('consultation_requests')
+        .delete()
+        .in('netlify_id', healDropIds);
+      if (healError) throw new Error(`db_heal_delete: ${healError.message}`);
+      for (const id of healDropIds) existing.delete(id);
+    }
+
+    // Import guard: skip tombstoned submissions and content-level duplicates
+    // (the same request double-fired by the website — in this batch, or
+    // against a row already in the table).
+    const seenFp = new Map<string, number>();
+    const keepRows: Array<Record<string, unknown>> = [];
+    const dupeIds: string[] = [];
+    let skippedDeleted = 0;
+    for (const submission of submissions) {
+      const rawId = String(submission.id ?? '');
+      if (rawId && deletedSet.has(rawId)) {
+        skippedDeleted += 1;
+        continue;
+      }
+      const row = buildRow(submission);
+      if (!row || row.netlify_id === '') continue;
+      const fp = fingerprint(row);
+      const at = timeOf(row.submitted_at) || timeOf(submission.created_at) || Date.now();
+      const batchAt = seenFp.get(fp);
+      const dupeBatch = batchAt !== undefined && Math.abs(batchAt - at) <= DUPLICATE_WINDOW_MS;
+      const dupeExisting = [...(byFp.get(fp) ?? [])].some(
+        (e) => Math.abs(timeOf(e.submitted_at ?? e.created_at) - at) <= DUPLICATE_WINDOW_MS,
+      );
+      if (dupeBatch || dupeExisting) {
+        dupeIds.push(String(row.netlify_id));
+        continue;
+      }
+      seenFp.set(fp, at);
+      keepRows.push(row);
+    }
+    if (dupeIds.length) {
+      await tombstone(db, dupeIds);
+      for (const id of dupeIds) await deleteOnNetlify(id);
+    }
 
     let syncedNew = 0;
-    for (const row of rows) {
+    for (const row of keepRows) {
       if (!existing.has(String(row.netlify_id))) syncedNew += 1;
     }
 
     // Upsert refreshes mapped columns + raw_data but never sends status/notes,
     // so anything the user managed in the system stays untouched.
-    for (let i = 0; i < rows.length; i += UPSERT_CHUNK) {
-      const chunk = rows.slice(i, i + UPSERT_CHUNK);
+    for (let i = 0; i < keepRows.length; i += UPSERT_CHUNK) {
+      const chunk = keepRows.slice(i, i + UPSERT_CHUNK);
       const { error } = await db
         .from('consultation_requests')
         .upsert(chunk, { onConflict: 'netlify_id' });
@@ -328,6 +459,10 @@ Deno.serve(async (req: Request): Promise<Response> => {
     return json({
       synced_new: syncedNew,
       total_fetched: submissions.length,
+      skipped_deleted: skippedDeleted,
+      skipped_duplicate: dupeIds.length,
+      healed_duplicates: healDropIds.length,
+      cleaned_leftovers: cleanedLeftovers,
       last_submission_at: lastSubmissionAt,
       pages_fetched: pages,
     });
