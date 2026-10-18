@@ -59,4 +59,23 @@ export default {
   'settings.restoreInvalidJson': 'ملف غير صالح (ليس JSON).',
   'settings.restoreWrongFormat': 'هذا الملف ليس نسخة احتياطية من AL BALQAN.',
   'settings.restoreVersion': 'تم إنشاء هذه النسخة بإصدار أحدث من النظام.',
+
+  'settings.mfa.title': 'التحقق الثنائي',
+  'settings.mfa.note':
+    'يضيف كودًا من ٦ أرقام من تطبيق المصادقة عند تسجيل الدخول. اتركه مطفأً إن كنت تفضل الدخول بكلمة المرور فقط.',
+  'settings.mfa.statusOn': 'مُفعّل',
+  'settings.mfa.statusOff': 'مطفأ',
+  'settings.mfa.enable': 'تفعيل',
+  'settings.mfa.disable': 'إيقاف',
+  'settings.mfa.enableError': 'تعذّر بدء إعداد التحقق الثنائي.',
+  'settings.mfa.disableError': 'تعذّر إيقاف التحقق الثنائي.',
+  'settings.mfa.step1': 'امسح رمز QR هذا بتطبيق مصادقة (Google Authenticator أو Authy أو 1Password…).',
+  'settings.mfa.step2': 'أدخل الكود المكوّن من ٦ أرقام الظاهر به للتأكيد.',
+  'settings.mfa.qrAlt': 'رمز QR لإعداد التحقق الثنائي',
+  'settings.mfa.manual': 'أو أدخل هذا المفتاح يدويًا:',
+  'settings.mfa.confirm': 'تأكيد',
+  'settings.mfa.codeInvalid': 'أدخل الكود المكوّن من ٦ أرقام من تطبيق المصادقة.',
+  'settings.mfa.codeWrong': 'هذا الكود لم يعمل. جرّب الكود الحالي.',
+  'settings.mfa.enabled': 'تم تفعيل التحقق الثنائي.',
+  'settings.mfa.disabled': 'تم إيقاف التحقق الثنائي.',
 };

@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { useToast } from '../../components/Toast/ToastProvider.jsx';
 import Logo from '../../components/Logo/Logo.jsx';
 import Icon from '../../components/Icons/Icon.jsx';
 import { migrateLocalInvoices } from '../../utils/storage.js';
+import { needsChallenge, activeTotpFactor, createChallenge, verifyChallenge } from '../../utils/mfa.js';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -14,6 +15,41 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [busy, setBusy] = useState(false);
+
+  /* Optional 2FA step — only shown when the account has a verified factor. */
+  const [mfaFactor, setMfaFactor] = useState(null);
+  const [mfaChallengeId, setMfaChallengeId] = useState(null);
+  const [mfaCode, setMfaCode] = useState('');
+  const [mfaBusy, setMfaBusy] = useState(false);
+  const codeRef = useRef(null);
+
+  const startChallenge = async (factor) => {
+    const challenge = await createChallenge(factor.id);
+    setMfaChallengeId(challenge.id);
+  };
+
+  const enterMfaStep = async () => {
+    if (!(await needsChallenge())) return false;
+    const factor = await activeTotpFactor();
+    if (!factor) return false;
+    setMfaFactor(factor);
+    await startChallenge(factor);
+    return true;
+  };
+
+  useEffect(() => {
+    if (mfaFactor) codeRef.current?.focus();
+  }, [mfaFactor]);
+
+  const finishSignIn = async () => {
+    const migrated = await migrateLocalInvoices();
+    if (migrated > 0) {
+      toast.success(`${migrated} invoice${migrated > 1 ? 's were' : ' was'} migrated from this device.`);
+    } else {
+      toast.success('Welcome back.');
+    }
+    navigate('/');
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,17 +70,39 @@ export default function Login() {
         toast.error('Incorrect email or password.');
         return;
       }
-      const migrated = await migrateLocalInvoices();
-      if (migrated > 0) {
-        toast.success(`${migrated} invoice${migrated > 1 ? 's were' : ' was'} migrated from this device.`);
-      } else {
-        toast.success('Welcome back.');
-      }
-      navigate('/');
+      /* This account has 2FA on — ask for the code before letting them in. */
+      if (await enterMfaStep()) return;
+      await finishSignIn();
     } catch (err) {
       toast.error('Something went wrong. Please try again.');
     } finally {
       setBusy(false);
+    }
+  };
+
+  const handleMfaSubmit = async (e) => {
+    e.preventDefault();
+    const code = mfaCode.trim();
+    if (!/^\d{6}$/.test(code) || !mfaFactor || !mfaChallengeId) {
+      toast.error('Enter the 6-digit code from your authenticator app.');
+      return;
+    }
+    setMfaBusy(true);
+    try {
+      await verifyChallenge(mfaFactor.id, mfaChallengeId, code);
+      await finishSignIn();
+    } catch (err) {
+      toast.error('That code did not work. Please try the current code.');
+      setMfaCode('');
+      /* A failed verify consumes the challenge — start a fresh one. */
+      try {
+        await startChallenge(mfaFactor);
+      } catch {
+        /* leave the old challenge id; the retry will surface the error */
+      }
+      codeRef.current?.focus();
+    } finally {
+      setMfaBusy(false);
     }
   };
 
@@ -59,53 +117,103 @@ export default function Login() {
 
         <div className="card login-card">
           <span className="login-card__strip" aria-hidden="true" />
-          <h1 className="login-card__title">Sign in to your account</h1>
-          <p className="login-card__sub">Sign in with your work email.</p>
 
-          <form className="login-form" onSubmit={handleSubmit}>
-            <div className="field">
-              <label htmlFor="login-email">Email address</label>
-              <input
-                id="login-email"
-                type="email"
-                autoComplete="username"
-                placeholder="you@company.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
+          {mfaFactor ? (
+            <>
+              <h1 className="login-card__title">Two-factor authentication</h1>
+              <p className="login-card__sub">
+                Enter the 6-digit code from your authenticator app to finish signing in.
+              </p>
 
-            <div className="field">
-              <label htmlFor="login-password">Password</label>
-              <input
-                id="login-password"
-                type="password"
-                autoComplete="current-password"
-                placeholder="Your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
+              <form className="login-form" onSubmit={handleMfaSubmit}>
+                <div className="field">
+                  <label htmlFor="login-code">Authentication code</label>
+                  <input
+                    ref={codeRef}
+                    id="login-code"
+                    type="text"
+                    inputMode="numeric"
+                    autoComplete="one-time-code"
+                    pattern="[0-9]*"
+                    maxLength={6}
+                    placeholder="000000"
+                    className="login-code-input"
+                    value={mfaCode}
+                    onChange={(e) => setMfaCode(e.target.value.replace(/\D/g, ''))}
+                  />
+                </div>
 
-            <button type="submit" className="btn btn--primary btn--block" disabled={busy}>
-              {busy ? (
-                <span className="btn__spinner" aria-hidden="true" />
-              ) : (
-                <>
-                  <Icon name="login" aria-hidden="true" />
-                  Sign in
-                </>
-              )}
-            </button>
-          </form>
+                <button type="submit" className="btn btn--primary btn--block" disabled={mfaBusy}>
+                  {mfaBusy ? (
+                    <span className="btn__spinner" aria-hidden="true" />
+                  ) : (
+                    <>
+                      <Icon name="lock" aria-hidden="true" />
+                      Verify and sign in
+                    </>
+                  )}
+                </button>
+              </form>
 
-          <div className="login-card__hint">
-            <p className="login-card__hint-title">Account access</p>
-            <p className="login-card__hint-text">
-              Invoices are stored securely in the cloud under this account.
-              Use the work email and password your administrator gave you.
-            </p>
-          </div>
+              <div className="login-card__hint">
+                <p className="login-card__hint-title">Lost your device?</p>
+                <p className="login-card__hint-text">
+                  Use one of your recovery codes, or ask an administrator to reset two-factor
+                  authentication for this account.
+                </p>
+              </div>
+            </>
+          ) : (
+            <>
+              <h1 className="login-card__title">Sign in to your account</h1>
+              <p className="login-card__sub">Sign in with your work email.</p>
+
+              <form className="login-form" onSubmit={handleSubmit}>
+                <div className="field">
+                  <label htmlFor="login-email">Email address</label>
+                  <input
+                    id="login-email"
+                    type="email"
+                    autoComplete="username"
+                    placeholder="you@company.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </div>
+
+                <div className="field">
+                  <label htmlFor="login-password">Password</label>
+                  <input
+                    id="login-password"
+                    type="password"
+                    autoComplete="current-password"
+                    placeholder="Your password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </div>
+
+                <button type="submit" className="btn btn--primary btn--block" disabled={busy}>
+                  {busy ? (
+                    <span className="btn__spinner" aria-hidden="true" />
+                  ) : (
+                    <>
+                      <Icon name="login" aria-hidden="true" />
+                      Sign in
+                    </>
+                  )}
+                </button>
+              </form>
+
+              <div className="login-card__hint">
+                <p className="login-card__hint-title">Account access</p>
+                <p className="login-card__hint-text">
+                  Invoices are stored securely in the cloud under this account.
+                  Use the work email and password your administrator gave you.
+                </p>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

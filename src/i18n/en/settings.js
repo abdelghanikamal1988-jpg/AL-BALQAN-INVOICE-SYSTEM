@@ -59,4 +59,23 @@ export default {
   'settings.restoreInvalidJson': 'That file is not valid JSON.',
   'settings.restoreWrongFormat': 'That file is not an AL BALQAN backup.',
   'settings.restoreVersion': 'That backup was made by a newer version of the system.',
+
+  'settings.mfa.title': 'Two-factor authentication',
+  'settings.mfa.note':
+    'Adds a 6-digit code from an authenticator app to your sign-in. Leave it off if you prefer signing in with your password alone.',
+  'settings.mfa.statusOn': 'On',
+  'settings.mfa.statusOff': 'Off',
+  'settings.mfa.enable': 'Turn on',
+  'settings.mfa.disable': 'Turn off',
+  'settings.mfa.enableError': 'Could not start two-factor setup.',
+  'settings.mfa.disableError': 'Could not turn two-factor off.',
+  'settings.mfa.step1': 'Scan this QR code with an authenticator app (Google Authenticator, Authy, 1Password…).',
+  'settings.mfa.step2': 'Enter the 6-digit code it shows to confirm.',
+  'settings.mfa.qrAlt': 'Two-factor setup QR code',
+  'settings.mfa.manual': 'Or enter this key by hand:',
+  'settings.mfa.confirm': 'Confirm',
+  'settings.mfa.codeInvalid': 'Enter the 6-digit code from your authenticator app.',
+  'settings.mfa.codeWrong': 'That code did not work. Try the current code.',
+  'settings.mfa.enabled': 'Two-factor authentication is on.',
+  'settings.mfa.disabled': 'Two-factor authentication is off.',
 };

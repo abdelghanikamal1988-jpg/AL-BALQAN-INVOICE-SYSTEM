@@ -43,6 +43,99 @@
   line-height: 1.8;
 }
 
+/* ---- Two-factor authentication ---- */
+
+.settings-mfa {
+  margin-top: 20px;
+}
+
+.settings-mfa__status {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.settings-mfa__chip {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  background: var(--surface-2);
+  color: var(--muted);
+}
+
+.settings-mfa__chip.is-on {
+  background: rgba(14, 111, 100, 0.12);
+  color: #0e6f64;
+}
+
+html[data-theme='dark'] .settings-mfa__chip.is-on {
+  background: rgba(94, 234, 212, 0.12);
+  color: #5eead4;
+}
+
+.settings-mfa__setup {
+  margin-top: 16px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface-2);
+}
+
+.settings-mfa__step {
+  margin: 0 0 12px;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.settings-mfa__qr {
+  display: block;
+  width: 176px;
+  height: 176px;
+  padding: 8px;
+  border-radius: 12px;
+  background: #fff;
+  margin-bottom: 12px;
+}
+
+.settings-mfa__secret {
+  margin: 0 0 14px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.settings-mfa__secret code {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: 0.08em;
+}
+
+.settings-mfa__form label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.settings-mfa__form input {
+  width: 100%;
+  max-width: 220px;
+  min-height: var(--tap-min);
+  font-size: 18px;
+  letter-spacing: 0.4em;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.settings-mfa__actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
 @media (max-width: 768px) {
   .settings-actions {
     position: static;

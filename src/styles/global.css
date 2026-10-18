@@ -1856,6 +1856,16 @@ button {
   font-weight: 500;
 }
 
+/* 6-digit one-time code — large, tabular, impossible to misread */
+.login-code-input {
+  text-align: center;
+  font-size: 22px;
+  letter-spacing: 0.45em;
+  text-indent: 0.45em;
+  font-variant-numeric: tabular-nums;
+  min-height: 52px;
+}
+
 .login-card .field input:not([type='checkbox']):not([type='radio']) {
   color: #ffffff;
   background-color: #000000;

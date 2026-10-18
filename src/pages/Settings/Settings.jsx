@@ -1,9 +1,16 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Icon from '../../components/Icons/Icon.jsx';
 import Modal from '../../components/Modal/Modal.jsx';
 import { useToast } from '../../components/Toast/ToastProvider.jsx';
 import { useLang } from '../../context/LangContext.jsx';
+import {
+  activeTotpFactor,
+  enrollTotp,
+  createChallenge,
+  verifyChallenge,
+  unenrollFactor,
+} from '../../utils/mfa.js';
 import {
   getSettings,
   saveSettings,
@@ -22,6 +29,93 @@ export default function Settings() {
   const [restoring, setRestoring] = useState(false);
   const [restorePreview, setRestorePreview] = useState(null);
   const restoreInputRef = useRef(null);
+
+  /* -------- Optional two-factor authentication (TOTP) -------- */
+  const [mfaFactor, setMfaFactor] = useState(null);
+  const [mfaPending, setMfaPending] = useState(null); // { id, qrCode, uri, secret }
+  const [mfaChallengeId, setMfaChallengeId] = useState(null);
+  const [mfaCode, setMfaCode] = useState('');
+  const [mfaBusy, setMfaBusy] = useState(false);
+  const mfaCodeRef = useRef(null);
+
+  useEffect(() => {
+    let active = true;
+    activeTotpFactor()
+      .then((f) => active && setMfaFactor(f))
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (mfaPending) mfaCodeRef.current?.focus();
+  }, [mfaPending]);
+
+  const mfaEnable = async () => {
+    setMfaBusy(true);
+    try {
+      const pending = await enrollTotp();
+      setMfaPending(pending);
+      setMfaCode('');
+      const challenge = await createChallenge(pending.id);
+      setMfaChallengeId(challenge.id);
+    } catch (err) {
+      toast.error(err.message || t('settings.mfa.enableError'));
+    } finally {
+      setMfaBusy(false);
+    }
+  };
+
+  const mfaConfirm = async (e) => {
+    e.preventDefault();
+    const code = mfaCode.trim();
+    if (!/^\d{6}$/.test(code) || !mfaPending || !mfaChallengeId) {
+      toast.error(t('settings.mfa.codeInvalid'));
+      return;
+    }
+    setMfaBusy(true);
+    try {
+      await verifyChallenge(mfaPending.id, mfaChallengeId, code);
+      setMfaFactor(await activeTotpFactor());
+      setMfaPending(null);
+      setMfaChallengeId(null);
+      setMfaCode('');
+      toast.success(t('settings.mfa.enabled'));
+    } catch (err) {
+      toast.error(err.message || t('settings.mfa.codeWrong'));
+      setMfaCode('');
+      try {
+        const challenge = await createChallenge(mfaPending.id);
+        setMfaChallengeId(challenge.id);
+      } catch {
+        /* keep the previous challenge id */
+      }
+      mfaCodeRef.current?.focus();
+    } finally {
+      setMfaBusy(false);
+    }
+  };
+
+  const mfaCancel = () => {
+    setMfaPending(null);
+    setMfaChallengeId(null);
+    setMfaCode('');
+  };
+
+  const mfaDisable = async () => {
+    if (!mfaFactor) return;
+    setMfaBusy(true);
+    try {
+      await unenrollFactor(mfaFactor.id);
+      setMfaFactor(null);
+      toast.success(t('settings.mfa.disabled'));
+    } catch (err) {
+      toast.error(err.message || t('settings.mfa.disableError'));
+    } finally {
+      setMfaBusy(false);
+    }
+  };
 
   const setField = (key, value) => {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -384,6 +478,86 @@ export default function Settings() {
           {t('settings.reset')}
         </button>
       </div>
+
+      {/* Two-factor authentication — optional, per user */}
+      <section className="card settings-mfa" aria-label={t('settings.mfa.title')}>
+        <div className="card__header">
+          <span className="card__icon" aria-hidden="true">
+            <Icon name="lock" />
+          </span>
+          <h2>{t('settings.mfa.title')}</h2>
+        </div>
+        <div className="card__body">
+          <p className="fieldset-note">{t('settings.mfa.note')}</p>
+
+          <div className="settings-mfa__status">
+            <span className={`settings-mfa__chip ${mfaFactor ? 'is-on' : ''}`}>
+              {mfaFactor ? t('settings.mfa.statusOn') : t('settings.mfa.statusOff')}
+            </span>
+
+            {mfaFactor ? (
+              <button
+                type="button"
+                className="btn btn--danger btn--sm"
+                onClick={mfaDisable}
+                disabled={mfaBusy}
+              >
+                {t('settings.mfa.disable')}
+              </button>
+            ) : (
+              !mfaPending && (
+                <button
+                  type="button"
+                  className="btn btn--primary btn--sm"
+                  onClick={mfaEnable}
+                  disabled={mfaBusy}
+                >
+                  {mfaBusy ? <span className="spinner" aria-hidden="true" /> : null}
+                  {t('settings.mfa.enable')}
+                </button>
+              )
+            )}
+          </div>
+
+          {mfaPending && (
+            <div className="settings-mfa__setup">
+              <p className="settings-mfa__step">{t('settings.mfa.step1')}</p>
+              {mfaPending.qrCode ? (
+                <img className="settings-mfa__qr" src={mfaPending.qrCode} alt={t('settings.mfa.qrAlt')} />
+              ) : null}
+              {mfaPending.secret ? (
+                <p className="settings-mfa__secret">
+                  {t('settings.mfa.manual')} <code>{mfaPending.secret}</code>
+                </p>
+              ) : null}
+
+              <form onSubmit={mfaConfirm} className="settings-mfa__form">
+                <label htmlFor="mfa-code">{t('settings.mfa.step2')}</label>
+                <input
+                  ref={mfaCodeRef}
+                  id="mfa-code"
+                  type="text"
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  maxLength={6}
+                  placeholder="000000"
+                  value={mfaCode}
+                  onChange={(e) => setMfaCode(e.target.value.replace(/\D/g, ''))}
+                />
+                <div className="settings-mfa__actions">
+                  <button type="button" className="btn btn--neutral btn--sm" onClick={mfaCancel}>
+                    {t('common.cancel')}
+                  </button>
+                  <button type="submit" className="btn btn--primary btn--sm" disabled={mfaBusy}>
+                    {mfaBusy ? <span className="spinner" aria-hidden="true" /> : null}
+                    {t('settings.mfa.confirm')}
+                  </button>
+                </div>
+              </form>
+            </div>
+          )}
+        </div>
+      </section>
 
       {restorePreview && (
         <Modal
