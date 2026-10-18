@@ -211,6 +211,10 @@
   'invoice.importFailedFile': 'Import failed. The file is not a valid AL BALQAN backup.',
   'invoice.importFailedRead': 'Import failed. Could not read the file.',
   'invoice.deleted': 'Invoice deleted.',
+  'invoice.deletedTitle': 'Recently deleted ({n})',
+  'invoice.deletedEmpty': 'Nothing has been deleted recently.',
+  'invoice.restore': 'Restore',
+  'invoice.restored': 'Invoice restored.',
 
   'invoice.trn': 'TRN',
   'invoice.termsSection': 'Terms & Conditions',

@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import { reportError } from '../../utils/errorLogger.js';
 
 export default class ErrorBoundary extends Component {
   constructor(props) {
@@ -10,8 +11,11 @@ export default class ErrorBoundary extends Component {
     return { hasError: true };
   }
 
-  componentDidCatch() {
-    // Prevents full page crash; the boundary UI is shown instead.
+  componentDidCatch(error, info) {
+    /* Send it to the error_logs table so an admin can see what broke. */
+    reportError(error, {
+      component: info?.componentStack?.split('\n')[1]?.trim().slice(0, 120) || 'ErrorBoundary',
+    });
   }
 
   handleReload = () => {

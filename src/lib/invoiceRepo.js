@@ -35,7 +35,8 @@ async function currentUserId() {
 export async function dbFetchAll() {
   const { data, error } = await supabase
     .from('invoices')
-    .select('data, user_id')
+    .select('data, user_id, deleted_at')
+    .is('deleted_at', null)
     .order('created_at', { ascending: false });
   if (error) throw error;
   return (data || []).map((row, index) => ({
@@ -50,6 +51,7 @@ export async function dbFetchOne(id) {
     .from('invoices')
     .select('data')
     .eq('data->>id', id)
+    .is('deleted_at', null)
     .maybeSingle();
   if (error) throw error;
   if (!data) return null;
@@ -70,6 +72,7 @@ export async function dbUpdateBackup(id, invoice) {
     .from('invoices')
     .update({ data: invoice })
     .eq('data->>id', id)
+    .is('deleted_at', null)
     .select();
   if (error) throw error;
   if (!data || data.length === 0) {
@@ -78,16 +81,45 @@ export async function dbUpdateBackup(id, invoice) {
   return data[0].data;
 }
 
+/** Soft delete: the row is stamped, never removed, so it can be restored. */
 export async function dbDelete(id) {
   const { data, error } = await supabase
     .from('invoices')
-    .delete()
+    .update({ deleted_at: new Date().toISOString() })
     .eq('data->>id', id)
+    .is('deleted_at', null)
     .select('id');
   if (error) throw error;
   if (!data || data.length === 0) {
-    throw new Error('No invoice was deleted. Check the DELETE policy in Supabase (supabase/schema.sql).');
+    throw new Error('No invoice was deleted. Check the UPDATE policy in Supabase (supabase/schema.sql).');
   }
+}
+
+/** Brings a soft-deleted invoice back. */
+export async function dbRestore(id) {
+  const { data, error } = await supabase
+    .from('invoices')
+    .update({ deleted_at: null })
+    .eq('data->>id', id)
+    .not('deleted_at', 'is', null)
+    .select('id');
+  if (error) throw error;
+  return (data || []).length > 0;
+}
+
+/** Invoices that were soft-deleted, for the admin recycle bin. */
+export async function dbFetchDeleted() {
+  const { data, error } = await supabase
+    .from('invoices')
+    .select('id, data, deleted_at, created_at')
+    .not('deleted_at', 'is', null)
+    .order('deleted_at', { ascending: false });
+  if (error) throw error;
+  return (data || []).map((row) => ({
+    rowId: row.id,
+    deletedAt: row.deleted_at,
+    ...row.data,
+  }));
 }
 
 export async function dbInsertMany(invoices) {

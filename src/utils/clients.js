@@ -65,6 +65,7 @@ export function formToClient(form, { id, documents, pdfPath }) {
     placeOfBirth: toUpperLatin(form.placeOfBirth),
     sex: form.sex || '',
     referralAgent: toUpperLatin(form.referralAgent),
+    referralAgentId: form.referralAgentId || null,
     status: CLIENT_STATUSES.includes(form.status) ? form.status : DEFAULT_CLIENT_STATUS,
     documents: documents || {},
     pdfPath: pdfPath || null,
@@ -88,6 +89,7 @@ export function clientToForm(client) {
     placeOfBirth: client.placeOfBirth || '',
     sex: client.sex || '',
     referralAgent: client.referralAgent || '',
+    referralAgentId: client.referralAgentId || null,
     status: client.status || DEFAULT_CLIENT_STATUS,
     createdAt: client.createdAt,
   };

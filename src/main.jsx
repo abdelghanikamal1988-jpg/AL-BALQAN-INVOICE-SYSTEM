@@ -16,3 +16,13 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     </ErrorBoundary>
   </React.StrictMode>
 );
+
+/* PWA: register the offline app-shell worker. It only activates on a
+   secure origin (https or localhost), so the dev server is unaffected. */
+if ('serviceWorker' in navigator && window.isSecureContext) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {
+      /* registration failure must never break the app */
+    });
+  });
+}

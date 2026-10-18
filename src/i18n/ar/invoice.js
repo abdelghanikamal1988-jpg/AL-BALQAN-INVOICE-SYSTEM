@@ -210,6 +210,10 @@
   'invoice.importFailedFile': 'فشل الاستيراد. الملف ليس نسخة احتياطية صالحة لـ AL BALQAN.',
   'invoice.importFailedRead': 'فشل الاستيراد. تعذّرت قراءة الملف.',
   'invoice.deleted': 'تم حذف الفاتورة.',
+  'invoice.deletedTitle': 'المحذوفات مؤخرًا ({n})',
+  'invoice.deletedEmpty': 'لا يوجد شيء تم حذفه مؤخرًا.',
+  'invoice.restore': 'استرجاع',
+  'invoice.restored': 'تم استرجاع الفاتورة.',
 
   'invoice.trn': 'الرقم الضريبي',
   'invoice.termsSection': 'الشروط والأحكام',

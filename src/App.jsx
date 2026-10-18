@@ -18,6 +18,7 @@ import ClientForm from './pages/ClientForm/ClientForm.jsx';
 import ClientDetail from './pages/ClientDetail/ClientDetail.jsx';
 import AdminUsers from './pages/AdminUsers/AdminUsers.jsx';
 import Consultations from './pages/Consultations/Consultations.jsx';
+import AuditLog from './pages/AuditLog/AuditLog.jsx';
 import Settings from './pages/Settings/Settings.jsx';
 import Login from './pages/Login/Login.jsx';
 import Website from './pages/Website/Website.jsx';
@@ -37,6 +38,7 @@ const ROUTES = [
   { path: '/clients/:id', perm: 'page:clients', element: <ClientDetail /> },
   { path: '/admin/users', perm: 'page:admin', element: <AdminUsers /> },
   { path: '/consultations', perm: 'page:consultations', element: <Consultations /> },
+  { path: '/audit', perm: 'page:admin', element: <AuditLog /> },
   { path: '/settings', perm: 'page:settings', element: <Settings /> },
 ];
 

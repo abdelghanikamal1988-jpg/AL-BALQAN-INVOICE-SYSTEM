@@ -46,6 +46,15 @@ function IconHistory() {
   );
 }
 
+function IconAudit() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" {...STROKE}>
+      <path d="M8 4h8a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" />
+      <path d="M9.5 9h5M9.5 12.5h5M9.5 16h3" />
+    </svg>
+  );
+}
+
 function IconNewClient() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" {...STROKE}>
@@ -129,6 +138,7 @@ const NAV_GROUPS = [
     items: [
       { to: '/admin/users', label: 'shell.nav.users', Icon: IconUsers, end: true, perm: 'page:admin' },
       { to: '/consultations', label: 'shell.nav.consultations', Icon: IconInbox, end: true, perm: 'page:consultations' },
+      { to: '/audit', label: 'shell.nav.auditLog', Icon: IconAudit, end: true, perm: 'page:admin' },
       { to: '/settings', label: 'shell.nav.settings', Icon: IconGear, end: true, perm: 'page:settings' },
     ],
   },

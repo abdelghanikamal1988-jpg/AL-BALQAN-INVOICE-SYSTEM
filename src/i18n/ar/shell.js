@@ -50,6 +50,7 @@ export default {
   'shell.nav.admin': 'الإدارة',
   'shell.nav.consultations': 'طلبات الاستشارة',
   'shell.nav.users': 'المستخدمون',
+  'shell.nav.auditLog': 'سجل التعديلات',
   'shell.nav.settings': 'الإعدادات',
 
   'shell.confirmIdentity': 'تأكيد هويتك',

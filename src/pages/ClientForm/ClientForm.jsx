@@ -132,6 +132,7 @@ export default function ClientForm() {
           setForm(clientToForm(client));
           setDocs(normalizeDocuments(client.documents || {}));
           setAgentChoice(client.referralAgent || CUSTOMER);
+          setForm((prev) => ({ ...prev, referralAgentId: client.referralAgentId || null }));
         } else {
           setAgentChoice(CUSTOMER);
           requestAnimationFrame(() => nameRef.current?.focus());
@@ -214,7 +215,8 @@ export default function ClientForm() {
     }
     setAddingAgent(false);
     setAgentChoice(value);
-    setForm((prev) => ({ ...prev, referralAgent: value }));
+    const match = agents.find((a) => a.name === value);
+    setForm((prev) => ({ ...prev, referralAgent: value, referralAgentId: match ? match.id : null }));
     setErrors((prev) => {
       const next = { ...prev };
       delete next.referralAgent;
@@ -232,7 +234,7 @@ export default function ClientForm() {
       const row = await dbInsertAgent(name);
       setAgents((prev) => [...prev, row]);
       setAgentChoice(row.name);
-      setForm((prev) => ({ ...prev, referralAgent: row.name }));
+      setForm((prev) => ({ ...prev, referralAgent: row.name, referralAgentId: row.id || null }));
       setAddingAgent(false);
       setNewAgentName('');
       toast.success(t('clients.toastAgentAdded'));
@@ -371,6 +373,7 @@ export default function ClientForm() {
           setAgents((prev) => (prev.some((a) => a.id === row.id) ? prev : [...prev, row]));
           resolvedAgent = row.name || resolvedAgent;
           setAgentChoice(resolvedAgent);
+          setForm((prev) => ({ ...prev, referralAgentId: row.id || null }));
           setAddingAgent(false);
           setNewAgentName('');
         } catch (err) {

@@ -320,3 +320,71 @@ html[data-theme='dark'] .au-chip--delegate {
   background: rgba(250, 204, 21, 0.14);
   color: #fde68a;
 }
+
+/* ============================================================
+   AUDIT LOG
+   ============================================================ */
+
+.audit-filters {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 220px)) 1fr;
+  gap: 12px 16px;
+  align-items: end;
+  margin-bottom: 16px;
+}
+
+.audit-summary {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+  justify-self: end;
+}
+
+.audit-empty {
+  margin: 0;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.audit-action {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.audit-action--insert {
+  background: rgba(14, 111, 100, 0.12);
+  color: #0e6f64;
+}
+
+.audit-action--update {
+  background: rgba(217, 119, 6, 0.12);
+  color: #b45309;
+}
+
+.audit-action--delete {
+  background: rgba(220, 38, 38, 0.12);
+  color: var(--danger);
+}
+
+html[data-theme='dark'] .audit-action--insert {
+  background: rgba(94, 234, 212, 0.12);
+  color: #5eead4;
+}
+
+html[data-theme='dark'] .audit-action--update {
+  background: rgba(251, 191, 36, 0.12);
+  color: #fbbf24;
+}
+
+@media (max-width: 768px) {
+  .audit-filters {
+    grid-template-columns: 1fr;
+  }
+
+  .audit-summary {
+    justify-self: start;
+  }
+}

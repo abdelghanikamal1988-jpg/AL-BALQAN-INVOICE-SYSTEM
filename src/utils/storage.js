@@ -14,6 +14,8 @@ import {
   dbInsert,
   dbUpdateBackup,
   dbDelete,
+  dbRestore,
+  dbFetchDeleted,
   dbInsertMany,
 } from '../lib/invoiceRepo.js';
 import {
@@ -42,6 +44,16 @@ export async function updateInvoice(invoice) {
 
 export async function deleteInvoice(id) {
   await dbDelete(id);
+}
+
+/** Brings a soft-deleted invoice back. */
+export async function restoreInvoice(id) {
+  return dbRestore(id);
+}
+
+/** Soft-deleted invoices, for the admin recycle bin. */
+export async function getDeletedInvoices() {
+  return dbFetchDeleted();
 }
 
 /**

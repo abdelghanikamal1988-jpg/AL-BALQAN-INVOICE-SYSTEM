@@ -25,6 +25,8 @@ import {
   deleteInvoice,
   filterInvoices,
   importInvoices,
+  getDeletedInvoices,
+  restoreInvoice,
 } from '../../utils/storage.js';
 import { calculatePayment, statusClass, PAYMENT_STATUS } from '../../utils/paymentCalculator.js';
 import { formatCurrency } from '../../utils/formatCurrency.js';
@@ -89,7 +91,17 @@ export default function InvoiceHistory() {
   const [deletePrompt, setDeletePrompt] = useState(null);
   const [authPrompt, setAuthPrompt] = useState(false);
   const [payFor, setPayFor] = useState(null);
+  const [showDeleted, setShowDeleted] = useState(false);
+  const [deleted, setDeleted] = useState([]);
   const fileInputRef = useRef(null);
+
+  const loadDeleted = async () => {
+    try {
+      setDeleted(await getDeletedInvoices());
+    } catch {
+      setDeleted([]);
+    }
+  };
 
   /* Deep link from the topbar search: /history?q=… */
   useEffect(() => {
@@ -698,6 +710,58 @@ export default function InvoiceHistory() {
 
       <div className="history-note">
         {t('invoice.historyNote')}
+      </div>
+
+      {/* Recycle bin — soft-deleted invoices, restorable */}
+      <div className="recycle-bin">
+        <button
+          type="button"
+          className="recycle-bin__toggle"
+          aria-expanded={showDeleted}
+          onClick={() => {
+            const next = !showDeleted;
+            setShowDeleted(next);
+            if (next) loadDeleted();
+          }}
+        >
+          <Icon name={showDeleted ? 'chevronRight' : 'chevronDown'} />
+          {t('invoice.deletedTitle', { n: deleted.length })}
+        </button>
+        {showDeleted && (
+          <div className="recycle-bin__body">
+            {deleted.length === 0 ? (
+              <p className="recycle-bin__empty">{t('invoice.deletedEmpty')}</p>
+            ) : (
+              <ul className="recycle-bin__list">
+                {deleted.map((inv) => (
+                  <li key={inv.id} className="recycle-bin__row">
+                    <span className="recycle-bin__num">{inv.invoiceNumber}</span>
+                    <span className="recycle-bin__client">
+                      {[inv.client?.firstName, inv.client?.fatherName, inv.client?.surname]
+                        .filter(Boolean)
+                        .join(' ') || '—'}
+                    </span>
+                    <span className="recycle-bin__date">{formatDateShort(inv.issueDate)}</span>
+                    <Can perm="action:invoice.delete">
+                      <button
+                        type="button"
+                        className="btn btn--secondary btn--sm"
+                        onClick={async () => {
+                          await restoreInvoice(inv.id);
+                          toast.success(t('invoice.restored'));
+                          loadDeleted();
+                          setRefreshKey((k) => k + 1);
+                        }}
+                      >
+                        {t('invoice.restore')}
+                      </button>
+                    </Can>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        )}
       </div>
 
       <input

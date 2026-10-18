@@ -50,6 +50,7 @@ export default {
   'shell.nav.admin': 'Admin',
   'shell.nav.consultations': 'Consultation Requests',
   'shell.nav.users': 'Users',
+  'shell.nav.auditLog': 'Audit Log',
   'shell.nav.settings': 'Settings',
 
   'shell.confirmIdentity': 'Confirm your identity',
