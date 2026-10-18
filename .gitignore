@@ -12,3 +12,4 @@ npm-debug.log*
 .dev/*.jpg
 .dev/*.pdf
 .dev/*.log
+.dev/commit-msg.txt
