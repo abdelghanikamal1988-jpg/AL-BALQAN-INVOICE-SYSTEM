@@ -1,0 +1,27 @@
+# AL BALQAN CRM - internal company system.
+# Block every crawler: this is not a marketing site and must never
+# appear in search results. The real gate is the login wall; this file
+# just keeps well-behaved bots from listing the URLs.
+User-agent: *
+Disallow: /
+
+# Belt and braces — some crawlers read these specifically.
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: PerplexityBot
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+# No sitemap on purpose.
