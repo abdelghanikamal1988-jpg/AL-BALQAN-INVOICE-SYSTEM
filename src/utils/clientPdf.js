@@ -133,7 +133,11 @@ const FIELDS = [
     { label: 'PASSPORT NO.', key: 'passport' },
     { label: 'ISSUING PLACE', key: 'issuingPlace' },
   ],
-  [{ label: 'SEX', key: 'sex' }],
+  [
+    { label: 'SEX', key: 'sex' },
+    { label: 'DESTINATION', key: 'destination' },
+  ],
+  [{ label: 'SERVICE', key: 'service' }],
 ];
 
 /**

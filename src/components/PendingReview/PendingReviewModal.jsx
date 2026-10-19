@@ -32,6 +32,8 @@ const FIELD_LABELS = {
   expiryDate: 'shell.field.expiryDate',
   address: 'shell.field.address',
   status: 'shell.field.status',
+  destination: 'shell.field.destination',
+  service: 'shell.field.service',
   referralAgent: 'shell.field.referralAgent',
   notesClient: 'shell.field.notesClient',
 };

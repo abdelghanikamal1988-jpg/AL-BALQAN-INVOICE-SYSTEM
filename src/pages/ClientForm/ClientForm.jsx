@@ -22,6 +22,7 @@ import {
   newClientId,
 } from '../../utils/clients.js';
 import { filterTextInput } from '../../utils/textCase.js';
+import { CLIENT_DESTINATIONS, CLIENT_SERVICES } from '../../data/clientOptions.js';
 import {
   DOCUMENT_TYPES,
   DOCUMENT_ACCEPT,
@@ -64,6 +65,16 @@ const FIELD_GROUPS = [
       { key: 'dateOfIssue', label: 'clients.field.dateOfIssue', type: 'date' },
       { key: 'dateOfExpiry', label: 'clients.field.dateOfExpiry', type: 'date' },
       { key: 'issuingPlace', label: 'clients.field.issuingPlace', type: 'text' },
+    ],
+  },
+  {
+    id: 'travel',
+    icon: 'plane',
+    title: 'clients.groupTravel',
+    note: 'clients.groupTravelNote',
+    fields: [
+      { key: 'destination', label: 'clients.field.destination', type: 'select', options: CLIENT_DESTINATIONS },
+      { key: 'service', label: 'clients.field.service', type: 'select', options: CLIENT_SERVICES },
     ],
   },
   {

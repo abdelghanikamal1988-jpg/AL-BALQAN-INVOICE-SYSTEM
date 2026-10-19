@@ -173,7 +173,7 @@ test('validateClientForm: empty form flags every required field', () => {
   const expected = [
     'firstName', 'fatherName', 'surname', 'country', 'passport',
     'dateOfBirth', 'dateOfIssue', 'dateOfExpiry', 'issuingPlace',
-    'placeOfBirth', 'sex', 'referralAgent',
+    'placeOfBirth', 'sex', 'destination', 'service', 'referralAgent',
   ];
   assert.deepEqual(Object.keys(errors).sort(), expected.sort());
 });
@@ -184,6 +184,7 @@ test('validateClientForm: a filled form has no errors', () => {
     country: 'EGYPT', passport: 'A1234567',
     dateOfBirth: '1990-01-01', dateOfIssue: '2020-01-01', dateOfExpiry: '2030-01-01',
     issuingPlace: 'CAIRO', placeOfBirth: 'CAIRO', sex: 'Male',
+    destination: 'Albania', service: 'Tourist Visa',
     referralAgent: 'AGENT ONE',
   };
   assert.deepEqual(validateClientForm(form), {});

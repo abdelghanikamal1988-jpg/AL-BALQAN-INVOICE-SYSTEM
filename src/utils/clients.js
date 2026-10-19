@@ -45,6 +45,8 @@ export function emptyClientForm() {
     issuingPlace: '',
     placeOfBirth: '',
     sex: '',
+    destination: '',
+    service: '',
     referralAgent: '',
     status: DEFAULT_CLIENT_STATUS,
   };
@@ -64,6 +66,8 @@ export function formToClient(form, { id, documents, pdfPath }) {
     issuingPlace: toUpperLatin(form.issuingPlace),
     placeOfBirth: toUpperLatin(form.placeOfBirth),
     sex: form.sex || '',
+    destination: form.destination || '',
+    service: form.service || '',
     referralAgent: toUpperLatin(form.referralAgent),
     referralAgentId: form.referralAgentId || null,
     status: CLIENT_STATUSES.includes(form.status) ? form.status : DEFAULT_CLIENT_STATUS,
@@ -88,6 +92,8 @@ export function clientToForm(client) {
     issuingPlace: client.issuingPlace || '',
     placeOfBirth: client.placeOfBirth || '',
     sex: client.sex || '',
+    destination: client.destination || '',
+    service: client.service || '',
     referralAgent: client.referralAgent || '',
     referralAgentId: client.referralAgentId || null,
     status: client.status || DEFAULT_CLIENT_STATUS,
@@ -107,6 +113,8 @@ const REQUIRED_FIELDS = [
   'issuingPlace',
   'placeOfBirth',
   'sex',
+  'destination',
+  'service',
   'referralAgent',
 ];
 

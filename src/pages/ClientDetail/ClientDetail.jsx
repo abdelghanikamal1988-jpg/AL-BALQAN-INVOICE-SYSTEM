@@ -47,6 +47,8 @@ const DETAIL_FIELDS = [
   ['clients.field.dateOfIssue', 'dateOfIssue', true],
   ['clients.field.dateOfExpiry', 'dateOfExpiry', true],
   ['clients.field.issuingPlace', 'issuingPlace'],
+  ['clients.field.destination', 'destination'],
+  ['clients.field.service', 'service'],
   ['clients.field.referralAgent', 'referralAgent'],
 ];
 
