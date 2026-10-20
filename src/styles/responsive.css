@@ -871,33 +871,46 @@
   .cl-table .user-cell {
     flex: 1 1 auto;
     min-width: 0;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 2px 6px;
-    min-height: calc(2 * 1.45em);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    min-height: 0;
   }
 
   .history-table .user-cell > span:first-child,
-  .cl-table .user-cell > span:first-child {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  .cl-table .user-cell > span:first-child,
+  .history-table .user-cell__sub,
+  .cl-table .user-cell__sub {
+    max-width: 100%;
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    min-height: 0;
   }
 
   .history-table .user-cell__sub,
   .cl-table .user-cell__sub {
-    grid-column: 1 / -1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    grid-column: auto;
+  }
+
+  .history-table .user-cell__sub svg,
+  .cl-table .user-cell__sub svg {
+    flex: 0 0 auto;
   }
 
   .history-table .pending-chip,
   .cl-table .pending-chip {
-    grid-column: 2;
-    grid-row: 1;
-    justify-self: end;
+    align-self: flex-start;
+    justify-self: start;
+    grid-column: auto;
+    grid-row: auto;
+    margin-block: 0;
+    max-width: 100%;
     white-space: nowrap;
   }
 
@@ -1121,6 +1134,102 @@
     inset-inline-end: 12px;
     bottom: calc(12px + env(safe-area-inset-bottom));
     max-width: none;
+  }
+
+  /* ---------- stacked cells: label above the value (full width) ----------
+     Each cell is only ~170px wide inside the 2-up grid, and the label used
+     to take a 45% slice of that with an ellipsis, so "INVOICE NO." /
+     "COUNTRY" / "USER" rendered as "INVOICE N..." / "COU..." / "US..." and
+     the value beside it wrapped mid-token ("AB-INV-" + "1042"). Give every
+     field a two-line block instead - label on top across the whole cell,
+     value flowing underneath - so nothing is shortened and the 2-up grid
+     (the density part) is untouched. No desktop rule is involved: this
+     block is phone-only (<= 767px). */
+  .history-table td[data-label],
+  .cl-table td[data-label],
+  .db-inv td[data-label],
+  .au-table td[data-label],
+  .history-table tfoot td[data-label],
+  .cl-table tfoot td[data-label],
+  .db-inv tfoot td[data-label],
+  .au-table tfoot td[data-label] {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 3px 8px;
+    min-height: 0;
+    padding: 9px 11px;
+    white-space: normal;
+    text-align: start;
+  }
+
+  .history-table td[data-label]::before,
+  .cl-table td[data-label]::before,
+  .db-inv td[data-label]::before,
+  .au-table td[data-label]::before,
+  .history-table tfoot td[data-label]::before,
+  .cl-table tfoot td[data-label]::before,
+  .db-inv tfoot td[data-label]::before,
+  .au-table tfoot td[data-label]::before {
+    flex: 0 0 100%;
+    width: 100%;
+    max-width: 100%;
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+    text-align: start;
+  }
+
+  /* Values keep their own line and are never shortened. */
+  .cell-v,
+  .db-panel .db-inv .db-cell__v {
+    flex: 0 0 auto;
+    text-align: start;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    -webkit-line-clamp: none;
+    min-height: 0;
+  }
+
+  .history-table td > .badge,
+  .cl-table td > .cbadge,
+  .cl-table td > .cl-passport {
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+    max-width: 100%;
+  }
+
+  .history-table .user-cell > span:first-child,
+  .cl-table .user-cell > span:first-child,
+  .history-table .user-cell__sub,
+  .cl-table .user-cell__sub,
+  .cl-identity .cl-sub {
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+  }
+
+  .cl-identity .cl-name {
+    min-height: 0;
+    -webkit-line-clamp: 4;
+  }
+
+  .cl-identity > span:last-child {
+    min-height: 0;
+  }
+
+  .cl-table tbody td:first-child:not(.mono) {
+    min-height: 0;
+  }
+
+  /* The ACTIONS row reads better as a labelled block above its buttons. */
+  .history-table td.actions-cell,
+  .cl-table td.actions-cell,
+  .au-table td.au-actions {
+    gap: 6px;
   }
 }
 
