@@ -82,6 +82,7 @@
   'clients.service': 'Service',
   'clients.passportLabel': 'Passport',
   'clients.agentLabel': 'Agent',
+  'clients.fileNo': 'File No.',
   'clients.backToClients': 'Back to Clients',
   'clients.backToClientsLink': 'Back to clients',
   'clients.application': 'Client Application',

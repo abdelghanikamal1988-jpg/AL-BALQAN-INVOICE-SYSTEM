@@ -588,7 +588,14 @@ export default function InvoiceHistory() {
             <tr key={inv.id}>
               <td className="mono" data-label={t('invoice.colInvoiceNo')}><span className="cell-v">{inv.invoiceNumber}</span></td>
               <td data-label={t('invoice.date')}><span className="cell-v">{inv.issueDate || '—'}</span></td>
-              <td data-label={t('invoice.colCustomer')}><span className="cell-v">{inv.customer?.name || '—'}</span></td>
+              <td data-label={t('invoice.colCustomer')}>
+                <span className="cell-v">
+                  {inv.customer?.name || '—'}
+                  {inv.client?.fileNo ? (
+                    <span className="cell-file">{inv.client.fileNo}</span>
+                  ) : null}
+                </span>
+              </td>
               <td data-label={t('invoice.colPassport')}><span className="cell-v">{inv.customer?.passport || '—'}</span></td>
               <td data-label={t('invoice.destination')}><span className="cell-v">{inv.travel?.destination ? t('data.destination.' + inv.travel.destination) : '—'}</span></td>
               <td data-label={t('invoice.service')}><span className="cell-v">{inv.travel?.service ? t('data.service.' + inv.travel.service) : '—'}</span></td>

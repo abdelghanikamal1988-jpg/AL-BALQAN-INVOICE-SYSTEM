@@ -8,8 +8,10 @@ import { useToast } from '../../components/Toast/ToastProvider.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { useLang } from '../../context/LangContext.jsx';
 import { dbSubmitPending } from '../../lib/pendingRepo.js';
+import { dbFetchClients } from '../../lib/clientRepo.js';
 import company from '../../data/company.js';
 import { nextInvoiceNumber, uniqueInvoiceNumber } from '../../utils/invoiceNumber.js';
+import { clientFullName, normalizePassport } from '../../utils/clients.js';
 import { formatDate, formatTime } from '../../utils/formatDate.js';
 import { formatCurrency } from '../../utils/formatCurrency.js';
 import {
@@ -71,6 +73,12 @@ export default function CreateInvoice() {
   /* Id of the invoice this screen already saved in create mode — every later
      save updates that row instead of inserting a duplicate. */
   const [savedId, setSavedId] = useState(null);
+  /* Client list, used only to recognise a repeat customer by passport/name
+     so the invoice can be filed under that client's file number. */
+  const [clients, setClients] = useState([]);
+  /* Link stored on the invoice being edited (kept when the client list is
+     empty or the client record is not visible to this user). */
+  const [storedLink, setStoredLink] = useState(null);
 
   const draftRef = useRef(null);
 
@@ -126,6 +134,7 @@ export default function CreateInvoice() {
           setInvoiceNumber(inv.invoiceNumber);
           setIssueDateDisplay(inv.issueDate || formatDate());
           setIssueTimeDisplay(inv.issueTime || formatTime());
+          setStoredLink(inv.client || null);
           setDirty(false);
         } else {
           const draft = getDraft();
@@ -180,6 +189,22 @@ export default function CreateInvoice() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, editing]);
 
+  /* The client list only feeds the file-number match, so a slow or failed
+     load must never block the invoice form. */
+  useEffect(() => {
+    let alive = true;
+    dbFetchClients()
+      .then((rows) => {
+        if (alive) setClients(rows || []);
+      })
+      .catch((err) => {
+        console.warn('Client list unavailable, file link off:', err);
+      });
+    return () => {
+      alive = false;
+    };
+  }, []);
+
   /* ---------- Draft autosave (create mode only) ---------- */
   useEffect(() => {
     draftRef.current = dirty;
@@ -221,6 +246,49 @@ export default function CreateInvoice() {
     return next;
   };
 
+  /* ---------- Client file link ---------- */
+  /* A repeat customer is recognised by passport first (unique in practice),
+     then by full name, so the invoice can carry the same file number the
+     client got when the file was opened. */
+  const linkedClient = useMemo(() => {
+    const passport = normalizePassport(form.passport);
+    if (passport) {
+      const byPassport = clients.find(
+        (client) => normalizePassport(client.passport) === passport
+      );
+      if (byPassport) return byPassport;
+    }
+    const wanted = normalizeName(form.name).toUpperCase();
+    if (wanted.length >= 3) {
+      const byName = clients.find(
+        (client) => normalizeName(clientFullName(client)).toUpperCase() === wanted
+      );
+      if (byName) return byName;
+    }
+    return null;
+  }, [clients, form.passport, form.name]);
+
+  const clientLink = useMemo(() => {
+    if (linkedClient) {
+      return {
+        id: linkedClient.id,
+        name: clientFullName(linkedClient) || normalizeName(form.name),
+        fileNo: linkedClient.fileNo || '',
+      };
+    }
+    /* Keep the link already stored on the invoice being edited when the
+       customer name is unchanged — covers a client list that did not load. */
+    if (
+      storedLink &&
+      storedLink.fileNo &&
+      normalizeName(storedLink.name).toUpperCase() ===
+        normalizeName(form.name).toUpperCase()
+    ) {
+      return storedLink;
+    }
+    return null;
+  }, [linkedClient, storedLink, form.name]);
+
   /* ---------- Save ---------- */
   /**
    * Cleans the form and returns the invoice object that would be written
@@ -238,7 +306,7 @@ export default function CreateInvoice() {
     const number = await uniqueInvoiceNumber(invoiceNumber, { ignoreId: targetId });
     setInvoiceNumber(number);
 
-    const invoice = createInvoiceObject(cleaned, number);
+    const invoice = createInvoiceObject(cleaned, number, clientLink);
 
     if (targetId) {
       invoice.id = targetId;
@@ -375,6 +443,7 @@ export default function CreateInvoice() {
     setErrors({});
     setInvoiceNumber('');
     setSavedId(null);
+    setStoredLink(null);
     setIssueDateDisplay(formatDate());
     setIssueTimeDisplay(formatTime());
     setDirty(false);
@@ -414,8 +483,13 @@ export default function CreateInvoice() {
   };
 
   const previewForm = useMemo(
-    () => ({ ...form, issueDateDisplay, issueTimeDisplay }),
-    [form, issueDateDisplay, issueTimeDisplay]
+    () => ({
+      ...form,
+      issueDateDisplay,
+      issueTimeDisplay,
+      clientFileNo: clientLink?.fileNo || '',
+    }),
+    [form, issueDateDisplay, issueTimeDisplay, clientLink]
   );
 
   return (
@@ -495,6 +569,7 @@ export default function CreateInvoice() {
             issueDateDisplay={issueDateDisplay}
             issueTimeDisplay={issueTimeDisplay}
             inputRef={inputRef}
+            clientLink={clientLink}
           />
 
           <div className="preview-sticky">

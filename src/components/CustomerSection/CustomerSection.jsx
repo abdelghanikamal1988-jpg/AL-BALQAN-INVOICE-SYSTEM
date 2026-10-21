@@ -1,7 +1,7 @@
 import Icon from '../Icons/Icon.jsx';
 import { useLang } from '../../context/LangContext.jsx';
 
-export default function CustomerSection({ form, errors, onChange, inputRef }) {
+export default function CustomerSection({ form, errors, onChange, inputRef, clientLink }) {
   const { t } = useLang();
   const set = (field) => (e) => onChange(field, e.target.value);
 
@@ -12,6 +12,18 @@ export default function CustomerSection({ form, errors, onChange, inputRef }) {
         <h2>{t('invoice.customerSection')}</h2>
       </div>
       <div className="card__body">
+        {clientLink ? (
+          <div className="client-link" role="status">
+            <span className="client-link__icon" aria-hidden="true">
+              <Icon name="folder" />
+            </span>
+            <span className="client-link__label">{t('invoice.linkedClient')}</span>
+            <span className="client-link__name">{clientLink.name}</span>
+            {clientLink.fileNo ? (
+              <span className="client-link__file mono">{clientLink.fileNo}</span>
+            ) : null}
+          </div>
+        ) : null}
         <div className="form-grid">
           <div className={`field ${errors.name ? 'field--error' : ''}`}>
             <label htmlFor="customer-name">{t('invoice.customerNameLabel')}</label>

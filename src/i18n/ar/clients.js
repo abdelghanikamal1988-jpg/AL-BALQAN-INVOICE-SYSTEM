@@ -81,6 +81,7 @@
   'clients.service': 'الخدمة',
   'clients.passportLabel': 'جواز السفر',
   'clients.agentLabel': 'الوكيل',
+  'clients.fileNo': 'رقم الملف',
   'clients.backToClients': 'العودة إلى العملاء',
   'clients.backToClientsLink': 'العودة إلى العملاء',
   'clients.application': 'طلب العميل',

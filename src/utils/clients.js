@@ -52,9 +52,10 @@ export function emptyClientForm() {
   };
 }
 
-export function formToClient(form, { id, documents, pdfPath }) {
+export function formToClient(form, { id, documents, pdfPath, fileNo }) {
   return {
     id,
+    fileNo: fileNo || form.fileNo || '',
     firstName: toUpperLatin(form.firstName),
     fatherName: toUpperLatin(form.fatherName),
     surname: toUpperLatin(form.surname),

@@ -187,6 +187,9 @@ export async function buildInvoicePdf(invoice) {
   rowY = item('Phone', caps(invoice.customer?.phone), M + colW + 6, rowY + 2, colW);
   rowY = item('Email', invoice.customer?.email, M, rowY + 2, colW);
   rowY = item('Destination', destinationLabel(invoice.travel?.destination), M + colW + 6, rowY + 2, colW);
+  if (invoice.client?.fileNo) {
+    rowY = item('File No.', invoice.client.fileNo, M, rowY + 2, colW);
+  }
 
   y = rowY + 8;
 

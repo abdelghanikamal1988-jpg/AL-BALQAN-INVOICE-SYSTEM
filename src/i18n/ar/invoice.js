@@ -63,6 +63,8 @@
   'invoice.notesPlaceholder': 'أضف أي ملاحظات تظهر على الفاتورة…',
 
   'invoice.customerSection': 'معلومات العميل',
+  'invoice.linkedClient': 'عميل مرتبط',
+  'invoice.fileNo': 'رقم الملف',
   'invoice.customerNameLabel': 'الاسم الكامل للعميل *',
   'invoice.customerNamePlaceholder': 'أدخل الاسم الكامل',
   'invoice.nationalityLabel': 'الجنسية *',

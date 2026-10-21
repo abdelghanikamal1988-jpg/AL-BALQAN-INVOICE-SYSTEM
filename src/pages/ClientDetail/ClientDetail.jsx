@@ -232,6 +232,11 @@ export default function ClientDetail() {
             <span className="cl-passport">{client.passport || '—'}</span>
             <span className="cd-chip">{client.country || '—'}</span>
             <span className="cd-chip">{t('clients.agentLabel')} · {client.referralAgent || '—'}</span>
+            {client.fileNo ? (
+              <span className="cl-passport" title={t('clients.fileNo')}>
+                {client.fileNo}
+              </span>
+            ) : null}
           </div>
           <div className="cd-profile__status">
             <span className={`cbadge ${statusClass(client.status)}`}>

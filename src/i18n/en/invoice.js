@@ -64,6 +64,8 @@
   'invoice.notesPlaceholder': 'Add any notes to appear on the invoice…',
 
   'invoice.customerSection': 'Customer Information',
+  'invoice.linkedClient': 'Linked client',
+  'invoice.fileNo': 'File No.',
   'invoice.customerNameLabel': 'Customer Full Name *',
   'invoice.customerNamePlaceholder': 'Enter full name',
   'invoice.nationalityLabel': 'Nationality *',

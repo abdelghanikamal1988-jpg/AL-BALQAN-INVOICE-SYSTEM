@@ -96,8 +96,14 @@ export default function InvoicePreview({ form, invoiceNumber }) {
                 </div>
                 <div className="invoice__customer-item">
                   <strong>{t('invoice.destination')}</strong>
-                  <span>{form.destination ? t('data.destination.' + form.destination) : '—'}</span>
+                  <span className="invoice__customer-value-upper">{form.destination ? t('data.destination.' + form.destination) : '—'}</span>
                 </div>
+                {form.clientFileNo ? (
+                  <div className="invoice__customer-item">
+                    <strong>{t('invoice.fileNo')}</strong>
+                    <span className="invoice__customer-value-upper">{form.clientFileNo}</span>
+                  </div>
+                ) : null}
               </div>
             </div>
 

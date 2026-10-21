@@ -143,10 +143,21 @@ export function clearDraft() {
 
 /* ----------------------- In-memory helpers ----------------------- */
 
-export function createInvoiceObject(formData, number) {
+export function createInvoiceObject(formData, number, linkedClient) {
   const now = new Date();
   const vatMode = formData.vatMode || VAT_MODE.NONE;
   const vat = calculateVat(formData.total, vatMode);
+  const linked =
+    linkedClient && linkedClient.id
+      ? {
+          /* The invoice remembers which file it belongs to, so a repeat
+             customer can be found from either side: the client record or
+             the invoice. Legacy invoices simply have no `client` key. */
+          id: linkedClient.id,
+          name: linkedClient.name || formData.name || '',
+          fileNo: linkedClient.fileNo || '',
+        }
+      : null;
   return {
     id: typeof crypto !== 'undefined' && crypto.randomUUID
       ? crypto.randomUUID()
@@ -161,6 +172,7 @@ export function createInvoiceObject(formData, number) {
       phone: formData.phone,
       email: formData.email,
     },
+    ...(linked ? { client: linked } : {}),
     travel: {
       destination: formData.destination,
       service: formData.service,

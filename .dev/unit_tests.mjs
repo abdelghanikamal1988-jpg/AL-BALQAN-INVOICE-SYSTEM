@@ -13,7 +13,8 @@ import { calculateVat, VAT_MODE } from '../src/utils/vat.js';
 import { hasArabic, toUpperLatin, arabicFieldKeys } from '../src/utils/textCase.js';
 import { whatsappDigits } from '../src/utils/whatsapp.js';
 import { transliterateArabic, pdfSafeText, containsArabic } from '../src/utils/arabicLatin.js';
-import { validateClientForm, normalizePassport, emptyClientForm } from '../src/utils/clients.js';
+import { validateClientForm, normalizePassport, emptyClientForm, formToClient } from '../src/utils/clients.js';
+import { createInvoiceObject } from '../src/utils/storage.js';
 import { normalizeName, isEmailValid, isPhoneValid } from '../src/utils/validation.js';
 
 /* ------------------------- paymentCalculator ------------------------- */
@@ -200,4 +201,54 @@ test('validateClientForm: Arabic in any field is rejected', () => {
   };
   const errors = validateClientForm(form);
   assert.equal(errors.country, 'clients.err.arabicOnly');
+});
+
+/* ------------------------- client file number ------------------------- */
+
+test('createInvoiceObject: linked invoice carries the client file number', () => {
+  const inv = createInvoiceObject(
+    { name: 'AHMED ALI', passport: 'P1234567', total: 1000, paid: 0, vatMode: 'none' },
+    'INV-2026-0001',
+    { id: 'cli-1', name: 'AHMED ALI', fileNo: 'FILE-2026-0001' }
+  );
+  assert.equal(inv.client.id, 'cli-1');
+  assert.equal(inv.client.name, 'AHMED ALI');
+  assert.equal(inv.client.fileNo, 'FILE-2026-0001');
+});
+
+test('createInvoiceObject: an unlinked invoice keeps the legacy shape', () => {
+  const inv = createInvoiceObject(
+    { name: 'AHMED ALI', passport: 'P1234567', total: 1000, paid: 0, vatMode: 'none' },
+    'INV-2026-0002'
+  );
+  assert.equal('client' in inv, false);
+});
+
+test('createInvoiceObject: linked client without a file number stays safe', () => {
+  const inv = createInvoiceObject(
+    { name: 'AHMED ALI', total: 100, paid: 0, vatMode: 'none' },
+    'INV-2026-0003',
+    { id: 'cli-2', name: 'AHMED ALI' }
+  );
+  assert.equal(inv.client.id, 'cli-2');
+  assert.equal(inv.client.fileNo, '');
+});
+
+test('formToClient: keeps the permanent file number', () => {
+  const client = formToClient(emptyClientForm(), {
+    id: 'cli-3',
+    documents: {},
+    pdfPath: null,
+    fileNo: 'FILE-2026-0007',
+  });
+  assert.equal(client.fileNo, 'FILE-2026-0007');
+});
+
+test('formToClient: legacy call without a file number falls back to empty', () => {
+  const client = formToClient(emptyClientForm(), {
+    id: 'cli-4',
+    documents: {},
+    pdfPath: null,
+  });
+  assert.equal(client.fileNo, '');
 });

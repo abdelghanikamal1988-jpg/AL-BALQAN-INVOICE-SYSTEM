@@ -22,6 +22,7 @@ import {
   newClientId,
 } from '../../utils/clients.js';
 import { filterTextInput } from '../../utils/textCase.js';
+import { nextFileNumber } from '../../utils/fileNumber.js';
 import { CLIENT_DESTINATIONS, CLIENT_SERVICES } from '../../data/clientOptions.js';
 import {
   DOCUMENT_TYPES,
@@ -392,10 +393,17 @@ export default function ClientForm() {
         }
       }
 
+      /* A file number is permanent: keep the one the client already has and
+         hand a new client its first number as it is saved, so every client
+         can be filed against the invoice that carries the same number. */
+      let fileNo = existing?.fileNo || '';
+      if (!fileNo) fileNo = await nextFileNumber();
+
       const client = formToClient({ ...form, referralAgent: resolvedAgent }, {
         id: clientId,
         documents: nextDocs,
         pdfPath: existing?.pdfPath || null,
+        fileNo,
       });
 
       if (editing) {
@@ -457,6 +465,14 @@ export default function ClientForm() {
           <h1>{editing ? t('clients.editClient') : t('clients.newClient')}</h1>
           <p className="subtitle">
             {editing ? t('clients.editSubtitle') : t('clients.newSubtitle')}
+            {editing && existing?.fileNo ? (
+              <>
+                {' · '}
+                <span className="mono">
+                  {t('clients.fileNo')}: {existing.fileNo}
+                </span>
+              </>
+            ) : null}
           </p>
         </div>
         <div className="editor-actions">

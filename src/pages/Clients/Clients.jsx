@@ -558,6 +558,9 @@ export default function Clients() {
                   </span>
                   <span>
                     <span className="cl-name">{clientFullName(client) || '—'}</span>
+                    {client.fileNo ? (
+                      <span className="cell-file">{client.fileNo}</span>
+                    ) : null}
                     <span className="cl-sub">{client.sex || ''}</span>
                   </span>
                 </div>

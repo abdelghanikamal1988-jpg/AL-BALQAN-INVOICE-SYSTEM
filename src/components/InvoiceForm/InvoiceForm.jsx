@@ -12,6 +12,7 @@ export default function InvoiceForm({
   issueDateDisplay,
   issueTimeDisplay,
   inputRef,
+  clientLink,
 }) {
   const { t } = useLang();
   return (
@@ -48,7 +49,13 @@ export default function InvoiceForm({
         </div>
       </section>
 
-      <CustomerSection form={form} errors={errors} onChange={onChange} inputRef={inputRef} />
+      <CustomerSection
+        form={form}
+        errors={errors}
+        onChange={onChange}
+        inputRef={inputRef}
+        clientLink={clientLink}
+      />
 
       <ServiceSection form={form} errors={errors} onChange={onChange} />
 
