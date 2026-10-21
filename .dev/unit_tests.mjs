@@ -15,6 +15,7 @@ import { whatsappDigits } from '../src/utils/whatsapp.js';
 import { transliterateArabic, pdfSafeText, containsArabic } from '../src/utils/arabicLatin.js';
 import { validateClientForm, normalizePassport, emptyClientForm, formToClient } from '../src/utils/clients.js';
 import { createInvoiceObject } from '../src/utils/storage.js';
+import { fileNumberDayPrefix, fileNumberFromCounter } from '../src/utils/fileNumber.js';
 import { normalizeName, isEmailValid, isPhoneValid } from '../src/utils/validation.js';
 
 /* ------------------------- paymentCalculator ------------------------- */
@@ -251,4 +252,22 @@ test('formToClient: legacy call without a file number falls back to empty', () =
     pdfPath: null,
   });
   assert.equal(client.fileNo, '');
+});
+
+test('fileNumber: counter key uses day and month of the day', () => {
+  assert.equal(fileNumberDayPrefix(new Date(2026, 9, 21)), 'FILE-2110');
+  assert.equal(fileNumberDayPrefix(new Date(2026, 0, 5)), 'FILE-0501');
+});
+
+test('fileNumber: counter value becomes FILE-YYYY-DDMM + daily sequence', () => {
+  assert.equal(fileNumberFromCounter('FILE-2110-2026-0001'), 'FILE-2026-21101');
+  assert.equal(fileNumberFromCounter('FILE-2110-2026-0042'), 'FILE-2026-211042');
+  assert.equal(fileNumberFromCounter('FILE-0501-2026-0009'), 'FILE-2026-05019');
+});
+
+test('fileNumber: unrelated counter values are rejected', () => {
+  assert.equal(fileNumberFromCounter('INV-2026-0001'), '');
+  assert.equal(fileNumberFromCounter('FILE-2110-2026'), '');
+  assert.equal(fileNumberFromCounter(''), '');
+  assert.equal(fileNumberFromCounter(null), '');
 });
