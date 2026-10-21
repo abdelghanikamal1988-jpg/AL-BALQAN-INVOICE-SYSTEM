@@ -1181,25 +1181,49 @@
     text-align: start;
   }
 
-  /* Values keep their own line and are never shortened. */
+  /* Values keep their own line and are never shortened - and they must stay
+     inside their own cell: the cell is only ~170px wide, so a value with
+     flex: 0 0 auto kept its full max-content width, never wrapped, and ran
+     sideways into the neighbouring cell (the customer name landing on top of
+     the passport number). Shrink to the line, wrap to as many lines as the
+     text needs, and break long unbroken tokens instead of overflowing. */
   .cell-v,
   .db-panel .db-inv .db-cell__v {
-    flex: 0 0 auto;
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: 100%;
+    display: block;
     text-align: start;
     white-space: normal;
     overflow: visible;
+    overflow-wrap: anywhere;
     text-overflow: clip;
     -webkit-line-clamp: none;
     min-height: 0;
   }
 
+  .history-table td[data-label] > *,
+  .cl-table td[data-label] > *,
+  .db-inv td[data-label] > *,
+  .au-table td[data-label] > *,
+  .history-table tfoot td[data-label] > *,
+  .cl-table tfoot td[data-label] > *,
+  .db-inv tfoot td[data-label] > *,
+  .au-table tfoot td[data-label] > * {
+    min-width: 0;
+    max-width: 100%;
+  }
+
   .history-table td > .badge,
   .cl-table td > .cbadge,
   .cl-table td > .cl-passport {
+    flex: 0 1 auto;
+    min-width: 0;
+    max-width: 100%;
     overflow: visible;
     text-overflow: clip;
     white-space: normal;
-    max-width: 100%;
+    overflow-wrap: anywhere;
   }
 
   .history-table .user-cell > span:first-child,
