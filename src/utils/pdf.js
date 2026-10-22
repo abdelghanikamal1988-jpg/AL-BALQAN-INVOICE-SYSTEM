@@ -62,12 +62,44 @@ export async function exportInvoicePdf(invoice) {
   pdf.save(pdfFilename(invoice));
 }
 
+async function loadJsPdf() {
+  let lastErr = null;
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    try {
+      return await import('jspdf');
+    } catch (err) {
+      lastErr = err;
+      if (attempt === 0) await new Promise((resolve) => setTimeout(resolve, 400));
+    }
+  }
+  console.error('[pdf] jsPDF failed to load', lastErr);
+  const err = new Error('pdf-engine-load');
+  err.code = 'PDF_ENGINE_LOAD';
+  throw err;
+}
+
+export function reportPdfFailure(err, toast, t, kind) {
+  console.error(`[pdf] ${kind} failed`, err);
+  if (err && err.message === 'popup-blocked') {
+    toast.info(t('invoice.printSavedInstead'));
+    return;
+  }
+  if (err && err.code === 'PDF_ENGINE_LOAD') {
+    toast.error(t('invoice.pdfNeedsRefresh'));
+    if (typeof window !== 'undefined' && window.location) {
+      setTimeout(() => window.location.reload(), 2200);
+    }
+    return;
+  }
+  toast.error(t(kind === 'print' ? 'invoice.printDialogFailed' : 'invoice.pdfExportFailed'));
+}
+
 /**
  * Builds the invoice PDF (shared by export and print) and returns the jsPDF
  * instance so callers can save it or print it.
  */
 export async function buildInvoicePdf(invoice) {
-  const { jsPDF } = await import('jspdf');
+  const { jsPDF } = await loadJsPdf();
   const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4', compress: true });
 
   const org = getCompany();

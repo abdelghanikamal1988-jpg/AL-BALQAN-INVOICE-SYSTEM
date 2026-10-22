@@ -17,6 +17,7 @@ import { validateClientForm, normalizePassport, emptyClientForm, formToClient } 
 import { createInvoiceObject } from '../src/utils/storage.js';
 import { fileNumberDayPrefix, fileNumberFromCounter } from '../src/utils/fileNumber.js';
 import { normalizeName, isEmailValid, isPhoneValid } from '../src/utils/validation.js';
+import { reportPdfFailure } from '../src/utils/pdf.js';
 
 /* ------------------------- paymentCalculator ------------------------- */
 
@@ -295,4 +296,47 @@ test('createInvoiceObject: a direct customer keeps the legacy shape', () => {
     'INV-2026-0012'
   );
   assert.equal('billedTo' in blankAgent, false);
+});
+
+test('reportPdfFailure: popup-blocked print reports the downloaded file instead of an error', () => {
+  const calls = [];
+  const toast = { success: () => {}, error: (m) => calls.push(['error', m]), info: (m) => calls.push(['info', m]) };
+  const t = (key) => key;
+  const realError = console.error;
+  console.error = () => {};
+  reportPdfFailure(new Error('popup-blocked'), toast, t, 'print');
+  console.error = realError;
+  assert.deepEqual(calls, [['info', 'invoice.printSavedInstead']]);
+});
+
+test('reportPdfFailure: missing jsPDF chunk asks for a refresh', () => {
+  const calls = [];
+  const toast = { success: () => {}, error: (m) => calls.push(['error', m]), info: (m) => calls.push(['info', m]) };
+  const t = (key) => key;
+  const err = new Error('pdf-engine-load');
+  err.code = 'PDF_ENGINE_LOAD';
+  const realError = console.error;
+  console.error = () => {};
+  reportPdfFailure(err, toast, t, 'export');
+  reportPdfFailure(err, toast, t, 'print');
+  console.error = realError;
+  assert.deepEqual(calls, [
+    ['error', 'invoice.pdfNeedsRefresh'],
+    ['error', 'invoice.pdfNeedsRefresh'],
+  ]);
+});
+
+test('reportPdfFailure: unknown failures keep the classic message per kind', () => {
+  const calls = [];
+  const toast = { success: () => {}, error: (m) => calls.push(['error', m]), info: (m) => calls.push(['info', m]) };
+  const t = (key) => key;
+  const realError = console.error;
+  console.error = () => {};
+  reportPdfFailure(new Error('boom'), toast, t, 'export');
+  reportPdfFailure(new Error('boom'), toast, t, 'print');
+  console.error = realError;
+  assert.deepEqual(calls, [
+    ['error', 'invoice.pdfExportFailed'],
+    ['error', 'invoice.printDialogFailed'],
+  ]);
 });

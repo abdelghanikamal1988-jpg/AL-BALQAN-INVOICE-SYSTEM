@@ -33,7 +33,7 @@ import { formatCurrency } from '../../utils/formatCurrency.js';
 import { formatDateShort } from '../../utils/formatDate.js';
 import services from '../../data/services.js';
 import destinations from '../../data/destinations.js';
-import { exportInvoicePdf, printInvoicePdf } from '../../utils/pdf.js';
+import { exportInvoicePdf, printInvoicePdf, reportPdfFailure } from '../../utils/pdf.js';
 import { invoicePaymentBreakdown } from '../../utils/vat.js';
 import { whatsappShareUrl } from '../../utils/whatsapp.js';
 
@@ -333,13 +333,13 @@ export default function InvoiceHistory() {
   const handlePdf = (invoice) => {
     exportInvoicePdf(invoice)
       .then(() => toast.success(t('invoice.pdfExported')))
-      .catch(() => toast.error(t('invoice.pdfExportFailed')));
+      .catch((err) => reportPdfFailure(err, toast, t, 'export'));
   };
 
   const handlePrint = (invoice) => {
     printInvoicePdf(invoice)
       .then(() => {})
-      .catch(() => toast.error(t('invoice.printDialogFailed')));
+      .catch((err) => reportPdfFailure(err, toast, t, 'print'));
   };
 
   const handleWhatsApp = (invoice) => {

@@ -51,6 +51,8 @@
   'invoice.pdfExported': 'PDF exported successfully.',
   'invoice.pdfExportFailed': 'Unable to export PDF. Please try again or use Print.',
   'invoice.printDialogFailed': "Unable to open the print dialog. Please use your browser's print command.",
+  'invoice.printSavedInstead': 'Popup blocked: the PDF was downloaded instead. Open the downloaded file to print it.',
+  'invoice.pdfNeedsRefresh': 'A new version is available. The page will refresh now, then try again.',
   'invoice.approvalRequiredExport': 'Your changes must be approved by an administrator before exporting or printing. The invoice in the history stays print-ready.',
   'invoice.formCleared': 'Form cleared. Starting a new invoice.',
 

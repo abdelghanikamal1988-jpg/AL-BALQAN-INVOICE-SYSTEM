@@ -23,7 +23,7 @@ import {
   clearDraft,
   createInvoiceObject,
 } from '../../utils/storage.js';
-import { exportInvoicePdf, printInvoicePdf } from '../../utils/pdf.js';
+import { exportInvoicePdf, printInvoicePdf, reportPdfFailure } from '../../utils/pdf.js';
 import { normalizeName, isEmailValid, isPhoneValid, isEmptyField } from '../../utils/validation.js';
 import { calculateVat } from '../../utils/vat.js';
 import { filterTextInput, hasArabic } from '../../utils/textCase.js';
@@ -426,7 +426,7 @@ export default function CreateInvoice() {
       await exportInvoicePdf(saved);
       toast.success(t('invoice.pdfExported'));
     } catch (err) {
-      toast.error(t('invoice.pdfExportFailed'));
+      reportPdfFailure(err, toast, t, 'export');
     } finally {
       setExporting(false);
     }
@@ -436,7 +436,7 @@ export default function CreateInvoice() {
     try {
       await printInvoicePdf(saved);
     } catch (err) {
-      toast.error(t('invoice.printDialogFailed'));
+      reportPdfFailure(err, toast, t, 'print');
     }
   };
 
@@ -725,7 +725,7 @@ export default function CreateInvoice() {
                   onClick={() => {
                     exportInvoicePdf(savedInvoice)
                       .then(() => toast.success(t('invoice.pdfExported')))
-                      .catch(() => toast.error(t('invoice.pdfExportFailed')));
+                      .catch((err) => reportPdfFailure(err, toast, t, 'export'));
                   }}
                 >
                   {t('invoice.exportPdf')}
@@ -738,7 +738,7 @@ export default function CreateInvoice() {
                     setSavedInvoice(null);
                     printInvoicePdf(savedInvoice)
                       .then(() => {})
-                      .catch(() => toast.error(t('invoice.printDialogFailed')));
+                      .catch((err) => reportPdfFailure(err, toast, t, 'print'));
                   }}
                 >
                   {t('common.print')}
