@@ -19,7 +19,7 @@ const plainFormatter = new Intl.NumberFormat('en-US', {
 export function formatCurrency(value) {
   const n = Number(value);
   if (Number.isNaN(n)) return `${company.currency} 0.00`;
-  return formatter.format(n);
+  return formatter.format(n).replace(/[\u00A0\u202F]/g, ' ');
 }
 
 export function formatNumber(value) {
