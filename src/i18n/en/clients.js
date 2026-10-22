@@ -111,6 +111,7 @@
   'clients.historyNote':
     'Invoice amounts are read live from the Invoice System — this module never stores payment data.',
 
+  'clients.doc.visa': 'Visa',
   'clients.doc.passport': 'Passport',
   'clients.doc.id': 'ID',
   'clients.doc.photo': 'Personal Photo',
@@ -191,6 +192,7 @@
   'clients.toastAgentAdded': 'Agent added.',
   'clients.toastAgentError': 'Unable to add the agent.',
   'clients.toastFileTooBig': 'File is larger than 10 MB.',
+  'clients.toastPdfOnly': 'Only PDF files are accepted here.',
   'clients.toastPendingSubmit':
     'Changes submitted for approval. The client stays unchanged until an administrator approves.',
   'clients.toastUpdated': 'Client updated successfully.',

@@ -108,4 +108,18 @@ begin
   exception when others then
     raise notice 'STORAGE POLICY FAILED: %  -> tell me the message', sqlerrm;
   end;
+
+  begin
+    drop policy if exists "client documents viewer" on storage.objects;
+    create policy "client documents viewer" on storage.objects
+      for select to authenticated
+      using (bucket_id in ('client-documents', 'client-pdfs')
+             and (storage.foldername(name))[1] = 'clients'
+             and exists (select 1 from public.clients c
+                         where c.id::text = (storage.foldername(name))[3]
+                           and c.user_id = auth.uid()));
+    raise notice 'STORAGE VIEWER POLICY OK';
+  exception when others then
+    raise notice 'STORAGE VIEWER POLICY FAILED: %  -> tell me the message', sqlerrm;
+  end;
 end $$;

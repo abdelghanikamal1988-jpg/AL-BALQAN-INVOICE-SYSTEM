@@ -18,6 +18,7 @@ import { createInvoiceObject } from '../src/utils/storage.js';
 import { fileNumberDayPrefix, fileNumberFromCounter } from '../src/utils/fileNumber.js';
 import { normalizeName, isEmailValid, isPhoneValid } from '../src/utils/validation.js';
 import { reportPdfFailure } from '../src/utils/pdf.js';
+import { DOCUMENT_TYPES, normalizeDocuments } from '../src/utils/uploads.js';
 
 /* ------------------------- paymentCalculator ------------------------- */
 
@@ -394,4 +395,21 @@ test('invoicePrefillFromClient: client service labels map to invoice services', 
   assert.equal(invoicePrefillFromClient({ ...base, service: 'Labor Contract' }).service, 'work-contract');
   assert.equal(invoicePrefillFromClient({ ...base, service: 'Resident Visa' }).service, 'residence');
   assert.equal(invoicePrefillFromClient(null), null);
+});
+
+test('DOCUMENT_TYPES: visa slot is a single optional PDF document', () => {
+  const visa = DOCUMENT_TYPES.find((def) => def.id === 'visa');
+  assert.ok(visa, 'visa type must exist');
+  assert.equal(visa.accept, 'application/pdf');
+  assert.equal(visa.optional, true);
+  assert.ok(!visa.multiple, 'visa is a single slot');
+  assert.equal(DOCUMENT_TYPES.filter((def) => !def.multiple).length, 3);
+});
+
+test('normalizeDocuments: keeps the visa slot untouched', () => {
+  const visa = { path: 'clients/u1/c1/visa.pdf', name: 'visa.pdf', type: 'application/pdf' };
+  const docs = normalizeDocuments({ visa, passport: { path: 'clients/u1/c1/p.png', name: 'p.png' } });
+  assert.equal(docs.visa.path, 'clients/u1/c1/visa.pdf');
+  assert.equal(docs.visa.name, 'visa.pdf');
+  assert.equal(normalizeDocuments({}).visa, undefined);
 });

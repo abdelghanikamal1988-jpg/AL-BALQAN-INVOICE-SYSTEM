@@ -109,6 +109,7 @@
   'clients.historyNote':
     'تُقرأ مبالغ الفواتير مباشرة من نظام الفواتير — لا يخزّن هذا القسم أي بيانات دفع.',
 
+  'clients.doc.visa': 'التأشيرة',
   'clients.doc.passport': 'جواز السفر',
   'clients.doc.id': 'بطاقة الهوية',
   'clients.doc.photo': 'الصورة الشخصية',
@@ -188,6 +189,7 @@
   'clients.toastAgentAdded': 'تمت إضافة الوكيل.',
   'clients.toastAgentError': 'تعذّر إضافة الوكيل.',
   'clients.toastFileTooBig': 'حجم الملف أكبر من 10 ميغابايت.',
+  'clients.toastPdfOnly': 'يُسمح بملفات PDF فقط هنا.',
   'clients.toastPendingSubmit': 'تم إرسال التغييرات للموافقة. لن يتغيّر العميل حتى يوافق المسؤول.',
   'clients.toastUpdated': 'تم تحديث العميل بنجاح.',
   'clients.toastSaved': 'تم حفظ العميل بنجاح.',

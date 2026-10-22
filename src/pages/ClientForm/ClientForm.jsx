@@ -270,6 +270,16 @@ export default function ClientForm() {
       toast.error(t('clients.toastFileTooBig'));
       return;
     }
+    const def = DOCUMENT_TYPES.find((d) => d.id === docId);
+    if (def && def.accept) {
+      const allowed = def.accept.split(',').map((s) => s.trim());
+      const typeOk = file.type && allowed.includes(file.type);
+      const extOk = /\.pdf$/i.test(file.name || '');
+      if (!typeOk && !(allowed.includes('application/pdf') && extOk)) {
+        toast.error(t('clients.toastPdfOnly'));
+        return;
+      }
+    }
     const previous = docs[docId];
     if (previous && previous.path) setStalePaths((prev) => [...prev, previous.path]);
     setPending((prev) => ({ ...prev, [docId]: file }));
@@ -339,8 +349,9 @@ export default function ClientForm() {
     }));
   };
 
-  /* "other" is an add-on slot, so only the passport and the photo warn. */
-  const missingDocs = DOCUMENT_TYPES.filter((def) => !def.multiple && !docs[def.id]);
+  /* "other" is an add-on slot and the visa arrives after the transaction,
+     so only the passport and the photo warn. */
+  const missingDocs = DOCUMENT_TYPES.filter((def) => !def.multiple && !def.optional && !docs[def.id]);
   const agentValue = isAgent
     ? agentOwnName || CUSTOMER
     : addingAgent
@@ -696,7 +707,7 @@ export default function ClientForm() {
                             {meta ? t('clients.replace') : t('common.upload')}
                             <input
                               type="file"
-                              accept={DOCUMENT_ACCEPT}
+                              accept={def.accept || DOCUMENT_ACCEPT}
                               style={{ display: 'none' }}
                               onChange={(e) => {
                                 const file = e.target.files?.[0];

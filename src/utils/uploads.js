@@ -12,6 +12,7 @@ export const DOCUMENTS_BUCKET = 'client-documents';
 export const PDFS_BUCKET = 'client-pdfs';
 
 export const DOCUMENT_TYPES = [
+  { id: 'visa', label: 'Visa', accept: 'application/pdf', optional: true },
   { id: 'passport', label: 'Passport' },
   { id: 'photo', label: 'Personal Photo' },
   { id: 'other', label: 'Other Document', multiple: true, accept: 'application/pdf' },
