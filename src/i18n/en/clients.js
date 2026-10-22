@@ -40,9 +40,11 @@
   'clients.viewClient': 'View client',
   'clients.editClientAction': 'Edit client',
   'clients.deleteClientAction': 'Delete client',
+  'clients.createInvoice': 'Create Invoice',
   'clients.ariaView': 'View {name}',
   'clients.ariaEdit': 'Edit {name}',
   'clients.ariaDelete': 'Delete {name}',
+  'clients.ariaCreateInvoice': 'Create invoice for {name}',
   'clients.invoiceNote':
     'Paid and remaining amounts are always read live from the invoice system — no payment data is stored in the client record.',
   'clients.invoicesModalTitle': 'Invoices — {name}',

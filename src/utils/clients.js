@@ -11,6 +11,14 @@ import { invoicePaymentBreakdown } from './vat.js';
 import { calculatePayment } from './paymentCalculator.js';
 import { CLIENT_STATUSES, DEFAULT_CLIENT_STATUS } from '../data/clientStatuses.js';
 import { toUpperLatin, hasArabic } from './textCase.js';
+import destinations from '../data/destinations.js';
+import services from '../data/services.js';
+
+const CLIENT_SERVICE_TO_INVOICE = {
+  'Tourist Visa': 'tourist-visa',
+  'Labor Contract': 'work-contract',
+  'Resident Visa': 'residence',
+};
 
 /** "ab-12 cd" -> "AB12CD" — used to match a client to its invoices. */
 export function normalizePassport(value) {
@@ -25,6 +33,27 @@ export function clientFullName(client) {
     .join(' ')
     .replace(/\s+/g, ' ')
     .trim();
+}
+
+export function invoicePrefillFromClient(client) {
+  if (!client) return null;
+  const rawDestination = String(client.destination || '').trim();
+  const destination = rawDestination
+    ? destinations.find((d) => d.id === rawDestination.toLowerCase())?.id ||
+      destinations.find((d) => d.label.toLowerCase() === rawDestination.toLowerCase())?.id ||
+      ''
+    : '';
+  const rawService = String(client.service || '').trim();
+  const service = services.some((s) => s.id === rawService)
+    ? rawService
+    : CLIENT_SERVICE_TO_INVOICE[rawService] || '';
+  return {
+    name: clientFullName(client),
+    nationality: client.country || '',
+    passport: client.passport || '',
+    destination,
+    service,
+  };
 }
 
 export function newClientId() {

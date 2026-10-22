@@ -634,6 +634,19 @@ export default function Clients() {
                           >
                             <Icon name="eye" />
                           </button>
+                          <Can perm="page:invoice.create">
+                            <button
+                              type="button"
+                              className="icon-btn"
+                              title={t('clients.createInvoice')}
+                              aria-label={t('clients.ariaCreateInvoice', {
+                                name: clientFullName(client) || t('clients.clientFallback'),
+                              })}
+                              onClick={() => navigate(`/create?client=${client.id}`)}
+                            >
+                              <Icon name="receipt" />
+                            </button>
+                          </Can>
                           <Can perm="action:client.save">
                             <button
                               type="button"

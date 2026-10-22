@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import InvoiceForm from '../../components/InvoiceForm/InvoiceForm.jsx';
 import InvoicePreview from '../../components/InvoicePreview/InvoicePreview.jsx';
 import Modal from '../../components/Modal/Modal.jsx';
@@ -8,10 +8,10 @@ import { useToast } from '../../components/Toast/ToastProvider.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { useLang } from '../../context/LangContext.jsx';
 import { dbSubmitPending } from '../../lib/pendingRepo.js';
-import { dbFetchClients } from '../../lib/clientRepo.js';
+import { dbFetchClients, dbFetchClient } from '../../lib/clientRepo.js';
 import company from '../../data/company.js';
 import { nextInvoiceNumber, uniqueInvoiceNumber } from '../../utils/invoiceNumber.js';
-import { clientFullName, normalizePassport } from '../../utils/clients.js';
+import { clientFullName, normalizePassport, invoicePrefillFromClient } from '../../utils/clients.js';
 import { formatDate, formatTime } from '../../utils/formatDate.js';
 import { formatCurrency } from '../../utils/formatCurrency.js';
 import {
@@ -53,11 +53,13 @@ const EMPTY_FORM = {
 export default function CreateInvoice() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const toast = useToast();
   const { needsEditApproval, profile } = useAuth();
   const { t } = useLang();
 
   const editing = Boolean(id);
+  const clientParam = searchParams.get('client');
   const inputRef = useRef(null);
   const mountedRef = useRef(true);
 
@@ -86,6 +88,8 @@ export default function CreateInvoice() {
   /* Set once the user picks the billed party by hand, so the agent of a
      matched client can no longer overwrite that choice. */
   const [billedTouched, setBilledTouched] = useState(false);
+  const [prefillClient, setPrefillClient] = useState(null);
+  const prefillAppliedRef = useRef(false);
 
   const draftRef = useRef(null);
 
@@ -214,6 +218,64 @@ export default function CreateInvoice() {
       alive = false;
     };
   }, []);
+
+  useEffect(() => {
+    prefillAppliedRef.current = false;
+    setPrefillClient(null);
+    if (editing || !clientParam) return undefined;
+    let alive = true;
+    dbFetchClient(clientParam)
+      .then((row) => {
+        if (!alive) return;
+        if (row) setPrefillClient(row);
+        else setSearchParams({}, { replace: true });
+      })
+      .catch((err) => {
+        console.warn('Client prefill unavailable:', err);
+      });
+    return () => {
+      alive = false;
+    };
+  }, [clientParam, editing, setSearchParams]);
+
+  useEffect(() => {
+    if (editing || !clientParam || !prefillClient || prefillAppliedRef.current) return;
+    if (loading || draftPrompt) return;
+    prefillAppliedRef.current = true;
+    const prefill = invoicePrefillFromClient(prefillClient);
+    const fileNo = prefillClient.fileNo || '';
+    const clientName = clientFullName(prefillClient);
+    setSearchParams({}, { replace: true });
+    setPrefillClient(null);
+    if (!prefill) return;
+    const merged = { ...form };
+    Object.entries(prefill).forEach(([key, value]) => {
+      if (value && !String(merged[key] || '').trim()) merged[key] = value;
+    });
+    setForm(merged);
+    if (fileNo) {
+      setStoredLink({ id: prefillClient.id, name: clientName, fileNo });
+    }
+    requestAnimationFrame(() => {
+      const order = [
+        ['#customer-name', merged.name],
+        ['#customer-nationality', merged.nationality],
+        ['#customer-passport', merged.passport],
+        ['#customer-phone', merged.phone],
+        ['#destination', merged.destination],
+        ['#service', merged.service],
+        ['#total', merged.total],
+      ];
+      for (const [selector, value] of order) {
+        if (String(value || '').trim()) continue;
+        const el = document.querySelector(selector);
+        if (el) {
+          el.focus();
+          break;
+        }
+      }
+    });
+  }, [editing, clientParam, prefillClient, loading, draftPrompt, form, setSearchParams]);
 
   /* ---------- Draft autosave (create mode only) ---------- */
   useEffect(() => {
@@ -515,6 +577,8 @@ export default function CreateInvoice() {
   };
 
   const handleResumeDraft = () => {
+    prefillAppliedRef.current = true;
+    if (clientParam) setSearchParams({}, { replace: true });
     setDraftPrompt(false);
     setDirty(true);
   };

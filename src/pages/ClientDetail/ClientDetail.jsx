@@ -213,6 +213,11 @@ export default function ClientDetail() {
               {t('common.edit')}
             </Link>
           </Can>
+          <Can perm="page:invoice.create">
+            <Link to={`/create?client=${client.id}`} className="btn btn--primary">
+              {t('clients.createInvoice')}
+            </Link>
+          </Can>
           <Can perm="action:client.delete">
             <button
               type="button"

@@ -13,7 +13,7 @@ import { calculateVat, VAT_MODE } from '../src/utils/vat.js';
 import { hasArabic, toUpperLatin, arabicFieldKeys } from '../src/utils/textCase.js';
 import { whatsappDigits } from '../src/utils/whatsapp.js';
 import { transliterateArabic, pdfSafeText, containsArabic } from '../src/utils/arabicLatin.js';
-import { validateClientForm, normalizePassport, emptyClientForm, formToClient } from '../src/utils/clients.js';
+import { validateClientForm, normalizePassport, emptyClientForm, formToClient, invoicePrefillFromClient } from '../src/utils/clients.js';
 import { createInvoiceObject } from '../src/utils/storage.js';
 import { fileNumberDayPrefix, fileNumberFromCounter } from '../src/utils/fileNumber.js';
 import { normalizeName, isEmailValid, isPhoneValid } from '../src/utils/validation.js';
@@ -339,4 +339,59 @@ test('reportPdfFailure: unknown failures keep the classic message per kind', () 
     ['error', 'invoice.pdfExportFailed'],
     ['error', 'invoice.printDialogFailed'],
   ]);
+});
+
+test('invoicePrefillFromClient: maps a client record onto empty invoice fields', () => {
+  const prefill = invoicePrefillFromClient({
+    id: 'c1',
+    firstName: 'MOHAMED',
+    fatherName: 'ESSAM',
+    surname: 'ELSAYED',
+    country: 'EGYPT',
+    passport: 'A23478',
+    destination: 'Albania',
+    service: 'Tourist Visa',
+    referralAgent: 'ESSAM',
+    fileNo: 'FILE-2210-2026',
+  });
+  assert.deepEqual(prefill, {
+    name: 'MOHAMED ESSAM ELSAYED',
+    nationality: 'EGYPT',
+    passport: 'A23478',
+    destination: 'albania',
+    service: 'tourist-visa',
+  });
+});
+
+test('invoicePrefillFromClient: invoice ids pass through, unknown values blank', () => {
+  const byId = invoicePrefillFromClient({
+    firstName: 'A',
+    fatherName: 'B',
+    surname: 'C',
+    country: 'X',
+    passport: 'P1',
+    destination: 'serbia',
+    service: 'work-contract',
+  });
+  assert.equal(byId.destination, 'serbia');
+  assert.equal(byId.service, 'work-contract');
+
+  const unknown = invoicePrefillFromClient({
+    firstName: 'A',
+    fatherName: 'B',
+    surname: 'C',
+    country: 'X',
+    passport: 'P1',
+    destination: 'Atlantis',
+    service: 'Rocket Ride',
+  });
+  assert.equal(unknown.destination, '');
+  assert.equal(unknown.service, '');
+});
+
+test('invoicePrefillFromClient: client service labels map to invoice services', () => {
+  const base = { firstName: 'A', fatherName: 'B', surname: 'C', country: 'X', passport: 'P1' };
+  assert.equal(invoicePrefillFromClient({ ...base, service: 'Labor Contract' }).service, 'work-contract');
+  assert.equal(invoicePrefillFromClient({ ...base, service: 'Resident Visa' }).service, 'residence');
+  assert.equal(invoicePrefillFromClient(null), null);
 });

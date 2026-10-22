@@ -40,9 +40,11 @@
   'clients.viewClient': 'عرض العميل',
   'clients.editClientAction': 'تعديل العميل',
   'clients.deleteClientAction': 'حذف العميل',
+  'clients.createInvoice': 'إنشاء فاتورة',
   'clients.ariaView': 'عرض {name}',
   'clients.ariaEdit': 'تعديل {name}',
   'clients.ariaDelete': 'حذف {name}',
+  'clients.ariaCreateInvoice': 'إنشاء فاتورة لـ {name}',
   'clients.invoiceNote':
     'تُقرأ المبالغ المدفوعة والمتبقة مباشرة من نظام الفواتير — لا تُخزَّن أي بيانات دفع في سجل العميل.',
   'clients.invoicesModalTitle': 'الفواتير — {name}',
