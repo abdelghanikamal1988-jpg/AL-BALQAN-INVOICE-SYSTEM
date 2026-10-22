@@ -65,6 +65,18 @@
   'invoice.customerSection': 'معلومات العميل',
   'invoice.linkedClient': 'عميل مرتبط',
   'invoice.fileNo': 'رقم الملف',
+  'invoice.billedLegend': 'الفاتورة إلى',
+  'invoice.billedCustomer': 'العميل المباشر',
+  'invoice.billedAgent': 'الوكيل',
+  'invoice.billedAgentName': 'اسم الوكيل',
+  'invoice.billedAgentNamePlaceholder': 'الوكيل الذي استلم الدفعة',
+  'invoice.billedHintCustomer': 'تصدر باسم العميل — بنفس الشكل المعتاد تمامًا.',
+  'invoice.billedHintAgent':
+    'تصدر الفاتورة باسم الوكيل، وبيانات العميل تبقى على الفاتورة كصاحب الجواز، ويُضاف سطر التحصيل في الملحوظات.',
+  'invoice.billedTo': 'فاتورة إلى',
+  'invoice.agentNote':
+    'تم التحصيل من {agent} نظير {service} إلى {destination} ({country}) للعميل {name} — رقم الجواز {passport}.',
+  'invoice.errBilledName': 'اسم الوكيل مطلوب عندما تُصدر الفاتورة باسم وكيل.',
   'invoice.customerNameLabel': 'الاسم الكامل للعميل *',
   'invoice.customerNamePlaceholder': 'أدخل الاسم الكامل',
   'invoice.nationalityLabel': 'الجنسية *',

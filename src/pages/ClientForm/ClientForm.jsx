@@ -98,8 +98,16 @@ export default function ClientForm() {
   const { hasPerm, needsEditApproval, profile } = useAuth();
   const canSave = hasPerm('action:client.save');
   /* An agent's own clients are never referred by someone else, so the
-     referral picker is hidden and left empty for that role. */
+     referral picker is hidden and the referral agent is always the agent's
+     own name (the same name the admin and employees see in the list). */
   const isAgent = profile?.role === 'delegate';
+  const agentOwnName = useMemo(
+    () =>
+      String(profile?.full_name || (profile?.email ? profile.email.split('@')[0] : '') || '')
+        .replace(/\s+/g, ' ')
+        .trim(),
+    [profile]
+  );
   const nameRef = useRef(null);
 
   const [form, setForm] = useState(emptyClientForm());
@@ -334,7 +342,7 @@ export default function ClientForm() {
   /* "other" is an add-on slot, so only the passport and the photo warn. */
   const missingDocs = DOCUMENT_TYPES.filter((def) => !def.multiple && !docs[def.id]);
   const agentValue = isAgent
-    ? CUSTOMER
+    ? agentOwnName || CUSTOMER
     : addingAgent
       ? newAgentName.trim()
       : agentChoice;
@@ -379,17 +387,47 @@ export default function ClientForm() {
       }
 
       let resolvedAgent = agentValue;
+      let resolvedAgentId = form.referralAgentId || null;
+      const rememberAgent = (row) => {
+        if (!row || !row.name) return;
+        setAgents((prev) =>
+          prev.some((a) => (row.id && a.id === row.id) || a.name === row.name)
+            ? prev
+            : [...prev, row]
+        );
+      };
+
       if (addingAgent && resolvedAgent) {
         try {
           const row = await dbInsertAgent(resolvedAgent);
-          setAgents((prev) => (prev.some((a) => a.id === row.id) ? prev : [...prev, row]));
           resolvedAgent = row.name || resolvedAgent;
+          resolvedAgentId = row.id || resolvedAgentId;
+          rememberAgent(row);
           setAgentChoice(resolvedAgent);
-          setForm((prev) => ({ ...prev, referralAgentId: row.id || null }));
           setAddingAgent(false);
           setNewAgentName('');
         } catch (err) {
           console.warn('Agent kept on the client only:', err);
+        }
+      }
+
+      /* An agent account files its own clients under its own name. The name
+         is registered as a referral agent once, so the admin and employees
+         can pick the same agent from the list when they create invoices. */
+      if (isAgent && resolvedAgent) {
+        const known = agents.find(
+          (a) => a.name.toLowerCase() === resolvedAgent.toLowerCase()
+        );
+        if (known) {
+          resolvedAgentId = known.id || resolvedAgentId;
+        } else {
+          try {
+            const row = await dbInsertAgent(resolvedAgent);
+            resolvedAgentId = row.id || resolvedAgentId;
+            rememberAgent(row);
+          } catch (err) {
+            console.warn('Agent record not created:', err);
+          }
         }
       }
 
@@ -399,12 +437,19 @@ export default function ClientForm() {
       let fileNo = existing?.fileNo || '';
       if (!fileNo) fileNo = await nextFileNumber();
 
-      const client = formToClient({ ...form, referralAgent: resolvedAgent }, {
-        id: clientId,
-        documents: nextDocs,
-        pdfPath: existing?.pdfPath || null,
-        fileNo,
-      });
+      const client = formToClient(
+        {
+          ...form,
+          referralAgent: resolvedAgent,
+          referralAgentId: resolvedAgentId,
+        },
+        {
+          id: clientId,
+          documents: nextDocs,
+          pdfPath: existing?.pdfPath || null,
+          fileNo,
+        }
+      );
 
       if (editing) {
         if (pendingApproval) {

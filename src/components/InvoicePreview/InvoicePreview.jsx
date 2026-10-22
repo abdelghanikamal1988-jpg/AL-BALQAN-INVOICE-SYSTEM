@@ -13,6 +13,22 @@ export default function InvoicePreview({ form, invoiceNumber }) {
   const calc = calculatePayment(vat.grandTotal, form.paid);
   const isEmpty =
     !form.name && !form.destination && !form.service && !form.total && !form.paid;
+  /* Issued to the agent who collected the money, or to the customer
+     directly (default — nothing extra is rendered). */
+  const billedName =
+    form.billedType === 'agent' ? String(form.billedName || '').trim() : '';
+  const agentNote = billedName
+    ? t('invoice.agentNote', {
+        agent: billedName,
+        service: form.service ? t('data.service.' + form.service) : '—',
+        country: form.nationality || '—',
+        destination: form.destination
+          ? t('data.destination.' + form.destination)
+          : '—',
+        name: form.name || '—',
+        passport: form.passport || '—',
+      })
+    : '';
 
   return (
     <div className="invoice-sheet" aria-label={t('invoice.previewAria')}>
@@ -74,6 +90,12 @@ export default function InvoicePreview({ form, invoiceNumber }) {
             <div className="invoice__section">
               <div className="invoice__section-title">{t('invoice.customerSection')}</div>
               <div className="invoice__customer-grid">
+                {billedName ? (
+                  <div className="invoice__customer-item">
+                    <strong>{t('invoice.billedTo')}</strong>
+                    <span className="invoice__customer-value-upper">{billedName}</span>
+                  </div>
+                ) : null}
                 <div className="invoice__customer-item">
                   <strong>{t('invoice.customerName')}</strong>
                   <span className="invoice__customer-value-upper">{form.name || '—'}</span>
@@ -157,10 +179,14 @@ export default function InvoicePreview({ form, invoiceNumber }) {
               </div>
             </div>
 
-            {form.notes && (
+            {(form.notes || agentNote) && (
               <div className="invoice__section">
                 <div className="invoice__section-title">{t('invoice.notesSection')}</div>
-                <div className="invoice__notes">{form.notes}</div>
+                <div className="invoice__notes">
+                  {agentNote}
+                  {agentNote && form.notes ? <br /> : null}
+                  {form.notes}
+                </div>
               </div>
             )}
 

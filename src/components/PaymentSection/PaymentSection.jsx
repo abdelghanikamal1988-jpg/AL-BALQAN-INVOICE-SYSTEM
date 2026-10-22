@@ -56,6 +56,53 @@ export default function PaymentSection({ form, errors, onChange }) {
         <h2>{t('invoice.paymentSection')}</h2>
       </div>
       <div className="card__body">
+        <fieldset className="field vat-fieldset">
+          <legend className="field__legend">{t('invoice.billedLegend')}</legend>
+          <div className="vat-options">
+            <label className="vat-option">
+              <input
+                type="radio"
+                name="billedType"
+                value="customer"
+                checked={form.billedType !== 'agent'}
+                onChange={() => onChange('billedType', 'customer')}
+              />
+              <span>{t('invoice.billedCustomer')}</span>
+            </label>
+            <label className="vat-option">
+              <input
+                type="radio"
+                name="billedType"
+                value="agent"
+                checked={form.billedType === 'agent'}
+                onChange={() => onChange('billedType', 'agent')}
+              />
+              <span>{t('invoice.billedAgent')}</span>
+            </label>
+          </div>
+          {form.billedType === 'agent' && (
+            <div className="field">
+              <label htmlFor="billed-name">{t('invoice.billedAgentName')}</label>
+              <input
+                id="billed-name"
+                type="text"
+                value={form.billedName || ''}
+                onChange={(e) => onChange('billedName', e.target.value)}
+                placeholder={t('invoice.billedAgentNamePlaceholder')}
+                autoComplete="organization"
+              />
+              {errors.billedName && (
+                <span className="field__error">{errors.billedName}</span>
+              )}
+            </div>
+          )}
+          <span className="field__hint">
+            {form.billedType === 'agent'
+              ? t('invoice.billedHintAgent')
+              : t('invoice.billedHintCustomer')}
+          </span>
+        </fieldset>
+
         <div className="form-grid">
           <div className={`field ${errors.total ? 'field--error' : ''}`}>
             <label htmlFor="total">{t('invoice.totalServiceLabel')}</label>

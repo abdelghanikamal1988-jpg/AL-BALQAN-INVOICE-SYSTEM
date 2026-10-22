@@ -158,12 +158,7 @@ export default function Header({ menuOpen = false, onMenuToggle }) {
 
   const clientCount = results.clients.length;
   const displayName = profile?.full_name || (user?.email ? user.email.split('@')[0] : '');
-  const roleLabel =
-    profile?.role === 'admin'
-      ? t('shell.role.admin')
-      : profile?.role
-        ? String(profile.role).replace(/^./, (m) => m.toUpperCase())
-        : '';
+  const roleLabel = profile?.role ? t(`shell.role.${profile.role}`) : '';
 
   return (
     <header className="app-header no-print">

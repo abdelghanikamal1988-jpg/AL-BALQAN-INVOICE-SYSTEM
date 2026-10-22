@@ -271,3 +271,28 @@ test('fileNumber: unrelated counter values are rejected', () => {
   assert.equal(fileNumberFromCounter(''), '');
   assert.equal(fileNumberFromCounter(null), '');
 });
+
+test('createInvoiceObject: an agent invoice stores who it is billed to', () => {
+  const base = { name: 'AHMED ALI', passport: 'P1', total: 1000, paid: 0, vatMode: 'none' };
+  const agent = createInvoiceObject(
+    { ...base, billedType: 'agent', billedName: '  MOHAMED AGENT  ' },
+    'INV-2026-0010'
+  );
+  assert.equal(agent.billedTo.type, 'agent');
+  assert.equal(agent.billedTo.name, 'MOHAMED AGENT');
+});
+
+test('createInvoiceObject: a direct customer keeps the legacy shape', () => {
+  const base = { name: 'AHMED ALI', passport: 'P1', total: 1000, paid: 0, vatMode: 'none' };
+  const direct = createInvoiceObject(
+    { ...base, billedType: 'customer', billedName: 'IGNORED' },
+    'INV-2026-0011'
+  );
+  assert.equal('billedTo' in direct, false);
+
+  const blankAgent = createInvoiceObject(
+    { ...base, billedType: 'agent', billedName: '   ' },
+    'INV-2026-0012'
+  );
+  assert.equal('billedTo' in blankAgent, false);
+});

@@ -35,6 +35,9 @@ export default {
   'shell.notifications': 'Notifications',
   'shell.editsWaiting': '{count} edit{s} waiting for your approval',
   'shell.role.admin': 'Administrator',
+  'shell.role.employee': 'Employee',
+  'shell.role.delegate': 'Agent',
+  'shell.role.custom': 'Custom',
   'shell.invoice': 'Invoice',
   'shell.dismissNotification': 'Dismiss notification',
 

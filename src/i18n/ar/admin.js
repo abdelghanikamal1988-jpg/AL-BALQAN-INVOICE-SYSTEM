@@ -40,7 +40,7 @@ export default {
 
   'admin.role.admin': 'مدير',
   'admin.role.employee': 'موظف',
-  'admin.role.delegate': 'مندوب',
+  'admin.role.delegate': 'وكيل',
   'admin.role.custom': 'مخصص',
 
   'admin.form.fullName': 'الاسم الكامل',

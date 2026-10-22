@@ -181,6 +181,9 @@ export async function buildInvoicePdf(invoice) {
 
   const colW = (CW - 6) / 2;
   let rowY = y;
+  if (invoice.billedTo?.name) {
+    rowY = item('Invoice To', caps(invoice.billedTo.name), M, rowY, CW) + 2;
+  }
   rowY = item('Customer Name', caps(invoice.customer?.name), M, rowY, colW);
   rowY = item('Nationality', caps(invoice.customer?.nationality), M + colW + 6, rowY, colW);
   rowY = item('Passport Number', caps(invoice.customer?.passport), M, rowY + 2, colW);
@@ -235,11 +238,22 @@ export async function buildInvoicePdf(invoice) {
 
   /* ---------- notes ---------- */
 
-  if (invoice.notes) {
+  /* The agent invoice carries its own line saying who the money was
+     collected from, before whatever the user typed as notes. */
+  const agentNote = invoice.billedTo?.name
+    ? `Collected from ${caps(invoice.billedTo.name)} for ${serviceLabel(invoice.travel?.service)} to ${destinationLabel(invoice.travel?.destination)} (${invoice.customer?.nationality || '-'}) for customer ${invoice.customer?.name || '-'} (passport ${invoice.customer?.passport || '-'}).`
+    : '';
+
+  if (agentNote || invoice.notes) {
     y += 3;
     sectionTitle('Notes', y);
     y += 7.5;
-    y += (wrap(invoice.notes, M, y, CW, { size: 8.5, color: GRAY }) - 1) * 3.8 + 4;
+    if (agentNote) {
+      y += (wrap(agentNote, M, y, CW, { size: 8.5, color: GRAY }) - 1) * 3.8 + 4;
+    }
+    if (invoice.notes) {
+      y += (wrap(invoice.notes, M, y, CW, { size: 8.5, color: GRAY }) - 1) * 3.8 + 4;
+    }
   }
 
   if (settings.terms) {

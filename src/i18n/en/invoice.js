@@ -66,6 +66,19 @@
   'invoice.customerSection': 'Customer Information',
   'invoice.linkedClient': 'Linked client',
   'invoice.fileNo': 'File No.',
+  'invoice.billedLegend': 'Invoice to',
+  'invoice.billedCustomer': 'Customer (direct)',
+  'invoice.billedAgent': 'Agent',
+  'invoice.billedAgentName': 'Agent name',
+  'invoice.billedAgentNamePlaceholder': 'Agent who collected the payment',
+  'invoice.billedHintCustomer':
+    'Issued to the customer — the invoice looks exactly like a normal one.',
+  'invoice.billedHintAgent':
+    'Issued to the agent; the customer details stay on the invoice as the traveller and a collection line is added to the notes.',
+  'invoice.billedTo': 'Invoice To',
+  'invoice.agentNote':
+    'Collected from {agent} for {service} to {destination} ({country}) for customer {name} — passport {passport}.',
+  'invoice.errBilledName': 'Agent name is required when the invoice is issued to an agent.',
   'invoice.customerNameLabel': 'Customer Full Name *',
   'invoice.customerNamePlaceholder': 'Enter full name',
   'invoice.nationalityLabel': 'Nationality *',

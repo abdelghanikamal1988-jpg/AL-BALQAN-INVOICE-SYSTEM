@@ -44,13 +44,17 @@ const EMPTY_FORM = {
   paid: '',
   vatMode: 'none',
   notes: '',
+  /* Who the invoice is issued to: the customer directly (default), or the
+     agent who collected the money and handed over the papers. */
+  billedType: 'customer',
+  billedName: '',
 };
 
 export default function CreateInvoice() {
   const { id } = useParams();
   const navigate = useNavigate();
   const toast = useToast();
-  const { needsEditApproval } = useAuth();
+  const { needsEditApproval, profile } = useAuth();
   const { t } = useLang();
 
   const editing = Boolean(id);
@@ -79,6 +83,9 @@ export default function CreateInvoice() {
   /* Link stored on the invoice being edited (kept when the client list is
      empty or the client record is not visible to this user). */
   const [storedLink, setStoredLink] = useState(null);
+  /* Set once the user picks the billed party by hand, so the agent of a
+     matched client can no longer overwrite that choice. */
+  const [billedTouched, setBilledTouched] = useState(false);
 
   const draftRef = useRef(null);
 
@@ -87,6 +94,7 @@ export default function CreateInvoice() {
       const nextValue = UPPERCASE_FIELDS.includes(field)
         ? filterTextInput(value)
         : value;
+      if (field === 'billedType' || field === 'billedName') setBilledTouched(true);
       setForm((prev) => ({ ...prev, [field]: nextValue }));
       setDirty(true);
       setErrors((prev) => {
@@ -130,6 +138,8 @@ export default function CreateInvoice() {
             paid: inv.payment?.paid ?? '',
             vatMode: inv.payment?.vatMode || 'none',
             notes: inv.notes || '',
+            billedType: inv.billedTo?.name ? 'agent' : 'customer',
+            billedName: inv.billedTo?.name || '',
           });
           setInvoiceNumber(inv.invoiceNumber);
           setIssueDateDisplay(inv.issueDate || formatDate());
@@ -226,6 +236,11 @@ export default function CreateInvoice() {
     if (isEmptyField(form.destination)) next.destination = t('invoice.errDestinationRequired');
     if (isEmptyField(form.service)) next.service = t('invoice.errServiceRequired');
 
+    /* Issued to an agent, the invoice must name the agent it is issued to. */
+    if (form.billedType === 'agent' && isEmptyField(String(form.billedName || ''))) {
+      next.billedName = t('invoice.errBilledName');
+    }
+
     const total = Number(form.total);
     if (form.total === '' || form.total === null || Number.isNaN(total) || total <= 0) {
       next.total = t('invoice.errTotalZero');
@@ -288,6 +303,32 @@ export default function CreateInvoice() {
     }
     return null;
   }, [linkedClient, storedLink, form.name]);
+
+  /* A customer brought in by an agent is billed to that agent, while a
+     direct customer keeps the plain invoice. The agent of the matched
+     client is offered automatically and can still be changed by hand; an
+     agent filing their own customer is not billed to themselves. */
+  const ownAgentName = useMemo(
+    () =>
+      String(profile?.full_name || (profile?.email ? profile.email.split('@')[0] : '') || '')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .toUpperCase(),
+    [profile]
+  );
+
+  useEffect(() => {
+    if (editing || billedTouched || !linkedClient) return;
+    const agentName = String(linkedClient.referralAgent || '').trim();
+    if (!agentName || agentName.toUpperCase() === 'CUSTOMER') return;
+    if (ownAgentName && agentName.toUpperCase() === ownAgentName) return;
+    setForm((prev) => {
+      if (prev.billedType === 'agent') {
+        return prev.billedName === agentName ? prev : { ...prev, billedName: agentName };
+      }
+      return { ...prev, billedType: 'agent', billedName: agentName };
+    });
+  }, [linkedClient, editing, billedTouched, ownAgentName]);
 
   /* ---------- Save ---------- */
   /**
@@ -362,6 +403,7 @@ export default function CreateInvoice() {
         setForm(EMPTY_FORM);
         setDirty(false);
         setSavedId(null);
+        setBilledTouched(false);
         toast.success(t('invoice.savedSuccess'));
       }
 
@@ -444,6 +486,7 @@ export default function CreateInvoice() {
     setInvoiceNumber('');
     setSavedId(null);
     setStoredLink(null);
+    setBilledTouched(false);
     setIssueDateDisplay(formatDate());
     setIssueTimeDisplay(formatTime());
     setDirty(false);

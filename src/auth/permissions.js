@@ -40,7 +40,7 @@ export const ALL_PERMISSIONS = [
 export const ROLE_OPTIONS = [
   { value: 'admin', label: 'Admin' },
   { value: 'employee', label: 'Employee' },
-  { value: 'delegate', label: 'Delegate' },
+  { value: 'delegate', label: 'Agent' },
   { value: 'custom', label: 'Custom' },
 ];
 

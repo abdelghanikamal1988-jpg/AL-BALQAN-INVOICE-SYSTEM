@@ -158,6 +158,15 @@ export function createInvoiceObject(formData, number, linkedClient) {
           fileNo: linkedClient.fileNo || '',
         }
       : null;
+  const billedTo =
+    formData.billedType === 'agent' && String(formData.billedName || '').trim()
+      ? {
+          /* The invoice is issued to the agent who collected the money;
+             a direct customer leaves the key out entirely. */
+          type: 'agent',
+          name: String(formData.billedName).trim(),
+        }
+      : null;
   return {
     id: typeof crypto !== 'undefined' && crypto.randomUUID
       ? crypto.randomUUID()
@@ -173,6 +182,7 @@ export function createInvoiceObject(formData, number, linkedClient) {
       email: formData.email,
     },
     ...(linked ? { client: linked } : {}),
+    ...(billedTo ? { billedTo } : {}),
     travel: {
       destination: formData.destination,
       service: formData.service,

@@ -35,6 +35,9 @@ export default {
   'shell.notifications': 'الإشعارات',
   'shell.editsWaiting': '{count} تعديل بانتظار موافقتك',
   'shell.role.admin': 'مسؤول',
+  'shell.role.employee': 'موظف',
+  'shell.role.delegate': 'وكيل',
+  'shell.role.custom': 'مخصص',
   'shell.invoice': 'فاتورة',
   'shell.dismissNotification': 'إخفاء الإشعار',
 

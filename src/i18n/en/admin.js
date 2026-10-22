@@ -40,7 +40,7 @@ export default {
 
   'admin.role.admin': 'Admin',
   'admin.role.employee': 'Employee',
-  'admin.role.delegate': 'Delegate',
+  'admin.role.delegate': 'Agent',
   'admin.role.custom': 'Custom',
 
   'admin.form.fullName': 'Full name',
