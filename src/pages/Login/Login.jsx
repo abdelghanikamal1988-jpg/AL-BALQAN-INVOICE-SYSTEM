@@ -47,11 +47,7 @@ export default function Login() {
       setMfaGateFailed(false);
       return undefined;
     }
-    enterMfaStep()
-      .then((entered) => {
-        if (!entered) setMfaGateFailed(true);
-      })
-      .catch(() => setMfaGateFailed(true));
+    enterMfaStep().catch(() => setMfaGateFailed(true));
     return undefined;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session]);
