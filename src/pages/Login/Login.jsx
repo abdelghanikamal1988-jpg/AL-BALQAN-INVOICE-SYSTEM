@@ -10,7 +10,7 @@ import { needsChallenge, activeTotpFactor, createChallenge, verifyChallenge } fr
 export default function Login() {
   const navigate = useNavigate();
   const toast = useToast();
-  const { signIn, configured } = useAuth();
+  const { signIn, configured, session } = useAuth();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -21,6 +21,7 @@ export default function Login() {
   const [mfaChallengeId, setMfaChallengeId] = useState(null);
   const [mfaCode, setMfaCode] = useState('');
   const [mfaBusy, setMfaBusy] = useState(false);
+  const [mfaGateFailed, setMfaGateFailed] = useState(false);
   const codeRef = useRef(null);
 
   const startChallenge = async (factor) => {
@@ -40,6 +41,20 @@ export default function Login() {
   useEffect(() => {
     if (mfaFactor) codeRef.current?.focus();
   }, [mfaFactor]);
+
+  useEffect(() => {
+    if (!session) {
+      setMfaGateFailed(false);
+      return undefined;
+    }
+    enterMfaStep()
+      .then((entered) => {
+        if (!entered) setMfaGateFailed(true);
+      })
+      .catch(() => setMfaGateFailed(true));
+    return undefined;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session]);
 
   const finishSignIn = async () => {
     const migrated = await migrateLocalInvoices();
@@ -70,8 +85,7 @@ export default function Login() {
         toast.error('Incorrect email or password.');
         return;
       }
-      /* This account has 2FA on — ask for the code before letting them in. */
-      if (await enterMfaStep()) return;
+      if (await needsChallenge()) return;
       await finishSignIn();
     } catch (err) {
       toast.error('Something went wrong. Please try again.');
@@ -118,7 +132,12 @@ export default function Login() {
         <div className="card login-card">
           <span className="login-card__strip" aria-hidden="true" />
 
-          {mfaFactor ? (
+          {session && !mfaFactor && !mfaGateFailed ? (
+            <>
+              <span className="spinner" aria-hidden="true" />
+              <p className="login-card__sub">Loading...</p>
+            </>
+          ) : mfaFactor ? (
             <>
               <h1 className="login-card__title">Two-factor authentication</h1>
               <p className="login-card__sub">

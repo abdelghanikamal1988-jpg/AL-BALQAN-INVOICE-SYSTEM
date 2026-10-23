@@ -10,6 +10,7 @@ import { PendingApprovalsProvider } from './context/PendingApprovalsContext.jsx'
 import { ThemeProvider } from './context/ThemeContext.jsx';
 import { LangProvider, useLang } from './context/LangContext.jsx';
 import { readPref, writePref, subscribeUserData } from './lib/userData.js';
+import { needsChallenge } from './utils/mfa.js';
 import Dashboard from './pages/Dashboard/Dashboard.jsx';
 import CreateInvoice from './pages/CreateInvoice/CreateInvoice.jsx';
 import InvoiceHistory from './pages/InvoiceHistory/InvoiceHistory.jsx';
@@ -67,6 +68,23 @@ function Shell() {
     }
     return false;
   });
+  const [mfaGate, setMfaGate] = useState(null);
+
+  useEffect(() => {
+    let live = true;
+    if (!session) {
+      setMfaGate(null);
+      return () => {
+        live = false;
+      };
+    }
+    needsChallenge()
+      .then((need) => live && setMfaGate(need ? 'challenge' : 'ok'))
+      .catch(() => live && setMfaGate('ok'));
+    return () => {
+      live = false;
+    };
+  }, [session]);
 
   /* Re-read the stored preference once per-user data is hydrated, because
      the initial state above is computed before the database load finishes. */
@@ -106,6 +124,25 @@ function Shell() {
     return (
       <div dir="ltr" lang="en">
         <Login />
+      </div>
+    );
+  }
+
+  if (mfaGate === 'challenge') {
+    return (
+      <div dir="ltr" lang="en">
+        <Login />
+      </div>
+    );
+  }
+
+  if (mfaGate !== 'ok') {
+    return (
+      <div className="login-page">
+        <div className="card login-card login-card--loading">
+          <span className="spinner" aria-hidden="true" />
+          <p>{t('shell.loading')}</p>
+        </div>
       </div>
     );
   }
