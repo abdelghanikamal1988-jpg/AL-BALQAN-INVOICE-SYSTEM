@@ -61,7 +61,12 @@ export default function Settings() {
       const challenge = await createChallenge(pending.id);
       setMfaChallengeId(challenge.id);
     } catch (err) {
-      toast.error(err.message || t('settings.mfa.enableError'));
+      if (err && err.mfaAlreadyOn) {
+        toast.error(t('settings.mfa.alreadyOn'));
+        activeTotpFactor().then((f) => setMfaFactor(f)).catch(() => {});
+      } else {
+        toast.error(err.message || t('settings.mfa.enableError'));
+      }
     } finally {
       setMfaBusy(false);
     }
@@ -98,6 +103,7 @@ export default function Settings() {
   };
 
   const mfaCancel = () => {
+    if (mfaPending) unenrollFactor(mfaPending.id).catch(() => null);
     setMfaPending(null);
     setMfaChallengeId(null);
     setMfaCode('');

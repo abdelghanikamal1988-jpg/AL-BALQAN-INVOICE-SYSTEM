@@ -68,6 +68,7 @@ export default {
   'settings.mfa.enable': 'تفعيل',
   'settings.mfa.disable': 'إيقاف',
   'settings.mfa.enableError': 'تعذّر بدء إعداد التحقق الثنائي.',
+  'settings.mfa.alreadyOn': 'التحقق الثنائي مُفعّل لهذا الحساب بالفعل.',
   'settings.mfa.disableError': 'تعذّر إيقاف التحقق الثنائي.',
   'settings.mfa.step1': 'امسح رمز QR هذا بتطبيق مصادقة (Google Authenticator أو Authy أو 1Password…).',
   'settings.mfa.step2': 'أدخل الكود المكوّن من ٦ أرقام الظاهر به للتأكيد.',

@@ -68,6 +68,7 @@ export default {
   'settings.mfa.enable': 'Turn on',
   'settings.mfa.disable': 'Turn off',
   'settings.mfa.enableError': 'Could not start two-factor setup.',
+  'settings.mfa.alreadyOn': 'Two-factor authentication is already on for this account.',
   'settings.mfa.disableError': 'Could not turn two-factor off.',
   'settings.mfa.step1': 'Scan this QR code with an authenticator app (Google Authenticator, Authy, 1Password…).',
   'settings.mfa.step2': 'Enter the 6-digit code it shows to confirm.',

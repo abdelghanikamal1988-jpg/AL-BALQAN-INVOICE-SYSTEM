@@ -40,7 +40,16 @@ export async function needsChallenge() {
  */
 export async function enrollTotp() {
   if (!supabase) throw new Error('Authentication is not configured.');
-  const { data, error } = await supabase.auth.mfa.enroll({ factorType: 'totp' });
+  const factors = await listFactors();
+  if (factors.some((f) => f.status === 'verified')) {
+    const err = new Error('Two-factor authentication is already on.');
+    err.mfaAlreadyOn = true;
+    throw err;
+  }
+  for (const f of factors) {
+    await unenrollFactor(f.id).catch(() => null);
+  }
+  const { data, error } = await supabase.auth.mfa.enroll({ factorType: 'totp', friendlyName: 'totp' });
   if (error) throw error;
   return {
     id: data.id,
