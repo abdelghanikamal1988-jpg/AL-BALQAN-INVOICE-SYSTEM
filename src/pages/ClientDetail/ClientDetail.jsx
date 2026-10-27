@@ -193,8 +193,8 @@ export default function ClientDetail() {
     try {
       const userId = await currentUserId();
       if (!userId) throw new Error('no session');
-      const meta = await uploadClientDocument(userId, client.id, 'visa', file);
-      const data = await dbAttachVisa(client.id, meta);
+      const meta = await uploadClientDocument(userId, id, 'visa', file);
+      const data = await dbAttachVisa(id, meta);
       const normalized = normalizeDocuments(data?.documents || {});
       setClient((prev) => ({ ...prev, ...(data || {}), documents: normalized }));
       const url = await documentUrl(meta.path).catch(() => null);
@@ -213,7 +213,7 @@ export default function ClientDetail() {
     setBusyVisa(true);
     try {
       const oldPath = client.documents?.visa?.path;
-      const data = await dbAttachVisa(client.id, null);
+      const data = await dbAttachVisa(id, null);
       const normalized = normalizeDocuments(data?.documents || {});
       setClient((prev) => ({ ...prev, ...(data || {}), documents: normalized }));
       setDocUrls((prev) => ({ ...prev, visa: null }));
@@ -231,7 +231,7 @@ export default function ClientDetail() {
     if (busyVisa) return;
     setBusyVisa(true);
     try {
-      const data = await dbPublishVisa(client.id);
+      const data = await dbPublishVisa(id);
       const normalized = normalizeDocuments(data?.documents || {});
       setClient((prev) => ({ ...prev, ...(data || {}), documents: normalized }));
       toast.success(t('clients.toastVisaPublished'));
