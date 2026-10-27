@@ -18,7 +18,8 @@ import { createInvoiceObject } from '../src/utils/storage.js';
 import { fileNumberDayPrefix, fileNumberFromCounter } from '../src/utils/fileNumber.js';
 import { normalizeName, isEmailValid, isPhoneValid } from '../src/utils/validation.js';
 import { reportPdfFailure } from '../src/utils/pdf.js';
-import { DOCUMENT_TYPES, normalizeDocuments } from '../src/utils/uploads.js';
+import { DOCUMENT_TYPES, normalizeDocuments, visaVisibility } from '../src/utils/uploads.js';
+import { ACTION_PERMISSIONS, ROLE_PRESETS } from '../src/auth/permissions.js';
 
 /* ------------------------- paymentCalculator ------------------------- */
 
@@ -412,4 +413,61 @@ test('normalizeDocuments: keeps the visa slot untouched', () => {
   assert.equal(docs.visa.path, 'clients/u1/c1/visa.pdf');
   assert.equal(docs.visa.name, 'visa.pdf');
   assert.equal(normalizeDocuments({}).visa, undefined);
+});
+
+test('formToClient: keeps the visa publish timestamp', () => {
+  const form = { ...emptyClientForm(), visaPublishedAt: '2026-10-23T12:00:00.000Z' };
+  const client = formToClient(form, {
+    id: 'cli-5',
+    documents: {},
+    pdfPath: null,
+    fileNo: 'FILE-2026-0008',
+  });
+  assert.equal(client.visaPublishedAt, '2026-10-23T12:00:00.000Z');
+});
+
+test('formToClient: a fresh record has no visa publish timestamp', () => {
+  const client = formToClient(emptyClientForm(), { id: 'cli-6', documents: {}, pdfPath: null });
+  assert.equal(client.visaPublishedAt, null);
+});
+
+test('permissions: action:client.visa exists and stays out of the presets', () => {
+  assert.ok(ACTION_PERMISSIONS.some((p) => p.key === 'action:client.visa'));
+  assert.ok(!ROLE_PRESETS.employee.includes('action:client.visa'));
+  assert.ok(!ROLE_PRESETS.delegate.includes('action:client.visa'));
+  assert.ok(ROLE_PRESETS.admin.includes('action:client.visa'));
+  assert.equal(ROLE_PRESETS.custom.length, 0);
+});
+
+test('visaVisibility: a viewer only sees a published visa', () => {
+  const meta = { path: 'clients/u1/c1/visa.pdf' };
+  const hidden = visaVisibility(false, meta, null);
+  assert.equal(hidden.show, false);
+  assert.equal(hidden.canDownload, false);
+  assert.equal(hidden.canUpload, false);
+  assert.equal(hidden.canPublish, false);
+  const released = visaVisibility(false, meta, '2026-10-23T12:00:00.000Z');
+  assert.equal(released.show, true);
+  assert.equal(released.canDownload, true);
+  assert.equal(released.canUpload, false);
+  assert.equal(released.canPublish, false);
+  assert.equal(released.published, true);
+});
+
+test('visaVisibility: a visa holder controls upload, replace and publish', () => {
+  const empty = visaVisibility(true, null, null);
+  assert.equal(empty.show, true);
+  assert.equal(empty.canDownload, false);
+  assert.equal(empty.canUpload, true);
+  assert.equal(empty.canPublish, false);
+  const ready = visaVisibility(true, { path: 'clients/u1/c1/visa.pdf' }, null);
+  assert.equal(ready.show, true);
+  assert.equal(ready.canDownload, true);
+  assert.equal(ready.canUpload, true);
+  assert.equal(ready.canPublish, true);
+  const done = visaVisibility(true, { path: 'clients/u1/c1/visa.pdf' }, '2026-10-23T12:00:00.000Z');
+  assert.equal(done.show, true);
+  assert.equal(done.canDownload, true);
+  assert.equal(done.canPublish, false);
+  assert.equal(done.published, true);
 });

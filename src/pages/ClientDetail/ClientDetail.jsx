@@ -6,7 +6,9 @@ import Icon from '../../components/Icons/Icon.jsx';
 import Can from '../../components/Can/Can.jsx';
 import { useToast } from '../../components/Toast/ToastProvider.jsx';
 import { useLang } from '../../context/LangContext.jsx';
+import { useAuth } from '../../context/AuthContext.jsx';
 import { dbFetchClient, dbUpdateClient, dbDeleteClient } from '../../lib/clientRepo.js';
+import { dbAttachVisa, dbPublishVisa } from '../../lib/visaRepo.js';
 import {
   clientFullName,
   getClientInvoices,
@@ -16,7 +18,12 @@ import {
   documentUrl,
   pdfUrl,
   removeClientFiles,
+  removeClientDocument,
   normalizeDocuments,
+  uploadClientDocument,
+  currentUserId,
+  visaVisibility,
+  MAX_UPLOAD_BYTES,
 } from '../../utils/uploads.js';
 import {
   buildClientPdf,
@@ -66,12 +73,15 @@ export default function ClientDetail() {
   const navigate = useNavigate();
   const { t } = useLang();
   const toast = useToast();
+  const { hasPerm } = useAuth();
+  const canVisa = hasPerm('action:client.visa');
 
   const [client, setClient] = useState(null);
   const [loading, setLoading] = useState(true);
   const [invoices, setInvoices] = useState([]);
   const [docUrls, setDocUrls] = useState({});
   const [busyPdf, setBusyPdf] = useState(false);
+  const [busyVisa, setBusyVisa] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [authPrompt, setAuthPrompt] = useState(false);
 
@@ -102,7 +112,9 @@ export default function ClientDetail() {
           );
         } else {
           const meta = normalized[def.id];
-          if (meta && meta.path) {
+          const visaHidden =
+            def.id === 'visa' && !record.visaPublishedAt && !canVisa;
+          if (meta && meta.path && !visaHidden) {
             try {
               urls[def.id] = await documentUrl(meta.path);
             } catch (err) {
@@ -165,6 +177,72 @@ export default function ClientDetail() {
     }
   };
 
+  const handleVisaFile = async (file) => {
+    if (!file || busyVisa) return;
+    if (file.size > MAX_UPLOAD_BYTES) {
+      toast.error(t('clients.toastFileTooBig'));
+      return;
+    }
+    const typeOk = file.type === 'application/pdf';
+    const extOk = /\.pdf$/i.test(file.name || '');
+    if (!typeOk && !extOk) {
+      toast.error(t('clients.toastPdfOnly'));
+      return;
+    }
+    setBusyVisa(true);
+    try {
+      const userId = await currentUserId();
+      if (!userId) throw new Error('no session');
+      const meta = await uploadClientDocument(userId, client.id, 'visa', file);
+      const data = await dbAttachVisa(client.id, meta);
+      const normalized = normalizeDocuments(data?.documents || {});
+      setClient((prev) => ({ ...prev, ...(data || {}), documents: normalized }));
+      const url = await documentUrl(meta.path).catch(() => null);
+      setDocUrls((prev) => ({ ...prev, visa: url }));
+      toast.success(t('clients.toastVisaUploaded'));
+    } catch (err) {
+      console.error(err);
+      toast.error(err.message || t('clients.toastStatusError'));
+    } finally {
+      setBusyVisa(false);
+    }
+  };
+
+  const handleVisaRemove = async () => {
+    if (busyVisa) return;
+    setBusyVisa(true);
+    try {
+      const oldPath = client.documents?.visa?.path;
+      const data = await dbAttachVisa(client.id, null);
+      const normalized = normalizeDocuments(data?.documents || {});
+      setClient((prev) => ({ ...prev, ...(data || {}), documents: normalized }));
+      setDocUrls((prev) => ({ ...prev, visa: null }));
+      if (oldPath) await removeClientDocument(oldPath).catch(() => {});
+      toast.info(t('clients.toastVisaRemoved'));
+    } catch (err) {
+      console.error(err);
+      toast.error(err.message || t('clients.toastStatusError'));
+    } finally {
+      setBusyVisa(false);
+    }
+  };
+
+  const handleVisaPublish = async () => {
+    if (busyVisa) return;
+    setBusyVisa(true);
+    try {
+      const data = await dbPublishVisa(client.id);
+      const normalized = normalizeDocuments(data?.documents || {});
+      setClient((prev) => ({ ...prev, ...(data || {}), documents: normalized }));
+      toast.success(t('clients.toastVisaPublished'));
+    } catch (err) {
+      console.error(err);
+      toast.error(t('clients.toastVisaPublishError'));
+    } finally {
+      setBusyVisa(false);
+    }
+  };
+
   /** Runs after the password gate — any failure is shown inside that modal. */
   const performDelete = async () => {
     await dbDeleteClient(client.id);
@@ -190,6 +268,9 @@ export default function ClientDetail() {
   }
 
   const photoUrl = docUrls.photo;
+  const visaMeta = client.documents?.visa;
+  const visaUrl = docUrls.visa;
+  const visaVis = visaVisibility(canVisa, visaMeta, client.visaPublishedAt);
   const totalInvoice = invoices.reduce((sum, r) => sum + (r.payment?.grandTotal || 0), 0);
   const totalPaid = invoices.reduce((sum, r) => sum + (Number(r.calc?.paid) || 0), 0);
   const totalRemaining = invoices.reduce((sum, r) => sum + (Number(r.calc?.remaining) || 0), 0);
@@ -327,7 +408,7 @@ export default function ClientDetail() {
         </div>
         <div className="card__body">
           <div className="cd-docs">
-            {DOCUMENT_TYPES.filter((def) => !def.multiple).map((def) => {
+            {DOCUMENT_TYPES.filter((def) => !def.multiple && def.id !== 'visa').map((def) => {
               const meta = client.documents?.[def.id];
               const url = docUrls[def.id];
               const defLabel = t(`clients.doc.${def.id}`);
@@ -373,6 +454,83 @@ export default function ClientDetail() {
                 </div>
               );
             })}
+
+            {visaVis.show && (
+              <div className="cd-doc">
+                {visaUrl ? (
+                  <div className="cd-doc__media cd-doc__media--missing">
+                    {t('clients.pdfDocument')}
+                  </div>
+                ) : (
+                  <div className="cd-doc__media cd-doc__media--missing">
+                    {t('clients.notUploaded')}
+                  </div>
+                )}
+                <div className="cd-doc__body">
+                  <strong>{t('clients.doc.visa')}</strong>
+                  <span className="cd-doc__name">{visaMeta?.name || '—'}</span>
+                  {visaVis.published ? (
+                    <span className="cd-doc__name">
+                      {t('clients.visa.publishedAt')}{' '}
+                      {fmtDate(String(client.visaPublishedAt || '').slice(0, 10))}
+                    </span>
+                  ) : (
+                    canVisa && <span className="cd-doc__name">{t('clients.visa.pending')}</span>
+                  )}
+                  <div className="cl-actions">
+                    {visaVis.canDownload && visaUrl && (
+                      <a
+                        className="btn btn--secondary btn--sm"
+                        href={visaUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        {t('clients.open')}
+                      </a>
+                    )}
+                    {visaVis.canUpload && (
+                      <label
+                        className="btn btn--neutral btn--sm"
+                        title={visaMeta ? t('clients.visa.replace') : t('clients.visa.upload')}
+                      >
+                        {visaMeta ? t('clients.visa.replace') : t('clients.visa.upload')}
+                        <input
+                          type="file"
+                          accept="application/pdf"
+                          hidden
+                          disabled={busyVisa}
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            e.target.value = '';
+                            handleVisaFile(file);
+                          }}
+                        />
+                      </label>
+                    )}
+                    {visaVis.canUpload && visaMeta && (
+                      <button
+                        type="button"
+                        className="btn btn--neutral btn--sm"
+                        onClick={handleVisaRemove}
+                        disabled={busyVisa}
+                      >
+                        {t('common.delete')}
+                      </button>
+                    )}
+                    {visaVis.canPublish && (
+                      <button
+                        type="button"
+                        className="btn btn--primary btn--sm"
+                        onClick={handleVisaPublish}
+                        disabled={busyVisa}
+                      >
+                        {t('clients.visa.publish')}
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
 
             {DOCUMENT_TYPES.filter((def) => def.multiple).map((def) => {
               const list = client.documents?.other || [];

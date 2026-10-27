@@ -40,6 +40,10 @@ export default {
   'shell.role.custom': 'مخصص',
   'shell.invoice': 'فاتورة',
   'shell.dismissNotification': 'إخفاء الإشعار',
+  'notif.empty': 'لا توجد إشعارات بعد.',
+  'notif.markAllRead': 'تحديد الكل كمقروء',
+  'notif.visaPublished': 'تم نشر التأشيرة النهائية الخاصة بـ {name}.',
+  'notif.visaPublishedGeneric': 'تم نشر تأشيرة نهائية جديدة.',
 
   'shell.nav.primary': 'الأساسي',
   'shell.nav.sections': 'الأقسام',

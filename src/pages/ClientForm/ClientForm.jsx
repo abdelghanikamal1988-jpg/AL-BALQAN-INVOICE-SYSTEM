@@ -97,6 +97,7 @@ export default function ClientForm() {
   const toast = useToast();
   const { hasPerm, needsEditApproval, profile } = useAuth();
   const canSave = hasPerm('action:client.save');
+  const canVisa = hasPerm('action:client.visa');
   /* An agent's own clients are never referred by someone else, so the
      referral picker is hidden and the referral agent is always the agent's
      own name (the same name the admin and employees see in the list). */
@@ -684,7 +685,9 @@ export default function ClientForm() {
             </div>
             <div className="card__body">
               <div className="cf-docs">
-                {DOCUMENT_TYPES.filter((def) => !def.multiple).map((def) => {
+                {DOCUMENT_TYPES.filter(
+                  (def) => !def.multiple && (def.id !== 'visa' || canVisa)
+                ).map((def) => {
                   const meta = docs[def.id];
                   const preview = previews[def.id];
                   const defLabel = t(`clients.doc.${def.id}`);

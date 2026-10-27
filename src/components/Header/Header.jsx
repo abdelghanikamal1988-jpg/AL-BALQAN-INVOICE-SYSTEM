@@ -7,6 +7,7 @@ import { useLang } from '../../context/LangContext.jsx';
 import { useTheme } from '../../context/ThemeContext.jsx';
 import Icon from '../Icons/Icon.jsx';
 import Logo from '../Logo/Logo.jsx';
+import NotificationsBell from '../Notifications/NotificationsBell.jsx';
 import { userInitials } from '../../utils/userInitials.js';
 import { dbFetchClients } from '../../lib/clientRepo.js';
 import { dbFetchAll } from '../../lib/invoiceRepo.js';
@@ -377,6 +378,8 @@ export default function Header({ menuOpen = false, onMenuToggle }) {
               )}
             </button>
           )}
+
+          <NotificationsBell />
 
           <span className="app-header__vr" aria-hidden="true" />
 

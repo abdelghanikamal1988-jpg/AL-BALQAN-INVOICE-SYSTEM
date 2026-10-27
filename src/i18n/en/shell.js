@@ -40,6 +40,10 @@ export default {
   'shell.role.custom': 'Custom',
   'shell.invoice': 'Invoice',
   'shell.dismissNotification': 'Dismiss notification',
+  'notif.empty': 'No notifications yet.',
+  'notif.markAllRead': 'Mark all as read',
+  'notif.visaPublished': 'The final visa for {name} has been published.',
+  'notif.visaPublishedGeneric': 'A final visa has been published.',
 
   'shell.nav.primary': 'Primary',
   'shell.nav.sections': 'Sections',

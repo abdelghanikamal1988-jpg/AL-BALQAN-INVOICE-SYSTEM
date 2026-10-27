@@ -45,6 +45,19 @@ export function normalizeDocuments(documents) {
 
 const SIGN_TTL = 60 * 60;
 
+export function visaVisibility(canVisa, meta, published) {
+  const hasMeta = Boolean(meta && meta.path);
+  const released = hasMeta && Boolean(published);
+  return {
+    show: Boolean(canVisa) || released,
+    canDownload: hasMeta && (Boolean(canVisa) || Boolean(published)),
+    canUpload: Boolean(canVisa),
+    canPublish: Boolean(canVisa) && hasMeta && !published,
+    published: Boolean(published),
+  };
+}
+
+
 export async function currentUserId() {
   const { data } = await supabase.auth.getSession();
   return data?.session?.user?.id ?? null;

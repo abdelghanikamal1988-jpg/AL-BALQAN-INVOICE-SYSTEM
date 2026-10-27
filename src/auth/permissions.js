@@ -30,6 +30,7 @@ export const ACTION_PERMISSIONS = [
   { key: 'action:client.status', label: 'Change application status' },
   { key: 'action:client.upload', label: 'Upload / replace documents' },
   { key: 'action:client.pdf', label: 'Generate client PDF' },
+  { key: 'action:client.visa', label: 'Upload / publish final visa' },
 ];
 
 export const ALL_PERMISSIONS = [

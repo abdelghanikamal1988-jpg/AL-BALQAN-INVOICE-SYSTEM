@@ -101,6 +101,7 @@ export function formToClient(form, { id, documents, pdfPath, fileNo }) {
     referralAgent: toUpperLatin(form.referralAgent),
     referralAgentId: form.referralAgentId || null,
     status: CLIENT_STATUSES.includes(form.status) ? form.status : DEFAULT_CLIENT_STATUS,
+    visaPublishedAt: form.visaPublishedAt || null,
     documents: documents || {},
     pdfPath: pdfPath || null,
     createdAt: form.createdAt || new Date().toISOString(),
@@ -127,6 +128,7 @@ export function clientToForm(client) {
     referralAgent: client.referralAgent || '',
     referralAgentId: client.referralAgentId || null,
     status: client.status || DEFAULT_CLIENT_STATUS,
+    visaPublishedAt: client.visaPublishedAt || null,
     createdAt: client.createdAt,
   };
 }

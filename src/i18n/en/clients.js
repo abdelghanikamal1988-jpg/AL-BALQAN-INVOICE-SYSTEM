@@ -117,6 +117,11 @@
   'clients.doc.photo': 'Personal Photo',
   'clients.doc.other': 'Other Document',
   'clients.otherCount': '{n} file(s)',
+  'clients.visa.upload': 'Upload final visa',
+  'clients.visa.replace': 'Replace final visa',
+  'clients.visa.publish': 'Publish to agent',
+  'clients.visa.publishedAt': 'Published on',
+  'clients.visa.pending': 'Not published yet',
 
   'clients.groupPersonal': 'Personal Details',
   'clients.groupPersonalNote': 'Exactly as written in the passport.',
@@ -193,6 +198,10 @@
   'clients.toastAgentError': 'Unable to add the agent.',
   'clients.toastFileTooBig': 'File is larger than 10 MB.',
   'clients.toastPdfOnly': 'Only PDF files are accepted here.',
+  'clients.toastVisaUploaded': 'Final visa uploaded.',
+  'clients.toastVisaPublished': 'The final visa has been published to the agent.',
+  'clients.toastVisaPublishError': 'Could not publish the visa. Try again.',
+  'clients.toastVisaRemoved': 'Final visa removed.',
   'clients.toastPendingSubmit':
     'Changes submitted for approval. The client stays unchanged until an administrator approves.',
   'clients.toastUpdated': 'Client updated successfully.',
