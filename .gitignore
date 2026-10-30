@@ -13,3 +13,5 @@ npm-debug.log*
 .dev/*.pdf
 .dev/*.log
 .dev/commit-msg.txt
+# logical DB dumps — client data, never committed
+.dev/backups/
