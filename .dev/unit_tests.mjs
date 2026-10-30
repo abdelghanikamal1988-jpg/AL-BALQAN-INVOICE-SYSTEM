@@ -16,7 +16,7 @@ import { transliterateArabic, pdfSafeText, containsArabic } from '../src/utils/a
 import { validateClientForm, normalizePassport, emptyClientForm, formToClient, invoicePrefillFromClient } from '../src/utils/clients.js';
 import { createInvoiceObject } from '../src/utils/storage.js';
 import { fileNumberDayPrefix, fileNumberFromCounter } from '../src/utils/fileNumber.js';
-import { normalizeName, isEmailValid, isPhoneValid } from '../src/utils/validation.js';
+import { normalizeName, isEmailValid, isPhoneValid, validateNewPassword, PASSWORD_MIN_LENGTH } from '../src/utils/validation.js';
 import { reportPdfFailure } from '../src/utils/pdf.js';
 import { DOCUMENT_TYPES, normalizeDocuments, visaVisibility } from '../src/utils/uploads.js';
 import { ACTION_PERMISSIONS, ROLE_PRESETS } from '../src/auth/permissions.js';
@@ -167,6 +167,24 @@ test('isPhoneValid', () => {
   assert.equal(isPhoneValid('+201012345678'), true);
   assert.equal(isPhoneValid('abc'), false);
   assert.equal(isPhoneValid(''), true); // optional
+});
+
+test('validateNewPassword accepts a matching password at the minimum length', () => {
+  const pw = 'a'.repeat(PASSWORD_MIN_LENGTH);
+  assert.deepEqual(validateNewPassword(pw, pw), { ok: true });
+  assert.equal(PASSWORD_MIN_LENGTH, 8);
+});
+
+test('validateNewPassword rejects short passwords', () => {
+  const short = 'a'.repeat(PASSWORD_MIN_LENGTH - 1);
+  assert.deepEqual(validateNewPassword(short, short), { ok: false, error: 'short' });
+  assert.deepEqual(validateNewPassword('', ''), { ok: false, error: 'short' });
+});
+
+test('validateNewPassword rejects mismatched confirmation', () => {
+  const pw = 'longenough1';
+  assert.deepEqual(validateNewPassword(pw, pw + 'x'), { ok: false, error: 'mismatch' });
+  assert.deepEqual(validateNewPassword(pw, undefined), { ok: false, error: 'mismatch' });
 });
 
 test('normalizePassport strips non-alphanumerics', () => {

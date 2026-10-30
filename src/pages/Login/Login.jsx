@@ -6,6 +6,8 @@ import Logo from '../../components/Logo/Logo.jsx';
 import Icon from '../../components/Icons/Icon.jsx';
 import { migrateLocalInvoices } from '../../utils/storage.js';
 import { needsChallenge, activeTotpFactor, createChallenge, verifyChallenge } from '../../utils/mfa.js';
+import { supabase } from '../../lib/supabase.js';
+import { isEmailValid } from '../../utils/validation.js';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -15,6 +17,11 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [busy, setBusy] = useState(false);
+
+  /* 'signin' — the normal form. 'forgot' — ask for a recovery link by email. */
+  const [mode, setMode] = useState('signin');
+  const [resetSent, setResetSent] = useState(false);
+  const [resetBusy, setResetBusy] = useState(false);
 
   /* Optional 2FA step — only shown when the account has a verified factor. */
   const [mfaFactor, setMfaFactor] = useState(null);
@@ -88,6 +95,40 @@ export default function Login() {
     } finally {
       setBusy(false);
     }
+  };
+
+  const handleResetRequest = async (e) => {
+    e.preventDefault();
+    if (!configured) {
+      toast.error('Database is not configured yet. Contact the administrator.');
+      return;
+    }
+    const mail = email.trim().toLowerCase();
+    if (!mail || !isEmailValid(mail)) {
+      toast.error('Please enter a valid email address.');
+      return;
+    }
+
+    setResetBusy(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(mail, {
+        redirectTo: `${window.location.origin}/`,
+      });
+      if (error) {
+        toast.error('Could not send the reset link. Please try again in a moment.');
+        return;
+      }
+      setResetSent(true);
+    } catch (err) {
+      toast.error('Could not send the reset link. Please try again in a moment.');
+    } finally {
+      setResetBusy(false);
+    }
+  };
+
+  const backToSignIn = () => {
+    setMode('signin');
+    setResetSent(false);
   };
 
   const handleMfaSubmit = async (e) => {
@@ -178,6 +219,63 @@ export default function Login() {
                 </p>
               </div>
             </>
+          ) : mode === 'forgot' ? (
+            resetSent ? (
+              <>
+                <h1 className="login-card__title">Check your inbox</h1>
+                <p className="login-card__sub">
+                  If an account exists for {email.trim()}, a link to set a new password is on its
+                  way. Open it on this device — the link expires after a short time.
+                </p>
+                <button
+                  type="button"
+                  className="btn btn--primary btn--block"
+                  onClick={backToSignIn}
+                >
+                  <Icon name="login" aria-hidden="true" />
+                  Back to sign in
+                </button>
+                <p className="login-card__note">
+                  Nothing arrived? Check the spam folder or ask an administrator.
+                </p>
+              </>
+            ) : (
+              <>
+                <h1 className="login-card__title">Reset your password</h1>
+                <p className="login-card__sub">
+                  Enter your work email and we will send you a link to set a new password.
+                </p>
+
+                <form className="login-form" onSubmit={handleResetRequest}>
+                  <div className="field">
+                    <label htmlFor="login-reset-email">Email address</label>
+                    <input
+                      id="login-reset-email"
+                      type="email"
+                      autoComplete="username"
+                      placeholder="you@company.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                  </div>
+
+                  <button type="submit" className="btn btn--primary btn--block" disabled={resetBusy}>
+                    {resetBusy ? (
+                      <span className="btn__spinner" aria-hidden="true" />
+                    ) : (
+                      <>
+                        <Icon name="login" aria-hidden="true" />
+                        Send reset link
+                      </>
+                    )}
+                  </button>
+                </form>
+
+                <button type="button" className="login-link login-link--block" onClick={backToSignIn}>
+                  Back to sign in
+                </button>
+              </>
+            )
           ) : (
             <>
               <h1 className="login-card__title">Sign in to your account</h1>
@@ -206,6 +304,16 @@ export default function Login() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
+                  <button
+                    type="button"
+                    className="login-link"
+                    onClick={() => {
+                      setMode('forgot');
+                      setResetSent(false);
+                    }}
+                  >
+                    Forgot password?
+                  </button>
                 </div>
 
                 <button type="submit" className="btn btn--primary btn--block" disabled={busy}>

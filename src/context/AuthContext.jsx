@@ -36,6 +36,12 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const [configured] = useState(isSupabaseConfigured);
 
+  /**
+   * True while the session came from a password-recovery link: the app must
+   * send the user to the "set a new password" screen instead of the dashboard.
+   */
+  const [recovery, setRecovery] = useState(false);
+
   /* Latest session for event handlers that live outside React render. */
   const sessionRef = useRef(null);
   useEffect(() => {
@@ -66,8 +72,9 @@ export function AuthProvider({ children }) {
       setLoading(false);
     });
 
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+    const { data: sub } = supabase.auth.onAuthStateChange((event, nextSession) => {
       if (!active) return;
+      if (event === 'PASSWORD_RECOVERY') setRecovery(true);
       setSession(nextSession);
       setLoading(false);
     });
@@ -268,6 +275,8 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
+  const clearRecovery = useCallback(() => setRecovery(false), []);
+
   /**
    * Visibility check for a "page:*" / "action:*" permission.
    * - admin role → always true (wildcard)
@@ -312,6 +321,8 @@ export function AuthProvider({ children }) {
         configured,
         signIn,
         signOut,
+        recovery,
+        clearRecovery,
       }}
     >
       {children}

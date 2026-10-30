@@ -22,6 +22,7 @@ import Consultations from './pages/Consultations/Consultations.jsx';
 import AuditLog from './pages/AuditLog/AuditLog.jsx';
 import Settings from './pages/Settings/Settings.jsx';
 import Login from './pages/Login/Login.jsx';
+import ResetPassword from './pages/ResetPassword/ResetPassword.jsx';
 import Website from './pages/Website/Website.jsx';
 
 /**
@@ -60,7 +61,7 @@ function NoAccess({ onSignOut }) {
 }
 
 function Shell() {
-  const { session, loading, hasPerm, signOut } = useAuth();
+  const { session, loading, hasPerm, signOut, recovery } = useAuth();
   const { t } = useLang();
   const [navOpen, setNavOpen] = useState(() => {
     if (window.innerWidth >= 1024) {
@@ -117,6 +118,11 @@ function Shell() {
         </div>
       </div>
     );
+  }
+
+  /* Opened the link from the recovery email → straight to the new-password form. */
+  if (recovery) {
+    return <Navigate to="/reset-password" replace />;
   }
 
   if (!session) {
@@ -185,6 +191,7 @@ export default function App() {
               <HashRouter>
                 <Routes>
                   <Route path="/website" element={<Website />} />
+                  <Route path="/reset-password" element={<ResetPassword />} />
                   <Route path="/*" element={<Shell />} />
                 </Routes>
               </HashRouter>

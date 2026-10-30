@@ -1908,6 +1908,35 @@ button {
   gap: 6px;
 }
 
+/* "Forgot password?" — sits under the password box, same rhythm as a hint. */
+.login-link {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  align-self: flex-start;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  font: inherit;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.75);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.login-link:hover,
+.login-link:focus-visible {
+  color: #ffffff;
+}
+
+.login-link--block {
+  width: 100%;
+  justify-content: center;
+  margin-top: 4px;
+}
+
 .login-card .field label {
   color: #ffffff;
   font-size: 13px;

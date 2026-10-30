@@ -34,3 +34,18 @@ export function sanitizeFilenamePart(value) {
 export function isEmptyField(value) {
   return String(value || '').trim() === '';
 }
+
+/** Same floor the admin panel enforces when it creates or resets an account. */
+export const PASSWORD_MIN_LENGTH = 8;
+
+/**
+ * Checks a "set a new password" form (reset link / change password).
+ * Returns { ok: true } or { ok: false, error: 'short' | 'mismatch' }.
+ */
+export function validateNewPassword(password, confirm) {
+  const pw = String(password ?? '');
+  const cf = String(confirm ?? '');
+  if (pw.length < PASSWORD_MIN_LENGTH) return { ok: false, error: 'short' };
+  if (pw !== cf) return { ok: false, error: 'mismatch' };
+  return { ok: true };
+}
