@@ -10,7 +10,12 @@
  * URL here is resolved relative to the worker's own location.
  */
 
-const VERSION = 'albalqan-v1';
+/* The version comes from the registration query (sw.js?v=<build id>), so
+   every deploy installs a new worker and the activate step below drops the
+   caches of the previous build. Falls back to the static name for direct
+   visits that carry no query. */
+const params = new URLSearchParams(self.location.search);
+const VERSION = params.get('v') ? 'albalqan-' + params.get('v') : 'albalqan-v1';
 const SHELL = `${VERSION}-shell`;
 
 /* The app shell: enough for the UI to boot offline. */

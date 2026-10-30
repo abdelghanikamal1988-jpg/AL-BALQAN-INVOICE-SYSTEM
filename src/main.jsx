@@ -17,11 +17,13 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   </React.StrictMode>
 );
 
-/* PWA: register the offline app-shell worker. It only activates on a
-   secure origin (https or localhost), so the dev server is unaffected. */
+/* PWA: register the offline app-shell worker. The ?v= build id forces a new
+   registration after every deploy, so the old worker cleans up its caches.
+   It only activates on a secure origin (https or localhost), so the dev
+   server is unaffected. */
 if ('serviceWorker' in navigator && window.isSecureContext) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js').catch(() => {
+    navigator.serviceWorker.register(`./sw.js?v=${__BUILD_ID__}`).catch(() => {
       /* registration failure must never break the app */
     });
   });

@@ -1,0 +1,48 @@
+<!doctype html>
+<!--
+  GitHub Pages has no SPA fallback, so a deep link like /clients/xyz used to
+  land on a real 404 page. This file is served for every unknown path; it
+  forwards the path into the hash route the app actually uses (HashRouter).
+  On a project page (…github.io/repo/…) the first path segment is the repo
+  name and is dropped; on the custom domain it is not.
+-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="noindex, nofollow, noarchive, noimageindex, notranslate" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>AL BALQAN — Tourism &amp; Visa Services</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        background: #141414;
+        color: rgba(255, 255, 255, 0.85);
+        font: 400 15px/1.6 Cairo, system-ui, sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+      a {
+        color: #ffffff;
+      }
+    </style>
+    <script>
+      (function () {
+        var keep = /(^|\.)github\.io$/.test(location.hostname) ? 1 : 0;
+        var segs = location.pathname.split('/').filter(Boolean);
+        var base = '/' + segs.slice(0, keep).join(keep ? '/' : '');
+        var route = '/' + segs.slice(keep).join('/');
+        location.replace(location.origin + (keep ? base : '') + '/#' + route + location.search);
+      })();
+    </script>
+  </head>
+  <body>
+    <p>
+      Redirecting to the app — if nothing happens,
+      <a href="./">open the home page</a>.
+    </p>
+  </body>
+</html>
