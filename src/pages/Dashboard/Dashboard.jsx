@@ -12,6 +12,7 @@ import { dbFetchClients } from '../../lib/clientRepo.js';
 import { clientFullName, normalizePassport } from '../../utils/clients.js';
 import { getAccessLogs } from '../../utils/accessLog.js';
 import { readPref, writePref } from '../../lib/userData.js';
+import { exportReportCsv, exportReportPdf } from '../../utils/reportExport.js';
 import { isConfigured } from '../../utils/settings.js';
 import { CLIENT_STATUSES } from '../../data/clientStatuses.js';
 import { useToast } from '../../components/Toast/ToastProvider.jsx';
@@ -781,6 +782,48 @@ export default function Dashboard() {
 
   const dash = (value) => (loading ? '—' : value);
 
+  const reportData = () => ({
+    monthSeries,
+    financials,
+    clientStats,
+    coverage,
+  });
+
+  const handleReportCsv = () => {
+    if (invoices.length === 0) {
+      toast.info(t('dashboard.report.empty'));
+      return;
+    }
+    try {
+      exportReportCsv(reportData());
+      toast.success(t('dashboard.report.csvSuccess'));
+    } catch (err) {
+      console.warn('CSV report export failed', err);
+      toast.error(t('dashboard.export.loadError'));
+    }
+  };
+
+  const handleReportPdf = async () => {
+    if (invoices.length === 0) {
+      toast.info(t('dashboard.report.empty'));
+      return;
+    }
+    try {
+      await exportReportPdf(reportData());
+      toast.success(t('dashboard.report.pdfSuccess'));
+    } catch (err) {
+      console.warn('PDF report export failed', err);
+      if (err?.code === 'PDF_ENGINE_LOAD') {
+        toast.error(t('invoice.pdfNeedsRefresh'));
+        if (typeof window !== 'undefined' && window.location) {
+          setTimeout(() => window.location.reload(), 2200);
+        }
+        return;
+      }
+      toast.error(t('dashboard.export.loadError'));
+    }
+  };
+
   const clientMetrics = [
     ['dashboard.metric.totalClients', dash(clientStats.total), 'users', 'slate'],
     ['dashboard.metric.newClients', dash(clientStats.fresh), 'user', 'green'],
@@ -957,11 +1000,21 @@ export default function Dashboard() {
             <Icon name="chartBar" aria-hidden="true" />
             {t('dashboard.section.reports')}
           </h2>
-          <Can perm="page:invoice.history">
-            <Link to="/history" className="db-section__hint">
-              {t('dashboard.link.viewAll')}
-            </Link>
-          </Can>
+          <div className="db-section__actions">
+            <Can perm="action:invoice.export">
+              <button type="button" className="btn btn--neutral btn--sm" onClick={handleReportCsv}>
+                {t('dashboard.report.exportCsv')}
+              </button>
+              <button type="button" className="btn btn--neutral btn--sm" onClick={handleReportPdf}>
+                {t('dashboard.report.exportPdf')}
+              </button>
+            </Can>
+            <Can perm="page:invoice.history">
+              <Link to="/history" className="db-section__hint">
+                {t('dashboard.link.viewAll')}
+              </Link>
+            </Can>
+          </div>
         </div>
 
         <div className="db-charts">

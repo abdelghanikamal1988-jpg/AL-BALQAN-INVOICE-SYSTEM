@@ -116,6 +116,19 @@
   text-decoration: underline;
 }
 
+.db-section__actions {
+  order: 3;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.db-section__actions .db-section__hint {
+  order: 0;
+  margin-inline-start: 4px;
+}
+
 /* ---------- KPI cards (Nexus stat cards) ---------- */
 
 .db-metrics {
