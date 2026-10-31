@@ -20,6 +20,12 @@ function notifText(item, t) {
       ? t('notif.visaPublished', { name })
       : t('notif.visaPublishedGeneric');
   }
+  if (item.type === 'consultation_new') {
+    const count = Number(item.payload?.count || 0);
+    return count > 0
+      ? t('notif.consultationNew', { count })
+      : t('notif.consultationNewGeneric');
+  }
   return item.type;
 }
 

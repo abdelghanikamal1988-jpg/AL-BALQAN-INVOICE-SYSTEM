@@ -44,6 +44,8 @@ export default {
   'notif.markAllRead': 'Mark all as read',
   'notif.visaPublished': 'The final visa for {name} has been published.',
   'notif.visaPublishedGeneric': 'A final visa has been published.',
+  'notif.consultationNew': '{count} new consultation request(s) arrived.',
+  'notif.consultationNewGeneric': 'New consultation request(s) arrived.',
 
   'shell.nav.primary': 'Primary',
   'shell.nav.sections': 'Sections',

@@ -44,6 +44,8 @@ export default {
   'notif.markAllRead': 'تحديد الكل كمقروء',
   'notif.visaPublished': 'تم نشر التأشيرة النهائية الخاصة بـ {name}.',
   'notif.visaPublishedGeneric': 'تم نشر تأشيرة نهائية جديدة.',
+  'notif.consultationNew': 'وصل {count} طلب استشارة جديد.',
+  'notif.consultationNewGeneric': 'وصلت طلبات استشارة جديدة.',
 
   'shell.nav.primary': 'الأساسي',
   'shell.nav.sections': 'الأقسام',

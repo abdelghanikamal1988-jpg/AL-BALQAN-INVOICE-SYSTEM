@@ -9,9 +9,20 @@
 //        -> tombstone the id, delete the submission on Netlify Forms AND its row
 // GET  /?action=submissions|forms      -> same actions via query string
 //
+// Two ways in:
+//   * a signed-in user (Authorization: Bearer <user jwt>) — the app's
+//     "Sync from Netlify Forms" button and its periodic re-sync;
+//   * the scheduler (header x-sync-secret: <NETLIFY_SYNC_SECRET>) — a
+//     pg_cron/pg_net job that keeps the table fresh with nobody logged in;
+//     imported rows are owned by NETLIFY_SYNC_USER_ID so RLS still applies.
+// Either way, freshly imported rows raise a bell notification for every
+// active user who holds the consultations page (notify_new_consultations).
+//
 // Deploy:
 //   supabase functions deploy netlify-forms
 //   supabase secrets set NETLIFY_TOKEN=<personal access token>
+//   supabase secrets set NETLIFY_SYNC_SECRET=<random>
+//   supabase secrets set NETLIFY_SYNC_USER_ID=<admin uuid>
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 const CORS = {
@@ -22,9 +33,16 @@ const CORS = {
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL') ?? '';
 const SUPABASE_ANON_KEY = Deno.env.get('SUPABASE_ANON_KEY') ?? '';
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
 const NETLIFY_TOKEN = Deno.env.get('NETLIFY_TOKEN') ?? '';
 const NETLIFY_SITE_ID =
   Deno.env.get('NETLIFY_SITE_ID') ?? 'c62355e1-108a-4b41-bc0d-6e5a6acda6ed';
+
+// Scheduled server-to-server sync (pg_cron + pg_net): the caller proves
+// itself with a shared secret instead of a user JWT. New rows then belong
+// to the standing admin so RLS keeps them visible in the app.
+const SYNC_SECRET = Deno.env.get('NETLIFY_SYNC_SECRET') ?? '';
+const SYNC_USER_ID = Deno.env.get('NETLIFY_SYNC_USER_ID') ?? '';
 
 const NETLIFY_API = 'https://api.netlify.com/api/v1';
 const FORM_NAME = 'consultation';
@@ -243,13 +261,20 @@ Deno.serve(async (req: Request): Promise<Response> => {
 
   try {
     const authHeader = req.headers.get('Authorization') ?? '';
-    if (!authHeader) return json({ error: 'auth_required' }, 401);
+    const syncSecret = req.headers.get('x-sync-secret') ?? '';
 
-    const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-      global: { headers: { Authorization: authHeader } },
-    });
-    const { data: userData, error: userError } = await db.auth.getUser();
-    if (userError || !userData?.user) return json({ error: 'auth_invalid' }, 401);
+    let db: ReturnType<typeof createClient>;
+    if (SYNC_SECRET && syncSecret !== '' && syncSecret === SYNC_SECRET) {
+      // Cron path: no user, service role — rows are owned by SYNC_USER_ID.
+      db = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY || SUPABASE_ANON_KEY);
+    } else {
+      if (!authHeader) return json({ error: 'auth_required' }, 401);
+      db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+        global: { headers: { Authorization: authHeader } },
+      });
+      const { data: userData, error: userError } = await db.auth.getUser();
+      if (userError || !userData?.user) return json({ error: 'auth_invalid' }, 401);
+    }
 
     let action = 'submissions';
     let payload: { action?: unknown; submission_id?: unknown } | null = null;
@@ -402,6 +427,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
     // Import guard: skip tombstoned submissions and content-level duplicates
     // (the same request double-fired by the website — in this batch, or
     // against a row already in the table).
+    const cronMode = SYNC_SECRET !== '' && req.headers.get('x-sync-secret') === SYNC_SECRET;
     const seenFp = new Map<string, number>();
     const keepRows: Array<Record<string, unknown>> = [];
     const dupeIds: string[] = [];
@@ -414,6 +440,12 @@ Deno.serve(async (req: Request): Promise<Response> => {
       }
       const row = buildRow(submission);
       if (!row || row.netlify_id === '') continue;
+      // The cron path has no signed-in user: own NEW rows to the standing
+      // admin so RLS still shows them; rows already in the table keep their
+      // owner (a refresh must not steal them).
+      if (cronMode && SYNC_USER_ID && !existing.has(String(row.netlify_id))) {
+        row.user_id = SYNC_USER_ID;
+      }
       const fp = fingerprint(row);
       const at = timeOf(row.submitted_at) || timeOf(submission.created_at) || Date.now();
       const batchAt = seenFp.get(fp);
@@ -453,6 +485,21 @@ Deno.serve(async (req: Request): Promise<Response> => {
       const createdAt = textOf(submission.created_at);
       if (createdAt && (!lastSubmissionAt || createdAt > lastSubmissionAt)) {
         lastSubmissionAt = createdAt;
+      }
+    }
+
+    // Durable in-app bell rows for everyone who can act on consultations —
+    // best effort, never fails the sync itself.
+    if (syncedNew > 0) {
+      const latestNew = keepRows.find((r) => !existing.has(String(r.netlify_id)));
+      const latestName = latestNew ? textOf(latestNew.full_name) ?? '' : '';
+      try {
+        await db.rpc('notify_new_consultations', {
+          p_count: syncedNew,
+          p_latest: latestName,
+        });
+      } catch {
+        /* notification failure must never break the sync */
       }
     }
 

@@ -15,3 +15,5 @@ npm-debug.log*
 .dev/commit-msg.txt
 # logical DB dumps — client data, never committed
 .dev/backups/
+# supabase CLI local temp
+supabase/.temp/
