@@ -4,6 +4,7 @@ import Modal from '../Modal/Modal.jsx';
 import Icon from '../Icons/Icon.jsx';
 import { useLang } from '../../context/LangContext.jsx';
 import { dbFetchNotifications, dbMarkNotificationRead } from '../../lib/visaRepo.js';
+import { notifText } from '../../utils/notifText.js';
 
 function notifTime(iso) {
   if (!iso) return '';
@@ -11,22 +12,6 @@ function notifTime(iso) {
   if (Number.isNaN(d.getTime())) return '';
   const pad = (n) => String(n).padStart(2, '0');
   return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
-}
-
-function notifText(item, t) {
-  if (item.type === 'visa_published') {
-    const name = item.payload?.name || item.payload?.fileNo || '';
-    return name
-      ? t('notif.visaPublished', { name })
-      : t('notif.visaPublishedGeneric');
-  }
-  if (item.type === 'consultation_new') {
-    const count = Number(item.payload?.count || 0);
-    return count > 0
-      ? t('notif.consultationNew', { count })
-      : t('notif.consultationNewGeneric');
-  }
-  return item.type;
 }
 
 export default function NotificationsBell() {

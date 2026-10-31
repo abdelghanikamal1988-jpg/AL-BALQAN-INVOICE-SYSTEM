@@ -20,6 +20,7 @@ import { normalizeName, isEmailValid, isPhoneValid, validateNewPassword, PASSWOR
 import { reportPdfFailure } from '../src/utils/pdf.js';
 import { DOCUMENT_TYPES, normalizeDocuments, visaVisibility } from '../src/utils/uploads.js';
 import { ACTION_PERMISSIONS, ROLE_PRESETS } from '../src/auth/permissions.js';
+import { notifText } from '../src/utils/notifText.js';
 
 /* ------------------------- paymentCalculator ------------------------- */
 
@@ -488,4 +489,52 @@ test('visaVisibility: a visa holder controls upload, replace and publish', () =>
   assert.equal(done.canDownload, true);
   assert.equal(done.canPublish, false);
   assert.equal(done.published, true);
+});
+
+/* ------------------------- notifText ------------------------- */
+
+/* Records key + params so the assertion sees what the bell would translate. */
+function makeT() {
+  const calls = [];
+  const t = (key, params) => {
+    calls.push({ key, params });
+    return `${key}|${JSON.stringify(params ?? null)}`;
+  };
+  t.calls = calls;
+  return t;
+}
+
+test('notifText: consultation_new announces the count with its payload', () => {
+  const t = makeT();
+  const out = notifText({ type: 'consultation_new', payload: { count: 3 } }, t);
+  assert.equal(out.startsWith('notif.consultationNew|'), true);
+  assert.deepEqual(t.calls[0].params, { count: 3 });
+});
+
+test('notifText: consultation_new without a count falls back to the generic line', () => {
+  const t = makeT();
+  const missing = notifText({ type: 'consultation_new', payload: {} }, t);
+  assert.equal(missing.startsWith('notif.consultationNewGeneric|'), true);
+  const zero = notifText({ type: 'consultation_new', payload: { count: 0 } }, t);
+  assert.equal(zero.startsWith('notif.consultationNewGeneric|'), true);
+  const none = notifText({ type: 'consultation_new' }, t);
+  assert.equal(none.startsWith('notif.consultationNewGeneric|'), true);
+});
+
+test('notifText: visa_published still reads name, then fileNo, then generic', () => {
+  const t = makeT();
+  notifText({ type: 'visa_published', payload: { name: 'Ahmed' } }, t);
+  assert.equal(t.calls[0].key, 'notif.visaPublished');
+  assert.deepEqual(t.calls[0].params, { name: 'Ahmed' });
+  notifText({ type: 'visa_published', payload: { fileNo: 'INV-1' } }, t);
+  assert.equal(t.calls[1].key, 'notif.visaPublished');
+  assert.deepEqual(t.calls[1].params, { name: 'INV-1' });
+  notifText({ type: 'visa_published', payload: {} }, t);
+  assert.equal(t.calls[2].key, 'notif.visaPublishedGeneric');
+});
+
+test('notifText: an unknown type renders its raw type as the last resort', () => {
+  const t = makeT();
+  assert.equal(notifText({ type: 'something_else' }, t), 'something_else');
+  assert.equal(t.calls.length, 0);
 });
