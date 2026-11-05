@@ -65,6 +65,7 @@ export function emptyClientForm() {
   return {
     firstName: '',
     fatherName: '',
+    motherName: '',
     surname: '',
     country: '',
     passport: '',
@@ -87,6 +88,7 @@ export function formToClient(form, { id, documents, pdfPath, fileNo }) {
     fileNo: fileNo || form.fileNo || '',
     firstName: toUpperLatin(form.firstName),
     fatherName: toUpperLatin(form.fatherName),
+    motherName: toUpperLatin(form.motherName),
     surname: toUpperLatin(form.surname),
     country: toUpperLatin(form.country),
     passport: toUpperLatin(form.passport),
@@ -114,6 +116,7 @@ export function clientToForm(client) {
     ...emptyClientForm(),
     firstName: client.firstName || '',
     fatherName: client.fatherName || '',
+    motherName: client.motherName || '',
     surname: client.surname || '',
     country: client.country || '',
     passport: client.passport || '',
@@ -136,6 +139,7 @@ export function clientToForm(client) {
 const REQUIRED_FIELDS = [
   'firstName',
   'fatherName',
+  'motherName',
   'surname',
   'country',
   'passport',
@@ -179,6 +183,7 @@ export function filterClients(list, query, agent) {
     const haystack = [
       client.firstName,
       client.fatherName,
+      client.motherName,
       client.surname,
       clientFullName(client),
       client.country,

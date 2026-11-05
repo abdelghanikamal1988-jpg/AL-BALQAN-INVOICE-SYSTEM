@@ -195,7 +195,7 @@ test('normalizePassport strips non-alphanumerics', () => {
 test('validateClientForm: empty form flags every required field', () => {
   const errors = validateClientForm(emptyClientForm());
   const expected = [
-    'firstName', 'fatherName', 'surname', 'country', 'passport',
+    'firstName', 'fatherName', 'motherName', 'surname', 'country', 'passport',
     'dateOfBirth', 'dateOfIssue', 'dateOfExpiry', 'issuingPlace',
     'placeOfBirth', 'sex', 'destination', 'service', 'referralAgent',
   ];
@@ -204,7 +204,7 @@ test('validateClientForm: empty form flags every required field', () => {
 
 test('validateClientForm: a filled form has no errors', () => {
   const form = {
-    firstName: 'MOHAMED', fatherName: 'AHMED', surname: 'KHALID',
+    firstName: 'MOHAMED', fatherName: 'AHMED', motherName: 'FATMA', surname: 'KHALID',
     country: 'EGYPT', passport: 'A1234567',
     dateOfBirth: '1990-01-01', dateOfIssue: '2020-01-01', dateOfExpiry: '2030-01-01',
     issuingPlace: 'CAIRO', placeOfBirth: 'CAIRO', sex: 'Male',
@@ -216,7 +216,7 @@ test('validateClientForm: a filled form has no errors', () => {
 
 test('validateClientForm: Arabic in any field is rejected', () => {
   const form = {
-    firstName: 'MOHAMED', fatherName: 'AHMED', surname: 'KHALID',
+    firstName: 'MOHAMED', fatherName: 'AHMED', motherName: 'FATMA', surname: 'KHALID',
     country: 'القاهرة', passport: 'A1234567',
     dateOfBirth: '1990-01-01', dateOfIssue: '2020-01-01', dateOfExpiry: '2030-01-01',
     issuingPlace: 'CAIRO', placeOfBirth: 'CAIRO', sex: 'Male',

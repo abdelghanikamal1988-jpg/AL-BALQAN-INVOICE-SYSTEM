@@ -67,6 +67,7 @@
 
   'clients.field.name': 'الاسم',
   'clients.field.fatherName': 'اسم الأب',
+  'clients.field.motherName': 'اسم الأم',
   'clients.field.surname': 'اللقب',
   'clients.field.country': 'اسم الدولة',
   'clients.field.passport': 'رقم جواز السفر',
@@ -146,6 +147,7 @@
 
   'clients.err.firstName': 'الاسم مطلوب.',
   'clients.err.fatherName': 'اسم الأب مطلوب.',
+  'clients.err.motherName': 'اسم الأم مطلوب.',
   'clients.err.surname': 'اللقب مطلوب.',
   'clients.err.country': 'اسم الدولة مطلوب.',
   'clients.err.passport': 'رقم جواز السفر مطلوب.',

@@ -45,6 +45,7 @@ function fmtDate(iso) {
 const DETAIL_FIELDS = [
   ['clients.field.name', 'firstName'],
   ['clients.field.fatherName', 'fatherName'],
+  ['clients.field.motherName', 'motherName'],
   ['clients.field.surname', 'surname'],
   ['clients.field.country', 'country'],
   ['clients.field.passport', 'passport'],

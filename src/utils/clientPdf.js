@@ -122,22 +122,25 @@ const FIELDS = [
     { label: 'PLACE OF BIRTH', key: 'placeOfBirth' },
   ],
   [
-    { label: 'SURNAME', key: 'surname' },
+    { label: 'MOTHER NAME', key: 'motherName' },
     { label: 'DATE OF ISSUE', key: 'dateOfIssue', date: true },
   ],
   [
-    { label: 'COUNTRY NAME', key: 'country' },
+    { label: 'SURNAME', key: 'surname' },
     { label: 'DATE OF EXPIRY', key: 'dateOfExpiry', date: true },
   ],
   [
-    { label: 'PASSPORT NO.', key: 'passport' },
+    { label: 'COUNTRY NAME', key: 'country' },
     { label: 'ISSUING PLACE', key: 'issuingPlace' },
   ],
   [
-    { label: 'SEX', key: 'sex' },
+    { label: 'PASSPORT NO.', key: 'passport' },
     { label: 'DESTINATION', key: 'destination' },
   ],
-  [{ label: 'SERVICE', key: 'service' }],
+  [
+    { label: 'SEX', key: 'sex' },
+    { label: 'SERVICE', key: 'service' },
+  ],
 ];
 
 /**
@@ -254,7 +257,7 @@ export async function buildClientPdf(client, invoiceRows) {
     });
   }
 
-  /* ---- fields (2 columns x 6 rows) ---- */
+  /* ---- fields (2 columns x 7 rows) ---- */
   const rowsTop = 255;
   const rowH = 68;
 

@@ -68,6 +68,7 @@
 
   'clients.field.name': 'Name',
   'clients.field.fatherName': 'Father Name',
+  'clients.field.motherName': 'Mother Name',
   'clients.field.surname': 'Surname',
   'clients.field.country': 'Country Name',
   'clients.field.passport': 'Passport No.',
@@ -148,6 +149,7 @@
 
   'clients.err.firstName': 'Name is required.',
   'clients.err.fatherName': 'Father name is required.',
+  'clients.err.motherName': 'Mother name is required.',
   'clients.err.surname': 'Surname is required.',
   'clients.err.country': 'Country name is required.',
   'clients.err.passport': 'Passport number is required.',

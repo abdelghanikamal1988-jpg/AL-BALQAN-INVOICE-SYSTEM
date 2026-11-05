@@ -49,6 +49,7 @@ const FIELD_GROUPS = [
     fields: [
       { key: 'firstName', label: 'clients.field.name', type: 'text' },
       { key: 'fatherName', label: 'clients.field.fatherName', type: 'text' },
+      { key: 'motherName', label: 'clients.field.motherName', type: 'text' },
       { key: 'surname', label: 'clients.field.surname', type: 'text' },
       { key: 'sex', label: 'clients.field.sex', type: 'select', options: ['Male', 'Female'] },
       { key: 'dateOfBirth', label: 'clients.field.dateOfBirth', type: 'date' },
