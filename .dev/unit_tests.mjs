@@ -294,6 +294,11 @@ test('fileNumber: unrelated counter values are rejected', () => {
   assert.equal(fileNumberFromCounter(null), '');
 });
 
+test('fileNumber: the running sequence outgrows four digits without breaking', () => {
+  assert.equal(fileNumberFromCounter('FILE-1011-2026-0047'), 'FILE-2026-101147');
+  assert.equal(fileNumberFromCounter('FILE-1111-2026-12345'), 'FILE-2026-111112345');
+});
+
 test('createInvoiceObject: an agent invoice stores who it is billed to', () => {
   const base = { name: 'AHMED ALI', passport: 'P1', total: 1000, paid: 0, vatMode: 'none' };
   const agent = createInvoiceObject(
@@ -531,6 +536,40 @@ test('notifText: visa_published still reads name, then fileNo, then generic', ()
   assert.deepEqual(t.calls[1].params, { name: 'INV-1' });
   notifText({ type: 'visa_published', payload: {} }, t);
   assert.equal(t.calls[2].key, 'notif.visaPublishedGeneric');
+});
+
+test('notifText: a new record says who added it and which record', () => {
+  const t = makeT();
+  const client = notifText(
+    { type: 'client_new', payload: { by: 'delegate@albalqan.com', name: 'AHMED KHALED ALI' } },
+    t
+  );
+  assert.equal(client.startsWith('notif.clientNew|'), true);
+  assert.deepEqual(t.calls[0].params, { by: 'delegate@albalqan.com', name: 'AHMED KHALED ALI' });
+
+  notifText({ type: 'invoice_new', payload: { by: 'hr@albalqan.com', name: 'INV-2026-0009' } }, t);
+  assert.equal(t.calls[1].key, 'notif.invoiceNew');
+  assert.deepEqual(t.calls[1].params, { by: 'hr@albalqan.com', name: 'INV-2026-0009' });
+
+  notifText({ type: 'edit_submitted', payload: { by: 'agent@albalqan.com', name: 'AHMED' } }, t);
+  assert.equal(t.calls[2].key, 'notif.editSubmitted');
+  assert.deepEqual(t.calls[2].params, { by: 'agent@albalqan.com', name: 'AHMED' });
+});
+
+test('notifText: a new record missing an actor or a name falls back to the generic line', () => {
+  const t = makeT();
+  const noActor = notifText({ type: 'client_new', payload: { name: 'AHMED' } }, t);
+  assert.equal(noActor.startsWith('notif.clientNewGeneric|'), true);
+
+  const noName = notifText({ type: 'invoice_new', payload: { by: 'hr@albalqan.com' } }, t);
+  assert.equal(noName.startsWith('notif.invoiceNewGeneric|'), true);
+
+  const fileOnly = notifText(
+    { type: 'edit_submitted', payload: { by: 'hr@albalqan.com', fileNo: 'FILE-2026-10117' } },
+    t
+  );
+  assert.equal(t.calls[2].key, 'notif.editSubmitted');
+  assert.deepEqual(t.calls[2].params, { by: 'hr@albalqan.com', name: 'FILE-2026-10117' });
 });
 
 test('notifText: an unknown type renders its raw type as the last resort', () => {

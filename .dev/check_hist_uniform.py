@@ -11,7 +11,7 @@ import urllib.request
 import websocket
 
 PORT = 9333
-ROOT = (r'C:\Users\hp\OneDrive\Desktop\desktop 298\AL BALQAN Invoice system'
+ROOT = (r'C:\Users\hp\OneDrive\Desktop\05 - Projects\desktop 298\AL BALQAN Invoice system'
         r'\.dev')
 PAGES = ['preview-clients.html', 'preview-history.html', 'preview-hist-test.html',
          'preview-detail.html']

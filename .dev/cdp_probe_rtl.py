@@ -7,7 +7,7 @@ import websocket
 
 sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 
-URL = ("file:///C:/Users/hp/OneDrive/Desktop/desktop%20298/"
+URL = ("file:///C:/Users/hp/OneDrive/Desktop/05%20-%20Projects/desktop%20298/"
        "AL%20BALQAN%20Invoice%20system/.dev/preview-dashboard.html")
 
 JS = r"""

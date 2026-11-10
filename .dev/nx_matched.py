@@ -1,7 +1,7 @@
 import json, time, urllib.request, websocket
 
 PORT = 9333
-url = "file:///C:/Users/hp/OneDrive/Desktop/desktop%20298/AL%20BALQAN%20Invoice%20system/.dev/nexus-dashboard.html"
+url = "file:///C:/Users/hp/OneDrive/Desktop/05%20-%20Projects/desktop%20298/AL%20BALQAN%20Invoice%20system/.dev/nexus-dashboard.html"
 req = urllib.request.Request(f"http://localhost:{PORT}/json/new?{urllib.request.quote(url, safe='')}", method="PUT")
 t = json.load(urllib.request.urlopen(req, timeout=10))
 ws = websocket.create_connection(t["webSocketDebuggerUrl"], timeout=20)

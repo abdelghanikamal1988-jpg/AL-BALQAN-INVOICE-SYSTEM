@@ -2,17 +2,19 @@
  * Client file number generation.
  *
  * Format: FILE-YYYY-DDMM<sequence>   e.g. FILE-2026-21101
- *   2026 = year, 2110 = day 21 / month 10, 1 = first file opened that day.
- * The sequence restarts every day and counts 1, 2, 3 ... (no padding), so a
- * number always tells you when the paper file was opened.
+ *   2026 = year, 2110 = day 21 / month 10, 1 = the sequence.
+ * The year/day part records when the paper file was opened; the
+ * sequence is ONE running number for the whole system — seeded from
+ * the highest file number ever stored and never restarted, so two
+ * accounts saving at the same moment can never be handed the same
+ * number and no day begins again at 1.
  *
- * The count comes from the shared server-side counter the invoice numbers
- * use, so Row Level Security can never hand the same number to two people.
- * That counter always appends the year itself and pads the sequence to four
- * digits ('FILE-2110' -> 'FILE-2110-2026-0001'), so it is called with the
- * day/month part only and the result is re-assembled into the file format
- * above. The random fallback only runs when the counter is unreachable and
- * uses a five-digit tail, which a real daily sequence cannot reach.
+ * `next_file_number` keeps that sequence in a counter table of its
+ * own, so Row Level Security can never show two users the same
+ * value. It answers 'FILE-2110-2026-0007', which is reassembled into
+ * the stored format by fileNumberFromCounter. The random fallback
+ * only runs when the counter is unreachable and uses a five-digit
+ * tail, which the real sequence always starts above.
  */
 
 import { supabase } from '../lib/supabase.js';
@@ -40,7 +42,7 @@ export async function nextFileNumber() {
 
   if (supabase) {
     try {
-      const { data, error } = await supabase.rpc('next_invoice_number', {
+      const { data, error } = await supabase.rpc('next_file_number', {
         p_prefix: fileNumberDayPrefix(now),
       });
       const fileNo = fileNumberFromCounter(data);

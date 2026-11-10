@@ -6,6 +6,17 @@
  * unit-testable logic instead of JSX.
  */
 
+/**
+ * Who did it + what they did. Both halves are needed for the full
+ * sentence; a payload missing either falls back to the plain line, so
+ * an old or hand-written row never renders half a sentence.
+ */
+function named(item, t, key, genericKey) {
+  const by = String(item.payload?.by || '').trim();
+  const name = String(item.payload?.name || item.payload?.fileNo || '').trim();
+  return by && name ? t(key, { by, name }) : t(genericKey);
+}
+
 export function notifText(item, t) {
   if (item.type === 'visa_published') {
     const name = item.payload?.name || item.payload?.fileNo || '';
@@ -18,6 +29,15 @@ export function notifText(item, t) {
     return count > 0
       ? t('notif.consultationNew', { count })
       : t('notif.consultationNewGeneric');
+  }
+  if (item.type === 'client_new') {
+    return named(item, t, 'notif.clientNew', 'notif.clientNewGeneric');
+  }
+  if (item.type === 'invoice_new') {
+    return named(item, t, 'notif.invoiceNew', 'notif.invoiceNewGeneric');
+  }
+  if (item.type === 'edit_submitted') {
+    return named(item, t, 'notif.editSubmitted', 'notif.editSubmittedGeneric');
   }
   return item.type;
 }

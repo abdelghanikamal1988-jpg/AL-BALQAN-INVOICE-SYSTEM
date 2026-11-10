@@ -9,7 +9,7 @@ import urllib.request
 import websocket
 
 PORT = 9333
-PATH = (r'C:\Users\hp\OneDrive\Desktop\desktop 298\AL BALQAN Invoice system'
+PATH = (r'C:\Users\hp\OneDrive\Desktop\05 - Projects\desktop 298\AL BALQAN Invoice system'
         r'\.dev\preview-dashboard.html')
 URL = 'file:///' + urllib.parse.quote(PATH.replace('\\', '/'), safe='/:')
 

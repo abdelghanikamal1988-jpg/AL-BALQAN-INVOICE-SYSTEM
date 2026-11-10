@@ -46,6 +46,12 @@ export default {
   'notif.visaPublishedGeneric': 'تم نشر تأشيرة نهائية جديدة.',
   'notif.consultationNew': 'وصل {count} طلب استشارة جديد.',
   'notif.consultationNewGeneric': 'وصلت طلبات استشارة جديدة.',
+  'notif.clientNew': 'أضاف {by} عميلًا جديدًا: {name}',
+  'notif.clientNewGeneric': 'تمت إضافة عميل جديد.',
+  'notif.invoiceNew': 'أنشأ {by} فاتورة جديدة: {name}',
+  'notif.invoiceNewGeneric': 'تم إنشاء فاتورة جديدة.',
+  'notif.editSubmitted': 'قدّم {by} تعديلات على {name}',
+  'notif.editSubmittedGeneric': 'تغييرات جديدة تنتظر موافقتك.',
 
   'shell.nav.primary': 'الأساسي',
   'shell.nav.sections': 'الأقسام',

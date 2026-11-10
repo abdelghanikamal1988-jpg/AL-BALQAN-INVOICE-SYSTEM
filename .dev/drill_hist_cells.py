@@ -9,7 +9,7 @@ import urllib.request
 import websocket
 
 PORT = 9333
-ROOT = (r'C:\Users\hp\OneDrive\Desktop\desktop 298\AL BALQAN Invoice system'
+ROOT = (r'C:\Users\hp\OneDrive\Desktop\05 - Projects\desktop 298\AL BALQAN Invoice system'
         r'\.dev')
 TARGETS = [('preview-clients.html', '.cl-table'),
            ('preview-history.html', '.history-table')]

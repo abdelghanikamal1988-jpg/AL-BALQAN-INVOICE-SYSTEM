@@ -46,6 +46,12 @@ export default {
   'notif.visaPublishedGeneric': 'A final visa has been published.',
   'notif.consultationNew': '{count} new consultation request(s) arrived.',
   'notif.consultationNewGeneric': 'New consultation request(s) arrived.',
+  'notif.clientNew': '{by} added a new client: {name}',
+  'notif.clientNewGeneric': 'A new client was added.',
+  'notif.invoiceNew': '{by} created a new invoice: {name}',
+  'notif.invoiceNewGeneric': 'A new invoice was created.',
+  'notif.editSubmitted': '{by} submitted changes to {name}',
+  'notif.editSubmittedGeneric': 'New changes are waiting for your approval.',
 
   'shell.nav.primary': 'Primary',
   'shell.nav.sections': 'Sections',

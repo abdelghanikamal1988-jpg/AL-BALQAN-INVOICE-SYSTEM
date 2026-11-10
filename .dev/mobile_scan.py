@@ -9,7 +9,7 @@ import urllib.request
 import websocket
 
 PORT = 9333
-BASE = "file:///C:/Users/hp/OneDrive/Desktop/desktop%20298/AL%20BALQAN%20Invoice%20system/.dev/"
+BASE = "file:///C:/Users/hp/OneDrive/Desktop/05%20-%20Projects/desktop%20298/AL%20BALQAN%20Invoice%20system/.dev/"
 
 PAGES = [
     "preview-dashboard.html", "preview-shell.html", "preview-clients.html",
