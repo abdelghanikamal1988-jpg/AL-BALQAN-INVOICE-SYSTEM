@@ -1084,6 +1084,12 @@ button {
   white-space: nowrap;
 }
 
+/* Pinned shortcut: edits waiting for approval, shown above the list. */
+.notif-item--pinned {
+  margin-block-end: 6px;
+  font-weight: 700;
+}
+
 /* ---------- Dashboard approval banner ---------- */
 
 .db-approval {

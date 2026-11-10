@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import company from '../../data/company.js';
 import { useAuth } from '../../context/AuthContext.jsx';
-import { usePendingApprovals } from '../../context/PendingApprovalsContext.jsx';
 import { useLang } from '../../context/LangContext.jsx';
 import { useTheme } from '../../context/ThemeContext.jsx';
 import Icon from '../Icons/Icon.jsx';
@@ -14,8 +13,7 @@ import { dbFetchAll } from '../../lib/invoiceRepo.js';
 import { clientFullName, normalizePassport, filterClients } from '../../utils/clients.js';
 
 export default function Header({ menuOpen = false, onMenuToggle }) {
-  const { user, profile, hasPerm, isAdmin, signOut } = useAuth();
-  const { count, openApprovals } = usePendingApprovals();
+  const { user, profile, hasPerm, signOut } = useAuth();
   const { t, lang, toggleLang } = useLang();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
@@ -355,29 +353,6 @@ export default function Header({ menuOpen = false, onMenuToggle }) {
           >
             <Icon name="maximize" />
           </button>
-
-          {isAdmin && (
-            <button
-              type="button"
-              className="app-header__bell"
-              onClick={openApprovals}
-              title={
-                count > 0
-                  ? t('shell.editsWaiting', { count, s: count > 1 ? 's' : '' })
-                  : t('shell.notifications')
-              }
-              aria-label={
-                count > 0 ? t('shell.editsWaiting', { count, s: 's' }) : t('shell.notifications')
-              }
-            >
-              <Icon name="bell" />
-              {count > 0 && (
-                <span className="app-header__bell-count" aria-hidden="true">
-                  {count > 9 ? '9+' : count}
-                </span>
-              )}
-            </button>
-          )}
 
           <NotificationsBell />
 

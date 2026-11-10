@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Modal from '../Modal/Modal.jsx';
 import Icon from '../Icons/Icon.jsx';
 import { useLang } from '../../context/LangContext.jsx';
+import { usePendingApprovals } from '../../context/PendingApprovalsContext.jsx';
 import { dbFetchNotifications, dbMarkNotificationRead } from '../../lib/visaRepo.js';
 import { notifText } from '../../utils/notifText.js';
 
@@ -17,6 +18,7 @@ function notifTime(iso) {
 export default function NotificationsBell() {
   const { t } = useLang();
   const navigate = useNavigate();
+  const { count: approvals, openApprovals } = usePendingApprovals();
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState([]);
 
@@ -40,6 +42,7 @@ export default function NotificationsBell() {
   }, [refresh]);
 
   const unread = items.filter((item) => !item.read_at).length;
+  const total = unread + approvals;
 
   const openItem = (item) => {
     const apply = async () => {
@@ -72,13 +75,13 @@ export default function NotificationsBell() {
         type="button"
         className="app-header__bell"
         onClick={() => setOpen(true)}
-        title={t('shell.notifications')}
-        aria-label={t('shell.notifications')}
+        title={total > 0 ? `${t('shell.notifications')} (${total})` : t('shell.notifications')}
+        aria-label={total > 0 ? `${t('shell.notifications')} (${total})` : t('shell.notifications')}
       >
         <Icon name="bell" />
-        {unread > 0 && (
+        {total > 0 && (
           <span className="app-header__bell-count" aria-hidden="true">
-            {unread > 9 ? '9+' : unread}
+            {total > 9 ? '9+' : total}
           </span>
         )}
       </button>
@@ -94,8 +97,22 @@ export default function NotificationsBell() {
             ) : null
           }
         >
+          {approvals > 0 && (
+            <button
+              type="button"
+              className="notif-item notif-item--pinned"
+              onClick={() => {
+                setOpen(false);
+                openApprovals();
+              }}
+            >
+              <span className="notif-item__text">
+                {t('shell.editsWaiting', { count: approvals, s: approvals > 1 ? 's' : '' })}
+              </span>
+            </button>
+          )}
           {items.length === 0 ? (
-            <p className="notif-empty">{t('notif.empty')}</p>
+            approvals > 0 ? null : <p className="notif-empty">{t('notif.empty')}</p>
           ) : (
             <ul className="notif-list">
               {items.map((item) => (
